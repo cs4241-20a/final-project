@@ -22,7 +22,7 @@ Cheem Chat will be brought to you by:
 - Authentication with Passport:
   - GitHub Strategy
   - Local Strategy with passwords encrypted via bcrypt
-- Chat functionality dedicated to sending pictures of cheems   
+- Chat functionality dedicated to sending pictures of cheems:  
   - Users can choose from 30+ cheem images stored on the site
 - Leaderboard functionality for:
   - Top chatter
