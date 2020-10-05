@@ -18,6 +18,7 @@ Cheem Chat will be brought to you by:
   - Server-side calculations for leaderboard rankings
   - Server-side validation to verify users are logged-in before chatting
   - Server-side ip address logging
+  - Stores image files of cheems to be used in chat
 - Authentication with Passport:
   - GitHub Strategy
   - Local Strategy with passwords encrypted via bcrypt
@@ -30,4 +31,3 @@ Cheem Chat will be brought to you by:
   - Login information
   - Chat log
   - leaderboard rankings
-  - cheem pictures
