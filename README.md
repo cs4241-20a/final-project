@@ -1,3 +1,4 @@
+Hi
 # cs4241-FinalProject
 
 For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
