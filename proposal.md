@@ -15,5 +15,8 @@ Our front-end will be written in plain JavaScript and styled with a CSS library 
 Other libraries will be implemented as needed
 
 Target users/Stakeholders
-This site will target nostalgic Nintendo DS users that want to relive their glory days (back in ‘04).
+This site will target nostalgic Nintendo DS users that want to relive their glory days (back in ‘04)
 
+Example Link: 
+
+https://gamespot1.cbsistatic.com/uploads/scale_medium/mig/3/2/0/8/2223208-pictochat_1.jpg
