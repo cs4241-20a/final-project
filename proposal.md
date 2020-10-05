@@ -1,4 +1,4 @@
-# Cheem Chat
+# Cheem Chat - Proposal
 For too long chat applications like Slack, Discord and Microsoft Teams has underrepresented those of the cheem kind. To solve this injustice we have made a chat app solely for cheems lovers to interact. In this revolutionary site built with JavaScript, Node.js / Express, MongoDB and React, users will be able to send their favorite cheems to each other inside a persistent and communal chat room. With intuitive leaderboard technologies, users will also compete to be the top chatter and attempt to make their favorite cheem top doge.  
 
 For those who are unaware of the cheem kind, click [here](https://i.redd.it/tgy4a5n8i9a41.png).
@@ -12,7 +12,7 @@ Cheem Chat will be brought to you by:
 - Maria Medina Martinez
 
 ## Project Features
-- UI built with the React UI library
+- UI built with the React library
 - JavaScript for the client-side language
 - A server built with Node.js and Express:
   - Server-side calculations for leaderboard rankings
@@ -22,12 +22,17 @@ Cheem Chat will be brought to you by:
 - Authentication with Passport:
   - GitHub Strategy
   - Local Strategy with passwords encrypted via bcrypt
-- Chat functions to send pictures of cheems   
-  - Users can choose from 30+ cheems images loaded onto the site
-- Leaderboard functions for:
+- Chat functionality dedicated to sending pictures of cheems   
+  - Users can choose from 30+ cheem images stored on the site
+- Leaderboard functionality for:
   - Top chatter
-  - Top doge, King of the cheems
+  - Top doge (King of the cheems)
 - Persistent data via MongoDB:
   - Login information
   - Chat log
   - leaderboard rankings
+
+## Targeted Users & Stakeholders
+- This site will target anyone who loves doges, memes and chatting.
+  - Anyone can fall into this categorization, but we feel a demographic of young adults will be most attracted to the site.
+- As for the stakeholders of our project,... well that would be the cheems of course!
