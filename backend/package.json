@@ -1,0 +1,17 @@
+{
+    "type": "module",
+    "scripts": {
+        "start": "node --experimental-modules server.js",
+        "watch": "nodemon server.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "express-static-gzip": "^2.0.8"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    },
+    "engines": {
+        "node": "v12.0.0"
+    }
+}
