@@ -1,6 +1,7 @@
 ## Team Members
 
 Nicole Conill (Will be focused on front-end styling)
+
 Matthew Tolbert (Will be focused on server-side)
 
 (Both will contribute to client-side)
