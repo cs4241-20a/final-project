@@ -1,0 +1,13 @@
+{
+  "name": "pictochat",
+  "version": "0.0.1",
+  "description": "Pictochat knock off",
+  "author": "Final Project Team",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "body-parser": "^1.19.0"
+  }
+}
