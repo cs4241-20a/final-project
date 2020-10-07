@@ -1,8 +1,13 @@
 "use strict";
 
 function colorClick(e) {
-    document.getElementsByClassName("selected")[0].className = "color";
+    document.getElementsByClassName("color selected")[0].className = "color";
     e.target.className = "color selected";
+}
+
+function brushClick(e) {
+    document.getElementsByClassName("brush selected")[0].className = "brush";
+    e.target.className = "brush selected";
 }
 
 function getImage(e) {
@@ -17,7 +22,12 @@ window.onload = function(e) {
         buttons[i].addEventListener('click', colorClick);
     }
 
-    document.getElementById("save").addEventListener('click', getImage);
-}
+    buttons = document.getElementsByClassName("brush");
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', brushClick);
+    }
 
-console.log("JS Loaded");
+    document.getElementById("send").addEventListener('click', getImage);
+
+    document.addEventListener('click', function(e) { if(document.activeElement.toString() == '[object HTMLButtonElement]'){ document.activeElement.blur(); } });
+}
