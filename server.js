@@ -216,7 +216,7 @@ realtime.connection.once("connected", () => {
 
 // routes
 app.get("/auth", (request, response) => {
-    const tokenParams = {clientId: ""}; //TODO get username
+    const tokenParams = {clientId: ""}; //TODO get username from response I guess
     realtime.auth.createTokenRequest(tokenParams, function (err, tokenRequest) {
         if (err) {
             response
@@ -237,7 +237,6 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(__dirname + "/views/login.html");
 });
-
 
 app.post("/login", bodyParser.json(),
     passport.authenticate('local', { failureFlash: false }),
