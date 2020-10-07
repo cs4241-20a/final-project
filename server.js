@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
-app.use(cookieSession({ 
+app.use(cookieSession({
     name: 'session',
     keys: ['key1']
 }));
@@ -32,7 +32,7 @@ let collection = null;
 
 client.connect()
     .then(() => {
-        return client.db('final-project').collection('users'); 
+        return client.db('final-project').collection('users');
     })
     .then(__collection => {
         collection = __collection;
@@ -42,19 +42,19 @@ client.connect()
     .then(console.log("MongoDB Connected Successfully!"));
 
 
-passport.use(new LocalStrategy( 
+passport.use(new LocalStrategy(
     function (userName, passWord, done) {
         collection.find({
             username: userName,
             password: passWord
         }).toArray()
-        
+
         .then(function (result) {
             // successful login
             if (result.length >= 1) {
                 console.log("Successful Login!")
                 return done(null, userName)
-    
+
             } else {
                 // failed login
                 console.log("Login Failed!")
@@ -81,6 +81,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + "/views/home.html");
 });
 
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + "/views/login.html");
+});
+
 
 app.post("/login", bodyParser.json(),
     passport.authenticate('local', { failureFlash: false }),
@@ -95,7 +99,7 @@ app.post("/signUp", bodyParser.json(), (request, response) => {
     collection.find({
         username: request.body.username
     }).toArray()
-    
+
     .then(function (result) {
         if (result.length < 1) {
             console.log("New User!");
