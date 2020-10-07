@@ -44,7 +44,7 @@ client.connect()
 
 passport.use(new LocalStrategy( 
     function (userName, passWord, done) {
-        userNameColumn.find({
+        collection.find({
             username: userName,
             password: passWord
         }).toArray()
