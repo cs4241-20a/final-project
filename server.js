@@ -42,11 +42,6 @@ app.use(
     })
 )
 
-function setUserSession(request, username) {
-    //request.session['User'] = username;
-}
-
-//connectDb(process.env.MONGO_URI)
 
 //////////////////////// MONGO STUFF ////////////////////////
 const client = new mongodb.MongoClient(process.env.MONGO_URI, {
@@ -185,6 +180,7 @@ const startGameDataTicker = function () {
         }
     }, GAME_TICKER_MS);
 }
+
 
 const handlePlayerEntered = function (player) {
     let newPlayerId;
