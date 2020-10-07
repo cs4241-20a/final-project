@@ -10,11 +10,14 @@ const connectDb = async(mongoUri) => {
 
 
         console.log(`MongoDB Connected: ${conn.connection.host}`)
+        
 
     } catch (e) {
         console.log(e);
         process.exit(1);
     }
 }
+
+
 
 module.exports = connectDb
