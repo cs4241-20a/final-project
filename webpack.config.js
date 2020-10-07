@@ -3,7 +3,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
-    entry: "./frontend/js/components/App.tsx",
+    entry: "./frontend/js/routes/App.tsx",
     module: {
         rules: [
             {
@@ -37,5 +37,16 @@ module.exports = {
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
-    }
+    },
+    optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /node_modules/,
+					name: 'vendors',
+					chunks: 'all'
+				}
+			}
+		}
+	}
 };

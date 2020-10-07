@@ -2,9 +2,13 @@ import { CssBaseline, Typography, useMediaQuery } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import React, { FunctionComponent, useState } from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'; 
+import { FourOhFour } from "./404";
+import { Home } from "./Home";
 
 const App: FunctionComponent = props => {
-    const prefersDarkTheme = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
+    // const prefersDarkTheme = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
+    const prefersDarkTheme = false;
     const [useDarkTheme, setUseDarkTheme] = useState(prefersDarkTheme);
 
     const theme = React.useMemo(() =>
@@ -22,7 +26,16 @@ const App: FunctionComponent = props => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
-            <Typography variant="h1">Hello, World!</Typography>
+            <Router>
+                <Switch>
+                    <Route exact path="/">
+                        <Home/>
+                    </Route>
+                    <Route path="*">
+                        <FourOhFour/>
+                    </Route>
+                </Switch>
+            </Router>
         </ThemeProvider>
     );
 }
