@@ -10,6 +10,12 @@ const LocalStrategy = require('passport-local').Strategy;
 const cookieSession = require('cookie-session');
 const app = express();
 const Ably = require("ably");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const cookieParser = require("cookie-parser"); // parse cookie header
+const mongoose = require("mongoose");
+const {ensureAuth, ensureGuest} = require("./middleware/auth");
+
 
 // morgan logging
 app.use(morgan("dev"));
@@ -18,10 +24,29 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 
 app.use(cookieSession({
-    name: 'session',
-    keys: ['key1']
+    name: "session",
+    keys: ["thisappisawesome"],
+    maxAge: 24 * 60 * 60 * 100
 }));
 
+// parse cookies
+app.use(cookieParser());
+
+// Sessions
+app.use(
+    session({
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: false,
+        store: new MongoStore({mongooseConnection: mongoose.connection})
+    })
+)
+
+function setUserSession(request, username) {
+    //request.session['User'] = username;
+}
+
+//connectDb(process.env.MONGO_URI)
 
 //////////////////////// MONGO STUFF ////////////////////////
 const client = new mongodb.MongoClient(process.env.MONGO_URI, {
@@ -44,25 +69,37 @@ client.connect()
 
 
 //////////////////////// PASSPORT JS STUFF ////////////////////////
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 passport.use(new LocalStrategy(
     function (userName, passWord, done) {
         collection.find({
             username: userName,
-            password: passWord
         }).toArray()
-
             .then(function (result) {
                 // successful login
                 if (result.length >= 1) {
                     console.log("Successful Login!")
-                    return done(null, userName)
+                    console.log(result);
 
+                    // verify password
+                    if (result[0].password === passWord) {
+                        return done(null, userName, {
+                            message: "Login Successful!"
+                        });
+                    } else {
+                        return done(null, null, {
+                            message: "Incorrect username / password"
+                        });
+                    }
                 } else {
-                    // failed login
-                    console.log("Login Failed!")
-                    return done(null, false, {
-                        message: "Incorrect username or password!"
-                    });
+                    // create new user
+                    collection.insertOne({username: userName, password: passWord})
+                        .then(() => {
+                            return done(null, userName);
+                        });
                 }
             });
     }
@@ -75,8 +112,6 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (user, done) {
     done(null, user);
 });
-
-app.use(passport.initialize());
 
 //////////////////////// GAME VARS ////////////////////////
 
@@ -230,49 +265,23 @@ app.get("/auth", (request, response) => {
 });
 
 // routes
-app.get('/', (req, res) => {
+app.get('/', ensureAuth, (req, res) => {
+    console.log(req.user);
     res.sendFile(__dirname + "/views/home.html");
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', ensureGuest, (req, res) => {
     res.sendFile(__dirname + "/views/login.html");
 });
 
-app.post("/login", bodyParser.json(),
-    passport.authenticate('local', { failureFlash: false }),
-    function (request, response) {
-        let userName = request.body.username;
-        setUserSession(request, userName);
-    }
-);
-
-
-app.post("/signUp", bodyParser.json(), (request, response) => {
-
-    collection.find({
-        username: request.body.username
-    }).toArray()
-
-    .then(function (result) {
-        if (result.length < 1) {
-            console.log("New User!");
-
-            collection.insertOne(request.body)
-            .then(() => {
-                let userName = request.body.username;
-                setUserSession(request, userName);
-
-                response.status(200).send({message: "User was created!"});
-            });
-
-        } else {
-            response.status(401).send({message: "User with the given username already exists"});
-        }
-    }).catch(function () {
-        console.log("Rejected");
-    });
+app.get('/auth/logout', (req, res) => {
+    req.logout();
+    res.redirect('/login')
 });
 
+app.post("/auth/signin", passport.authenticate('local', {failureRedirect: '/login'}), (req, res) => {
+    res.redirect('/');
+});
 
 app.listen(process.env.PORT, () => {
     console.log("Server is listening on port: ", process.env.PORT);
