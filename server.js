@@ -94,33 +94,51 @@ app.get('/login', (req, res) => {
     res.sendFile(__dirname + "/views/login.html");
 });
 
-
-app.post("/login", bodyParser.json(), (request, response) => {
-    let username = request.body.username;
-    let password = request.body.password;
-
-    let checkUserAccount = {username: username, password: password};
-
-    /*
-    TODO
-    - get it so page gets redirected
-    - see if a response message can be sent using passport local
-    */
-    collection.find(checkUserAccount).toArray(function(err, result) {
+/*
+app.post("/login", bodyParser.json(), function(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
         if (err) {
-            throw err;
+            return next(err);
         }
 
-        // found user
-        if (result.length == 1) {
-            setUserSession(request, username);
-            response.redirect("/");
+        if (!user) {
+            return res.json({message: info.message})
         
         } else {
-            response.status(401).send({message: "Inccorrect Username or Password"});
+            console.log('FOUND')
         }
     })
 });
+*/
+
+/*
+TODO
+-get page to be redirected
+*/
+app.post("/login", bodyParser.json(),
+    function(req, res, next) {
+        passport.authenticate('local', function(error, user, info) {
+            if (error) {
+                res.status(401).send(error);
+            
+            } else if (!user) {
+                res.status(401).send(info);
+            
+            } else {
+                next();
+            }
+            
+            //res.status(401).send(info);
+        }) (req, res);
+    },
+
+    function (request, response) {
+        let userName = request.body.username;
+        console.log('Logged In')
+        setUserSession(request, userName);
+        response.redirect("/");
+    }
+);
 
 
 app.post("/signUp", bodyParser.json(), (request, response) => {
