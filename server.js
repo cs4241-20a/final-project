@@ -42,6 +42,7 @@ client.connect()
     .then(console.log("MongoDB Connected Successfully!"));
 
 
+//////////////////////// PASSPORT JS STUFF ////////////////////////
 passport.use(new LocalStrategy(
     function (userName, passWord, done) {
         collection.find({
@@ -76,6 +77,8 @@ passport.deserializeUser(function (user, done) {
 
 app.use(passport.initialize());
 
+//////////////////////// <--- END PASSPORT JS STUFF ---> ////////////////////////
+
 // routes
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/views/home.html");
@@ -96,6 +99,7 @@ app.post("/login", bodyParser.json(),
 
 
 app.post("/signUp", bodyParser.json(), (request, response) => {
+
     collection.find({
         username: request.body.username
     }).toArray()
@@ -108,10 +112,12 @@ app.post("/signUp", bodyParser.json(), (request, response) => {
             .then(() => {
                 let userName = request.body.username;
                 setUserSession(request, userName);
+
+                response.status(200).send({message: "User was created!"});
             });
 
         } else {
-            response.sendStatus(401);
+            response.status(401).send({message: "User with the given username already exists"});
         }
     }).catch(function () {
         console.log("Rejected");

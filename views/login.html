@@ -6,16 +6,24 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <form>
-        <label for="username"/>
-        <input id="username" name="username" type="text"/>
 
-        <label for="password"/>
-        <input id="password" name="password" type="password"/>
+<div class="form-container">
+<form id="the-form" onsubmit="function submit(e) {
+      e.preventDefault();
+    }">
+    <label for="username"/>
+    <input id="username" name="username" type="text" placeholder="Enter username"/>
 
-        <button id="log-in" onclick="handleLogIn()">Log in</button>
-        <button id="sign-up" onclick="handleSignUp()">Sign up</button>
-    </form>
-    <script src="/login.js"></script>
+    <label for="password"/>
+    <input id="password" name="password" type="password" placeholder="Enter password"/>
+
+    <button id="log-in" onclick="handleSignUpOrLogin(false)">Log in</button>
+    <button id="sign-up" onclick="handleSignUpOrLogin(true)">Sign up</button>
+</form>
+
+<div id="error-message"></div>
+</div>
+
+<script src="/login.js"></script>
 </body>
 </html>
