@@ -2,7 +2,7 @@
     "type": "module",
     "scripts": {
         "start": "node --experimental-modules server.js",
-        "watch": "nodemon server.js"
+        "watch": "nodemon --experimental-modules server.js"
     },
     "dependencies": {
         "express": "^4.17.1",
