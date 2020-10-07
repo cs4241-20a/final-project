@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
-app.use(cookieSession({ // middleware
+app.use(cookieSession({ 
     name: 'session',
     keys: ['key1']
 }));
@@ -87,7 +87,6 @@ app.post("/login", bodyParser.json(),
     function (request, response) {
         let userName = request.body.username;
         setUserSession(request, userName);
-        //response.redirect("/getData");
     }
 );
 
@@ -105,7 +104,6 @@ app.post("/signUp", bodyParser.json(), (request, response) => {
             .then(() => {
                 let userName = request.body.username;
                 setUserSession(request, userName);
-                //response.redirect("/getData");
             });
 
         } else {
