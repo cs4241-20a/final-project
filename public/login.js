@@ -29,7 +29,7 @@ function handleSignUpOrLogin(isSignUp) {
 
     if (data.username.length && data.password.length) {
         // make the api request to create new user
-        fetch(route, {method: 'POST', body: JSON.stringify(data)})
+        fetch(route, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
             .then((res) => {
                 res.json().then((resultJson) => {
                     if (res.status === 401) {

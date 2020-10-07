@@ -21,6 +21,10 @@ app.use(cookieSession({
     keys: ['key1']
 }));
 
+function setUserSession(request, username) {
+    request.session['User'] = username;
+}
+
 //connectDb(process.env.MONGO_URI)
 
 const client = new mongodb.MongoClient(process.env.MONGO_URI, {
@@ -54,7 +58,9 @@ passport.use(new LocalStrategy(
             // successful login
             if (result.length >= 1) {
                 console.log("Successful Login!")
-                return done(null, userName)
+                return done(null, userName, {
+                    message: "Login Successful!"
+                });
 
             } else {
                 // failed login
@@ -89,13 +95,32 @@ app.get('/login', (req, res) => {
 });
 
 
-app.post("/login", bodyParser.json(),
-    passport.authenticate('local', { failureFlash: false }),
-    function (request, response) {
-        let userName = request.body.username;
-        setUserSession(request, userName);
-    }
-);
+app.post("/login", bodyParser.json(), (request, response) => {
+    let username = request.body.username;
+    let password = request.body.password;
+
+    let checkUserAccount = {username: username, password: password};
+
+    /*
+    TODO
+    - get it so page gets redirected
+    - see if a response message can be sent using passport local
+    */
+    collection.find(checkUserAccount).toArray(function(err, result) {
+        if (err) {
+            throw err;
+        }
+
+        // found user
+        if (result.length == 1) {
+            setUserSession(request, username);
+            response.redirect("/");
+        
+        } else {
+            response.status(401).send({message: "Inccorrect Username or Password"});
+        }
+    })
+});
 
 
 app.post("/signUp", bodyParser.json(), (request, response) => {
