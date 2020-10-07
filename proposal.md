@@ -1,11 +1,11 @@
 # Webware Team 19
 
 # Team Members:
-Nikhil Chintada
-Luke Bodwell
-Rimsha Kayastha
-Adam Desveaux
-Benny Klaiman
+- Nikhil Chintada
+- Luke Bodwell
+- Rimsha Kayastha
+- Adam Desveaux
+- Benny Klaiman
 
 # Project Description:
 A website designed for teams to collaborate in planning tasks. The website will have a login page which allows users to create an account tied to an existing service. 
@@ -21,17 +21,17 @@ Users: Anyone who is trying to complete a group project (small to medium sized g
 Stakeholders: Our users.
 
 # Technical Specifications:
-HTML + CSS Using a framework
-Javascript
-Node.js 
-MongoDB for Server + Mongoose
-OAuth Authentication (from multiple services Google, GitHub)
-Live chat feature (Socket io)
-Moment.js for dealing with due dates
+- HTML + CSS Using a framework
+- Javascript
+- Node.js 
+- MongoDB for Server + Mongoose
+- OAuth Authentication (from multiple services Google, GitHub)
+- Live chat feature (Socket io)
+- Moment.js for dealing with due dates
 
 # Team Assignments:
-Benny: Front-end, page layout and styling
-Luke: Back-end, databases and authentication + socket.io
-Nikhil: Front-end, Javascript for authentication, task-list, group selection
-Rimsha: Front-end, page layout and styling
-Adam: Chat-based functionality (socket.io)
+- Benny: Front-end, page layout and styling
+- Luke: Back-end, databases and authentication + socket.io
+- Nikhil: Front-end, Javascript for authentication, task-list, group selection
+- Rimsha: Front-end, page layout and styling
+- Adam: Chat-based functionality (socket.io)
