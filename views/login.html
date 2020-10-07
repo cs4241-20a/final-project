@@ -4,24 +4,30 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/style.css">
+    <!-- core style only -->
+    <link href="https://unpkg.com/nes.css/css/nes-core.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 </head>
 <body>
 
-<div class="form-container">
-<form id="the-form" onsubmit="function submit(e) {
+<div class="content-container">
+    <div class="form-container">
+        <form id="the-form" onsubmit="function submit(e) {
       e.preventDefault();
     }">
-    <label for="username"/>
-    <input id="username" name="username" type="text" placeholder="Enter username"/>
+            <label for="username"/>
+            <input id="username" name="username" type="text" placeholder="Enter username" spellcheck="false"/>
 
-    <label for="password"/>
-    <input id="password" name="password" type="password" placeholder="Enter password"/>
+            <label for="password"/>
+            <input id="password" name="password" type="password" placeholder="Enter password"/>
 
-    <button id="log-in" onclick="handleSignUpOrLogin(false)">Log in</button>
-    <button id="sign-up" onclick="handleSignUpOrLogin(true)">Sign up</button>
-</form>
+            <button id="log-in" onclick="handleSignUpOrLogin(false)">Log in</button>
+            <button id="sign-up" onclick="handleSignUpOrLogin(true)">Sign up</button>
+        </form>
 
-<div id="error-message"></div>
+        <div id="error-message"></div>
+    </div>
+
 </div>
 
 <script src="/login.js"></script>
