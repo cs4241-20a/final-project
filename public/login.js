@@ -16,30 +16,35 @@ function setErrorMessage(message) {
     errorMessage.innerText = message;
 }
 
-function handleSignUpOrLogin(isSignUp) {
+function handleSignUpOrLogin() {
     // clear error message
     setErrorMessage("");
 
     let data = getLoginPasswordData();
 
-    let route = "/signUp";
-    if (!isSignUp) {
-        route = "/login"
-    }
+    let route = "/auth/signin";
 
     if (data.username.length && data.password.length) {
         // make the api request to create new user
-        fetch(route, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
+        fetch(route, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
             .then((res) => {
-                res.json().then((resultJson) => {
-                    if (res.status === 401) {
-                        // bad
-                        setErrorMessage(resultJson.message);
-                    } else {
-                        console.log('Did not get 401');
-                        console.log(resultJson);
+                console.log(res);
+                if (res.status === 401) {
+                    try {
+                        res.json().then((jsonRes) => {
+                            setErrorMessage(jsonRes.message);
+                        })
+                    } catch (e) {
+                        setErrorMessage("Something went wrong");
                     }
-                });
+                } else {
+                    console.log('Did not get 401');
+                    window.location.replace("/");
+                }
             })
     } else {
         // user didn't enter password / username
