@@ -1,0 +1,53 @@
+#background{
+  background-image: url('../loginbg.jpg');
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  -webkit-mask-image:-webkit-gradient(linear, left top, left bottom,
+      from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+  background-repeat:no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+
+  width: 100%;
+  height: 100vh;
+}
+
+.navbar-dark {
+  background-color: #304154;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  -webkit-mask-image:-webkit-gradient(linear, left top, left bottom,
+      from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+}
+
+.info-container{
+   display:flex;
+   justify-content: center;
+   align-items: center;
+   position: relative;
+   margin-top:-500px;
+
+ }
+
+.login{
+  padding: 30px 0px 30px 90px;
+ }
+
+
+#information{
+  font-family: 'Crimson Text', serif;
+  color: #4d606d;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: rgb(128, 156, 181, 0.4);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1),
+  0 2px 2px rgba(0,0,0,0.1),
+  0 4px 4px rgba(0,0,0,0.1),
+  0 8px 8px rgba(0,0,0,0.1),
+  0 16px 16px rgba(0,0,0,0.1);
+
+}
+
+#logintitle{
+  text-align: center;
+}
+

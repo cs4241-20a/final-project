@@ -1,0 +1,22 @@
+{
+  "name": "Filifili",
+  "version": "",
+  "description": "CS4241 FinalProject",
+  "author": "Xiaowei Chen, Yaru Gong, Xiaoyue Lyu, Mingxi Liu, Jialin Song",
+  "scripts": {
+    "start": "node -r esm -r dotenv/config server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-session": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "mime": "^2.4.4",
+    "mongodb": "^3.6.2",
+    "node-fetch": "^2.6.1",
+    "node-statsd": "^0.1.1",
+    "response-time": "^2.3.2",
+    "serve-favicon": "^2.5.0"
+  }
+}
