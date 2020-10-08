@@ -112,7 +112,7 @@ passport.deserializeUser(function (user, done) {
 
 const CANVAS_HEIGHT = 750;
 const CANVAS_WIDTH = 1400;
-const PLAYER_VERTICAL_INCREMENT = 20;
+const PLAYER_MOVEMENT_INCREMENT = 20;
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
@@ -156,6 +156,27 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 }
 
 function moveEveryPlayer() {
+    let interval = setInterval(() => {
+        players.forEach(function(player) {
+            let tryDirection = player.direction
+
+            // can move in the current direction
+            if (canMove(tryDirection, player.id)) {
+                if (tryDirection === 1) { // direction is North
+                    player.y += PLAYER_MOVEMENT_INCREMENT
+
+                } else if (tryDirection === 2) { // direction is East
+                    player.x += PLAYER_MOVEMENT_INCREMENT
+
+                } else if (tryDirection === 3) { // direction is South
+                    player.y -= PLAYER_MOVEMENT_INCREMENT
+
+                } else if (tryDirection === 4) { // direction is West
+                    player.x -= PLAYER_MOVEMENT_INCREMENT
+                }
+            }
+        })
+    })
     // change every players position in the players direction
 
     // check if the move is legal
@@ -165,6 +186,42 @@ function moveEveryPlayer() {
 
 
     // check if players die
+}
+
+function withinBoundary(x, y) {
+    if (x >= 0 && x <= CANVAS_WIDTH) {
+        if (y >= 0 && y <= CANVAS_HEIGHT) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function canMove(direction, id) {
+    let positionX = players[id].x
+    let postitonY = players[id].y
+
+    if (!withinBoundary(positionX, postitonY)) {
+        return false;
+    }
+
+    if (direction === 1) { // direction is North
+        positionY += PLAYER_MOVEMENT_INCREMENT
+
+    } else if (direction === 2) { // direction is East
+        positionX += PLAYER_MOVEMENT_INCREMENT
+
+    } else if (direction === 3) { // direction is South
+        postitonY -= PLAYER_MOVEMENT_INCREMENT
+
+    } else if (direction === 4) { // direction is West
+        postitonX -= PLAYER_MOVEMENT_INCREMENT
+    }
+
+    // TODO: check the map array if the current postionX and positionY is at a wall or a player
+
+
 }
 
 const startGameDataTicker = function () {
@@ -210,6 +267,7 @@ const handlePlayerEntered = function (player) {
         y: 20,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
+        direction: 3,
         score: 0,
         nickname: player.data,
         isAlive: true,
