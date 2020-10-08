@@ -217,11 +217,6 @@ class GameScene extends Phaser.Scene {
                         .sprite(players[item].x, players[item].y, avatarName)
                         .setOrigin(0.5, 0.5);
                     this.avatars[avatarId].setCollideWorldBounds(true);
-                    document.getElementById("join-leave-updates").innerHTML =
-                        players[avatarId].nickname + " joined";
-                    setTimeout(() => {
-                        document.getElementById("join-leave-updates").innerHTML = "";
-                    }, 2000);
                 } else if (players[item].id === myClientId) {
 
                     // if it's our avatar, color it with default (white)
@@ -256,9 +251,6 @@ class GameScene extends Phaser.Scene {
             this.avatars[deadPlayerId].y
         );
         delete this.avatars[deadPlayerId];
-        setTimeout(() => {
-            document.getElementById("join-leave-updates").innerHTML = "";
-        }, 2000);
     }
 
     publishMyInput() {
