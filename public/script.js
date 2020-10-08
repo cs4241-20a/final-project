@@ -1,32 +1,37 @@
 let gameRoom;
-let deadPlayerCh;
 let myClientId;
 let myChannel;
 let gameOn = false;
 let players = {};
 let totalPlayers = 0;
-let latestShipPosition;
-let bulletThatShotMe;
-let bulletThatShotSomeone;
-let bulletOutOfBounds = "";
 let amIalive = false;
 let game;
+let coins = {};
+let prevKey = "";
 
-const BASE_SERVER_URL = "http://localhost:5000";
-const myNickname = localStorage.getItem("nickname");
+const BASE_SERVER_URL = "http://localhost:4000";
+let myNickname = "";
 
 const realtime = Ably.Realtime({
-    authUrl: "/auth",
+    authUrl: "/auth/game",
 });
 
 realtime.connection.once("connected", () => {
     myClientId = realtime.auth.clientId;
+    myNickname = realtime.auth.clientId;
     gameRoom = realtime.channels.get("game-room");
-    deadPlayerCh = realtime.channels.get("dead-player");
     myChannel = realtime.channels.get("clientChannel-" + myClientId);
     gameRoom.presence.enter(myNickname);
     game = new Phaser.Game(config);
 });
+
+class Explosion extends Phaser.GameObjects.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, "explosion");
+        scene.add.existing(this);
+        this.play("explode");
+    }
+}
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -132,22 +137,6 @@ class GameScene extends Phaser.Scene {
             }
         );
         this.load.spritesheet(
-            "ship",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FShip%402x.png?v=1589228730678",
-            {
-                frameWidth: 60,
-                frameHeight: 32
-            }
-        );
-        this.load.spritesheet(
-            "bullet",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fbullet.png?v=1589229887570",
-            {
-                frameWidth: 32,
-                frameHeight: 48
-            }
-        );
-        this.load.spritesheet(
             "explosion",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fexplosion57%20(2).png?v=1589491279459",
             {
@@ -160,8 +149,6 @@ class GameScene extends Phaser.Scene {
     //init variables, define animations & sounds, and display assets
     create() {
         this.avatars = {};
-        this.visibleBullets = {};
-        this.ship = {};
         this.cursorKeys = this.input.keyboard.createCursorKeys();
 
         this.anims.create({
@@ -175,34 +162,17 @@ class GameScene extends Phaser.Scene {
         gameRoom.subscribe("game-state", (msg) => {
             if (msg.data.gameOn) {
                 gameOn = true;
-                if (msg.data.shipBody["0"]) {
-                    latestShipPosition = msg.data.shipBody["0"];
-                }
-                if (msg.data.bulletOrBlank !== "") {
-                    let bulletId = msg.data.bulletOrBlank.id;
-                    this.visibleBullets[bulletId] = {
-                        id: bulletId,
-                        y: msg.data.bulletOrBlank.y,
-                        toLaunch: true,
-                        bulletSprite: "",
-                    };
-                }
-                if (msg.data.killerBulletId) {
-                    bulletThatShotSomeone = msg.data.killerBulletId;
-                }
             }
             players = msg.data.players;
             totalPlayers = msg.data.playerCount;
+            coins = msg.data.coins;
         });
 
         gameRoom.subscribe("game-over", (msg) => {
             gameOn = false;
             localStorage.setItem("totalPlayers", msg.data.totalPlayers);
             localStorage.setItem("winner", msg.data.winner);
-            localStorage.setItem("firstRunnerUp", msg.data.firstRunnerUp);
-            localStorage.setItem("secondRunnerUp", msg.data.secondRunnerUp);
             gameRoom.unsubscribe();
-            deadPlayerCh.unsubscribe();
             myChannel.unsubscribe();
             if (msg.data.winner == "Nobody") {
                 window.location.replace(BASE_SERVER_URL + "/gameover");
@@ -215,32 +185,6 @@ class GameScene extends Phaser.Scene {
 
     //update the attributes of various game objects per game logic
     update() {
-        if (gameOn) {
-            if (this.ship.x) {
-                this.ship.x = latestShipPosition;
-            } else {
-                this.ship = this.physics.add
-                    .sprite(latestShipPosition, config.height - 32, "ship")
-                    .setOrigin(0.5, 0.5);
-                this.ship.x = latestShipPosition;
-            }
-            for (let item in this.visibleBullets) {
-                if (this.visibleBullets[item].toLaunch) {
-                    this.visibleBullets[item].toLaunch = false;
-                    this.createBullet(this.visibleBullets[item]);
-                } else {
-                    this.visibleBullets[item].bulletSprite.y -= 20;
-                    if (
-                        this.visibleBullets[item].bulletSprite.y < 0 ||
-                        this.visibleBullets[item].id == bulletThatShotSomeone
-                    ) {
-                        this.visibleBullets[item].bulletSprite.destroy();
-                        delete this.visibleBullets[item];
-                    }
-                }
-            }
-        }
-
         for (let item in this.avatars) {
             if (!players[item]) {
                 this.avatars[item].destroy();
@@ -251,6 +195,8 @@ class GameScene extends Phaser.Scene {
         for (let item in players) {
             let avatarId = players[item].id;
             if (this.avatars[avatarId] && players[item].isAlive) {
+                // render position of the avatar to match player's
+
                 this.avatars[avatarId].x = players[item].x;
                 this.avatars[avatarId].y = players[item].y;
                 if (avatarId == myClientId) {
@@ -258,7 +204,11 @@ class GameScene extends Phaser.Scene {
                         "Score: " + players[item].score;
                 }
             } else if (!this.avatars[avatarId] && players[item].isAlive) {
-                if (players[item].id != myClientId) {
+
+                // initialize the avatar on client side
+                if (players[item].id !== myClientId) {
+
+                    // if this is another user's avatar, get its color
                     let avatarName =
                         "avatar" +
                         players[item].invaderAvatarType +
@@ -272,7 +222,9 @@ class GameScene extends Phaser.Scene {
                     setTimeout(() => {
                         document.getElementById("join-leave-updates").innerHTML = "";
                     }, 2000);
-                } else if (players[item].id == myClientId) {
+                } else if (players[item].id === myClientId) {
+
+                    // if it's our avatar, color it with default (white)
                     let avatarName = "avatar" + players[item].invaderAvatarType;
                     this.avatars[avatarId] = this.physics.add
                         .sprite(players[item].x, players[item].y, avatarName)
@@ -281,7 +233,15 @@ class GameScene extends Phaser.Scene {
                     amIalive = true;
                 }
             } else if (this.avatars[avatarId] && !players[item].isAlive) {
+                // player died
+
+                console.log("death");
+
                 this.explodeAndKill(avatarId);
+
+                if (players[item].id === myClientId) {
+                    amIalive = false;
+                }
             }
         }
         this.publishMyInput();
@@ -295,60 +255,39 @@ class GameScene extends Phaser.Scene {
             this.avatars[deadPlayerId].y
         );
         delete this.avatars[deadPlayerId];
-        document.getElementById("join-leave-updates").innerHTML =
-            players[deadPlayerId].nickname + " died";
         setTimeout(() => {
             document.getElementById("join-leave-updates").innerHTML = "";
         }, 2000);
     }
 
     publishMyInput() {
-        if (Phaser.Input.Keyboard.JustDown(this.cursorKeys.left) && amIalive) {
+        if (Phaser.Input.Keyboard.JustDown(this.cursorKeys.left) && amIalive && prevKey !== "left") {
             myChannel.publish("pos", {
                 keyPressed: "left",
             });
+            prevKey = "left";
         } else if (
             Phaser.Input.Keyboard.JustDown(this.cursorKeys.right) &&
-            amIalive
+            amIalive && prevKey !== "right"
         ) {
             myChannel.publish("pos", {
                 keyPressed: "right",
             });
-        }
-    }
-
-    createBullet(bulletObject) {
-        let bulletId = bulletObject.id;
-        this.visibleBullets[bulletId].bulletSprite = this.physics.add
-            .sprite(this.ship.x - 8, bulletObject.y, "bullet")
-            .setOrigin(0.5, 0.5);
-
-        //add an overlap callback if the current player is still alive
-        if (amIalive) {
-            if (
-                this.physics.add.overlap(
-                    this.visibleBullets[bulletId].bulletSprite,
-                    this.avatars[myClientId],
-                    this.publishMyDeathNews,
-                    null,
-                    this
-                )
-            ) {
-                bulletThatShotMe = bulletId;
-            }
-        }
-    }
-
-    publishMyDeathNews(bullet, avatar) {
-        if (amIalive) {
-            deadPlayerCh.publish("dead-notif", {
-                killerBulletId: bulletThatShotMe,
-                deadPlayerId: myClientId,
+            prevKey = "right";
+        } else if (Phaser.Input.Keyboard.JustDown(this.cursorKeys.down) &&
+            amIalive && prevKey !== "down") {
+            myChannel.publish("pos", {
+                keyPressed: "down",
             });
+            prevKey = "down";
+        } else if (Phaser.Input.Keyboard.JustDown(this.cursorKeys.up) &&
+            amIalive && prevKey !== "up") {
+            myChannel.publish("pos", {
+                keyPressed: "up",
+            });
+            prevKey = "up";
         }
-        amIalive = false;
     }
-
 }
 
 const config = {

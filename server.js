@@ -131,6 +131,9 @@ let gameRoom;
 let gameTickerOn = false;
 let world;
 
+let avatarColors = ["green", "cyan", "yellow"];
+let avatarTypes = ["A", "B", "C"];
+
 
 // setup ably
 const realtime = new Ably.Realtime({
@@ -186,30 +189,28 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 }
 
 function moveEveryPlayer() {
-    let interval = setInterval(() => {
-        players.forEach(function(player) {
-            let tryDirection = player.direction
-
-            // check to see if can move in the current direction
-            if (canMove(tryDirection, player.id)) {
-                if (tryDirection === 1) { // direction is North
-                    player.y += PLAYER_MOVEMENT_INCREMENT
-                
-                } else if (tryDirection === 2) { // direction is East
-                    player.x += PLAYER_MOVEMENT_INCREMENT
-                
-                } else if (tryDirection === 3) { // direction is South
-                    player.y -= PLAYER_MOVEMENT_INCREMENT
-                
-                } else if (tryDirection === 4) { // direction is West
-                    player.x -= PLAYER_MOVEMENT_INCREMENT
-                }
-            }
-
-            // check for coins 
-            // check if the player happen to die
-        })
-    })
+    // TODO I don't think we need another interval here since there is one already from where we call this function
+    // let interval = setInterval(() => {
+    //     players.forEach(function(player) {
+    //         let tryDirection = player.direction
+    //
+    //         // can move in the current direction
+    //         if (canMove(tryDirection, player.id)) {
+    //             if (tryDirection === 1) { // direction is North
+    //                 player.y += PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 2) { // direction is East
+    //                 player.x += PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 3) { // direction is South
+    //                 player.y -= PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 4) { // direction is West
+    //                 player.x -= PLAYER_MOVEMENT_INCREMENT
+    //             }
+    //         }
+    //     })
+    // })
     // change every players position in the players direction
 
     // check if the move is legal [X]
@@ -296,13 +297,14 @@ const handlePlayerEntered = function (player) {
         id: newPlayerId,
         x: Math.floor((Math.random() * 1370 + 30) * 1000) / 1000,
         y: 20,
+        invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
+        invaderAvatarColor: avatarColors[randomAvatarSelector()],
         direction: 3,
-        invaderAvatarType: "", // get from db
-        invaderAvatarColor: "",
         score: 0,
         nickname: player.data,
         isAlive: true
     };
+
     players[newPlayerId] = newPlayerObject;
     subscribeToPlayerInput(playerChannels[newPlayerId], newPlayerId);
 }
@@ -328,6 +330,10 @@ function resetServerState() {
     }
 }
 
+function randomAvatarSelector() {
+    return Math.floor(Math.random() * 3);
+}
+
 ///////////////////// END GAME LOGIC ////////////////////////
 
 // initialize channels and channel-listeners
@@ -340,7 +346,7 @@ realtime.connection.once("connected", () => {
 
 // routes
 app.get("/auth/game", (request, response) => {
-    const tokenParams = {clientId: response.user};
+    const tokenParams = {clientId: request.user};
     realtime.auth.createTokenRequest(tokenParams, function (err, tokenRequest) {
         if (err) {
             response
@@ -361,6 +367,10 @@ app.get('/', ensureAuth, (req, res) => {
 
 app.get('/login', ensureGuest, (req, res) => {
     res.sendFile(__dirname + "/views/login.html");
+});
+
+app.get('/game', ensureAuth, (req, res) => {
+    res.sendFile(__dirname + "/views/game.html");
 });
 
 app.get('/auth/logout', (req, res) => {
