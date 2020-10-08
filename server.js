@@ -162,49 +162,56 @@ function subscribeToPlayerInput(channelInstance, playerId) {
                 players[playerId].x = CANVAS_WIDTH;
             
             } else {
-                players[playerId].x += CANVAS_WIDTH;
+                // players[playerId].x += CANVAS_WIDTH;
+                players[playerId].x += PLAYER_MOVEMENT_INCREMENT;
             }
 
         } else if (msg.data.keyPressed === "up") {
             //players[playerId].direction = 1;
 
-            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
-                players[playerId].y = CANVAS_HEIGHT;
+            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
+                players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
             
             } else {
-                players[playerId].x += CANVAS_HEIGHT;
+                // players[playerId].x += CANVAS_HEIGHT;
+                players[playerId].y -= PLAYER_MOVEMENT_INCREMENT;
             }
 
         } else if (msg.data.keyPressed === "down") {
             //players[playerId].direction = 3;
 
-            if (players[playerId].y - PLAYER_MOVEMENT_INCREMENT > PLAYER_MOVEMENT_INCREMENT) {
-                players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
+            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
+                players[playerId].y = CANVAS_HEIGHT;
             
             } else {
                 players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
             }
         }
+        // console.log( "Canvas W: " + CANVAS_WIDTH
+        //  + ", Canvas H: "+ CANVAS_HEIGHT
+        //  + ", Player X: " + players[playerId].x
+        //  + ", Player Y: " + players[playerId].y )
     });
 }
 
 function moveEveryPlayer() {
+    // console.log( players )
     // TODO I don't think we need another interval here since there is one already from where we call this function
     // let interval = setInterval(() => {
     //     players.forEach(function(player) {
     //         let tryDirection = player.direction
-    //
+    
     //         // can move in the current direction
     //         if (canMove(tryDirection, player.id)) {
     //             if (tryDirection === 1) { // direction is North
     //                 player.y += PLAYER_MOVEMENT_INCREMENT
-    //
+    
     //             } else if (tryDirection === 2) { // direction is East
     //                 player.x += PLAYER_MOVEMENT_INCREMENT
-    //
+    
     //             } else if (tryDirection === 3) { // direction is South
     //                 player.y -= PLAYER_MOVEMENT_INCREMENT
-    //
+    
     //             } else if (tryDirection === 4) { // direction is West
     //                 player.x -= PLAYER_MOVEMENT_INCREMENT
     //             }
