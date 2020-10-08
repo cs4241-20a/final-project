@@ -150,7 +150,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 
             if (players[playerId].x - PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].x = PLAYER_MOVEMENT_INCREMENT;
-            
+
             } else {
                 players[playerId].x -= PLAYER_MOVEMENT_INCREMENT;
             }
@@ -160,7 +160,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 
             if (players[playerId].x + PLAYER_MOVEMENT_INCREMENT > CANVAS_WIDTH) {
                 players[playerId].x = CANVAS_WIDTH;
-            
+
             } else {
                 players[playerId].x += CANVAS_WIDTH;
             }
@@ -170,7 +170,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 
             if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
                 players[playerId].y = CANVAS_HEIGHT;
-            
+
             } else {
                 players[playerId].x += CANVAS_HEIGHT;
             }
@@ -180,7 +180,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 
             if (players[playerId].y - PLAYER_MOVEMENT_INCREMENT > PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
-            
+
             } else {
                 players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
             }
@@ -233,8 +233,8 @@ function withinBoundary(x, y) {
 }
 
 function canMove(direction, id) {
-    let positionX = players[id].x; 
-    let postitonY = players[id].y; 
+    let positionX = players[id].x;
+    let postitonY = players[id].y;
 
     if (!withinBoundary(positionX, postitonY)) {
         return false;
@@ -242,13 +242,13 @@ function canMove(direction, id) {
 
     if (direction === 1) { // direction is North
         positionY += PLAYER_MOVEMENT_INCREMENT;
-    
+
     } else if (direction === 2) { // direction is East
         positionX += PLAYER_MOVEMENT_INCREMENT;
-    
+
     } else if (direction === 3) { // direction is South
         postitonY -= PLAYER_MOVEMENT_INCREMENT;
-    
+
     } else if (direction === 4) { // direction is West
         postitonX -= PLAYER_MOVEMENT_INCREMENT;
     }

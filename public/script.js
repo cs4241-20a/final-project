@@ -185,6 +185,8 @@ class GameScene extends Phaser.Scene {
 
     //update the attributes of various game objects per game logic
     update() {
+        let scores = [];
+
         for (let item in this.avatars) {
             if (!players[item]) {
                 this.avatars[item].destroy();
@@ -199,10 +201,8 @@ class GameScene extends Phaser.Scene {
 
                 this.avatars[avatarId].x = players[item].x;
                 this.avatars[avatarId].y = players[item].y;
-                if (avatarId == myClientId) {
-                    document.getElementById("score").innerHTML =
-                        "Score: " + players[item].score;
-                }
+
+                scores.push({id: players[item].id, score: players[item].score})
             } else if (!this.avatars[avatarId] && players[item].isAlive) {
 
                 // initialize the avatar on client side
@@ -245,6 +245,7 @@ class GameScene extends Phaser.Scene {
             }
         }
         this.publishMyInput();
+        this.updateScores(scores);
     }
 
     explodeAndKill(deadPlayerId) {
@@ -287,6 +288,17 @@ class GameScene extends Phaser.Scene {
             });
             prevKey = "up";
         }
+    }
+
+    updateScores(scores) {
+        scores.sort((a, b) => a.score < b.score);
+        let displayStr = "";
+
+        scores.forEach((item) => {
+            displayStr += "'" + item.id + " : " + item.score + "' ";
+        })
+
+        document.getElementById("score").innerText = displayStr;
     }
 }
 
