@@ -112,7 +112,7 @@ passport.deserializeUser(function (user, done) {
 
 const CANVAS_HEIGHT = 750;
 const CANVAS_WIDTH = 1400;
-const PLAYER_MOVEMENT_INCREMENT = 20;
+const PLAYER_MOVEMENT_INCREMENT = 10;
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
@@ -131,6 +131,9 @@ let gameRoom;
 let gameTickerOn = false;
 let world;
 
+let avatarColors = ["green", "cyan", "yellow"];
+let avatarTypes = ["A", "B", "C"];
+
 
 // setup ably
 const realtime = new Ably.Realtime({
@@ -143,7 +146,7 @@ const realtime = new Ably.Realtime({
 function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
         if (msg.data.keyPressed === "left") {
-            players[playerId].direction = 4;
+            //players[playerId].direction = 4;
 
             if (players[playerId].x - PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].x = PLAYER_MOVEMENT_INCREMENT;
@@ -153,7 +156,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
             }
 
         } else if (msg.data.keyPressed === "right") {
-            players[playerId].direction = 2;
+            //players[playerId].direction = 2;
 
             if (players[playerId].x + PLAYER_MOVEMENT_INCREMENT > CANVAS_WIDTH) {
                 players[playerId].x = CANVAS_WIDTH;
@@ -163,7 +166,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
             }
 
         } else if (msg.data.keyPressed === "up") {
-            players[playerId].direction = 1;
+            //players[playerId].direction = 1;
 
             if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
                 players[playerId].y = CANVAS_HEIGHT;
@@ -173,7 +176,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
             }
 
         } else if (msg.data.keyPressed === "down") {
-            players[playerId].direction = 3;
+            //players[playerId].direction = 3;
 
             if (players[playerId].y - PLAYER_MOVEMENT_INCREMENT > PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
@@ -186,31 +189,28 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 }
 
 function moveEveryPlayer() {
-    let interval = setInterval(() => {
-        players.forEach(function(player) {
-            let tryDirection = player.direction
-
-            // can move in the current direction
-            // check if the move is legal via canMove - if false, the move is not legal
-            if (canMove(tryDirection, player.id)) {     
-                if (tryDirection === 1) { // direction is North
-                    player.y += PLAYER_MOVEMENT_INCREMENT
-                
-                } else if (tryDirection === 2) { // direction is East
-                    player.x += PLAYER_MOVEMENT_INCREMENT
-                
-                } else if (tryDirection === 3) { // direction is South
-                    player.y -= PLAYER_MOVEMENT_INCREMENT
-                
-                } else if (tryDirection === 4) { // direction is West
-                    player.x -= PLAYER_MOVEMENT_INCREMENT
-                }
-            }
-            else {            
-            console.log( "That move doesn't work." )
-            }
-        })
-    })
+    // TODO I don't think we need another interval here since there is one already from where we call this function
+    // let interval = setInterval(() => {
+    //     players.forEach(function(player) {
+    //         let tryDirection = player.direction
+    //
+    //         // can move in the current direction
+    //         if (canMove(tryDirection, player.id)) {
+    //             if (tryDirection === 1) { // direction is North
+    //                 player.y += PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 2) { // direction is East
+    //                 player.x += PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 3) { // direction is South
+    //                 player.y -= PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 4) { // direction is West
+    //                 player.x -= PLAYER_MOVEMENT_INCREMENT
+    //             }
+    //         }
+    //     })
+    // })
     // change every players position in the players direction
 
     // check if player picked a coin
@@ -300,13 +300,14 @@ const handlePlayerEntered = function (player) {
         id: newPlayerId,
         x: Math.floor((Math.random() * 1370 + 30) * 1000) / 1000,
         y: 20,
-        direction: 3,
-        invaderAvatarType: "", // get from db
-        invaderAvatarColor: "",
+        invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
+        invaderAvatarColor: avatarColors[randomAvatarSelector()],
+        direction: [1, 0],
         score: 0,
         nickname: player.data,
         isAlive: true
     };
+
     players[newPlayerId] = newPlayerObject;
     subscribeToPlayerInput(playerChannels[newPlayerId], newPlayerId);
 }
@@ -332,6 +333,10 @@ function resetServerState() {
     }
 }
 
+function randomAvatarSelector() {
+    return Math.floor(Math.random() * 3);
+}
+
 ///////////////////// END GAME LOGIC ////////////////////////
 
 // initialize channels and channel-listeners
@@ -344,7 +349,7 @@ realtime.connection.once("connected", () => {
 
 // routes
 app.get("/auth/game", (request, response) => {
-    const tokenParams = {clientId: response.user};
+    const tokenParams = {clientId: request.user};
     realtime.auth.createTokenRequest(tokenParams, function (err, tokenRequest) {
         if (err) {
             response
@@ -365,6 +370,10 @@ app.get('/', ensureAuth, (req, res) => {
 
 app.get('/login', ensureGuest, (req, res) => {
     res.sendFile(__dirname + "/views/login.html");
+});
+
+app.get('/game', ensureAuth, (req, res) => {
+    res.sendFile(__dirname + "/views/game.html");
 });
 
 app.get('/auth/logout', (req, res) => {
