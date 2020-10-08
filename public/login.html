@@ -15,69 +15,70 @@
 <body>
   <div id="background"> </div>
   <!-- navbar -->
-  <nav class="navbar fixed-top navbar-dark">
-    <span class="navbar-brand mb-0 h1">CS4241 WEBWARE</span>
-  </nav>
+  <div class="navbarbody">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">Filifili</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Page1</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Page2</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Page3</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
 
   <div class="info-container">
     <div id="information" style = "width: 1000px">
       <div id = "intro">
-        <h1>Not-to-Use-Password Generator</h1>
+        <h1>Join Us!</h1>
       </div>
       <div class="row">
-        <div class = "col-3">
-          <form action="#" class = "needs-validation" novalidate>
+        <div class = "col-6">
+          <form action="#" class = "needs-validation">
             <div class="form-group">
-              <label for="name"><b>Name</b></label>
-              <input type="text" class="form-control" id="name" placeholder="Enter your name here">
-              <div class="invalid-tooltip">
-                Please provide a valid name!.
-              </div>
+              <label for="name"><b>Field1</b></label>
+              <input type="text" class="form-control" id="name" placeholder="Enter your info here">
             </div>
             <div class="form-group">
-              <label for="major"><b>Major</b></label>
-              <input type="text" class="form-control" id="major" placeholder="Enter your major here">
-              <div class="invalid-tooltip">
-                Please provide a valid major!.
-              </div>
+              <label for="major"><b>Field2</b></label>
+              <input type="text" class="form-control" id="major" placeholder="Enter your info here">
             </div>
             <div class="form-group">
-              <label><b>College Year</b></label>
-              <select class="form-control" id="collegeyear">
-                <option>Freshman</option>
-                <option>Sophomore</option>
-                <option>Junior</option>
-                <option>Senior</option>
-              </select>
+              <label for="major"><b>Field3</b></label>
+              <input type="text" class="form-control" id="major" placeholder="Enter your info here">
             </div>
-
-            <div class="form-group">
-              <label for="number"><b>Lucky Number</b></label>
-              <select class="form-control" id="number">
-                <option>1</option>  <option>2</option>
-                <option>3</option>  <option>4</option>
-                <option>5</option>  <option>6</option>
-                <option>7</option>  <option>8</option>
-                <option>9</option>  <option>0</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary" id = "submitButton">Submit</button>
+            <button type="submit" class="btn btn-primary" id = "submitButton">Sign-up</button>
           </form>
         </div>
-        <div class = "col-9">
-          <table class="table table-striped table-active" id="password_table">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Major</th>
-                <th scope="col">College Year</th>
-                <th scope="col">Lucky Number</th>
-                <th scope="col">Password(Don't use it!)</th>
-                <th scope="col">Operations</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+        <div class = "col-6">
+          <form action="#" class = "needs-validation">
+            <div class="form-group">
+              <label for="name"><b>Field1</b></label>
+              <input type="text" class="form-control" id="name" placeholder="Enter your info here">
+            </div>
+            <div class="form-group">
+              <label for="major"><b>Field2</b></label>
+              <input type="text" class="form-control" id="major" placeholder="Enter your info here">
+            </div>
+            <div class="form-group">
+              <label for="major"><b>Field3</b></label>
+              <input type="text" class="form-control" id="major" placeholder="Enter your info here">
+            </div>
+            <button type="submit" class="btn btn-primary" id = "submitButton">Login</button>
+          </form>
         </div>
       </div>
     </div>
