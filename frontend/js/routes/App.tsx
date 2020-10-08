@@ -3,6 +3,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import React, { FunctionComponent, useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'; 
+import { TopBar } from "../components/TopBar";
 import { FourOhFour } from "./404";
 import { Home } from "./Home";
 
@@ -18,6 +19,16 @@ const App: FunctionComponent = props => {
             } : 
             {
                 type: 'light',
+            },
+            overrides: {
+                MuiCssBaseline: {
+                    '@global': {
+                        a: {
+                            color: 'inherit',
+                            textDecoration: 'inherit'
+                        }
+                    }
+                }
             }
         }),
         [useDarkTheme],
@@ -27,6 +38,7 @@ const App: FunctionComponent = props => {
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <Router>
+                <TopBar/>
                 <Switch>
                     <Route exact path="/">
                         <Home/>
