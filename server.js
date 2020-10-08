@@ -121,8 +121,8 @@ const GAME_TICKER_MS = 100;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
-let coins = {};
-let walls = [] // 2d array of the whole board (walls)
+let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
+let walls = [] // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy )
 let playerChannels = {};
 let gameOn = false;
 let alivePlayers = 0;
@@ -156,7 +156,8 @@ function moveEveryPlayer() {
             let tryDirection = player.direction
 
             // can move in the current direction
-            if (canMove(tryDirection, player.id)) {
+            // check if the move is legal via canMove - if false, the move is not legal
+            if (canMove(tryDirection, player.id)) {     
                 if (tryDirection === 1) { // direction is North
                     player.y += PLAYER_MOVEMENT_INCREMENT
                 
@@ -170,12 +171,12 @@ function moveEveryPlayer() {
                     player.x -= PLAYER_MOVEMENT_INCREMENT
                 }
             }
+            else {            
+            console.log( "That move doesn't work." )
+            }
         })
     })
     // change every players position in the players direction
-
-    // check if the move is legal
-
 
     // check if player picked a coin
 
@@ -214,7 +215,14 @@ function canMove(direction, id) {
         postitonX -= PLAYER_MOVEMENT_INCREMENT
     }
 
+    // checking if wall is present
+    if( walls[positionX][positionY] === 1 ){
+        console.log( "There is a wall here" )
+        return false;
+    }
+
     // TODO: check the map array if the current postionX and positionY is at a wall or a player
+
 
 
 }
