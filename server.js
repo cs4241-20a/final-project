@@ -156,27 +156,28 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 }
 
 function moveEveryPlayer() {
-    let interval = setInterval(() => {
-        players.forEach(function(player) {
-            let tryDirection = player.direction
-
-            // can move in the current direction
-            if (canMove(tryDirection, player.id)) {
-                if (tryDirection === 1) { // direction is North
-                    player.y += PLAYER_MOVEMENT_INCREMENT
-
-                } else if (tryDirection === 2) { // direction is East
-                    player.x += PLAYER_MOVEMENT_INCREMENT
-
-                } else if (tryDirection === 3) { // direction is South
-                    player.y -= PLAYER_MOVEMENT_INCREMENT
-
-                } else if (tryDirection === 4) { // direction is West
-                    player.x -= PLAYER_MOVEMENT_INCREMENT
-                }
-            }
-        })
-    })
+    // TODO I don't think we need another interval here since there is one already from where we call this function
+    // let interval = setInterval(() => {
+    //     players.forEach(function(player) {
+    //         let tryDirection = player.direction
+    //
+    //         // can move in the current direction
+    //         if (canMove(tryDirection, player.id)) {
+    //             if (tryDirection === 1) { // direction is North
+    //                 player.y += PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 2) { // direction is East
+    //                 player.x += PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 3) { // direction is South
+    //                 player.y -= PLAYER_MOVEMENT_INCREMENT
+    //
+    //             } else if (tryDirection === 4) { // direction is West
+    //                 player.x -= PLAYER_MOVEMENT_INCREMENT
+    //             }
+    //         }
+    //     })
+    // })
     // change every players position in the players direction
 
     // check if the move is legal
