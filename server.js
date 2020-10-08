@@ -112,7 +112,7 @@ passport.deserializeUser(function (user, done) {
 
 const CANVAS_HEIGHT = 750;
 const CANVAS_WIDTH = 1400;
-const PLAYER_MOVEMENT_INCREMENT = 20;
+const PLAYER_MOVEMENT_INCREMENT = 10;
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
@@ -146,7 +146,7 @@ const realtime = new Ably.Realtime({
 function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
         if (msg.data.keyPressed === "left") {
-            players[playerId].direction = 4;
+            //players[playerId].direction = 4;
 
             if (players[playerId].x - PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].x = PLAYER_MOVEMENT_INCREMENT;
@@ -156,7 +156,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
             }
 
         } else if (msg.data.keyPressed === "right") {
-            players[playerId].direction = 2;
+            //players[playerId].direction = 2;
 
             if (players[playerId].x + PLAYER_MOVEMENT_INCREMENT > CANVAS_WIDTH) {
                 players[playerId].x = CANVAS_WIDTH;
@@ -166,7 +166,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
             }
 
         } else if (msg.data.keyPressed === "up") {
-            players[playerId].direction = 1;
+            //players[playerId].direction = 1;
 
             if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
                 players[playerId].y = CANVAS_HEIGHT;
@@ -176,7 +176,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
             }
 
         } else if (msg.data.keyPressed === "down") {
-            players[playerId].direction = 3;
+            //players[playerId].direction = 3;
 
             if (players[playerId].y - PLAYER_MOVEMENT_INCREMENT > PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
@@ -299,7 +299,7 @@ const handlePlayerEntered = function (player) {
         y: 20,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
-        direction: 3,
+        direction: [1, 0],
         score: 0,
         nickname: player.data,
         isAlive: true
