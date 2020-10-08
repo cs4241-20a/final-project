@@ -42,6 +42,7 @@ function handleSignUpOrLogin() {
                         setErrorMessage("Something went wrong");
                     }
                 } else {
+                    localStorage.setItem("nickname", data.username);
                     console.log('Did not get 401');
                     window.location.replace("/");
                 }

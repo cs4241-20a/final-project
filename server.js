@@ -131,6 +131,9 @@ let gameRoom;
 let gameTickerOn = false;
 let world;
 
+let avatarColors = ["green", "cyan", "yellow"];
+let avatarTypes = ["A", "B", "C"];
+
 
 // setup ably
 const realtime = new Ably.Realtime({
@@ -142,6 +145,8 @@ const realtime = new Ably.Realtime({
 ///////////////////// GAME LOGIC ////////////////////////
 function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
+        console.log(msg);
+
         if (msg.data.keyPressed == "left") {
 
         } else if (msg.data.keyPressed == "right") {
@@ -203,13 +208,14 @@ const handlePlayerEntered = function (player) {
         id: newPlayerId,
         x: Math.floor((Math.random() * 1370 + 30) * 1000) / 1000,
         y: 20,
-        invaderAvatarType: "", // get from db
-        invaderAvatarColor: "",
+        invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
+        invaderAvatarColor: avatarColors[randomAvatarSelector()],
         score: 0,
         nickname: player.data,
         isAlive: true,
         direction: [1, 0],
     };
+
     players[newPlayerId] = newPlayerObject;
     subscribeToPlayerInput(playerChannels[newPlayerId], newPlayerId);
 }
@@ -235,6 +241,10 @@ function resetServerState() {
     }
 }
 
+function randomAvatarSelector() {
+    return Math.floor(Math.random() * 3);
+}
+
 ///////////////////// END GAME LOGIC ////////////////////////
 
 // initialize channels and channel-listeners
@@ -247,7 +257,7 @@ realtime.connection.once("connected", () => {
 
 // routes
 app.get("/auth/game", (request, response) => {
-    const tokenParams = {clientId: response.user};
+    const tokenParams = {clientId: request.user};
     realtime.auth.createTokenRequest(tokenParams, function (err, tokenRequest) {
         if (err) {
             response
@@ -268,6 +278,10 @@ app.get('/', ensureAuth, (req, res) => {
 
 app.get('/login', ensureGuest, (req, res) => {
     res.sendFile(__dirname + "/views/login.html");
+});
+
+app.get('/game', ensureAuth, (req, res) => {
+    res.sendFile(__dirname + "/views/game.html");
 });
 
 app.get('/auth/logout', (req, res) => {
