@@ -4,9 +4,11 @@
   "description": "CS4241 FinalProject",
   "author": "Xiaowei Chen, Yaru Gong, Xiaoyue Lyu, Mingxi Liu, Jialin Song",
   "scripts": {
-    "start": "node -r esm -r dotenv/config server.js"
+    "start": "node -r esm -r dotenv/config server.js",
+    "dev": "nodemon -r esm -r dotenv/config server.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-session": "^1.4.0",
     "dotenv": "^8.2.0",
@@ -14,9 +16,15 @@
     "express": "^4.17.1",
     "mime": "^2.4.4",
     "mongodb": "^3.6.2",
+    "mongoose": "^5.10.8",
     "node-fetch": "^2.6.1",
     "node-statsd": "^0.1.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
