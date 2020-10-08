@@ -21,12 +21,12 @@ app.use(cookieSession({
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient;
 
-const uri = `mongodb+srv://admin:a3-admin-password@a3-matt-tolbert.gv63o.mongodb.net/a3?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://admin:final_project-admin-password@a3-matt-tolbert.gv63o.mongodb.net/final_project?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
 let collection = null
 client.connect(err => {
-  collection = client.db("a3").collection("database");
+  collection = client.db("final_project").collection("database");
 });
 
 // middleware #3 - verify mongodb connection
@@ -68,9 +68,9 @@ app.get("/", (request, response) => {
 });
 
 
-/* 
-Handle OAuth with GitHub - Tutorial from Kevin Simper @ 
-https://www.kevinsimper.dk/posts/how-to-make-authentication-with-github-apps-for-side-projects 
+/*
+Handle OAuth with GitHub - Tutorial from Kevin Simper @
+https://www.kevinsimper.dk/posts/how-to-make-authentication-with-github-apps-for-side-projects
 */
 const clientID = '78a1d3d8b280e8c9cd48'
 const clientSecret = '876062c9d6411279a48c624b6b103d4c72213544'
@@ -162,7 +162,7 @@ app.post('/add', (req, res) => {
 
 app.post( '/delete', (req, res) => {
   collection
-    .deleteOne( { _id:mongodb.ObjectID( req.body._id ) } ) 
+    .deleteOne( { _id:mongodb.ObjectID( req.body._id ) } )
     .then(result => res.json(result))
 })
 
@@ -179,7 +179,7 @@ app.post( '/update', (req, res) => {
   };
   collection
     .updateOne(
-      { _id:mongodb.ObjectID( req.body._id ) }, 
+      { _id:mongodb.ObjectID( req.body._id ) },
       { $set: json }
     )
   .then( result => res.json(result))
