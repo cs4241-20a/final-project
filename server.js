@@ -122,7 +122,7 @@ const GAME_TICKER_MS = 100;
 let peopleAccessingTheWebsite = 0;
 let players = {};
 let coins = {};
-let walls = [] // 2d array of the whole board (walls)
+let map = [] // 2d array of the whole board (walls)
 let playerChannels = {};
 let gameOn = false;
 let alivePlayers = 0;
@@ -142,10 +142,45 @@ const realtime = new Ably.Realtime({
 ///////////////////// GAME LOGIC ////////////////////////
 function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
-        if (msg.data.keyPressed == "left") {
+        if (msg.data.keyPressed === "left") {
+            players[playerId].direction = 4;
 
-        } else if (msg.data.keyPressed == "right") {
+            if (players[playerId].x - PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
+                players[playerId].x = PLAYER_MOVEMENT_INCREMENT;
+            
+            } else {
+                players[playerId].x -= PLAYER_MOVEMENT_INCREMENT;
+            }
 
+        } else if (msg.data.keyPressed === "right") {
+            players[playerId].direction = 2;
+
+            if (players[playerId].x + PLAYER_MOVEMENT_INCREMENT > CANVAS_WIDTH) {
+                players[playerId].x = CANVAS_WIDTH;
+            
+            } else {
+                players[playerId].x += CANVAS_WIDTH;
+            }
+
+        } else if (msg.data.keyPressed === "up") {
+            players[playerId].direction = 1;
+
+            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
+                players[playerId].y = CANVAS_HEIGHT;
+            
+            } else {
+                players[playerId].x += CANVAS_HEIGHT;
+            }
+
+        } else if (msg.data.keyPressed === "down") {
+            players[playerId].direction = 3;
+
+            if (players[playerId].y - PLAYER_MOVEMENT_INCREMENT > PLAYER_MOVEMENT_INCREMENT) {
+                players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
+            
+            } else {
+                players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
+            }
         }
     });
 }
@@ -155,7 +190,7 @@ function moveEveryPlayer() {
         players.forEach(function(player) {
             let tryDirection = player.direction
 
-            // can move in the current direction
+            // check to see if can move in the current direction
             if (canMove(tryDirection, player.id)) {
                 if (tryDirection === 1) { // direction is North
                     player.y += PLAYER_MOVEMENT_INCREMENT
@@ -170,11 +205,14 @@ function moveEveryPlayer() {
                     player.x -= PLAYER_MOVEMENT_INCREMENT
                 }
             }
+
+            // check for coins 
+            // check if the player happen to die
         })
     })
     // change every players position in the players direction
 
-    // check if the move is legal
+    // check if the move is legal [X]
 
 
     // check if player picked a coin
@@ -194,29 +232,27 @@ function withinBoundary(x, y) {
 }
 
 function canMove(direction, id) {
-    let positionX = players[id].x 
-    let postitonY = players[id].y 
+    let positionX = players[id].x; 
+    let postitonY = players[id].y; 
 
     if (!withinBoundary(positionX, postitonY)) {
         return false;
     }
 
     if (direction === 1) { // direction is North
-        positionY += PLAYER_MOVEMENT_INCREMENT
+        positionY += PLAYER_MOVEMENT_INCREMENT;
     
     } else if (direction === 2) { // direction is East
-        positionX += PLAYER_MOVEMENT_INCREMENT
+        positionX += PLAYER_MOVEMENT_INCREMENT;
     
     } else if (direction === 3) { // direction is South
-        postitonY -= PLAYER_MOVEMENT_INCREMENT
+        postitonY -= PLAYER_MOVEMENT_INCREMENT;
     
     } else if (direction === 4) { // direction is West
-        postitonX -= PLAYER_MOVEMENT_INCREMENT
+        postitonX -= PLAYER_MOVEMENT_INCREMENT;
     }
 
     // TODO: check the map array if the current postionX and positionY is at a wall or a player
-
-
 }
 
 const startGameDataTicker = function () {
@@ -265,8 +301,7 @@ const handlePlayerEntered = function (player) {
         invaderAvatarColor: "",
         score: 0,
         nickname: player.data,
-        isAlive: true,
-        direction: [1, 0],
+        isAlive: true
     };
     players[newPlayerId] = newPlayerObject;
     subscribeToPlayerInput(playerChannels[newPlayerId], newPlayerId);
