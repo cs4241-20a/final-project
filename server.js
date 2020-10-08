@@ -246,8 +246,8 @@ realtime.connection.once("connected", () => {
 
 
 // routes
-app.get("/auth", (request, response) => {
-    const tokenParams = {clientId: ""}; //TODO get username from response I guess
+app.get("/auth/game", (request, response) => {
+    const tokenParams = {clientId: response.user};
     realtime.auth.createTokenRequest(tokenParams, function (err, tokenRequest) {
         if (err) {
             response
