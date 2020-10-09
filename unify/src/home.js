@@ -27,12 +27,17 @@ export default class Home extends React.Component {
                 }), // Gray bubble
                 new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
               ],
+            overlay: false,
+            overlayStyle: "none"
         }
+
+        this.overlayDiv = React.createRef()
 
         this.getSongs = this.getSongs.bind(this)
         this.handleUser1Change = this.handleUser1Change.bind(this)
         this.handleUser2Change = this.handleUser2Change.bind(this)
         this.setChatState = this.setChatState.bind(this)
+        this.toggleOverlay = this.toggleOverlay.bind(this)
     }
 
     // Get form value on change
@@ -77,8 +82,18 @@ export default class Home extends React.Component {
 
     setChatState() {
         this.setState({
-            showChat: !this.state.showChat
+            showChat: true
         })
+    }
+
+    toggleOverlay() {
+
+        if (this.state.overlayStyle === "block") {
+            this.setState({ 
+                overlayStyle: "none",
+                showChat: false 
+            })
+        }
     }
 
 
@@ -96,6 +111,10 @@ export default class Home extends React.Component {
 
         const renderChat = () => {
             if (this.state.showChat) {
+                if (this.state.overlayStyle !== "block") {
+                    this.setState({ overlayStyle: "block" })
+                }
+                console.log("showing chat where overlaystyle = " + this.state.overlayStyle)
                 return (
                     <Container id="chatDiv">
                         <h1 style={{color: "#ffffff"}} className="mt-5 mb-10">Chat</h1>
@@ -121,10 +140,12 @@ export default class Home extends React.Component {
                     )
             }
         }
+ 
 
         return (
             <div id="wrapperDiv">
-                <Container id="mainDiv">
+                <div id="overlay" onClick={this.toggleOverlay} ref="overlayDiv" style={{display: this.state.overlayStyle}}></div>
+                <Container id="mainDiv" >
 
                     <h1 className="mt-5 mb-10">Unify</h1>
 
