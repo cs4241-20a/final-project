@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, IconButton, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Home as HomeIcon, Menu as MenuIcon } from "@material-ui/icons"
+import { Brush as BrushIcon, Home as HomeIcon, Menu as MenuIcon } from "@material-ui/icons"
 import { FunctionComponent } from "react";
 import { Link } from 'react-router-dom';
 
@@ -41,10 +41,14 @@ export const TopBar: FunctionComponent = () => {
             onClose={closeDrawer}
         >
             <List className={classes.drawerList}>
-                <ListItem button component={Link} to="/" onClick={closeDrawer}>
-                    <ListItemIcon><HomeIcon/></ListItemIcon>
-                    <ListItemText primary="Home"/>
-                </ListItem>
+            {([
+                ["/", "Home", <HomeIcon/>],
+                ["/create", "Create", <BrushIcon/>]
+            ] as const).map(option =>
+                <ListItem button component={Link} to={option[0]} onClick={closeDrawer}>
+                    <ListItemIcon>{option[2]}</ListItemIcon>
+                    <ListItemText primary={option[1]}/>
+                </ListItem>)}
             </List>
         </SwipeableDrawer>
     </>;

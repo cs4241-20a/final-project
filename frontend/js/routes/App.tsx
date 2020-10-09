@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { TopBar } from "../components/TopBar";
 import { FourOhFour } from "./404";
 import { Home } from "./Home";
+import { CreateChallenge } from "./CreateChallenge";
 
 const App: FunctionComponent = props => {
     // const prefersDarkTheme = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
@@ -42,6 +43,9 @@ const App: FunctionComponent = props => {
                 <Switch>
                     <Route exact path="/">
                         <Home/>
+                    </Route>
+                    <Route path="/create">
+                        <CreateChallenge/>
                     </Route>
                     <Route path="*">
                         <FourOhFour/>
