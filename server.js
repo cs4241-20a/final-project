@@ -24,8 +24,6 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 //     secret: cookie_secret
 //   })
 // );
- 
-app.use(bodyparser.json())
 
 
 
@@ -42,6 +40,13 @@ connection.once('open', () => {
 
 // Passport config
 require('./config/passport.js')(passport)
+
+// Bodyparser
+app.use(bodyparser.urlencoded({ extended: true }))
+app.use(bodyparser.json())
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 // User route
 app.use('/users', require('./routes/users'))

@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!--   Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <title>Register</title>
 </head>
 <body>
     <div class="container">
         <h1>Register</h1>
-        <div class="alert" hidden="true" role="alert">
+        <div class="alert alert-warning" hidden="true" role="alert">
             A simple warning alert—check it out!
         </div>
         <form id="register-form">
@@ -69,7 +69,7 @@
               Register
             </button>
           </form>
-          <p class="lead mt-4">Have An Account? <a href="/users/login" class="text-secondary">Log in</a></p>
+          <p class="lead mt-4">Have An Account? <a href="/login" class="text-secondary">Log in</a></p>
       </div>
 </body>
 <script>
@@ -82,9 +82,9 @@
             [e.target[2].name]: e.target[2].value,
             [e.target[3].name]: e.target[3].value
         }
-
+        console.log(user)
         fetch('http://localhost:3000/users/register', {
-            method: 'POST', // or 'PUT'
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -96,7 +96,7 @@
                     window.location.href = "http://localhost:3000/login"
                 }
                 else {
-                    displayMessage(data.msg, 'alert-warning')
+                    displayMessage(data.msg)
                 }
             })
             .catch((error) => {
@@ -104,11 +104,11 @@
             })
     })
 
-    function displayMessage(message, type) {
+    function displayMessage(message) {
         const messageDiv = document.querySelector('.alert')
-        messageDiv.setAttribute('hidden', false)
-        messageDiv.classList.add(type)
+        messageDiv.removeAttribute('hidden')
         messageDiv.innerHTML = message
+        console.log(message)
     }
 
 </script>
