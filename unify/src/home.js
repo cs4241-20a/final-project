@@ -2,6 +2,9 @@ import React from 'react'
 import { Button, Form, FormGroup, Input, Container } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import { faComments } from '@fortawesome/free-solid-svg-icons'
 
 
 export default class Home extends React.Component {
@@ -15,12 +18,14 @@ export default class Home extends React.Component {
             //songs: [],
             showTable: false,
             user1: "", 
-            user2: ""
+            user2: "",
+            showChat: false
         }
 
         this.getSongs = this.getSongs.bind(this)
         this.handleUser1Change = this.handleUser1Change.bind(this)
         this.handleUser2Change = this.handleUser2Change.bind(this)
+        this.setChatState = this.setChatState.bind(this)
     }
 
     // Get form value on change
@@ -63,6 +68,12 @@ export default class Home extends React.Component {
         
     }
 
+    setChatState() {
+        this.setState({
+            showChat: true
+        })
+    }
+
 
     render () {
         // Show table on recieving data from server
@@ -76,29 +87,46 @@ export default class Home extends React.Component {
             }
         }
 
+        const renderChat = () => {
+            if (this.state.showChat) {
+                return (
+                    <Container id="chatDiv">
+                        
+                    </Container>
+                    )
+            }
+        }
+
         return (
-            <Container>
+            <div id="wrapperDiv">
+                <Container id="mainDiv">
 
-                <h1 className="mt-5 mb-10">Application Name</h1>
+                    <h1 className="mt-5 mb-10">Spotify Friends</h1>
 
-                <div className="mt-5 mb-10">
-                    <Form>
-                        <FormGroup>
-                            <Input type="text" placeholder="login_username else placeholder text" className="form-control" value={this.state.user1} onChange={this.handleUser1Change} required></Input>
-                        </FormGroup>                    
-                        <FormGroup>
-                            <Input type="text" placeholder="Enter another username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
-                        </FormGroup>
-                        <FormGroup>
-                            <Button className="btn btn-primary btn-lg btn-block" onClick={this.getSongs}>Compare data</Button>
-                        </FormGroup>
-                    </Form>
-                </div>
+                    <div className="mt-5 mb-10">
+                        <Form>
+                            <FormGroup>
+                                <Input type="text" placeholder="login_username else placeholder text" className="form-control" value={this.state.user1} onChange={this.handleUser1Change} required></Input>
+                            </FormGroup>                    
+                            <FormGroup>
+                                <Input type="text" placeholder="Enter another username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
+                            </FormGroup>
+                            <FormGroup>
+                                <Button className="btn btn-primary btn-lg btn-block" onClick={this.getSongs}>Compare data</Button>
+                            </FormGroup>
+                        </Form>
+                    </div>
 
-                { renderTable() }
+                    { renderTable() }
+
+                    <FontAwesomeIcon icon={faComments} className="fa-3x sticky-chat" onClick={this.setChatState} />
+
+                </Container>
+
+                { renderChat() }
+
                 
-
-            </Container>
+            </div>
         )
     }
 
