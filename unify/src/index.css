@@ -29,12 +29,11 @@ code {
 
 #mainDiv {
   display: block;
-
 }
 
 #chatDiv {
   width: 40%; 
-  background-color: aqua;
+  background-color: black;
   height: 100%;
   position: absolute;
   right: 0;

@@ -3,8 +3,8 @@ import { Button, Form, FormGroup, Input, Container } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { faComments } from '@fortawesome/free-solid-svg-icons'
+import { ChatFeed, Message } from 'react-chat-ui'
 
 
 export default class Home extends React.Component {
@@ -19,7 +19,14 @@ export default class Home extends React.Component {
             showTable: false,
             user1: "", 
             user2: "",
-            showChat: false
+            showChat: false,
+            messages: [
+                new Message({
+                  id: 1,
+                  message: "I'm the recipient! (The person you're talking to)",
+                }), // Gray bubble
+                new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
+              ],
         }
 
         this.getSongs = this.getSongs.bind(this)
@@ -70,7 +77,7 @@ export default class Home extends React.Component {
 
     setChatState() {
         this.setState({
-            showChat: true
+            showChat: !this.state.showChat
         })
     }
 
@@ -91,7 +98,25 @@ export default class Home extends React.Component {
             if (this.state.showChat) {
                 return (
                     <Container id="chatDiv">
-                        
+                        <h1 style={{color: "#ffffff"}} className="mt-5 mb-10">Chat</h1>
+                            <ChatFeed
+                            messages={this.state.messages} // Array: list of message objects
+                            isTyping={this.state.is_typing} // Boolean: is the recipient typing
+                            hasInputField={false} // Boolean: use our input, or use your own
+                            showSenderName // show the name of the user who sent the message
+                            bubblesCentered={false} //Boolean should the bubbles be centered in the feed?
+                            bubbleStyles={
+                            {
+                                text: {
+                                    fontSize: 16
+                                },
+                                chatbubble: {
+                                    borderRadius: 70,
+                                    padding: 10
+                                }
+                                }
+                            }
+                            />
                     </Container>
                     )
             }
@@ -101,7 +126,7 @@ export default class Home extends React.Component {
             <div id="wrapperDiv">
                 <Container id="mainDiv">
 
-                    <h1 className="mt-5 mb-10">Spotify Friends</h1>
+                    <h1 className="mt-5 mb-10">Unify</h1>
 
                     <div className="mt-5 mb-10">
                         <Form>
