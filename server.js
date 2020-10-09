@@ -121,8 +121,10 @@ const GAME_TICKER_MS = 100;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
-let coins = {};
-let walls = [] // 2d array of the whole board (walls)
+let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
+let walls = [ // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 56x30  (each position is 25px).
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,1]
 let playerChannels = {};
 let gameOn = false;
 let alivePlayers = 0;
@@ -329,6 +331,7 @@ app.get("/auth/game", (request, response) => {
     });
 });
 
+app.post("/getBoard", bodyParser.json(), (req, res) =>  res.json(walls))
 // routes
 app.get('/', ensureAuth, (req, res) => {
     console.log(req.user);
