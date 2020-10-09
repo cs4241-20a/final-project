@@ -181,11 +181,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 
 
             if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
-<<<<<<< HEAD
                 players[playerId].y = CANVAS_HEIGHT;         
-=======
-                players[playerId].y = CANVAS_HEIGHT;
->>>>>>> df4a5a65b695a4615d950941503429e03f8f5960
             } else {
                 players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
             }
@@ -199,7 +195,6 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 
 // move all present players based on their keyboard input
 function moveEveryPlayer() {
-<<<<<<< HEAD
 
         Object.values(players).forEach( function(player) {
             let tryDirection = player.direction
@@ -223,32 +218,6 @@ function moveEveryPlayer() {
             // console.log( "My player's updated position: x = " + player.x + ", y = " + player.y )
         })
 
-=======
-    // console.log( players )
-    // TODO I don't think we need another interval here since there is one already from where we call this function
-    // let interval = setInterval(() => {
-    //     players.forEach(function(player) {
-    //         let tryDirection = player.direction
-
-    //         // can move in the current direction
-    //         if (canMove(tryDirection, player.id)) {
-    //             if (tryDirection === 1) { // direction is North
-    //                 player.y += PLAYER_MOVEMENT_INCREMENT
-
-    //             } else if (tryDirection === 2) { // direction is East
-    //                 player.x += PLAYER_MOVEMENT_INCREMENT
-
-    //             } else if (tryDirection === 3) { // direction is South
-    //                 player.y -= PLAYER_MOVEMENT_INCREMENT
-
-    //             } else if (tryDirection === 4) { // direction is West
-    //                 player.x -= PLAYER_MOVEMENT_INCREMENT
-    //             }
-    //         }
-    //     })
-    // })
-    // change every players position in the players direction
->>>>>>> df4a5a65b695a4615d950941503429e03f8f5960
 
     // check if player picked a coin
 
@@ -270,7 +239,6 @@ function withinBoundary(x, y) {
 // check against game boundaries
 // TODO: CHECK AGAINST WALLS
 function canMove(direction, id) {
-<<<<<<< HEAD
     let positionX = players[id].x; 
     let positionY = players[id].y; 
 
@@ -278,29 +246,12 @@ function canMove(direction, id) {
         positionY -= PLAYER_MOVEMENT_INCREMENT;
 
     
-=======
-    let positionX = players[id].x;
-    let postitonY = players[id].y;
-
-    if (!withinBoundary(positionX, postitonY)) {
-        return false;
-    }
-
-    if (direction === 1) { // direction is North
-        positionY += PLAYER_MOVEMENT_INCREMENT;
-
->>>>>>> df4a5a65b695a4615d950941503429e03f8f5960
     } else if (direction === 2) { // direction is East
         positionX += PLAYER_MOVEMENT_INCREMENT;
 
     } else if (direction === 3) { // direction is South
-<<<<<<< HEAD
         positionY += PLAYER_MOVEMENT_INCREMENT;
     
-=======
-        postitonY -= PLAYER_MOVEMENT_INCREMENT;
-
->>>>>>> df4a5a65b695a4615d950941503429e03f8f5960
     } else if (direction === 4) { // direction is West
         positionX -= PLAYER_MOVEMENT_INCREMENT;
     }
