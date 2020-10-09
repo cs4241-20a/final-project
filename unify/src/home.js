@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, FormGroup, Input, Container, Table, Pagination, PaginationItem, PaginationLink  } from 'reactstrap'
+import { Button, Form, FormGroup, Input, Container } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator'
 
@@ -18,55 +18,24 @@ export default class Home extends React.Component {
         return (
             <Container>
 
-                <h1 className="mt-5 mb-5">Application Name</h1>
+                <h1 className="mt-5 mb-10">Application Name</h1>
 
-                <Form>
-                    <FormGroup>
-                        <Input type="text" placeholder="login_username else placeholder text" className="form-control" required></Input>
-                    </FormGroup>                    
-                    <FormGroup>
-                        <Input type="text" placeholder="Enter another username" className="form-control" required></Input>
-                    </FormGroup>
-                    <FormGroup>
-                        <Button className="btn btn-primary btn-lg btn-block">Compare data</Button>
-                    </FormGroup>
-                </Form>
-
-                <div>
-                    <Table bordered>
-                        <thead>
-                            <tr>
-                            <th>Songs in Common</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            <td>Party in the USA</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                    <Pagination aria-label="Page navigation example">
-                        <PaginationItem>
-                            <PaginationLink first href="#" />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink previous href="#" />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">
-                            1
-                            </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">
-                            2
-                            </PaginationLink>
-                        </PaginationItem>
-                    </Pagination>
+                <div className="mt-5 mb-10">
+                    <Form>
+                        <FormGroup>
+                            <Input type="text" placeholder="login_username else placeholder text" className="form-control" required></Input>
+                        </FormGroup>                    
+                        <FormGroup>
+                            <Input type="text" placeholder="Enter another username" className="form-control" required></Input>
+                        </FormGroup>
+                        <FormGroup>
+                            <Button className="btn btn-primary btn-lg btn-block">Compare data</Button>
+                        </FormGroup>
+                    </Form>
                 </div>
 
-                <div>
-                    <BootstrapTable keyField='id' data={ this.state.songs } columns={ this.state.columns } pagination={ paginationFactory() } />
+                <div className="mt-5 mb-10">
+                    <BootstrapTable keyField='id' data={ this.state.songs } columns={ this.state.columns } pagination={ paginationFactory() } bootstrap4={true} />
                 </div>
 
 
