@@ -9,8 +9,10 @@ export default class Home extends React.Component {
         super(props)
 
         this.state = {
-            columns: [{ dataField: 'title', text: 'Songs in Common'}],
+            // columns: [{ dataField: 'title', text: 'Songs in Common'}],
             songs: [{ id: 0, title: "song0" }, { id: 1, title: "song1" }, { id: 2, title: "song2" }, { id: 3, title: "song3" }, { id: 4, title: "song4" }, { id: 5, title: "song5" }, { id: 6, title: "song6" }, { id: 7, title: "song7" }, { id: 8, title: "song8" }, { id: 9, title: "song9" }, { id: 10, title: "song10" }, { id: 11, title: "song11" }, { id: 12, title: "song12" }, { id: 13, title: "song13"}],
+            columns: [],
+            //songs: [],
             showTable: false,
             user1: "", 
             user2: ""
@@ -38,8 +40,11 @@ export default class Home extends React.Component {
         // }).then(response => response.json())
         // .then(json => {
         //     console.log("SONGS FROM SERVER: " + json)
+        //     let staticUser1 = this.state.user1
+        //     let staticUser2 = this.state.user2
         //     this.setState({
         //         songs: json,
+        //         columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
         //         showTable: true,
         //         user1: "",
         //         user2: ""
@@ -47,8 +52,11 @@ export default class Home extends React.Component {
         // }) 
 
         // TEMP FOR FRONT END TESTING
+        let staticUser1 = this.state.user1
+        let staticUser2 = this.state.user2
         this.setState({ 
             showTable: true,
+            columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
             user1: "",
             user2: ""
         })
