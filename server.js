@@ -117,12 +117,12 @@ const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const MIN_PLAYERS_TO_START_GAME = 2;
-const GAME_TICKER_MS = 500;
+const GAME_TICKER_MS = 1000;
 
 let peopleAccessingTheWebsite = 0;
-let players = {};
+let players = {}; // 4 players - Players will always be in the 'middle' of a 10x10px area
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
-let walls = [] // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy )
+let walls = [] // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 140 x 75 (each position is 10px).
 let playerChannels = {};
 let gameOn = false;
 let alivePlayers = 0;
@@ -144,8 +144,8 @@ const realtime = new Ably.Realtime({
 ///////////////////// GAME LOGIC ////////////////////////
 function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
-        if (msg.data.keyPressed === "left") {
-            //players[playerId].direction = 4;
+        if (msg.data.keyPressed === "left") { // direction is East
+            players[playerId].direction = 4;
 
             if (players[playerId].x - PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].x = PLAYER_MOVEMENT_INCREMENT;
@@ -154,8 +154,8 @@ function subscribeToPlayerInput(channelInstance, playerId) {
                 players[playerId].x -= PLAYER_MOVEMENT_INCREMENT;
             }
 
-        } else if (msg.data.keyPressed === "right") {
-            //players[playerId].direction = 2;
+        } else if (msg.data.keyPressed === "right") { // direction is West
+            players[playerId].direction = 2;
 
             if (players[playerId].x + PLAYER_MOVEMENT_INCREMENT > CANVAS_WIDTH) {
                 players[playerId].x = CANVAS_WIDTH;
@@ -165,8 +165,8 @@ function subscribeToPlayerInput(channelInstance, playerId) {
                 players[playerId].x += PLAYER_MOVEMENT_INCREMENT;
             }
 
-        } else if (msg.data.keyPressed === "up") {
-            //players[playerId].direction = 1;
+        } else if (msg.data.keyPressed === "up") { // direction is North
+            players[playerId].direction = 1;
 
             if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
                 players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
@@ -175,8 +175,8 @@ function subscribeToPlayerInput(channelInstance, playerId) {
                 players[playerId].y -= PLAYER_MOVEMENT_INCREMENT;
             }
 
-        } else if (msg.data.keyPressed === "down") {
-            //players[playerId].direction = 3;
+        } else if (msg.data.keyPressed === "down") { // direction is South
+            players[playerId].direction = 3;
 
 
             if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
@@ -192,31 +192,31 @@ function subscribeToPlayerInput(channelInstance, playerId) {
     });
 }
 
+// move all present players based on their keyboard input
 function moveEveryPlayer() {
-    // console.log( players )
-    // TODO I don't think we need another interval here since there is one already from where we call this function
-    // let interval = setInterval(() => {
-    //     players.forEach(function(player) {
-    //         let tryDirection = player.direction
 
-    //         // can move in the current direction
-    //         if (canMove(tryDirection, player.id)) {
-    //             if (tryDirection === 1) { // direction is North
-    //                 player.y += PLAYER_MOVEMENT_INCREMENT
+        Object.values(players).forEach( function(player) {
+            let tryDirection = player.direction
 
-    //             } else if (tryDirection === 2) { // direction is East
-    //                 player.x += PLAYER_MOVEMENT_INCREMENT
+            // can move in the current direction
+            if (canMove(tryDirection, player.id)) {
+                // console.log( "We can move in this direction: " + tryDirection )
+                if (tryDirection === 1) { // direction is North
+                    player.y -= PLAYER_MOVEMENT_INCREMENT
 
-    //             } else if (tryDirection === 3) { // direction is South
-    //                 player.y -= PLAYER_MOVEMENT_INCREMENT
+                } else if (tryDirection === 2) { // direction is West
+                    player.x += PLAYER_MOVEMENT_INCREMENT
 
-    //             } else if (tryDirection === 4) { // direction is West
-    //                 player.x -= PLAYER_MOVEMENT_INCREMENT
-    //             }
-    //         }
-    //     })
-    // })
-    // change every players position in the players direction
+                } else if (tryDirection === 3) { // direction is South
+                    player.y += PLAYER_MOVEMENT_INCREMENT
+
+                } else if (tryDirection === 4) { // direction is East
+                    player.x -= PLAYER_MOVEMENT_INCREMENT
+                }
+            }
+            // console.log( "My player's updated position: x = " + player.x + ", y = " + player.y )
+        })
+
 
     // check if player picked a coin
 
@@ -234,32 +234,38 @@ function withinBoundary(x, y) {
     return false;
 }
 
+// check if a player's move would be valid
+// check against game boundaries
+// TODO: CHECK AGAINST WALLS
 function canMove(direction, id) {
     let positionX = players[id].x;
-    let postitonY = players[id].y;
-
-    if (!withinBoundary(positionX, postitonY)) {
-        return false;
-    }
+    let positionY = players[id].y;
 
     if (direction === 1) { // direction is North
-        positionY += PLAYER_MOVEMENT_INCREMENT;
+        positionY -= PLAYER_MOVEMENT_INCREMENT;
+
 
     } else if (direction === 2) { // direction is East
         positionX += PLAYER_MOVEMENT_INCREMENT;
 
     } else if (direction === 3) { // direction is South
-        postitonY -= PLAYER_MOVEMENT_INCREMENT;
+        positionY += PLAYER_MOVEMENT_INCREMENT;
 
     } else if (direction === 4) { // direction is West
-        postitonX -= PLAYER_MOVEMENT_INCREMENT;
+        positionX -= PLAYER_MOVEMENT_INCREMENT;
+    }
+    if (!withinBoundary(positionX, positionY)) {
+        console.log( "Error! That would be outside of the boundary. X: " + positionX + ", Y: " +positionY )
+        return false;
+    } else {
+    return true
     }
 
     // checking if wall is present
-    if( walls[positionX][positionY] === 1 ){
-        console.log( "There is a wall here" )
-        return false;
-    }
+    // if( walls[positionX][positionY] === 1 ){
+    //     console.log( "There is a wall here" )
+    //     return false;
+    // }
 
     // TODO: check the map array if the current postionX and positionY is at a wall or a player
 }
