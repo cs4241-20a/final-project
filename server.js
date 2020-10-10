@@ -219,6 +219,7 @@ function moveEveryPlayer() {
 
 
     // check if player picked a coin
+    // on every tick, publish the number of coins left
 
 
     // check if players die
@@ -240,7 +241,7 @@ function withinBoundary(x, y) {
 function canMove(direction, id) {
     let positionX = players[id].x;
     let positionY = players[id].y;
-
+    console.log( walls )
     if (direction === 1) { // direction is North
         positionY -= PLAYER_MOVEMENT_INCREMENT;
 
@@ -261,6 +262,7 @@ function canMove(direction, id) {
     return true
     }
 
+    
     // checking if wall is present
     // if( walls[positionX][positionY] === 1 ){
     //     console.log( "There is a wall here" )
