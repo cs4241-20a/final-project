@@ -110,50 +110,54 @@ passport.deserializeUser(function (user, done) {
 
 //////////////////////// GAME VARS ////////////////////////
 
+const PLAYER_MOVEMENT_INCREMENT = 25;
 const CANVAS_HEIGHT = 750;
 const CANVAS_WIDTH = 1400;
-const PLAYER_MOVEMENT_INCREMENT = 10;
+const CANVAS_TO_ARRAY_HEIGHT_MODIFIER = ( CANVAS_HEIGHT / PLAYER_MOVEMENT_INCREMENT ) / CANVAS_HEIGHT
+const CANVAS_TO_ARRAY_WIDTH_MODIFIER = ( CANVAS_WIDTH / PLAYER_MOVEMENT_INCREMENT ) / CANVAS_WIDTH 
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const MIN_PLAYERS_TO_START_GAME = 2;
+const PLAYER_MOVEMENT_OFFSET = PLAYER_MOVEMENT_INCREMENT / 2;
+
 const GAME_TICKER_MS = 1000;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
 let walls = [ // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 56x30  (each position is 25px).
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,1],
-        [1,1,1,0,1,1,1,0,0,0,1,0,0,0,0,0,1,1,0,1,0,0,0,0,0,1,0,1,0,1,1,0,0,0,1,1,0,1,1,0,1,1,1,0,0,1,0,0,0,1,1,1,0,1,0,1],
-        [1,0,0,0,0,1,0,0,1,1,1,1,1,1,1,0,1,1,0,0,0,1,1,1,1,1,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,1],
-        [1,0,1,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,0,1,1,1,0,1,0,1,0,1,0,0,0,0,1,0,1,0,0,0,1,1,1],
-        [1,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,1,0,1,1,0,0,1,0,0,0,1,1,0,1,0,1,0,0,0,0,1,0,0,0,1,1,1,0,1,1,0,0,0,1,1,1,0,1,0,1],
-        [1,1,1,1,1,0,1,1,1,0,0,1,0,0,1,0,1,0,1,0,0,1,1,1,1,0,1,0,0,0,0,1,1,1,0,1,1,1,1,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,0,1],
-        [1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,1,1,0,0,0,1,0,0,0,1],
-        [1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,1,1,1,0,1,0,1,0,1,1,1,1,1,0,0,0,0,0,1,1,0,1,0,1,0,1,1,0,0,1,0,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,1,1,0,1,0,0,1,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,0,1,1,0,1,0,1,1],
-        [1,0,0,0,0,0,1,0,1,1,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,1,1,0,0,1,0,1,1,1,1,0,1,1,1,0,1,0,1,1,0,1,1],
-        [1,1,1,0,1,0,0,0,0,1,0,1,0,1,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,1,0,1,1,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0,1,1,1,1,1,1,1],
-        [1,1,1,0,1,0,1,0,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1],
-        [1,0,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,1,0,0,1,0,1,0,0,0,1,0,1,0,0,0,0,0,1,1,0,1,1,1,1,0,1,0,0,0,0,0,1,0,1,0,1],
-        [1,1,1,0,1,0,0,0,0,0,0,1,1,0,1,0,0,0,1,0,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,0,1,0,0,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
-        [1,0,0,0,1,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,1],
-        [1,1,1,0,1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,1,0,1,1,0,1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,1,1,1,0,0,0,0,1,0,1,0,0,0,1,1,1],
-        [1,0,0,0,1,1,1,0,1,1,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0,0,1,0,1,0,0,0,1,0,1,0,1,1,1,0,1,1,1,1,0,1,0,0,1,1],
-        [1,0,0,1,1,0,0,0,1,0,0,0,1,0,1,1,1,1,1,0,1,1,0,1,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,1,1,0,0,1],
-        [1,1,0,1,1,1,1,0,1,1,0,1,1,0,1,0,0,0,1,0,1,0,0,1,0,0,1,1,0,1,0,0,0,0,1,1,1,0,1,1,1,0,0,0,1,1,1,1,0,1,0,1,1,1,0,1],
-        [1,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0,1],
-        [1,0,1,0,0,0,1,1,0,1,0,1,1,0,1,1,1,1,1,0,1,1,0,0,1,0,1,0,1,1,0,1,1,1,0,0,0,1,0,1,1,0,1,1,0,1,0,1,1,1,0,1,1,1,0,1],
-        [1,0,1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,1],
-        [1,1,1,0,1,1,0,0,0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0,1],
-        [1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,0,1],
-        [1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,0,1,1,1,0,1,1,1],
-        [1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-]
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1],
+        [1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1],
+        [1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1],
+        [1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1],
+        [1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+];
 let playerChannels = {};
 let gameOn = false;
 let alivePlayers = 0;
@@ -175,47 +179,35 @@ const realtime = new Ably.Realtime({
 ///////////////////// GAME LOGIC ////////////////////////
 function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
-        if (msg.data.keyPressed === "left") { // direction is East
+        if (msg.data.keyPressed === "left") { // direction is West
             players[playerId].direction = 4;
 
-            if (players[playerId].x - PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
-                players[playerId].x = PLAYER_MOVEMENT_INCREMENT;
-
-            } else {
+            if ( canMove( 4, players[playerId].id  ) ){
                 players[playerId].x -= PLAYER_MOVEMENT_INCREMENT;
             }
 
-        } else if (msg.data.keyPressed === "right") { // direction is West
+        } else if (msg.data.keyPressed === "right") { // direction is East
             players[playerId].direction = 2;
 
-            if (players[playerId].x + PLAYER_MOVEMENT_INCREMENT > CANVAS_WIDTH) {
-                players[playerId].x = CANVAS_WIDTH;
-
-            } else {
-                // players[playerId].x += CANVAS_WIDTH;
+            if ( canMove( 2, players[playerId].id  ) ){
                 players[playerId].x += PLAYER_MOVEMENT_INCREMENT;
             }
 
         } else if (msg.data.keyPressed === "up") { // direction is North
             players[playerId].direction = 1;
 
-            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
-                players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
-            } else {
-                // players[playerId].x += CANVAS_HEIGHT;
+            if ( canMove( 1, players[playerId].id ) ){
                 players[playerId].y -= PLAYER_MOVEMENT_INCREMENT;
             }
 
         } else if (msg.data.keyPressed === "down") { // direction is South
             players[playerId].direction = 3;
 
-
-            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
-                players[playerId].y = CANVAS_HEIGHT;
-            } else {
+            if ( canMove( 3, players[playerId].id  ) ){
                 players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
             }
-        }
+
+    }
         // console.log( "Canvas W: " + CANVAS_WIDTH
         //  + ", Canvas H: "+ CANVAS_HEIGHT
         //  + ", Player X: " + players[playerId].x
@@ -226,27 +218,27 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 // move all present players based on their keyboard input
 function moveEveryPlayer() {
 
-        Object.values(players).forEach( function(player) {
-            let tryDirection = player.direction
+    Object.values(players).forEach(function (player) {
+        let tryDirection = player.direction
 
-            // can move in the current direction
-            if (canMove(tryDirection, player.id)) {
-                // console.log( "We can move in this direction: " + tryDirection )
-                if (tryDirection === 1) { // direction is North
-                    player.y -= PLAYER_MOVEMENT_INCREMENT
+        // can move in the current direction
+        if (canMove(tryDirection, player.id)) {
+            // console.log( "We can move in this direction: " + tryDirection )
+            if (tryDirection === 1) { // direction is North
+                player.y -= PLAYER_MOVEMENT_INCREMENT
 
-                } else if (tryDirection === 2) { // direction is West
-                    player.x += PLAYER_MOVEMENT_INCREMENT
+            } else if (tryDirection === 2) { // direction is East
+                player.x += PLAYER_MOVEMENT_INCREMENT
 
-                } else if (tryDirection === 3) { // direction is South
-                    player.y += PLAYER_MOVEMENT_INCREMENT
+            } else if (tryDirection === 3) { // direction is South
+                player.y += PLAYER_MOVEMENT_INCREMENT
 
-                } else if (tryDirection === 4) { // direction is East
-                    player.x -= PLAYER_MOVEMENT_INCREMENT
-                }
+            } else if (tryDirection === 4) { // direction is West
+                player.x -= PLAYER_MOVEMENT_INCREMENT
             }
-            // console.log( "My player's updated position: x = " + player.x + ", y = " + player.y )
-        })
+        }
+        console.log( "My player's updated position: x = " + player.x + ", y = " + player.y )
+    })
 
 
     // check if player picked a coin
@@ -268,39 +260,53 @@ function withinBoundary(x, y) {
 
 // check if a player's move would be valid
 // check against game boundaries
-// TODO: CHECK AGAINST WALLS
+// check against wall locations
 function canMove(direction, id) {
     let positionX = players[id].x;
     let positionY = players[id].y;
-    // console.log( walls )
+
+    // console.log( "My current location: Pixels - " + positionX + ", " + positionY ". Array - " )
+
+    var positionXArray = 1
+    var positionYArray = 1
+    console.log( "My direction: " + direction )
     if (direction === 1) { // direction is North
         positionY -= PLAYER_MOVEMENT_INCREMENT;
+        positionXArray = ( positionX - PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_WIDTH_MODIFIER
+        positionYArray = ( positionY - PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_HEIGHT_MODIFIER
 
 
     } else if (direction === 2) { // direction is East
         positionX += PLAYER_MOVEMENT_INCREMENT;
+        positionXArray = ( positionX - PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_WIDTH_MODIFIER
+        positionYArray = ( positionY - PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_HEIGHT_MODIFIER
 
     } else if (direction === 3) { // direction is South
         positionY += PLAYER_MOVEMENT_INCREMENT;
+        positionXArray = ( positionX - PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_WIDTH_MODIFIER
+        positionYArray = ( positionY + PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_HEIGHT_MODIFIER - 1
 
     } else if (direction === 4) { // direction is West
         positionX -= PLAYER_MOVEMENT_INCREMENT;
+        positionXArray = ( positionX + PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_WIDTH_MODIFIER - 1
+        positionYArray = ( positionY - PLAYER_MOVEMENT_OFFSET ) * CANVAS_TO_ARRAY_HEIGHT_MODIFIER
     }
     if (!withinBoundary(positionX, positionY)) {
-        console.log( "Error! That would be outside of the boundary. X: " + positionX + ", Y: " +positionY )
+        console.log("Error! That would be outside of the boundary. X: " + positionX + ", Y: " + positionY)
         return false;
-    } else {
-    return true
+    } 
+
+        //checking if wall is present
+    // console.log( "destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray )
+    // console.log( "That space contains: " + walls[positionYArray][positionXArray] )
+    if( walls[positionYArray][positionXArray] === 1 ){
+        console.log( "There is a wall here" )
+        return false;
+    }
+    else {
+        return true
     }
 
-    
-    // checking if wall is present
-    // if( walls[positionX][positionY] === 1 ){
-    //     console.log( "There is a wall here" )
-    //     return false;
-    // }
-
-    // TODO: check the map array if the current postionX and positionY is at a wall or a player
 }
 
 const startGameDataTicker = function () {
@@ -342,8 +348,8 @@ const handlePlayerEntered = function (player) {
 
     let newPlayerObject = {
         id: newPlayerId,
-        x: Math.floor((Math.random() * 1370 + 30) * 1000) / 1000,
-        y: 20,
+        x: 37.5,
+        y: 37.5,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
         direction: [1, 0],
@@ -406,7 +412,7 @@ app.get("/auth/game", (request, response) => {
     });
 });
 
-app.post("/getBoard", bodyParser.json(), (req, res) =>  res.json(walls))
+app.get("/getBoard", bodyParser.json(), (req, res) => res.json(walls))
 // routes
 app.get('/', ensureAuth, (req, res) => {
     console.log(req.user);

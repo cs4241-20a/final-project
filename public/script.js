@@ -9,7 +9,7 @@ let game;
 let coins = null;
 let clientCoins = {};
 let prevKey = "";
-let board = new Array(56).fill(0).map(() => new Array(30).fill(0)); // init
+let board = []; // init
 
 const BASE_SERVER_URL = "http://localhost:4000";
 let myNickname = "";
@@ -36,7 +36,6 @@ class Explosion extends Phaser.GameObjects.Sprite {
 }
 
 
-
 class GameScene extends Phaser.Scene {
     constructor() {
         super("gameScene");
@@ -48,117 +47,120 @@ class GameScene extends Phaser.Scene {
             "avatarA",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderA_00%402x.png?v=1589228669385",
             {
-                frameWidth: 48,
-                frameHeight: 32
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarB",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderB_00%402x.png?v=1589228660870",
             {
-                frameWidth: 48,
-                frameHeight: 32
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarC",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderC_00%402x.png?v=1589228654058",
             {
-                frameWidth: 48,
-                frameHeight: 32
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarAgreen",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAgreen.png?v=1589839188589",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarAcyan",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAcyan.png?v=1589839190850",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarAyellow",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAyellow.png?v=1589839197191",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarBgreen",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderBgreen.png?v=1589839187283",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarBcyan",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderBcyan.png?v=1589839193162",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarByellow",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderByellow.png?v=1589839195096",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarCgreen",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCgreen.png?v=1589839203129",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarCcyan",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCcyan.png?v=1589839200959",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "avatarCyellow",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCyellow.png?v=1589839198988",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
         this.load.spritesheet(
             "explosion",
             "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fexplosion57%20(2).png?v=1589491279459",
             {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         );
-        this.load.image("wall", "/assets/wall.png");
+        this.load.image("wall", "/assets/wall_actual.png");
 
         this.load.spritesheet(
             "coin",
             "/assets/coin_actual.png", {
-                frameWidth: 48,
-                frameHeight: 48
+                frameWidth: 25,
+                frameHeight: 25
             }
         )
 
-        this.loadBoard();
+        //load board
+        fetch("/getBoard", {headers: {'Content-Type': 'application/json'}})
+            .then((response) => response.json())
+            .then((walls) => board = walls);
     }
 
     //init variables, define animations & sounds, and display assets
@@ -327,29 +329,20 @@ class GameScene extends Phaser.Scene {
         document.getElementById("score").innerText = displayStr;
     }
 
-    loadBoard() {
-        // TODO make api call and set board to be the board
-        // dummy data
-        for (let i = 0; i < 56; i++) {
-            for (let j = 0; j < 30; j++) {
-                if ((i === 10 && j === 5) || (i === 1)) {
-                    board[i][j] = 1;
-                }
-            }
-        }
-    }
-
     renderBoardAndCoins() {
         let ratio = 25;
 
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[i].length; j++) {
-                if (board[i][j] === 1) {
+        console.log(board.length); // 30 // 56
+
+        for (let i = 0; i < board[0].length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                // console.log(`${i} : ${j}`);
+                if (board[j][i] === 1) {
                     this.physics.add.image(((i + 1) * ratio) - Math.floor(ratio / 2), ((j + 1) * ratio) - Math.floor(ratio / 2), "wall", null, {
                         restitution: 0.4,
                         isStatic: true
                     });
-                } else if (board[i][j] === 0) {
+                } else if (board[j][i] === 0) {
                     let coinId = `${i}|${j}`;
 
                     clientCoins[coinId] = this.physics.add
