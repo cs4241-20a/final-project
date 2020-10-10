@@ -1,5 +1,5 @@
 import { CssBaseline, Typography, useMediaQuery } from "@material-ui/core";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import React, { FunctionComponent, useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'; 
@@ -7,6 +7,8 @@ import { TopBar } from "../components/TopBar";
 import { FourOhFour } from "./404";
 import { Home } from "./Home";
 import { CreateChallenge } from "./CreateChallenge";
+import "../../css/main.css";
+import { blue, pink } from "@material-ui/core/colors";
 
 const App: FunctionComponent = props => {
     // const prefersDarkTheme = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
@@ -15,11 +17,15 @@ const App: FunctionComponent = props => {
 
     const theme = React.useMemo(() =>
         createMuiTheme({
-            palette: useDarkTheme ? {
-                type: 'dark',
-            } : 
-            {
-                type: 'light',
+            palette: {
+                primary: { main: blue[700] },
+                secondary: { main: pink[300] },
+                ...(useDarkTheme ? {
+                    type: 'dark'
+                } : 
+                {
+                    type: 'light'
+                })
             },
             overrides: {
                 MuiCssBaseline: {
