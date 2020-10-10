@@ -13,7 +13,7 @@ io.on("connection", (client) => {
     client.on("join", (roomID) => {
         console.log(client.id, "joined", roomID);
         client.join(roomID);
-        io.sockets.in(roomID).emit("chat", "new user joinded");
+        io.sockets.in(roomID).emit("chat", "New User Joined");
     });
 
     client.on("chat", (msg) => {

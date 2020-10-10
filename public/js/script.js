@@ -11,8 +11,10 @@ function brushClick(e) {
 }
 
 function getImage(e) {
-    document.getElementById("centralCanvas").toBlob(function (blob) {
-        console.log(blob);
+    let data = document.getElementById("centralCanvas").toDataURL()
+    socket.emit("chat", {
+        roomID,
+        message: data,
     });
 }
 
@@ -35,3 +37,37 @@ window.onload = function (e) {
         }
     });
 };
+
+//Socket code using jquery
+var socket;
+var roomID = window.location.pathname.split("/")[2];
+var username;
+$(document).ready(function () {
+    socket = io();
+    socket.emit("join", roomID);
+    username = document.getElementById("username").value;
+    socket.emit("chat", {
+        roomID,
+        message: username + " has joined"
+    });
+});
+$(function () {
+    $("form").submit(function (e) {
+        e.preventDefault(); // prevents page reloading
+        socket.emit("chat", {
+            roomID,
+            message: username + ": " + $("#userMessage").val(),
+        });
+        $("#userMessage").val("");
+        return false;
+    });
+    socket.on("chat", function (msg) {
+        if (msg.substr(0, 22) === "data:image/png;base64,") {
+            $("#messages").append($("<li>").html($("<img>").attr("src", msg)));
+            $("#messages").animate({scrollTop: $("#messages")[0].scrollHeight}, 1);
+        } else {
+            $("#messages").append($("<li>").text(msg));
+            $("#messages").animate({scrollTop: $("#messages")[0].scrollHeight}, 1);
+        }
+    });
+});
