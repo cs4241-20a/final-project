@@ -4,7 +4,7 @@
 ## Authors
   1. Jordan Stoessel
   2. Christian Tweed
-  3. Song Zhecheng
+  3. Song Zhecheng?
   
 ### Proposal
   Our proposed application is a version of a Battleship with a chat feature as well as a friend and a lobby system.
@@ -30,3 +30,6 @@
   - Challenges faced creating the project
   - What did each group member do
   - Link to project video
+ 
+### Note
+So far Song Zhecheng has not replied to any of our attempts to reach out to him, and so we are wondering if this suffices as a two person project or if it is either too much or too little.
