@@ -1,8 +1,85 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>CS4241 Team 19 Final Project</title>
-  </head>
-  <body>
-  </body>
+<head>
+  <title>CS4241 Team 19 Final Project</title>
+  <style>
+    body{
+      background-color: lightgrey;
+    }
+
+    button{
+      background-color: black;
+      color: white;
+      height: 40px;
+    }
+
+    .header_btns{
+      float: right;
+    }
+
+    #task_container{
+      width: 100%;
+      overflow-x: scroll;
+      background-color: white;
+      margin: 10px;
+    }
+
+    .container, #chat_box{
+      float: left;
+      margin: 15px;
+    }
+
+    .task_lists{
+      width: 250px;
+      height: 100vh;
+      background-color: white;
+      box-shadow: inset 0px 0px 20px 2px grey;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+
+    .task_contents{
+      width: 95%;
+      padding: 5px;
+      margin: 6px;
+    }
+
+    h1{
+      text-align: center;
+    }
+
+    .btn_container{
+      width: 75px;
+      float: right;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1 id="group_name">Group's Tasks</h1>
+  <button id="back_btn" class="header_btns">Back</button>
+  <button id="invite_btn" class="header_btns">+</button>
+</header>
+<div id="task_container">
+  <div class="container">
+    <div class="task_lists">
+      <h2 class="list_name">List Name</h2>
+      <div class="task_contents">
+        <span class="task_item" id="task_name">Task Name</span><br>
+        <span class="task_item" id="task_desc">Description</span>
+      </div>
+      <button class="task_contents">+</button>
+    </div>
+    <div class="btn_container">
+      <button id="add_list">+</button>
+      <button id="delete_list">-</button>
+    </div>
+  </div>
+  <div id="chat_box">
+
+  </div>
+</div>
+</body>
 </html>
+
