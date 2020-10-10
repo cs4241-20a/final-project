@@ -122,14 +122,13 @@ const GAME_TICKER_MS = 1000;
 let peopleAccessingTheWebsite = 0;
 let players = {}; // 4 players - Players will always be in the 'middle' of a 10x10px area
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
-let walls = [] // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 140 x 75 (each position is 10px). 
+let walls = [] // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 140 x 75 (each position is 10px).
 let playerChannels = {};
 let gameOn = false;
 let alivePlayers = 0;
 let totalPlayers = 0;
 let gameRoom;
 let gameTickerOn = false;
-let world;
 
 let avatarColors = ["green", "cyan", "yellow"];
 let avatarTypes = ["A", "B", "C"];
@@ -181,7 +180,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 
 
             if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
-                players[playerId].y = CANVAS_HEIGHT;         
+                players[playerId].y = CANVAS_HEIGHT;
             } else {
                 players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
             }
@@ -198,19 +197,19 @@ function moveEveryPlayer() {
 
         Object.values(players).forEach( function(player) {
             let tryDirection = player.direction
-    
+
             // can move in the current direction
             if (canMove(tryDirection, player.id)) {
                 // console.log( "We can move in this direction: " + tryDirection )
                 if (tryDirection === 1) { // direction is North
                     player.y -= PLAYER_MOVEMENT_INCREMENT
-    
+
                 } else if (tryDirection === 2) { // direction is West
                     player.x += PLAYER_MOVEMENT_INCREMENT
-    
+
                 } else if (tryDirection === 3) { // direction is South
                     player.y += PLAYER_MOVEMENT_INCREMENT
-    
+
                 } else if (tryDirection === 4) { // direction is East
                     player.x -= PLAYER_MOVEMENT_INCREMENT
                 }
@@ -239,19 +238,19 @@ function withinBoundary(x, y) {
 // check against game boundaries
 // TODO: CHECK AGAINST WALLS
 function canMove(direction, id) {
-    let positionX = players[id].x; 
-    let positionY = players[id].y; 
+    let positionX = players[id].x;
+    let positionY = players[id].y;
 
     if (direction === 1) { // direction is North
         positionY -= PLAYER_MOVEMENT_INCREMENT;
 
-    
+
     } else if (direction === 2) { // direction is East
         positionX += PLAYER_MOVEMENT_INCREMENT;
 
     } else if (direction === 3) { // direction is South
         positionY += PLAYER_MOVEMENT_INCREMENT;
-    
+
     } else if (direction === 4) { // direction is West
         positionX -= PLAYER_MOVEMENT_INCREMENT;
     }
@@ -284,7 +283,7 @@ const startGameDataTicker = function () {
                 playerCount: totalPlayers,
                 gameOn: gameOn,
                 deadPlayers: {},
-                coins: coins,
+                coins: {},
             });
         }
     }, GAME_TICKER_MS);

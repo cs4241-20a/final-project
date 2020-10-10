@@ -6,8 +6,10 @@ let players = {};
 let totalPlayers = 0;
 let amIalive = false;
 let game;
-let coins = {};
+let coins = null;
+let clientCoins = {};
 let prevKey = "";
+let board = new Array(56).fill(0).map(() => new Array(30).fill(0)); // init
 
 const BASE_SERVER_URL = "http://localhost:4000";
 let myNickname = "";
@@ -32,6 +34,8 @@ class Explosion extends Phaser.GameObjects.Sprite {
         this.play("explode");
     }
 }
+
+
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -144,6 +148,17 @@ class GameScene extends Phaser.Scene {
                 frameHeight: 48
             }
         );
+        this.load.image("wall", "/assets/wall.png");
+
+        this.load.spritesheet(
+            "coin",
+            "/assets/coin_actual.png", {
+                frameWidth: 48,
+                frameHeight: 48
+            }
+        )
+
+        this.loadBoard();
     }
 
     //init variables, define animations & sounds, and display assets
@@ -158,6 +173,9 @@ class GameScene extends Phaser.Scene {
             repeat: 0,
             hideOnComplete: true
         });
+
+        this.renderBoardAndCoins();
+
 
         gameRoom.subscribe("game-state", (msg) => {
             if (msg.data.gameOn) {
@@ -239,8 +257,24 @@ class GameScene extends Phaser.Scene {
                 }
             }
         }
-        this.publishMyInput();
+
+        this.updateCoinsOnClient();
         this.updateScores(scores);
+        this.publishMyInput();
+    }
+
+    updateCoinsOnClient() {
+        // make sure they were initialized
+        if (coins != null) {
+            for (let item in clientCoins) {
+                // if such coin is not on server side anymore
+                if (!coins[item]) {
+                    // coin was picked
+                    clientCoins[item].disableBody(true, true);
+                    delete clientCoins[item];
+                }
+            }
+        }
     }
 
     explodeAndKill(deadPlayerId) {
@@ -291,6 +325,39 @@ class GameScene extends Phaser.Scene {
         })
 
         document.getElementById("score").innerText = displayStr;
+    }
+
+    loadBoard() {
+        // TODO make api call and set board to be the board
+        // dummy data
+        for (let i = 0; i < 56; i++) {
+            for (let j = 0; j < 30; j++) {
+                if ((i === 10 && j === 5) || (i === 1)) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    renderBoardAndCoins() {
+        let ratio = 25;
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] === 1) {
+                    this.physics.add.image(((i + 1) * ratio) - Math.floor(ratio / 2), ((j + 1) * ratio) - Math.floor(ratio / 2), "wall", null, {
+                        restitution: 0.4,
+                        isStatic: true
+                    });
+                } else if (board[i][j] === 0) {
+                    let coinId = `${i}|${j}`;
+
+                    clientCoins[coinId] = this.physics.add
+                        .sprite(((i + 1) * ratio) - Math.floor(ratio / 2), ((j + 1) * ratio) - Math.floor(ratio / 2), "coin")
+                        .setOrigin(0.5, 0.5);
+                }
+            }
+        }
     }
 }
 
