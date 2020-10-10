@@ -28,14 +28,14 @@ function onMouseUp(event) {
     path.simplify(2);
 }
 
-function onKeyDown(event) {
-    if (event.key === "backspace" && content.length > 0) {
-        content = content.slice(0, -1);
-    } else {
-        content += event.character;
-    }
-    text.content = content;
-}
+// function onKeyDown(event) {
+//     if (event.key === "backspace" && content.length > 0) {
+//         content = content.slice(0, -1);
+//     } else {
+//         content += event.character;
+//     }
+//     text.content = content;
+// }
 
 document.getElementById("clear").addEventListener("click", function (e) {
     project.clear();
