@@ -11,23 +11,27 @@ function brushClick(e) {
 }
 
 function getImage(e) {
-    document.getElementById("centralCanvas").toBlob(function(blob) {
+    document.getElementById("centralCanvas").toBlob(function (blob) {
         console.log(blob);
     });
 }
 
-window.onload = function(e) {
+window.onload = function (e) {
     let buttons = document.getElementsByClassName("color");
     for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', colorClick);
+        buttons[i].addEventListener("click", colorClick);
     }
 
     buttons = document.getElementsByClassName("brush");
     for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', brushClick);
+        buttons[i].addEventListener("click", brushClick);
     }
 
-    document.getElementById("send").addEventListener('click', getImage);
+    document.getElementById("send").addEventListener("click", getImage);
 
-    document.addEventListener('click', function(e) { if(document.activeElement.toString() == '[object HTMLButtonElement]'){ document.activeElement.blur(); } });
-}
+    document.addEventListener("click", function (e) {
+        if (document.activeElement.toString() == "[object HTMLButtonElement]") {
+            document.activeElement.blur();
+        }
+    });
+};

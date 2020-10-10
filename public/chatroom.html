@@ -6,12 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="css/style.css" />
         <script src="js/paper-full.js"></script>
+        <script defer src="js/script.js"></script>
+
         <script
             type="text/paperscript"
             canvas="centralCanvas"
             src="js/draw.js"
         ></script>
-        <script defer src="js/script.js"></script>
         <style>
             .wrapper {
                 display: grid;
@@ -94,8 +95,10 @@
             </div>
             <div class="right">
                 <ul id="messages"></ul>
-                <form action="">
-                    <input id="m" autocomplete="off" /><button>Send</button>
+                <form id="no" action="">
+                    <input id="userMessage" autocomplete="off" /><button>
+                        Send
+                    </button>
                 </form>
                 <script src="/socket.io/socket.io.js"></script>
                 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -111,9 +114,9 @@
                             e.preventDefault(); // prevents page reloading
                             socket.emit("chat", {
                                 roomID,
-                                message: $("#m").val(),
+                                message: $("#userMessage").val(),
                             });
-                            $("#m").val("");
+                            $("#userMessage").val("");
                             return false;
                         });
                         socket.on("chat", function (msg) {
