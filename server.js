@@ -112,12 +112,12 @@ passport.deserializeUser(function (user, done) {
 
 const CANVAS_HEIGHT = 750;
 const CANVAS_WIDTH = 1400;
-const PLAYER_MOVEMENT_INCREMENT = 20;
+const PLAYER_MOVEMENT_INCREMENT = 10;
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const MIN_PLAYERS_TO_START_GAME = 2;
-const GAME_TICKER_MS = 100;
+const GAME_TICKER_MS = 1000;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
@@ -160,7 +160,6 @@ let alivePlayers = 0;
 let totalPlayers = 0;
 let gameRoom;
 let gameTickerOn = false;
-let world;
 
 let avatarColors = ["green", "cyan", "yellow"];
 let avatarTypes = ["A", "B", "C"];
@@ -176,42 +175,78 @@ const realtime = new Ably.Realtime({
 ///////////////////// GAME LOGIC ////////////////////////
 function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
-        console.log(msg);
+        if (msg.data.keyPressed === "left") { // direction is East
+            players[playerId].direction = 4;
 
-        if (msg.data.keyPressed == "left") {
+            if (players[playerId].x - PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
+                players[playerId].x = PLAYER_MOVEMENT_INCREMENT;
 
-        } else if (msg.data.keyPressed == "right") {
+            } else {
+                players[playerId].x -= PLAYER_MOVEMENT_INCREMENT;
+            }
 
+        } else if (msg.data.keyPressed === "right") { // direction is West
+            players[playerId].direction = 2;
+
+            if (players[playerId].x + PLAYER_MOVEMENT_INCREMENT > CANVAS_WIDTH) {
+                players[playerId].x = CANVAS_WIDTH;
+
+            } else {
+                // players[playerId].x += CANVAS_WIDTH;
+                players[playerId].x += PLAYER_MOVEMENT_INCREMENT;
+            }
+
+        } else if (msg.data.keyPressed === "up") { // direction is North
+            players[playerId].direction = 1;
+
+            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT < PLAYER_MOVEMENT_INCREMENT) {
+                players[playerId].y = PLAYER_MOVEMENT_INCREMENT;
+            } else {
+                // players[playerId].x += CANVAS_HEIGHT;
+                players[playerId].y -= PLAYER_MOVEMENT_INCREMENT;
+            }
+
+        } else if (msg.data.keyPressed === "down") { // direction is South
+            players[playerId].direction = 3;
+
+
+            if (players[playerId].y + PLAYER_MOVEMENT_INCREMENT > CANVAS_HEIGHT) {
+                players[playerId].y = CANVAS_HEIGHT;
+            } else {
+                players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
+            }
         }
+        // console.log( "Canvas W: " + CANVAS_WIDTH
+        //  + ", Canvas H: "+ CANVAS_HEIGHT
+        //  + ", Player X: " + players[playerId].x
+        //  + ", Player Y: " + players[playerId].y )
     });
 }
 
+// move all present players based on their keyboard input
 function moveEveryPlayer() {
-    // TODO I don't think we need another interval here since there is one already from where we call this function
-    // let interval = setInterval(() => {
-    //     players.forEach(function(player) {
-    //         let tryDirection = player.direction
-    //
-    //         // can move in the current direction
-    //         if (canMove(tryDirection, player.id)) {
-    //             if (tryDirection === 1) { // direction is North
-    //                 player.y += PLAYER_MOVEMENT_INCREMENT
-    //
-    //             } else if (tryDirection === 2) { // direction is East
-    //                 player.x += PLAYER_MOVEMENT_INCREMENT
-    //
-    //             } else if (tryDirection === 3) { // direction is South
-    //                 player.y -= PLAYER_MOVEMENT_INCREMENT
-    //
-    //             } else if (tryDirection === 4) { // direction is West
-    //                 player.x -= PLAYER_MOVEMENT_INCREMENT
-    //             }
-    //         }
-    //     })
-    // })
-    // change every players position in the players direction
 
-    // check if the move is legal
+        Object.values(players).forEach( function(player) {
+            let tryDirection = player.direction
+
+            // can move in the current direction
+            if (canMove(tryDirection, player.id)) {
+                // console.log( "We can move in this direction: " + tryDirection )
+                if (tryDirection === 1) { // direction is North
+                    player.y -= PLAYER_MOVEMENT_INCREMENT
+
+                } else if (tryDirection === 2) { // direction is West
+                    player.x += PLAYER_MOVEMENT_INCREMENT
+
+                } else if (tryDirection === 3) { // direction is South
+                    player.y += PLAYER_MOVEMENT_INCREMENT
+
+                } else if (tryDirection === 4) { // direction is East
+                    player.x -= PLAYER_MOVEMENT_INCREMENT
+                }
+            }
+            // console.log( "My player's updated position: x = " + player.x + ", y = " + player.y )
+        })
 
 
     // check if player picked a coin
@@ -230,30 +265,40 @@ function withinBoundary(x, y) {
     return false;
 }
 
+// check if a player's move would be valid
+// check against game boundaries
+// TODO: CHECK AGAINST WALLS
 function canMove(direction, id) {
-    let positionX = players[id].x
-    let postitonY = players[id].y
-
-    if (!withinBoundary(positionX, postitonY)) {
-        return false;
-    }
+    let positionX = players[id].x;
+    let positionY = players[id].y;
 
     if (direction === 1) { // direction is North
-        positionY += PLAYER_MOVEMENT_INCREMENT
+        positionY -= PLAYER_MOVEMENT_INCREMENT;
+
 
     } else if (direction === 2) { // direction is East
-        positionX += PLAYER_MOVEMENT_INCREMENT
+        positionX += PLAYER_MOVEMENT_INCREMENT;
 
     } else if (direction === 3) { // direction is South
-        postitonY -= PLAYER_MOVEMENT_INCREMENT
+        positionY += PLAYER_MOVEMENT_INCREMENT;
 
     } else if (direction === 4) { // direction is West
-        postitonX -= PLAYER_MOVEMENT_INCREMENT
+        positionX -= PLAYER_MOVEMENT_INCREMENT;
+    }
+    if (!withinBoundary(positionX, positionY)) {
+        console.log( "Error! That would be outside of the boundary. X: " + positionX + ", Y: " +positionY )
+        return false;
+    } else {
+    return true
     }
 
+    // checking if wall is present
+    // if( walls[positionX][positionY] === 1 ){
+    //     console.log( "There is a wall here" )
+    //     return false;
+    // }
+
     // TODO: check the map array if the current postionX and positionY is at a wall or a player
-
-
 }
 
 const startGameDataTicker = function () {
@@ -269,7 +314,7 @@ const startGameDataTicker = function () {
                 playerCount: totalPlayers,
                 gameOn: gameOn,
                 deadPlayers: {},
-                coins: coins,
+                coins: {},
             });
         }
     }, GAME_TICKER_MS);
@@ -299,11 +344,10 @@ const handlePlayerEntered = function (player) {
         y: 20,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
-        direction: 3,
+        direction: [1, 0],
         score: 0,
         nickname: player.data,
-        isAlive: true,
-        direction: [1, 0],
+        isAlive: true
     };
 
     players[newPlayerId] = newPlayerObject;
