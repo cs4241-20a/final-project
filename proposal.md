@@ -12,7 +12,7 @@
 ### Requirements
 
 - Initial proposal.md file (this)
-- Real Time communication Technology:
+- Real Time communication Technology
   - Multiplayer game of battleship
   - Chat system alongside battleship game
   - Audio Sound Effects (Miss, Hit, Sink, Win, Loss)
@@ -23,13 +23,12 @@
  - Back-end Tech
   - Server: **NodeJS** (using appropriate middleware)
   - Database: **MongoDB**
- - Proper Documentation:
-  - Brief description and link to project
-  - How to use the project (if needed)
-  - Outline of all technologies used
-  - Challenges faced creating the project
-  - What did each group member do
-  - Link to project video
- 
+ - Proper Documentation
+    - Brief description and link to project
+    - How to use the project (if needed)
+    - Outline of all technologies used
+    - Challenges faced creating the project
+    - What did each group member do
+    - Link to project video
 ### Note
 So far Song Zhecheng has not replied to any of our attempts to reach out to him, and so we are wondering if this suffices as a two person project or if it is either too much or too little.
