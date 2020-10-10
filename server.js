@@ -116,6 +116,8 @@ const PLAYER_MOVEMENT_INCREMENT = 10;
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
+const ROOM_FOR_COLLISION = 20;
+const ROOM_FOR_COLLISION_SAME = 5;
 const MIN_PLAYERS_TO_START_GAME = 2;
 const GAME_TICKER_MS = 1000;
 
@@ -229,23 +231,36 @@ function moveEveryPlayer() {
     Object.values(players).forEach(function (player) {
         let tryDirection = player.direction
 
+        let previousX = player.x;
+        let previousY = player.y;
+        let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
+
+        if (player.isAlive === false) {
+            delete players[player.id]
+            console.log("FOUND DEAD PLAYER");
+        }
         // can move in the current direction
-        if (canMove(tryDirection, player.id)) {
+        if (player.isAlive !== false && canMove(tryDirection, player.id)) {
             // console.log( "We can move in this direction: " + tryDirection )
             if (tryDirection === 1) { // direction is North
                 player.y -= PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, previousY, player.y, previousX, 0)
 
             } else if (tryDirection === 2) { // direction is West
                 player.x += PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, player.x, previousX, previousY, 1)
 
             } else if (tryDirection === 3) { // direction is South
                 player.y += PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, player.y, previousY, previousX, 0)
 
             } else if (tryDirection === 4) { // direction is East
                 player.x -= PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, previousX, player.x, previousY, 1)
             }
         }
-        // console.log( "My player's updated position: x = " + player.x + ", y = " + player.y )
+        
+        console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
     })
 
 
@@ -253,6 +268,30 @@ function moveEveryPlayer() {
 
 
     // check if players die
+}
+
+function checkIfDead(id, largerVal, smallerVal, other, direction) {
+    Object.values(players).forEach(function (player) {
+        if (player.id !== id) {
+            // direction was vertical
+            if (direction === 0) {
+                if ((player.y >= smallerVal - ROOM_FOR_COLLISION_SAME) && (player.y <= largerVal + ROOM_FOR_COLLISION_SAME) 
+                && (player.x >= other - ROOM_FOR_COLLISION && player.x <= other + ROOM_FOR_COLLISION)) {
+                    player.isAlive = false; 
+                    players[id] = false;
+                    delete players[id]
+                }
+        
+            } else {
+                if ((player.x >= smallerVal - ROOM_FOR_COLLISION_SAME) && (player.x <= largerVal + ROOM_FOR_COLLISION_SAME) 
+                && (player.y >= other - ROOM_FOR_COLLISION && player.y <= other + ROOM_FOR_COLLISION)) {
+                    player.isAlive = false;
+                    players[id] = false;
+                    delete players[id]
+                }
+            }
+        }
+    })
 }
 
 function withinBoundary(x, y) {
@@ -269,6 +308,11 @@ function withinBoundary(x, y) {
 // check against game boundaries
 // TODO: CHECK AGAINST WALLS
 function canMove(direction, id) {
+
+    if (players[id] === null) {
+        return false;
+    }
+
     let positionX = players[id].x;
     let positionY = players[id].y;
 
@@ -285,9 +329,11 @@ function canMove(direction, id) {
     } else if (direction === 4) { // direction is West
         positionX -= PLAYER_MOVEMENT_INCREMENT;
     }
+
     if (!withinBoundary(positionX, positionY)) {
         console.log("Error! That would be outside of the boundary. X: " + positionX + ", Y: " + positionY)
         return false;
+    
     } else {
         return true
     }
@@ -308,6 +354,7 @@ const startGameDataTicker = function () {
         } else {
             // move every player
             moveEveryPlayer();
+            // check player dead
 
             gameRoom.publish("game-state", {
                 players: players,
@@ -344,7 +391,7 @@ const handlePlayerEntered = function (player) {
         y: 20,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
-        direction: [1, 0],
+        direction: 1,
         score: 0,
         nickname: player.data,
         isAlive: true
