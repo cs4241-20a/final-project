@@ -40,9 +40,11 @@ export default class Home extends React.Component {
         this.sendMessage = this.sendMessage.bind(this)
     }
 
+
     // Get form value on change
     handleUser1Change (e) { this.setState({ user1: e.target.value }) }
     handleUser2Change (e) { this.setState({ user2: e.target.value }) }
+
     handleMessageChange (e) { this.setState({ typedMsg: e.target.value }) }
 
     // Send request to server for songs in common
@@ -88,12 +90,12 @@ export default class Home extends React.Component {
     }
 
     toggleOverlay() {
-
         if (this.state.overlayStyle === "block") {
             this.setState({ 
                 overlayStyle: "none",
                 showChat: false 
             })
+            document.body.style.overflow = "unset"
         }
     }
 
@@ -128,10 +130,12 @@ export default class Home extends React.Component {
             if (this.state.showChat) {
                 if (this.state.overlayStyle !== "block") {
                     this.setState({ overlayStyle: "block" })
+                    document.body.style.overflow = 'hidden'
                 }
 
                 return (
                     <div id="chatDiv">
+                        
                         <Container>
                             <h1 style={{color: "#ffffff"}} className="mt-5 mb-10">Chat</h1>
                                 <ChatFeed
@@ -167,6 +171,7 @@ export default class Home extends React.Component {
 
         return (
             <div id="wrapperDiv">
+
                 <div id="overlay" onClick={this.toggleOverlay} ref="overlayDiv" style={{display: this.state.overlayStyle}}></div>
                 <Container id="mainDiv" >
 
@@ -194,7 +199,6 @@ export default class Home extends React.Component {
 
                 { renderChat() }
 
-                
             </div>
         )
     }
