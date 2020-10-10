@@ -117,7 +117,7 @@ const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const MIN_PLAYERS_TO_START_GAME = 2;
-const GAME_TICKER_MS = 100;
+const GAME_TICKER_MS = 500;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
@@ -129,7 +129,6 @@ let alivePlayers = 0;
 let totalPlayers = 0;
 let gameRoom;
 let gameTickerOn = false;
-let world;
 
 let avatarColors = ["green", "cyan", "yellow"];
 let avatarTypes = ["A", "B", "C"];
@@ -278,7 +277,7 @@ const startGameDataTicker = function () {
                 playerCount: totalPlayers,
                 gameOn: gameOn,
                 deadPlayers: {},
-                coins: coins,
+                coins: {},
             });
         }
     }, GAME_TICKER_MS);
