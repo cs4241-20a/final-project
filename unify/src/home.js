@@ -6,13 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
 
-
 export default class Home extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            // columns: [{ dataField: 'title', text: 'Songs in Common'}],
             songs: [{ id: 0, title: "song0" }, { id: 1, title: "song1" }, { id: 2, title: "song2" }, { id: 3, title: "song3" }, { id: 4, title: "song4" }, { id: 5, title: "song5" }, { id: 6, title: "song6" }, { id: 7, title: "song7" }, { id: 8, title: "song8" }, { id: 9, title: "song9" }, { id: 10, title: "song10" }, { id: 11, title: "song11" }, { id: 12, title: "song12" }, { id: 13, title: "song13"}],
             columns: [],
             //songs: [],
@@ -76,7 +74,11 @@ export default class Home extends React.Component {
         let staticUser2 = this.state.user2
         this.setState({ 
             showTable: true,
-            columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
+            columns: [
+                { dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`, 
+                headerStyle: { backgroundColor: "#ffffff"}
+            }
+            ],
             user1: "",
             user2: ""
         })
@@ -120,7 +122,14 @@ export default class Home extends React.Component {
             if (this.state.showTable) {
                 return (                
                 <div className="mt-5 mb-10">
-                    <BootstrapTable keyField='id' data={ this.state.songs } columns={ this.state.columns } pagination={ paginationFactory() } bootstrap4={true} />
+                    <BootstrapTable 
+                    rowStyle={{ backgroundColor: '#ffffff' }}
+                    
+                    border={true}
+                    keyField='id' data={ this.state.songs } 
+                    columns={ this.state.columns } 
+                    pagination={ paginationFactory() } 
+                    bootstrap4={true} />
                 </div>
                 )
             }
@@ -175,7 +184,7 @@ export default class Home extends React.Component {
                 <div id="overlay" onClick={this.toggleOverlay} ref="overlayDiv" style={{display: this.state.overlayStyle}}></div>
                 <Container id="mainDiv" >
 
-                    <h1 className="mt-5 mb-10">Unify</h1>
+                    <h1 className="mt-5 mb-10" style={{color: "#ffffff"}}>Unify</h1>
 
                     <div className="mt-5 mb-10">
                         <Form>
@@ -186,7 +195,7 @@ export default class Home extends React.Component {
                                 <Input type="text" placeholder="Enter another username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
                             </FormGroup>
                             <FormGroup>
-                                <Button className="btn btn-primary btn-lg btn-block" onClick={this.getSongs}>Compare data</Button>
+                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Compare data</Button>
                             </FormGroup>
                         </Form>
                     </div>
