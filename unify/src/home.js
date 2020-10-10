@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Input, Container } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComments } from '@fortawesome/free-solid-svg-icons'
+import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
 
 export default class Home extends React.Component {
@@ -146,7 +146,7 @@ export default class Home extends React.Component {
                     <div id="chatDiv">
                         
                         <Container>
-                            <h1 style={{color: "#ffffff"}} className="mt-5 mb-10">Chat</h1>
+                            <h1 style={{color: "#191414"}} className="mt-5 mb-10">Chat</h1>
                                 <ChatFeed
                                 messages={this.state.messages} // Array: list of message objects
                                 isTyping={this.state.is_typing} // Boolean: is the recipient typing
@@ -160,8 +160,12 @@ export default class Home extends React.Component {
                                     },
                                     chatbubble: {
                                         borderRadius: 70,
-                                        padding: 10
-                                    }
+                                        padding: 10,
+                                        backgroundColor: '#1DB954',
+                                    },
+                                    recipientChatbubble: {
+                                        backgroundColor: '#191414',
+                                    },
                                     }
                                 }
                                 />
@@ -202,7 +206,7 @@ export default class Home extends React.Component {
 
                     { renderTable() }
 
-                    <FontAwesomeIcon icon={faComments} className="fa-3x sticky-chat" onClick={this.setChatState} />
+                    <FontAwesomeIcon icon={faComment} className="fas-3x sticky-chat" onClick={this.setChatState} />
 
                 </Container>
 

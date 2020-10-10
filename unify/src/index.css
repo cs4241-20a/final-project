@@ -16,23 +16,55 @@ body {
   overflow: auto;
 }
 
-
 #root {
   margin: 0;
   height: 100%;
   background-color: #191414;
 }
 
+
+
+/* Custom bootstrap style */
 .mb-10 {
   margin-bottom: 5rem !important;
 }
 
+
+
+/* Chat */
 .sticky-chat {
-  position: -webkit-sticky;
-  position: sticky;
-  bottom: 0;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
 }
 
+svg {
+  color: #1db954 !important;
+  font-size: 3rem !important;
+}
+
+#chatDiv {
+  width: 40%; 
+  background-color: #ffffff;
+  position: fixed;
+  right: 0;
+  height: 100%;
+  z-index: 4;
+}
+
+#writeMsgDiv {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background-color: #191414;
+}
+
+
+
+/* Main screen and overlay */
 #wrapperDiv {
   display: flex;
   flex-direction: row;
@@ -55,24 +87,9 @@ body {
   height: 100%;
 }
 
-#chatDiv {
-  width: 40%; 
-  background-color: black;
-  position: fixed;
-  right: 0;
-  height: 100%;
-  z-index: 4;
-}
 
-#writeMsgDiv {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  display: flex;
-  justify-content: space-around;
-  padding: 20px;
-}
 
+/* Customize table library */
 .page-item.active .page-link {
   background-color: #1DB954 !important;
   border-color: #1db954 !important;
