@@ -21,14 +21,12 @@ export default class Home extends React.Component {
             user2: "",
             showChat: false,
             messages: [
-                new Message({
-                  id: 1,
-                  message: "I'm the recipient! (The person you're talking to)",
-                }), // Gray bubble
-                new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
+                new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
+                new Message({ id: 0, message: "I'm you -- the blue bubble!" }),
               ],
             overlay: false,
-            overlayStyle: "none"
+            overlayStyle: "none", 
+            typedMsg: ""
         }
 
         this.overlayDiv = React.createRef()
@@ -38,17 +36,20 @@ export default class Home extends React.Component {
         this.handleUser2Change = this.handleUser2Change.bind(this)
         this.setChatState = this.setChatState.bind(this)
         this.toggleOverlay = this.toggleOverlay.bind(this)
+        this.handleMessageChange = this.handleMessageChange.bind(this)
+        this.sendMessage = this.sendMessage.bind(this)
     }
 
     // Get form value on change
     handleUser1Change (e) { this.setState({ user1: e.target.value }) }
     handleUser2Change (e) { this.setState({ user2: e.target.value }) }
+    handleMessageChange (e) { this.setState({ typedMsg: e.target.value }) }
 
     // Send request to server for songs in common
     getSongs() {
         // FOR WHEN SERVER IS SET UP
-        // let bodyJson = [{user1: this.state.user1}, {user2: this.state.user2}]
-        // fetch('/DUMMY_PATH_TO_GET_SONGS', {
+        // let bodyJson = {user1: this.state.user1, user2: this.state.user2}
+        // fetch('/getSongs', {
         //     method: 'POST',
         //     body: JSON.stringify(bodyJson),
         //     headers: {
@@ -96,6 +97,20 @@ export default class Home extends React.Component {
         }
     }
 
+    // NEED TO WATCH LECTURES FOR THIS PART (i think)
+    sendMessage() {
+        // FOR WHEN SERVER IS SET UP
+        //let bodyJson = {id: this.state.latestId, message: this.state.typedMsg}
+        // fetch('/postMsg', {
+        //     method: 'POST',
+        //     body: JSON.stringify(bodyJson),
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     }
+        // }).then(response => response.json())
+        this.setState({ typedMsg: "" })
+    }
+
 
     render () {
         // Show table on recieving data from server
@@ -114,29 +129,37 @@ export default class Home extends React.Component {
                 if (this.state.overlayStyle !== "block") {
                     this.setState({ overlayStyle: "block" })
                 }
-                console.log("showing chat where overlaystyle = " + this.state.overlayStyle)
+
                 return (
-                    <Container id="chatDiv">
-                        <h1 style={{color: "#ffffff"}} className="mt-5 mb-10">Chat</h1>
-                            <ChatFeed
-                            messages={this.state.messages} // Array: list of message objects
-                            isTyping={this.state.is_typing} // Boolean: is the recipient typing
-                            hasInputField={false} // Boolean: use our input, or use your own
-                            showSenderName // show the name of the user who sent the message
-                            bubblesCentered={false} //Boolean should the bubbles be centered in the feed?
-                            bubbleStyles={
-                            {
-                                text: {
-                                    fontSize: 16
-                                },
-                                chatbubble: {
-                                    borderRadius: 70,
-                                    padding: 10
+                    <div id="chatDiv">
+                        <Container>
+                            <h1 style={{color: "#ffffff"}} className="mt-5 mb-10">Chat</h1>
+                                <ChatFeed
+                                messages={this.state.messages} // Array: list of message objects
+                                isTyping={this.state.is_typing} // Boolean: is the recipient typing
+                                hasInputField={false} // Boolean: use our input, or use your own
+                                showSenderName // show the name of the user who sent the message
+                                bubblesCentered={false} //Boolean should the bubbles be centered in the feed?
+                                bubbleStyles={
+                                {
+                                    text: {
+                                        fontSize: 16
+                                    },
+                                    chatbubble: {
+                                        borderRadius: 70,
+                                        padding: 10
+                                    }
+                                    }
                                 }
-                                }
-                            }
-                            />
-                    </Container>
+                                />
+                        </Container>
+
+                        <div id="writeMsgDiv">
+                            <Input type="text" placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} value={this.state.typedMsg} ></Input>
+                            <Button className="btn btn-primary" onClick={this.sendMessage}>Send</Button>
+                        </div>
+
+                    </div>
                     )
             }
         }
