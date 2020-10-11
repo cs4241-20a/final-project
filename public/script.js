@@ -6,10 +6,10 @@ let players = {};
 let totalPlayers = 0;
 let amIalive = false;
 let game;
-let coins = null;
 let clientCoins = {};
 let prevKey = "";
 let board = []; // init
+const RATIO = 25;
 
 const BASE_SERVER_URL = "http://localhost:4000";
 let myNickname = "";
@@ -40,6 +40,7 @@ class GameScene extends Phaser.Scene {
     constructor() {
         super("gameScene");
     }
+
 
     //load assets
     preload() {
@@ -185,7 +186,6 @@ class GameScene extends Phaser.Scene {
             }
             players = msg.data.players;
             totalPlayers = msg.data.playerCount;
-            coins = msg.data.coins;
         });
 
         gameRoom.subscribe("game-over", (msg) => {
@@ -215,6 +215,9 @@ class GameScene extends Phaser.Scene {
         }
 
         for (let item in players) {
+
+            this.updateCoinsOnClient(players[item].x, players[item].y);
+
             let avatarId = players[item].id;
             if (this.avatars[avatarId] && players[item].isAlive) {
                 // render position of the avatar to match player's
@@ -260,22 +263,20 @@ class GameScene extends Phaser.Scene {
             }
         }
 
-        this.updateCoinsOnClient();
         this.updateScores(scores);
         this.publishMyInput();
     }
 
-    updateCoinsOnClient() {
-        // make sure they were initialized
-        if (coins != null) {
-            for (let item in clientCoins) {
-                // if such coin is not on server side anymore
-                if (!coins[item]) {
-                    // coin was picked
-                    clientCoins[item].disableBody(true, true);
-                    delete clientCoins[item];
-                }
-            }
+    updateCoinsOnClient(x, y) {
+        // scale user's x and y
+        let currentColumnScaled = Math.floor(x / RATIO)
+        let currentRowScaled = Math.floor(y / 25)
+
+        let coinId = `${currentColumnScaled}|${currentRowScaled}`;
+
+        if (clientCoins[coinId]) {
+            clientCoins[coinId].disableBody(true, true);
+            delete clientCoins[coinId];
         }
     }
 
@@ -330,15 +331,11 @@ class GameScene extends Phaser.Scene {
     }
 
     renderBoardAndCoins() {
-        let ratio = 25;
-
-        console.log(board.length); // 30 // 56
-
         for (let i = 0; i < board[0].length; i++) {
             for (let j = 0; j < board.length; j++) {
                 // console.log(`${i} : ${j}`);
                 if (board[j][i] === 1) {
-                    this.physics.add.image(((i + 1) * ratio) - Math.floor(ratio / 2), ((j + 1) * ratio) - Math.floor(ratio / 2), "wall", null, {
+                    this.physics.add.image(((i + 1) * RATIO) - Math.floor(RATIO / 2), ((j + 1) * RATIO) - Math.floor(RATIO / 2), "wall", null, {
                         restitution: 0.4,
                         isStatic: true
                     });
@@ -346,7 +343,7 @@ class GameScene extends Phaser.Scene {
                     let coinId = `${i}|${j}`;
 
                     clientCoins[coinId] = this.physics.add
-                        .sprite(((i + 1) * ratio) - Math.floor(ratio / 2), ((j + 1) * ratio) - Math.floor(ratio / 2), "coin")
+                        .sprite(((i + 1) * RATIO) - Math.floor(RATIO / 2), ((j + 1) * RATIO) - Math.floor(RATIO / 2), "coin")
                         .setOrigin(0.5, 0.5);
                 }
             }

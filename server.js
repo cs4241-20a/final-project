@@ -325,15 +325,18 @@ function canMove(direction, id) {
 
 const startGameDataTicker = function () {
 
-    for (let i = 0; i < walls[0].length; i++) {
-        for (let j = 0; j < walls.length; j++) {
-            if (walls[j][i] === 0) {
-                let id = i + "| " + j
-                let coin = {x: i, y: j, score: 5}
-                coins[id] = coin
-            }
-        }
-    }
+    // for (let i = 0; i < walls[0].length; i++) {
+    //     for (let j = 0; j < walls.length; j++) {
+    //         if (walls[j][i] === 0) {
+    //             let id = i + "|" + j
+    //             let coin = {x: i, y: j, score: 5}
+    //             coins[id] = coin
+    //         }
+    //     }
+    // }
+
+    console.log("hmm");
+
     let tickInterval = setInterval(() => {
         if (!gameTickerOn) {
             clearInterval(tickInterval);
@@ -346,7 +349,6 @@ const startGameDataTicker = function () {
                 playerCount: totalPlayers,
                 gameOn: gameOn,
                 deadPlayers: {},
-                coins,
             });
         }
     }, GAME_TICKER_MS);
@@ -358,7 +360,7 @@ const handlePlayerEntered = function (player) {
     alivePlayers++;
     totalPlayers++;
 
-    if (totalPlayers === 1) {
+    if (totalPlayers >= 1) {
         gameTickerOn = true;
         startGameDataTicker();
     }
