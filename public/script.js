@@ -6,6 +6,8 @@ let players = {};
 let totalPlayers = 0;
 let amIalive = false;
 let game;
+
+let backendCoins = null;
 let clientCoins = {};
 let prevKey = "";
 let board = []; // init
@@ -186,6 +188,7 @@ class GameScene extends Phaser.Scene {
             }
             players = msg.data.players;
             totalPlayers = msg.data.playerCount;
+            backendCoins = msg.data.coins;
         });
 
         gameRoom.subscribe("game-over", (msg) => {
@@ -215,8 +218,6 @@ class GameScene extends Phaser.Scene {
         }
 
         for (let item in players) {
-
-            this.updateCoinsOnClient(players[item].x, players[item].y);
 
             let avatarId = players[item].id;
             if (this.avatars[avatarId] && players[item].isAlive) {
@@ -263,20 +264,21 @@ class GameScene extends Phaser.Scene {
             }
         }
 
+        this.updateCoinsOnClient()
         this.updateScores(scores);
         this.publishMyInput();
     }
 
-    updateCoinsOnClient(x, y) {
+    updateCoinsOnClient() {
         // scale user's x and y
-        let currentColumnScaled = Math.floor(x / RATIO)
-        let currentRowScaled = Math.floor(y / 25)
-
-        let coinId = `${currentColumnScaled}|${currentRowScaled}`;
-
-        if (clientCoins[coinId]) {
-            clientCoins[coinId].disableBody(true, true);
-            delete clientCoins[coinId];
+        if (backendCoins != null) {
+            for (let item in clientCoins) {
+                if (!backendCoins[item]) {
+                    // coin has been picked
+                    clientCoins[item].disableBody(true, true);
+                    delete clientCoins[item];
+                }
+            }
         }
     }
 
@@ -340,9 +342,19 @@ class GameScene extends Phaser.Scene {
                         isStatic: true
                     });
                 } else if (board[j][i] === 0) {
-                    let coinId = `${i}|${j}`;
+                    let x = i
+                    let y = j
+                    if (x < 10) {
+                        x = `0${x}`
+                    }
 
-                    clientCoins[coinId] = this.physics.add
+                    if (y < 10) {
+                        y = `0${y}`
+                    }
+
+                    let id = `${x}|${y}`
+
+                    clientCoins[id] = this.physics.add
                         .sprite(((i + 1) * RATIO) - Math.floor(RATIO / 2), ((j + 1) * RATIO) - Math.floor(RATIO / 2), "coin")
                         .setOrigin(0.5, 0.5);
                 }

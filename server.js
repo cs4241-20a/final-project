@@ -125,7 +125,7 @@ const GAME_TICKER_MS = 500;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
-let coins = {"3|2": {x: 3, y: 2, score: 5}, "3|3": {x: 3, y: 2, score: 5}}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
+let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
 let walls = [ // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 56x30  (each position is 25px).
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
@@ -362,7 +362,7 @@ const handlePlayerEntered = function (player) {
         "clientChannel-" + player.clientId
     );
 
-    
+
     // check through the spawn locations to find a location that has not been used yet
 
     for( location of spawnLocations ){
