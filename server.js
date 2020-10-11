@@ -230,38 +230,45 @@ function subscribeToPlayerInput(channelInstance, playerId) {
 function moveEveryPlayer() {
 
     Object.values(players).forEach(function (player) {
-        let tryDirection = player.direction
 
-        let previousX = player.x;
-        let previousY = player.y;
-        let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
+        if (player !== null) {
 
-        if (player.isAlive === false) {
-            //delete players[player.id]
-            console.log("FOUND DEAD PLAYER: " + player.id);
-        }
-        // can move in the current direction
-        if (player.isAlive !== false && canMove(tryDirection, player.id)) {
-            // console.log( "We can move in this direction: " + tryDirection )
-            if (tryDirection === 1) { // direction is North
-                player.y -= PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, player.y, previousY, previousX, movementDirection)
+            let tryDirection = player.direction;
+            let previousX = player.x;
+            let previousY = player.y;
+            
+            let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
 
-            } else if (tryDirection === 2) { // direction is West
-                player.x += PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, previousX, player.x, previousY, movementDirection)
-
-            } else if (tryDirection === 3) { // direction is South
-                player.y += PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, previousY, player.y, previousX, movementDirection)
-
-            } else if (tryDirection === 4) { // direction is East
-                player.x -= PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, player.x, previousX, previousY, movementDirection)
+            if (player.isAlive === false) {
+                deadPlayers[player.id] = player;
+                console.log("Deleted " + player.id);
+                console.log("FOUND DEAD PLAYER: " + player.id);
+                delete players[player.id];
             }
-        }
+            
+            // can move in the current direction
+            if (player.isAlive !== false && canMove(tryDirection, player.id)) {
+                // console.log( "We can move in this direction: " + tryDirection )
+                if (tryDirection === 1) { // direction is North
+                    player.y -= PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, player.y, previousY, previousX, movementDirection)
+
+                } else if (tryDirection === 2) { // direction is West
+                    player.x += PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, previousX, player.x, previousY, movementDirection)
+
+                } else if (tryDirection === 3) { // direction is South
+                    player.y += PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, previousY, player.y, previousX, movementDirection)
+
+                } else if (tryDirection === 4) { // direction is East
+                    player.x -= PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, player.x, previousX, previousY, movementDirection)
+                }
+            }
         
-        console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
+            //console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
+        }
     })
 
 
@@ -311,8 +318,6 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
             if (inRange) {
                 currentPlayerDead = true;
                 player.isAlive = false;
-                deadPlayers[player.id] = player;
-                delete players[player.id];
             }
         }  
     })
@@ -320,6 +325,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     if (currentPlayerDead) {
         players[id].isAlive = false;
         deadPlayers[id] = players[id];
+        console.log("Deleted " + players[id].id);
         delete players[id];
     }
 }
