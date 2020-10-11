@@ -216,7 +216,7 @@ class GameScene extends Phaser.Scene {
 
         for (let item in players) {
 
-            this.updateCoinsOnClient(players[item].x, players[item].y);
+            //this.updateCoinsOnClient(players[item].x, players[item].y);
 
             let avatarId = players[item].id;
             if (this.avatars[avatarId] && players[item].isAlive) {

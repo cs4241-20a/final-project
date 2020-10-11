@@ -315,8 +315,6 @@ const startGameDataTicker = function () {
     //     }
     // }
 
-    console.log("hmm");
-
     let tickInterval = setInterval(() => {
         if (!gameTickerOn) {
             clearInterval(tickInterval);
