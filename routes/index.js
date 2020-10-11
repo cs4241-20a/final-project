@@ -1,9 +1,9 @@
 const express = require('express'),
       path = require('path')
-const { route } = require('./users')
 const router = express.Router()
+const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth')
 
-router.get('/', (req, res) => {
+router.get('/', ensureAuthenticated, (req, res) => {
     res.sendFile( path.join(__dirname, '../public/html/index.html') )
 })
 
@@ -11,13 +11,13 @@ router.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname , '../public/html/register.html') )
 })
 
-router.get('/login', (req, res) => {
+router.get('/login', forwardAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname , '../public/html/login.html') )
 })
 
-router.get('/home', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/home.html'))
-})
+// router.get('/welcome', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../public/html/welcome.html'))
+// })
 
 
 module.exports = router

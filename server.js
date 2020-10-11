@@ -4,8 +4,10 @@ const express = require('express'),
       cookie = require('cookie-session'),
       mongodb = require('mongodb'),
       mongoose = require('mongoose'),
-      passport = require('passport')
-      app = express()
+      passport = require('passport'),
+      app = express(),
+      ws = require('ws'),
+      http = require('http')
 
 // const client_id = process.env.GITHUB_CLIENT_ID
 // const client_secret = process.env.GITHUB_CLIENT_SECRET
@@ -16,6 +18,27 @@ var StatsD = require('node-statsd')
 var favicon = require('serve-favicon')
 var path = require('path')
 
+// const server = http.createServer(app)
+// const socketServer = new ws.Server({ server })
+
+// const clients = []
+
+// socketServer.on( 'connection', client => {
+//   // when the server receives a message from this client...
+//   client.on( 'message', msg => {
+// 	  // send msg to every client EXCEPT
+//     // the one who originally sent it
+//     clients.forEach( c => {
+//       if( c !== client )
+//         c.send( msg )
+//     })
+//   })
+
+//   // add clien to client list
+//   clients.push( client )
+// })
+
+// server.listen( 3000 )
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
@@ -52,10 +75,21 @@ app.use(passport.session())
 app.use('/users', require('./routes/users'))
 app.use('/', require('./routes/index'))
 
+app.get("/video", (request, response) => {
+  response.sendFile(__dirname + "/public/html/video.html");
+});
+
+
+// const listener = server.listen( process.env.PORT || 3000, function() {
+//   console.log( 'Your app is listening on port ' + listener.address().port )
+// })
+
 
 const listener = app.listen( process.env.PORT || 3000, function() {
   console.log( 'Your app is listening on port ' + listener.address().port )
 })
+
+
 
 // async function getAccessToken(code){
 //   const token_url = 'https://github.com/login/oauth/access_token'
