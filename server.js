@@ -308,12 +308,13 @@ const startGameDataTicker = function () {
     for (let i = 0; i < walls[0].length; i++) {
         for (let j = 0; j < walls.length; j++) {
             if (walls[j][i] === 0) {
-                let id = i + "| " + j
+                let id = i + "|" + j
                 let coin = {x: i, y: j, score: 5}
                 coins[id] = coin
             }
         }
     }
+
     let tickInterval = setInterval(() => {
         if (!gameTickerOn) {
             clearInterval(tickInterval);
@@ -337,7 +338,7 @@ const handlePlayerEntered = function (player) {
     alivePlayers++;
     totalPlayers++;
 
-    if (totalPlayers === 1) {
+    if (totalPlayers >= 1) {
         gameTickerOn = true;
         startGameDataTicker();
     }
