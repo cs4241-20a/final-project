@@ -1,7 +1,6 @@
 html {
   margin: 0; 
   height: 100%;
-  overflow: hidden;
 }
 
 body {
@@ -13,7 +12,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #191414;
   height: 100%;
-  overflow: auto;
+  overscroll-behavior-y: none;
 }
 
 #root {
