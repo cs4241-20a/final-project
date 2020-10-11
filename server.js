@@ -165,6 +165,8 @@ let totalPlayers = 0;
 let gameRoom;
 let gameTickerOn = false;
 
+// spawn locations - these are currently hardcoded for a 1400x750px board
+let spawnLocations = [ {x: 1362.5,y: 712.5, occupied: false}, {x: 37.5,y: 712.5, occupied: false}, {x: 1362.5,y: 37.5, occupied: false}, {x: 37.5,y: 37.5, occupied: false} ]
 let avatarColors = ["green", "cyan", "yellow"];
 let avatarTypes = ["A", "B", "C"];
 
@@ -348,6 +350,8 @@ const handlePlayerEntered = function (player) {
     alivePlayers++;
     totalPlayers++;
 
+    let xPos;
+    let yPos;
     if (totalPlayers >= 1) {
         gameTickerOn = true;
         startGameDataTicker();
@@ -358,12 +362,23 @@ const handlePlayerEntered = function (player) {
         "clientChannel-" + player.clientId
     );
 
+    
+    // check through the spawn locations to find a location that has not been used yet
+
+    for( location of spawnLocations ){
+            if( location.occupied === false ){
+            xPos = location.x
+            yPos = location.y
+            location.occupied = true
+            }
+        }
+
     //TODO figure out how to spawn them in a smarter way
 
     let newPlayerObject = {
         id: newPlayerId,
-        x: 37.5,
-        y: 37.5,
+        x: xPos,
+        y: yPos,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
         direction: [1, 0],
