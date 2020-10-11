@@ -9,6 +9,7 @@ import { Home } from "./Home";
 import { CreateChallenge } from "./CreateChallenge";
 import "../../css/main.css";
 import { blue, pink } from "@material-ui/core/colors";
+import { Login } from "./Login";
 
 const App: FunctionComponent = props => {
     // const prefersDarkTheme = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
@@ -49,6 +50,9 @@ const App: FunctionComponent = props => {
                 <Switch>
                     <Route exact path="/">
                         <Home/>
+                    </Route>
+                    <Route path="/login">
+                        <Login/>
                     </Route>
                     <Route path="/create">
                         <CreateChallenge/>

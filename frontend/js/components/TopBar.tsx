@@ -42,8 +42,9 @@ export const TopBar: FunctionComponent = () => {
         >
             <List className={classes.drawerList}>
             {([
+                ["/login", "Login", <React.Fragment/>],
                 ["/", "Home", <HomeIcon/>],
-                ["/create", "Create", <BrushIcon/>]
+                ["/create", "Create", <BrushIcon/>],
             ] as const).map(option =>
                 <ListItem button component={Link} to={option[0]} onClick={closeDrawer}>
                     <ListItemIcon>{option[2]}</ListItemIcon>
