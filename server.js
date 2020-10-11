@@ -181,32 +181,12 @@ function subscribeToPlayerInput(channelInstance, playerId) {
     channelInstance.subscribe("pos", (msg) => {
         if (msg.data.keyPressed === "left") { // direction is West
             players[playerId].direction = 4;
-
-            if (canMove(4, players[playerId].id)) {
-                players[playerId].x -= PLAYER_MOVEMENT_INCREMENT;
-            }
-
         } else if (msg.data.keyPressed === "right") { // direction is East
             players[playerId].direction = 2;
-
-            if (canMove(2, players[playerId].id)) {
-                players[playerId].x += PLAYER_MOVEMENT_INCREMENT;
-            }
-
         } else if (msg.data.keyPressed === "up") { // direction is North
             players[playerId].direction = 1;
-
-            if (canMove(1, players[playerId].id)) {
-                players[playerId].y -= PLAYER_MOVEMENT_INCREMENT;
-            }
-
         } else if (msg.data.keyPressed === "down") { // direction is South
             players[playerId].direction = 3;
-
-            if (canMove(3, players[playerId].id)) {
-                players[playerId].y += PLAYER_MOVEMENT_INCREMENT;
-            }
-
         }
         // console.log( "Canvas W: " + CANVAS_WIDTH
         //  + ", Canvas H: "+ CANVAS_HEIGHT
@@ -312,7 +292,7 @@ function canMove(direction, id) {
     }
 
     //checking if wall is present
-    // console.log( "destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray )
+    console.log( "destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray )
     // console.log( "That space contains: " + walls[positionYArray][positionXArray] )
     if (walls[positionYArray][positionXArray] === 1) {
         console.log("There is a wall here")
