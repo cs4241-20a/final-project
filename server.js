@@ -116,13 +116,14 @@ const PLAYER_MOVEMENT_INCREMENT = 10;
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
-const ROOM_FOR_COLLISION = 20;
-const ROOM_FOR_COLLISION_SAME = 5;
+const OTHER_AXIS_RANGE = 20;
+const SAME_AXIS_RANGE = 5;
 const MIN_PLAYERS_TO_START_GAME = 2;
 const GAME_TICKER_MS = 1000;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
+let deadPlayers = {};
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
 let walls = [ // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 56x30  (each position is 25px).
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -236,7 +237,7 @@ function moveEveryPlayer() {
         let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
 
         if (player.isAlive === false) {
-            delete players[player.id]
+            //delete players[player.id]
             console.log("FOUND DEAD PLAYER");
         }
         // can move in the current direction
@@ -244,19 +245,19 @@ function moveEveryPlayer() {
             // console.log( "We can move in this direction: " + tryDirection )
             if (tryDirection === 1) { // direction is North
                 player.y -= PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, previousY, player.y, previousX, 0)
+                checkIfDead(player.id, player.y, previousY, previousX, movementDirection)
 
             } else if (tryDirection === 2) { // direction is West
                 player.x += PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, player.x, previousX, previousY, 1)
+                checkIfDead(player.id, previousX, player.x, previousY, movementDirection)
 
             } else if (tryDirection === 3) { // direction is South
                 player.y += PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, player.y, previousY, previousX, 0)
+                checkIfDead(player.id, previousY, player.y, previousX, movementDirection)
 
             } else if (tryDirection === 4) { // direction is East
                 player.x -= PLAYER_MOVEMENT_INCREMENT
-                checkIfDead(player.id, previousX, player.x, previousY, 1)
+                checkIfDead(player.id, player.x, previousX, previousY, movementDirection)
             }
         }
         
@@ -270,29 +271,55 @@ function moveEveryPlayer() {
     // check if players die
 }
 
-function checkIfDead(id, largerVal, smallerVal, other, direction) {
+
+function checkRange(positionVal, minimalRange, maxRange, constant) {
+    if ( (positionVal >= (minimalRange - constant)) &&
+        (positionVal <= (maxRange + constant)) ) 
+    {
+        return true;
+
+    }  
+
+    return false;
+}
+
+
+function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
+    let inRange = false;
+
     Object.values(players).forEach(function (player) {
         if (player.id !== id) {
-            // direction was vertical
+            // direction was vertical (SAME AXIS WOULD BE Y-AXIS)
             if (direction === 0) {
-                if ((player.y >= smallerVal - ROOM_FOR_COLLISION_SAME) && (player.y <= largerVal + ROOM_FOR_COLLISION_SAME) 
-                && (player.x >= other - ROOM_FOR_COLLISION && player.x <= other + ROOM_FOR_COLLISION)) {
-                    player.isAlive = false; 
-                    players[id] = false;
-                    delete players[id]
+                
+                if ( checkRange(player.y, minRange, maxRange, SAME_AXIS_RANGE) &&
+                    checkRange(player.x, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE) )
+                {
+                    inRange = true;
                 }
-        
-            } else {
-                if ((player.x >= smallerVal - ROOM_FOR_COLLISION_SAME) && (player.x <= largerVal + ROOM_FOR_COLLISION_SAME) 
-                && (player.y >= other - ROOM_FOR_COLLISION && player.y <= other + ROOM_FOR_COLLISION)) {
-                    player.isAlive = false;
-                    players[id] = false;
-                    delete players[id]
+
+            } else { // direction was horizontal (SAME AXIS WOULD BE X-AXIS)
+
+                if ( checkRange(player.x, minRange, maxRange, SAME_AXIS_RANGE) &&
+                    checkRange(player.y, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE) )
+                {
+                    inRange = true;
                 }
             }
+
+            if (inRange) {
+                player.isAlive = false;
+                players[id].isAlive = false;
+                deadPlayers[player.id] = player;
+                deadPlayers[id] = players[id];
+                delete players[id];
+                delete players[player.id];
+            }
         }
+        
     })
 }
+
 
 function withinBoundary(x, y) {
     if (x >= 0 && x <= CANVAS_WIDTH) {
@@ -360,7 +387,7 @@ const startGameDataTicker = function () {
                 players: players,
                 playerCount: totalPlayers,
                 gameOn: gameOn,
-                deadPlayers: {},
+                deadPlayers: deadPlayers,
                 coins: {},
             });
         }
