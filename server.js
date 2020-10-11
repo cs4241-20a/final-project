@@ -117,7 +117,7 @@ const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const OTHER_AXIS_RANGE = 20;
-const SAME_AXIS_RANGE = 5;
+const SAME_AXIS_RANGE = 10;
 const MIN_PLAYERS_TO_START_GAME = 2;
 const GAME_TICKER_MS = 1000;
 
@@ -238,7 +238,7 @@ function moveEveryPlayer() {
 
         if (player.isAlive === false) {
             //delete players[player.id]
-            console.log("FOUND DEAD PLAYER");
+            console.log("FOUND DEAD PLAYER: " + player.id);
         }
         // can move in the current direction
         if (player.isAlive !== false && canMove(tryDirection, player.id)) {
@@ -286,6 +286,7 @@ function checkRange(positionVal, minimalRange, maxRange, constant) {
 
 function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     let inRange = false;
+    let currentPlayerDead = false;
 
     Object.values(players).forEach(function (player) {
         if (player.id !== id) {
@@ -309,15 +310,17 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 
             if (inRange) {
                 player.isAlive = false;
-                players[id].isAlive = false;
                 deadPlayers[player.id] = player;
-                deadPlayers[id] = players[id];
-                delete players[id];
                 delete players[player.id];
             }
-        }
-        
+        }  
     })
+
+    if (currentPlayerDead) {
+        players[id].isAlive = false;
+        deadPlayers[id] = players[id];
+        delete players[id];
+    }
 }
 
 
