@@ -57,7 +57,7 @@
             [e.target[1].name]: e.target[1].value
         }
 
-        fetch('http://localhost:3000/users/login', {
+        fetch('/users/login', {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json'
@@ -68,7 +68,7 @@
             .then(data => {
               console.log(data)
                 if(!data.msg){
-                    window.location.href = "http://localhost:3000/home"
+                    window.location.href = "/"
                 }
                 else {
                     displayMessage(data.msg)
