@@ -309,6 +309,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
             }
 
             if (inRange) {
+                currentPlayerDead = true;
                 player.isAlive = false;
                 deadPlayers[player.id] = player;
                 delete players[player.id];
