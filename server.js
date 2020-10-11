@@ -121,7 +121,7 @@ const P2_WORLD_TIME_STEP = 1 / 16;
 const MIN_PLAYERS_TO_START_GAME = 2;
 const PLAYER_MOVEMENT_OFFSET = PLAYER_MOVEMENT_INCREMENT / 2;
 
-const GAME_TICKER_MS = 1000;
+const GAME_TICKER_MS = 500;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
@@ -308,8 +308,18 @@ const startGameDataTicker = function () {
     for (let i = 0; i < walls[0].length; i++) {
         for (let j = 0; j < walls.length; j++) {
             if (walls[j][i] === 0) {
-                let id = i + "|" + j
-                let coin = {x: i, y: j, score: 5}
+                let x = i
+                let y = j
+                if (x < 10) {
+                    x = `0${x}`
+                }
+
+                if (y < 10) {
+                    y = `0${y}`
+                }
+
+                let id = `${x}|${y}`
+                let coin = 5
                 coins[id] = coin
             }
         }
