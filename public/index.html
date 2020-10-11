@@ -1,127 +1,16 @@
 <!DOCTYPE html>
-<!-- html lang="en">
+<! html lang="en">
     <head>
-        <title>Final Project</title>
+        <title>Chatroom Selection</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="css/style.css" />
-        <script src="js/paper-full.js"></script>
-        <script
-            type="text/paperscript"
-            canvas="centralCanvas"
-            src="js/draw.js"
-        ></script>
-        <script defer src="js/script.js"></script>
-        <style>
-            .wrapper {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                grid-auto-rows: 100px;
-            }
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            body {
-                font: 13px Helvetica, Arial;
-            }
-            form {
-                background: #000;
-                padding: 3px;
-                position: fixed;
-                bottom: 0;
-                width: 50%;
-            }
-            form input {
-                border: 0;
-                padding: 10px;
-                width: 90%;
-                margin-right: 0.5%;
-            }
-            form button {
-                width: 9%;
-                background: rgb(130, 224, 255);
-                border: none;
-                padding: 10px;
-            }
-            #messages {
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-            }
-            #messages li {
-                padding: 5px 10px;
-            }
-            #messages li:nth-child(odd) {
-                background: #eee;
-            }
-        </style>
     </head>
 
     <body>
-        <div class="wrapper">
-            <div class="left">
-                <h1>Pictochat 2</h1>
-                <h3>Type or draw something!</h3>
-                <button id="send">Send</button>
-                <button id="clear">Clear</button>
-                <div>
-                    <p>Brush Size Selection</p>
-                    <button id="5" class="brush selected">5px</button>
-                    <button id="10" class="brush">10px</button>
-                    <button id="15" class="brush">15px</button>
-                    <button id="20" class="brush">20px</button>
-                    <button id="30" class="brush">30px</button>
-                    <button id="40" class="brush">40px</button>
-                </div>
-                <div>
-                    <p>Brush Color Selection</p>
-                    <button id="red" class="color selected">Red</button>
-                    <button id="blue" class="color">Blue</button>
-                    <button id="yellow" class="color">Yellow</button>
-                    <button id="orange" class="color">Orange</button>
-                    <button id="green" class="color">Green</button>
-                    <button id="violet" class="color">Violet</button>
-                    <button id="white" class="color">Eraser</button>
-                </div>
-                <canvas
-                    id="centralCanvas"
-                    width="650"
-                    height="300"
-                    style="border: 2px solid #000000"
-                ></canvas>
-            </div>
-            <div class="right">
-                <ul id="messages"></ul>
-                <form action="">
-                    <input id="m" autocomplete="off" /><button>Send</button>
-                </form>
-                <script src="/socket.io/socket.io.js"></script>
-                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-                <script>
-                    var socket;
-                    var roomID = window.location.pathname.split("/")[2];
-                    $(document).ready(function () {
-                        socket = io();
-                        socket.emit("join", roomID);
-                    });
-                    $(function () {
-                        $("form").submit(function (e) {
-                            e.preventDefault(); // prevents page reloading
-                            socket.emit("chat", {
-                                roomID,
-                                message: $("#m").val(),
-                            });
-                            $("#m").val("");
-                            return false;
-                        });
-                        socket.on("chat", function (msg) {
-                            $("#messages").append($("<li>").text(msg));
-                        });
-                    });
-                </script>
-            </div>
-        </div>
+        <a href="/chatroom/1">Room 1</a>
+        <a href="/chatroom/2">Room 2</a>
+        <a href="/chatroom/3">Room 3</a>
+        <a href="/chatroom/4">Room 4</a>
     </body>
-</html -->
+</html>
