@@ -25,13 +25,14 @@ io.on("connection", (client) => {
     });
 });
 
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/public/main.html");
+});
 // app.use(express.static("public"));
 app.get("/chatroom/:roomID", (req, res) => {
     res.sendFile(__dirname + "/public/chatroom.html");
 });
-app.get("/chatroom/:roomID", (req, res) => {
-    res.sendFile(__dirname + "/public/chatroom.html");
-});
+
 app.get("/chatroom/js/paper-full.js", (req, res) => {
     res.sendFile(__dirname + "/public/js/paper-full.js");
 });
