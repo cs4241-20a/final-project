@@ -91,7 +91,7 @@ passport.use(new LocalStrategy(
                     }
                 } else {
                     // create new user
-                    collection.insertOne({username: userName, password: passWord})
+                    collection.insertOne({username: userName, password: passWord, score: 0})
                         .then(() => {
                             return done(null, userName);
                         });
@@ -328,6 +328,13 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     if (currentPlayerDead) {
         players[id].isAlive = false;
         deadPlayers.push(players[id]);
+        collection
+            .updateOne(
+                { username: players[id].nickname},
+                {
+                    $set: { "score": players[id].score }
+                }
+            )
         //players[id].score =100; for testing purposes
         //console.log("Deleted " + players[id].id);
         //delete players[id];
@@ -376,6 +383,13 @@ function finishGame() {
             name: player.id,
             score: player.score,
         });
+        collection
+            .updateOne(
+                { username: player.nickname},
+                {
+                    $set: { "score": player.score }
+                }
+            )
     });
 
     rankings.sort((a, b) => {
@@ -586,6 +600,10 @@ app.get("/auth/game", (request, response) => {
 });
 
 app.get("/getBoard", bodyParser.json(), (req, res) => res.json(walls))
+
+app.get("/topScores", bodyParser.json(), (req, res) => {
+    collection.find().project({username:1, score:1}).sort({score:-1}).limit(10).toArray().then(result => res.json(result))
+})
 // routes
 app.get('/', ensureAuth, (req, res) => {
     console.log(req.user);
