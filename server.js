@@ -232,13 +232,22 @@ function moveEveryPlayer() {
     // check if players die
 }
 
+function getCoinId(x, y) {
+    if (x < 10) {
+        x = `0${x}`
+    }
+
+    if (y < 10) {
+        y = `0${y}`
+    }
+
+    return `${x}|${y}`;
+}
 
 function collectCoin(x, y) {
-    let coordinates = x + "|" + y
-    console.log(coordinates)
+    let coordinates = getCoinId(x, y)
     if (coordinates in coins) {
-        console.log("Coin")
-        let score = coins[coordinates].score
+        let score = coins[coordinates]
         delete coins[coordinates]
         return score
     }
@@ -310,17 +319,7 @@ const startGameDataTicker = function () {
     for (let i = 0; i < walls[0].length; i++) {
         for (let j = 0; j < walls.length; j++) {
             if (walls[j][i] === 0) {
-                let x = i
-                let y = j
-                if (x < 10) {
-                    x = `0${x}`
-                }
-
-                if (y < 10) {
-                    y = `0${y}`
-                }
-
-                let id = `${x}|${y}`
+                let id = getCoinId(i, j)
                 let coin = 5
                 coins[id] = coin
             }
@@ -339,6 +338,7 @@ const startGameDataTicker = function () {
                 playerCount: totalPlayers,
                 gameOn: gameOn,
                 deadPlayers: {},
+                coins
             });
         }
     }, GAME_TICKER_MS);
