@@ -5,6 +5,7 @@ const express = require('express'),
       mongodb = require('mongodb'),
       mongoose = require('mongoose'),
       passport = require('passport'),
+      session = require('express-session'),
       app = express(),
       ws = require('ws'),
       http = require('http')
@@ -68,6 +69,15 @@ require('./config/passport.js')(passport)
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(bodyparser.json())
 
+// Express session
+app.use(
+    session({
+        secret: 'secret',
+        resave: true,
+        saveUninitialized: true
+    })
+)
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -79,6 +89,10 @@ app.get("/video", (request, response) => {
   response.sendFile(__dirname + "/public/html/video.html");
 });
 
+app.delete("/logout", (req, res)=>{
+  req.logOut()
+  res.redirect("/login")
+})
 
 // const listener = server.listen( process.env.PORT || 3000, function() {
 //   console.log( 'Your app is listening on port ' + listener.address().port )

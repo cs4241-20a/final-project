@@ -26,16 +26,37 @@
       <button>Home</button>
     </a>
     <p id="type">Video Type</p>
-    <iframe id="video" frameborder="0" allowfullscreen></iframe>
+    <div class="main" style="position:relative; width:1024px;height:1024px">
+      <div class="container" style="position:absolute">
+        <div class="movie">
+          <iframe
+            id="video"
+            frameborder="0"
+            allowfullscreen
+            style="position: relative;
+    height: auto;"
+          ></iframe>
+        </div>
+        <div class="danmu">
+          <input
+            type="text"
+            class="input"
+            placeholder="Please enter flying comments"
+          />
+          <div id="btn">发送弹幕</div>
+        </div>
+        <div class="al">
+          You should input something and then send!
+        </div>
+      </div>
+    </div>
 
-<!--     <div>
+    <!--     <div>
       <input type="text" id="comment" />
       <button>
         Submit
       </button>
     </div> -->
-    
-    
 
     <script>
       var videoType;
@@ -88,6 +109,72 @@
       //   // re-assigning to msgs variable triggers UI update
       //   msgs = msgs.concat([txt]);
       // };
+      var oMovie = document.getElementsByClassName("movie")[0],
+        oInput = document.getElementsByClassName("input")[0],
+        oBtn = document.getElementById("btn"),
+        oAl = document.getElementsByClassName("al")[0];
+      oMovieWidth = oMovie.offsetWidth;
+      var timer2;
+
+      oBtn.onclick = send;
+      oInput.onkeydown = function(e) {
+        if (e.keyCode == 13) {
+          send();
+        }
+      };
+      function send() {
+        if (oInput.value.length <= 0 || /^\s+$/.test(oInput.value)) {
+          oAl.style.display = "block";
+          timer2 = setTimeout(function() {
+            oAl.style.display = "none";
+          }, 1500);
+          return;
+        }
+        createSpan(oInput.value);
+        console.log("send clicked");
+        oInput.value = "";
+      }
+
+      function createSpan(text) {
+        var oSpan = document.createElement("span");
+        oSpan.innerText = text;
+        oSpan.style.left = oMovieWidth + "px";
+        oMovie.appendChild(oSpan);
+        styleSpan(oSpan);
+      }
+      function styleSpan(dom) {
+        dom.style.top = random(0, 180) + "px";
+        dom.style.color =
+          "rgb(" +
+          random(0, 255) +
+          "," +
+          random(0, 255) +
+          "," +
+          random(0, 255) +
+          ")";
+        dom.style.fontSize = random(8, 24) + "px";
+        var domW = dom.offsetWidth;
+        var speed = [0, 1, 2][random(0, 2)];
+        dom.timer = setInterval(function() {
+          switch (speed) {
+            case 0:
+              dom.style.left = dom.offsetLeft - 2 + "px";
+              break;
+            case 1:
+              dom.style.left = dom.offsetLeft - 4 + "px";
+              break;
+            case 2:
+              dom.style.left = dom.offsetLeft - 4 + "px";
+          }
+          if (dom.offsetLeft <= -domW) {
+            clearInterval(dom.timer);
+            oMovie.removeChild(dom);
+          }
+        }, 20);
+      }
+      function random(start, end) {
+        return Math.floor(Math.random() * (end + 1 - start) + start);
+      }
     </script>
   </body>
 </html>
