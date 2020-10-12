@@ -120,7 +120,7 @@ const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const OTHER_AXIS_RANGE = 20;
 const SAME_AXIS_RANGE = 12;
-const MIN_PLAYERS_TO_START_GAME = 2;
+const MIN_PLAYERS_TO_START_GAME = 4;
 const PLAYER_MOVEMENT_OFFSET = PLAYER_MOVEMENT_INCREMENT / 2;
 
 const GAME_TICKER_MS = 500;
@@ -619,7 +619,13 @@ app.get('/login', ensureGuest, (req, res) => {
 });
 
 app.get('/game', ensureAuth, (req, res) => {
-    res.sendFile(__dirname + "/views/game.html");
+    peopleAccessingTheWebsite++;
+
+    if (peopleAccessingTheWebsite > MIN_PLAYERS_TO_START_GAME) {
+        res.sendFile(__dirname + "/views/gameRoomFull.html")
+    } else {
+        res.sendFile(__dirname + "/views/game.html");
+    }
 });
 
 app.get('/auth/logout', (req, res) => {
