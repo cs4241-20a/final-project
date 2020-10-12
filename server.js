@@ -166,7 +166,11 @@ let gameRoom;
 let gameTickerOn = false;
 
 // spawn locations - these are currently hardcoded for a 1400x750px board
-let spawnLocations = [ {x: 1362.5,y: 712.5, occupied: false}, {x: 37.5,y: 712.5, occupied: false}, {x: 1362.5,y: 37.5, occupied: false}, {x: 37.5,y: 37.5, occupied: false} ]
+let spawnLocations = [{x: 1362.5, y: 712.5, occupied: false}, {x: 37.5, y: 712.5, occupied: false}, {
+    x: 1362.5,
+    y: 37.5,
+    occupied: false
+}, {x: 37.5, y: 37.5, occupied: false}]
 let avatarColors = ["green", "cyan", "yellow"];
 let avatarTypes = ["A", "B", "C"];
 
@@ -303,7 +307,7 @@ function canMove(direction, id) {
     }
 
     //checking if wall is present
-    console.log( "destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray )
+    console.log("destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray)
     // console.log( "That space contains: " + walls[positionYArray][positionXArray] )
     if (walls[positionYArray][positionXArray] === 1) {
         console.log("There is a wall here")
@@ -337,7 +341,6 @@ const startGameDataTicker = function () {
                 players: players,
                 playerCount: totalPlayers,
                 gameOn: gameOn,
-                deadPlayers: {},
                 coins
             });
         }
@@ -352,7 +355,7 @@ const handlePlayerEntered = function (player) {
 
     let xPos;
     let yPos;
-    if (totalPlayers >= 1) {
+    if (totalPlayers === 1) {
         gameTickerOn = true;
         startGameDataTicker();
     }
@@ -365,13 +368,14 @@ const handlePlayerEntered = function (player) {
 
     // check through the spawn locations to find a location that has not been used yet
 
-    for( location of spawnLocations ){
-            if( location.occupied === false ){
+    for (location of spawnLocations) {
+        if (location.occupied === false) {
             xPos = location.x
             yPos = location.y
             location.occupied = true
-            }
+            break
         }
+    }
 
     //TODO figure out how to spawn them in a smarter way
 
@@ -383,7 +387,6 @@ const handlePlayerEntered = function (player) {
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
         direction: [1, 0],
         score: 0,
-        nickname: player.data,
         isAlive: true
     };
 
