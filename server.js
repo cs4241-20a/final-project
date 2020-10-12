@@ -117,13 +117,14 @@ const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const OTHER_AXIS_RANGE = 20;
-const SAME_AXIS_RANGE = 10;
+const SAME_AXIS_RANGE = 12;
 const MIN_PLAYERS_TO_START_GAME = 2;
 const GAME_TICKER_MS = 1000;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
-let deadPlayers = {};
+let deadPlayers = new Array();
+let rankings = new Array();
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
 let walls = [ // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 56x30  (each position is 25px).
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -224,6 +225,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
         //  + ", Player X: " + players[playerId].x
         //  + ", Player Y: " + players[playerId].y )
     });
+    
 }
 
 // move all present players based on their keyboard input
@@ -240,10 +242,10 @@ function moveEveryPlayer() {
             let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
 
             if (player.isAlive === false) {
-                deadPlayers[player.id] = player;
-                console.log("Deleted " + player.id);
+                //deadPlayers.push(player);
+                //console.log("Deleted " + player.id);
                 console.log("FOUND DEAD PLAYER: " + player.id);
-                delete players[player.id];
+                //delete players[player.id];
             }
             
             // can move in the current direction
@@ -317,6 +319,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 
             if (inRange) {
                 currentPlayerDead = true;
+                deadPlayers.push(player)
                 player.isAlive = false;
             }
         }  
@@ -324,9 +327,10 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 
     if (currentPlayerDead) {
         players[id].isAlive = false;
-        deadPlayers[id] = players[id];
+        deadPlayers.push(players[id]);
+        //players[id].score =100; for testing purposes
         console.log("Deleted " + players[id].id);
-        delete players[id];
+        //delete players[id];
     }
 }
 
@@ -340,6 +344,56 @@ function withinBoundary(x, y) {
 
     return false;
 }
+
+function gameHasEnded() {
+    let numOfDeadPlayers = deadPlayers.length
+
+    /*
+    TODO 
+    - check for if all coins are gone
+    */
+    if (totalPlayers > 1) {
+        if (numOfDeadPlayers === totalPlayers || numOfDeadPlayers === (totalPlayers - 1)) {
+            return true;
+        }
+        
+    }
+
+    return false;
+}
+
+
+function finishGame() {
+
+    console.log("Dead Players = " + deadPlayers.length)
+    console.log("Alive Players = " + alivePlayers)
+
+    let winnerName = "Nobody";
+
+    Object.values(players).forEach(function (player) {
+        rankings.push({
+            name: player.id,
+            score: player.score,
+        });
+    });
+
+    rankings.sort((a, b) => {
+        return b.score - a.score;
+    });
+
+    if (rankings[0].score !== rankings[1].score) {
+        winnerName = rankings[0].name;
+    }
+
+    gameRoom.publish("game-over", {
+        winner: winnerName,
+        totalPlayers: totalPlayers,
+    }); 
+    
+    console.log("GAME OVER");
+    resetServerState();
+}
+
 
 // check if a player's move would be valid
 // check against game boundaries
@@ -391,7 +445,6 @@ const startGameDataTicker = function () {
         } else {
             // move every player
             moveEveryPlayer();
-            // check player dead
 
             gameRoom.publish("game-state", {
                 players: players,
@@ -400,6 +453,11 @@ const startGameDataTicker = function () {
                 deadPlayers: deadPlayers,
                 coins: {},
             });
+
+            // right here check for end game
+            if (gameHasEnded()) {
+                finishGame();
+            }
         }
     }, GAME_TICKER_MS);
 }
