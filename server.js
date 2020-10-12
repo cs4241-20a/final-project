@@ -118,13 +118,17 @@ const CANVAS_TO_ARRAY_WIDTH_MODIFIER = (CANVAS_WIDTH / PLAYER_MOVEMENT_INCREMENT
 const PLAYER_VERTICAL_MOVEMENT_UPDATE_INTERVAL = 1000;
 const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
+const OTHER_AXIS_RANGE = 20;
+const SAME_AXIS_RANGE = 12;
 const MIN_PLAYERS_TO_START_GAME = 2;
 const PLAYER_MOVEMENT_OFFSET = PLAYER_MOVEMENT_INCREMENT / 2;
 
-const GAME_TICKER_MS = 500;
+const GAME_TICKER_MS = 400;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
+let deadPlayers = new Array();
+let rankings = new Array();
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
 let walls = [ // 2d array of the whole board (walls) ( 1 is a wall, 0 is empty space that a player can occupy ) this will be 56x30  (each position is 25px).
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -195,31 +199,53 @@ function subscribeToPlayerInput(channelInstance, playerId) {
         //  + ", Player X: " + players[playerId].x
         //  + ", Player Y: " + players[playerId].y )
     });
+    
 }
 
 // move all present players based on their keyboard input
 function moveEveryPlayer() {
 
     Object.values(players).forEach(function (player) {
-        let tryDirection = player.direction
 
-        // can move in the current direction
-        if (canMove(tryDirection, player.id)) {
-            // console.log( "We can move in this direction: " + tryDirection )
-            if (tryDirection === 1) { // direction is North
-                player.y -= PLAYER_MOVEMENT_INCREMENT
+        if (player !== null) {
 
-            } else if (tryDirection === 2) { // direction is East
-                player.x += PLAYER_MOVEMENT_INCREMENT
+            let tryDirection = player.direction;
+            let previousX = player.x;
+            let previousY = player.y;
+            
+            let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
 
-            } else if (tryDirection === 3) { // direction is South
-                player.y += PLAYER_MOVEMENT_INCREMENT
-
-            } else if (tryDirection === 4) { // direction is West
-                player.x -= PLAYER_MOVEMENT_INCREMENT
+            if (player.isAlive === false) {
+                //deadPlayers.push(player);
+                //console.log("Deleted " + player.id);
+                console.log("FOUND DEAD PLAYER: " + player.id);
+                //delete players[player.id];
             }
+            
+            // can move in the current direction
+            if (player.isAlive !== false && canMove(tryDirection, player.id)) {
+                // console.log( "We can move in this direction: " + tryDirection )
+                if (tryDirection === 1) { // direction is North
+                    player.y -= PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, player.y, previousY, previousX, movementDirection)
+
+                } else if (tryDirection === 2) { // direction is West
+                    player.x += PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, previousX, player.x, previousY, movementDirection)
+
+                } else if (tryDirection === 3) { // direction is South
+                    player.y += PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, previousY, player.y, previousX, movementDirection)
+
+                } else if (tryDirection === 4) { // direction is East
+                    player.x -= PLAYER_MOVEMENT_INCREMENT
+                    checkIfDead(player.id, player.x, previousX, previousY, movementDirection)
+                }
+            }
+        
+            //console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
         }
-        console.log("My player's updated position: x = " + player.x + ", y = " + player.y)
+        //console.log("My player's updated position: x = " + player.x + ", y = " + player.y)
 
         player.score += collectCoin(Math.floor(player.x / 25), (Math.floor(player.y / 25)))
     })
@@ -254,6 +280,61 @@ function collectCoin(x, y) {
     return 0
 }
 
+
+function checkRange(positionVal, minimalRange, maxRange, constant) {
+    if ( (positionVal >= (minimalRange - constant)) &&
+        (positionVal <= (maxRange + constant)) ) 
+    {
+        return true;
+
+    }  
+
+    return false;
+}
+
+
+function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
+    let inRange = false;
+    let currentPlayerDead = false;
+
+    Object.values(players).forEach(function (player) {
+        if (player.id !== id) {
+            // direction was vertical (SAME AXIS WOULD BE Y-AXIS)
+            if (direction === 0) {
+                
+                if ( checkRange(player.y, minRange, maxRange, SAME_AXIS_RANGE) &&
+                    checkRange(player.x, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE) )
+                {
+                    inRange = true;
+                }
+
+            } else { // direction was horizontal (SAME AXIS WOULD BE X-AXIS)
+
+                if ( checkRange(player.x, minRange, maxRange, SAME_AXIS_RANGE) &&
+                    checkRange(player.y, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE) )
+                {
+                    inRange = true;
+                }
+            }
+
+            if (inRange) {
+                currentPlayerDead = true;
+                deadPlayers.push(player)
+                player.isAlive = false;
+            }
+        }  
+    })
+
+    if (currentPlayerDead) {
+        players[id].isAlive = false;
+        deadPlayers.push(players[id]);
+        //players[id].score =100; for testing purposes
+        //console.log("Deleted " + players[id].id);
+        //delete players[id];
+    }
+}
+
+
 function withinBoundary(x, y) {
     if (x >= 0 && x <= CANVAS_WIDTH) {
         if (y >= 0 && y <= CANVAS_HEIGHT) {
@@ -264,10 +345,66 @@ function withinBoundary(x, y) {
     return false;
 }
 
+function gameHasEnded() {
+    let numOfDeadPlayers = deadPlayers.length
+
+    // do no know if this works
+    if (coins === null) {
+        return true;
+    }
+
+    if (totalPlayers > 1) {
+        if (numOfDeadPlayers === totalPlayers || numOfDeadPlayers === (totalPlayers - 1)) {
+            return true;
+        }
+        
+    }
+
+    return false;
+}
+
+
+function finishGame() {
+
+    console.log("Dead Players = " + deadPlayers.length)
+    console.log("Alive Players = " + alivePlayers)
+
+    let winnerName = "Nobody";
+
+    Object.values(players).forEach(function (player) {
+        rankings.push({
+            name: player.id,
+            score: player.score,
+        });
+    });
+
+    rankings.sort((a, b) => {
+        return b.score - a.score;
+    });
+
+    if (rankings[0].score !== rankings[1].score) {
+        winnerName = rankings[0].name;
+    }
+
+    gameRoom.publish("game-over", {
+        winner: winnerName,
+        totalPlayers: totalPlayers,
+    }); 
+    
+    console.log("GAME OVER");
+    resetServerState();
+}
+
+
 // check if a player's move would be valid
 // check against game boundaries
 // check against wall locations
 function canMove(direction, id) {
+
+    if (players[id] === null) {
+        return false;
+    }
+
     let positionX = players[id].x;
     let positionY = players[id].y;
 
@@ -275,7 +412,7 @@ function canMove(direction, id) {
 
     var positionXArray = 1
     var positionYArray = 1
-    console.log("My direction: " + direction)
+    //console.log("My direction: " + direction)
     if (direction === 1) { // direction is North
         positionY -= PLAYER_MOVEMENT_INCREMENT;
         positionXArray = (positionX - PLAYER_MOVEMENT_OFFSET) * CANVAS_TO_ARRAY_WIDTH_MODIFIER
@@ -297,16 +434,17 @@ function canMove(direction, id) {
         positionXArray = (positionX + PLAYER_MOVEMENT_OFFSET) * CANVAS_TO_ARRAY_WIDTH_MODIFIER - 1
         positionYArray = (positionY - PLAYER_MOVEMENT_OFFSET) * CANVAS_TO_ARRAY_HEIGHT_MODIFIER
     }
+
     if (!withinBoundary(positionX, positionY)) {
-        console.log("Error! That would be outside of the boundary. X: " + positionX + ", Y: " + positionY)
+        //console.log("Error! That would be outside of the boundary. X: " + positionX + ", Y: " + positionY)
         return false;
     }
 
     //checking if wall is present
-    console.log( "destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray )
+    //console.log( "destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray )
     // console.log( "That space contains: " + walls[positionYArray][positionXArray] )
     if (walls[positionYArray][positionXArray] === 1) {
-        console.log("There is a wall here")
+        //console.log("There is a wall here")
         return false;
     } else {
         return true
@@ -337,9 +475,14 @@ const startGameDataTicker = function () {
                 players: players,
                 playerCount: totalPlayers,
                 gameOn: gameOn,
-                deadPlayers: {},
-                coins
+                deadPlayers: deadPlayers,
+                coins,
             });
+
+            // right here check for end game
+            if (gameHasEnded()) {
+                finishGame();
+            }
         }
     }, GAME_TICKER_MS);
 }
@@ -381,7 +524,7 @@ const handlePlayerEntered = function (player) {
         y: yPos,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
-        direction: [1, 0],
+        direction: 1,
         score: 0,
         nickname: player.data,
         isAlive: true
