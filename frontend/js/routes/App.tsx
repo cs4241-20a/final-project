@@ -11,17 +11,23 @@ import "../../css/main.css";
 import { blue, pink } from "@material-ui/core/colors";
 import { Login } from "./Login";
 
+export interface SiteSettings {
+    theme: 'light' | 'dark';
+}
+
 const App: FunctionComponent = props => {
     // const prefersDarkTheme = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
     const prefersDarkTheme = false;
-    const [useDarkTheme, setUseDarkTheme] = useState(prefersDarkTheme);
+    const [siteSettings, setSiteSettings] = useState({
+        theme: prefersDarkTheme ? 'dark' : 'light'
+    } as SiteSettings);
 
     const theme = React.useMemo(() =>
         createMuiTheme({
             palette: {
                 primary: { main: blue[700] },
                 secondary: { main: pink[300] },
-                ...(useDarkTheme ? {
+                ...(siteSettings.theme === 'dark' ? {
                     type: 'dark'
                 } : 
                 {
@@ -39,14 +45,14 @@ const App: FunctionComponent = props => {
                 }
             }
         }),
-        [useDarkTheme],
+        [siteSettings],
     );
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <Router>
-                <TopBar/>
+                <TopBar siteSettings={siteSettings} setSiteSettings={setSiteSettings}/>
                 <Switch>
                     <Route exact path="/">
                         <Home/>
@@ -55,7 +61,7 @@ const App: FunctionComponent = props => {
                         <Login/>
                     </Route>
                     <Route path="/create">
-                        <CreateChallenge/>
+                        <CreateChallenge siteSettings={siteSettings}/>
                     </Route>
                     <Route path="*">
                         <FourOhFour/>

@@ -8,25 +8,30 @@ import Pane from 'react-split-pane/lib/Pane';
 import { ControlledEditor as Editor, monaco } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { Send as SendIcon } from '@material-ui/icons';
-import '../../css/react-split-pane.css';
 import editorTypes from '!!raw-loader!../../assets/challengelib.d.ts';
+import { SiteSettings } from './App';
 
 const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(2),
         display: "flex",
         flexDirection: "column",
-        flexGrow: 1
+        flexGrow: 1,
+        maxHeight: `calc(100vh - 64px)`
     },
     editors: {
         flexGrow: 1
     },
     codeContainer: {
+        ...(theme.palette.type === 'dark' ? {
+            color: '#d4d4d4',
+            backgroundColor: '#202124',
+        } : {}),
         margin: theme.spacing(2),
         padding: theme.spacing(2),
         display: "flex",
         flexDirection: "column",
-        height: `calc(50% - ${theme.spacing(3)}px)`
+        height: `calc(50% - ${theme.spacing(3)}px)`,
     },
     challengeControlsHeader: {
         display: "flex",
@@ -61,7 +66,7 @@ monaco.init().then(async monaco => {
     monaco.languages.typescript.javascriptDefaults.addExtraLib(editorTypes, "challengelib.d.ts");
 });
 
-export const CreateChallenge: FunctionComponent = () => {
+export const CreateChallenge: FunctionComponent<{siteSettings: SiteSettings}> = ({siteSettings}) => {
     const classes = useStyles();
 
     const [title, setTitle] = useState("New Challenge");
@@ -115,6 +120,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Tell the user what their objective is in precise detail</Typography>
                         <Editor
                             language="markdown"
+                            theme={siteSettings.theme}
                             options={{...editorOptions, wordWrap: 'on'}}
                             value={description}
                             onChange={handleChange(setDescription)}
@@ -126,6 +132,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Give the user some code to work with when they begin</Typography>
                         <Editor
                             language="javascript"
+                            theme={siteSettings.theme}
                             options={editorOptions}
                             value={starterCode}
                             onChange={handleChange(setStarterCode)}
@@ -138,6 +145,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Provide a working solution to your challenge. The user will not see this</Typography>
                         <Editor
                             language="javascript"
+                            theme={siteSettings.theme}
                             options={editorOptions}
                             value={solution}
                             onChange={handleChange(setSolution)}
@@ -149,6 +157,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Provide some code to verify that the user's solution is correct</Typography>
                         <Editor
                             language="javascript"
+                            theme={siteSettings.theme}
                             options={editorOptions}
                             value={tests}
                             onChange={handleChange(setTests)}

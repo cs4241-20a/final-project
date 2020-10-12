@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { AppBar, IconButton, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Brush as BrushIcon, Home as HomeIcon, Menu as MenuIcon } from "@material-ui/icons"
+import { Brightness4, Brightness7, Brush as BrushIcon, Home as HomeIcon, Menu as MenuIcon } from "@material-ui/icons"
 import { FunctionComponent } from "react";
 import { Link } from 'react-router-dom';
+import { SiteSettings } from '../routes/App';
 
 const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -17,7 +18,10 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const TopBar: FunctionComponent = () => {
+export const TopBar: FunctionComponent<{siteSettings: SiteSettings, setSiteSettings: (siteSettings: SiteSettings) => void}> = ({
+    siteSettings,
+    setSiteSettings
+}) => {
     const classes = useStyles();
 
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -32,6 +36,9 @@ export const TopBar: FunctionComponent = () => {
                     <MenuIcon/>
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>Website Name</Typography>
+                <IconButton color="inherit" aria-label="toggle dark theme" onClick={() => setSiteSettings({...siteSettings, theme: siteSettings.theme === 'light' ? 'dark' : 'light'})}>
+                    {siteSettings.theme === 'light' ? <Brightness4/> : <Brightness7/>}
+                </IconButton>
             </Toolbar>
         </AppBar>
         <SwipeableDrawer
