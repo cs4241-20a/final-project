@@ -4,10 +4,13 @@ import passport from 'passport';
 import path from 'path';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { getCollection } from './db.js';
+import bodyParser from 'body-parser';
 
 const PORT = 3000;
 
 const app = express();
+
+const jsonBodyParser = bodyParser.json();
 
 passport.use(new LocalStrategy(async (username, password, done) => {
     const users = await getCollection('users');
@@ -37,6 +40,37 @@ passport.use('local-signup', new LocalStrategy(async (username, password, done) 
         done(null, {username});
     }
 }));
+
+const authenticate = (req, /** @type {import('express').Response} */ res, /** @type {import('express').NextFunction} */ next) => {
+    if (req.user) {
+        return next();
+    }
+    res.status(401).send("You must be logged in to perform that action.");
+};
+
+app.post('/api/challenge', authenticate, jsonBodyParser, async (req, res) => {
+    const { title, description, starterCode, solution, tests } = req.body;
+    if ([typeof title, typeof description, typeof starterCode, typeof solution, typeof tests].every(x => x === 'string')) {
+        /** @type {import('mongodb').Collection<import('../frontend/js/types/challenge').Challenge>} */
+        const challenges = await getCollection('challenges');
+        const result = await challenges.insertOne({
+            author: req.user.username,
+            title, description, starterCode, solution, tests
+        });
+        const newChallenge = result.ops[0];
+        newChallenge.id = newChallenge._id;
+        delete newChallenge._id;
+        res.json(newChallenge);
+    }
+    else {
+        res.status(400).send("Invalid arguments to /api/challenge");
+    }
+});
+
+// Unknown API endpoint
+app.use('/api/*', (req, res) => {
+    res.sendStatus(404);
+});
 
 app.post('/register', passport.authenticate('local-signup', {failureRedirect: '/register'}), (req, res) => {
     res.redirect('/');

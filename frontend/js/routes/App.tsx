@@ -10,6 +10,7 @@ import { CreateChallenge } from "./CreateChallenge";
 import "../../css/main.css";
 import { blue, pink } from "@material-ui/core/colors";
 import { Login } from "./Login";
+import DialogProvider from "../components/DialogProvider";
 
 export interface SiteSettings {
     theme: 'light' | 'dark';
@@ -26,7 +27,7 @@ const App: FunctionComponent = props => {
         createMuiTheme({
             palette: {
                 primary: { main: blue[700] },
-                secondary: { main: pink[300] },
+                secondary: { main: pink[400] },
                 ...(siteSettings.theme === 'dark' ? {
                     type: 'dark'
                 } : 
@@ -50,6 +51,7 @@ const App: FunctionComponent = props => {
 
     return (
         <ThemeProvider theme={theme}>
+        <DialogProvider>
             <CssBaseline/>
             <Router>
                 <TopBar siteSettings={siteSettings} setSiteSettings={setSiteSettings}/>
@@ -68,6 +70,7 @@ const App: FunctionComponent = props => {
                     </Route>
                 </Switch>
             </Router>
+        </DialogProvider>
         </ThemeProvider>
     );
 }

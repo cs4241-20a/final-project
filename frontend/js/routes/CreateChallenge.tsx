@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FunctionComponent } from "react";
 import { handleChange } from '../util';
@@ -10,6 +10,9 @@ import type { editor } from 'monaco-editor';
 import { Send as SendIcon } from '@material-ui/icons';
 import editorTypes from '!!raw-loader!../../assets/challengelib.d.ts';
 import { SiteSettings } from './App';
+import { useHistory } from 'react-router-dom';
+import { useDialog } from '../components/DialogProvider';
+import { Challenge } from '../types/challenge';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -68,6 +71,8 @@ monaco.init().then(async monaco => {
 
 export const CreateChallenge: FunctionComponent<{siteSettings: SiteSettings}> = ({siteSettings}) => {
     const classes = useStyles();
+    const history = useHistory();
+    const [openDialog, closeDialog] = useDialog();
 
     const [title, setTitle] = useState("New Challenge");
 
@@ -93,6 +98,36 @@ In this challenge, you will have to write a Hello, World function.
 `// The tests will fail if any error is thrown
 console.assert(helloWorld() == "Hello, World!");`);
 
+    async function publish() {
+        const response = await fetch('/api/challenge', {
+            method: "POST",
+            body: JSON.stringify({
+                title,
+                description,
+                starterCode,
+                solution,
+                tests
+            } as Omit<Challenge, 'author'>)
+        });
+        if (response.ok) {
+            const body = await response.json();
+            history.push(`/challenge/${body.id}`);
+        }
+        else {
+            openDialog({
+                children: <>
+                    <DialogTitle>Publish Failed</DialogTitle>
+                    <DialogContent>
+                        {await response.text() ?? "An unexpected error occurred"}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="secondary" onClick={closeDialog}>Close</Button>
+                    </DialogActions>
+                </>
+            });
+        }
+    }
+
     const editorOptions: editor.IEditorConstructionOptions = {
         minimap: { enabled: false },
         renderLineHighlight: "none",
@@ -111,7 +146,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                     value={title}
                     onChange={handleChange(setTitle)}
                 />
-                <span><Button variant="contained" color="secondary" size="large" endIcon={<SendIcon/>}>Publish</Button></span>
+                <span><Button variant="contained" color="secondary" size="large" endIcon={<SendIcon/>} onClick={publish}>Publish</Button></span>
             </div>
             <SplitPane className={classes.editors} split="vertical" onChange={() => editors.forEach(x => x.layout())}>
                 <Pane minSize="300px">
