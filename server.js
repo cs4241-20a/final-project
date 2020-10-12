@@ -123,7 +123,7 @@ const SAME_AXIS_RANGE = 12;
 const MIN_PLAYERS_TO_START_GAME = 2;
 const PLAYER_MOVEMENT_OFFSET = PLAYER_MOVEMENT_INCREMENT / 2;
 
-const GAME_TICKER_MS = 400;
+const GAME_TICKER_MS = 500;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
@@ -435,8 +435,8 @@ function canMove(direction, id) {
         positionYArray = (positionY - PLAYER_MOVEMENT_OFFSET) * CANVAS_TO_ARRAY_HEIGHT_MODIFIER
     }
 
-    if (!withinBoundary(positionX, positionY)) {
-        //console.log("Error! That would be outside of the boundary. X: " + positionX + ", Y: " + positionY)
+    if (!withinBoundary(positionXArray, positionYArray)) {
+        console.log("Error! That would be outside of the boundary. X: " + positionX + ", Y: " + positionY)
         return false;
     }
 
@@ -509,12 +509,13 @@ const handlePlayerEntered = function (player) {
     // check through the spawn locations to find a location that has not been used yet
 
     for( location of spawnLocations ){
-            if( location.occupied === false ){
+        if( location.occupied === false ){
             xPos = location.x
             yPos = location.y
             location.occupied = true
-            }
+            break;
         }
+    }
 
     //TODO figure out how to spawn them in a smarter way
 
