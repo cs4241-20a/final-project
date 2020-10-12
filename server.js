@@ -99,7 +99,7 @@ app.post("/logout", (req, res) => {
 app.use(express.static("public", { extensions: "html" }));
 
 app.get("/", (req, res) => {
-    console.log(req.session.username);
+    //console.log(req.session.username);
     if(req.session.username) {
         res.sendFile(__dirname + "/public/nav.html");
     } else {
