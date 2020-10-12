@@ -5,6 +5,8 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
+import * as d3 from 'd3'
+
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -17,6 +19,8 @@ export default class Home extends React.Component {
             showTable: false,
             user1: "", 
             user2: "",
+            staticUser1: "", 
+            staticUser2: "",
             showChat: false,
             messages: [
                 new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
@@ -24,7 +28,9 @@ export default class Home extends React.Component {
               ],
             overlay: false,
             overlayStyle: "none", 
-            typedMsg: ""
+            typedMsg: "",
+            testArtistsA: [{name: "aaa"}, {name: "bbb"}, {name: "ccc"}, {name: "ddd"}, {name: "eee"}, {name: "ddd"}, {name: "eee"}, {name: "ddd"}, {name: "eee"}],
+            testArtistsB: [{name: "bbb"}, {name: "fff"}, {name: "ccc"}, {name: "aaa"}, {name: "ggg"}, {name: "fff"}, {name: "ccc"}, {name: "aaa"}, {name: "ggg"}]
         }
 
         this.overlayDiv = React.createRef()
@@ -64,21 +70,23 @@ export default class Home extends React.Component {
         //         songs: json,
         //         columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
         //         showTable: true,
+        //          staticUser1: this.state.user1,
+        //          staticUser2: this.state.user2,
         //         user1: "",
         //         user2: ""
         //     })
         // }) 
 
         // TEMP FOR FRONT END TESTING
-        let staticUser1 = this.state.user1
-        let staticUser2 = this.state.user2
         this.setState({ 
             showTable: true,
             columns: [
-                { dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`, 
+                { dataField: 'title', text: ``, 
                 headerStyle: { backgroundColor: "#ffffff"}
             }
             ],
+            staticUser1: this.state.user1,
+            staticUser2: this.state.user2,
             user1: "",
             user2: ""
         })
@@ -120,17 +128,22 @@ export default class Home extends React.Component {
         // Show table on recieving data from server
         const renderTable = () => {
             if (this.state.showTable) {
-                return (                
-                <div className="mt-5 mb-10">
-                    <BootstrapTable 
-                    rowStyle={{ backgroundColor: '#ffffff' }}
-                    
-                    border={true}
-                    keyField='id' data={ this.state.songs } 
-                    columns={ this.state.columns } 
-                    pagination={ paginationFactory() } 
-                    bootstrap4={true} />
-                </div>
+                return (   
+                    <div>    
+                        <h2 className="mt-5 mb-10 user-title">{this.state.staticUser1} and {this.state.staticUser2}</h2>
+
+                        <div className="mt-5 mb-10">
+                            <h4 className="subtitle">Songs in Common</h4>
+                            <BootstrapTable 
+                            rowStyle={{ backgroundColor: '#ffffff' }}
+                            
+                            border={true}
+                            keyField='id' data={ this.state.songs } 
+                            columns={ this.state.columns } 
+                            pagination={ paginationFactory() } 
+                            bootstrap4={true} />
+                        </div>
+                    </div>  
                 )
             }
         }
@@ -180,6 +193,52 @@ export default class Home extends React.Component {
                     )
             }
         }
+
+        const renderArtists = () => {
+            let group1Map = d3.rollup(this.state.testArtistsA, v => v.length, d => d.name)
+            let group2Map = d3.rollup(this.state.testArtistsB, v => v.length, d => d.name)
+
+            let group1Keys = []
+            for (let [key, value] of Array.from(group1Map)) {
+                group1Keys.push(key)
+            }
+
+            let group2Keys = []
+            for (let [key, value] of Array.from(group2Map)) {
+                group2Keys.push(key)
+            }
+
+            let combinedKeys = (d3.intersection(group1Keys, group2Keys))
+
+            let groupValues = []
+            for (let item of combinedKeys.values()) {
+                let sum = group1Map.get(item) + group2Map.get(item)
+                groupValues.push({ title: item, sum: sum})
+            }
+
+            groupValues.sort(function(x, y){
+                return d3.descending(x.sum, y.sum);
+            })
+
+            if (this.state.showTable) {
+                return (
+                    <Container className="mt-5 mb-10">
+                        <h4 className="subtitle">Top Artists in Common</h4>
+
+                        <div className="artistDiv">
+                            {groupValues.map(value => (
+                                // add images too 
+                                <div className="artistName">{value.title}</div>
+                            ))}
+                        </div>
+                    </Container>
+                )
+            }
+        }
+        
+        const renderPopularity = () => {
+            
+        }
  
 
         return (
@@ -205,6 +264,10 @@ export default class Home extends React.Component {
                     </div>
 
                     { renderTable() }
+
+                    { renderArtists() }
+
+                    { renderPopularity() }
 
                     <FontAwesomeIcon icon={faComment} className="fas-3x sticky-chat" onClick={this.setChatState} />
 
