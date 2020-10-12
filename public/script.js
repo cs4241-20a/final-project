@@ -48,7 +48,7 @@ class GameScene extends Phaser.Scene {
     preload() {
         this.load.spritesheet(
             "avatarA",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderA_00%402x.png?v=1589228669385",
+            "/assets/avatarA.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -56,7 +56,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarB",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderB_00%402x.png?v=1589228660870",
+            "/assets/avatarB.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -64,7 +64,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarC",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FInvaderC_00%402x.png?v=1589228654058",
+            "/assets/avatarC.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -72,7 +72,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarAgreen",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAgreen.png?v=1589839188589",
+            "/assets/avatarAgreen.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -80,7 +80,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarAcyan",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAcyan.png?v=1589839190850",
+            "/assets/avatarAcyan.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -88,7 +88,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarAyellow",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderAyellow.png?v=1589839197191",
+            "/assets/avatarAyellow.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -96,7 +96,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarBgreen",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderBgreen.png?v=1589839187283",
+            "/assets/avatarBgreen.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -104,7 +104,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarBcyan",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderBcyan.png?v=1589839193162",
+            "/assets/avatarBcyan.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -112,7 +112,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarByellow",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderByellow.png?v=1589839195096",
+            "/assets/avatarByellow.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -120,7 +120,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarCgreen",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCgreen.png?v=1589839203129",
+            "/assets/avatarCgreen.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -128,7 +128,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarCcyan",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCcyan.png?v=1589839200959",
+            "/assets/avatarCcyan.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -136,7 +136,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "avatarCyellow",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2FinvaderCyellow.png?v=1589839198988",
+            "/assets/avatarCyellow.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -144,7 +144,7 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "explosion",
-            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fexplosion57%20(2).png?v=1589491279459",
+            "/assets/.png",
             {
                 frameWidth: 25,
                 frameHeight: 25
@@ -193,17 +193,10 @@ class GameScene extends Phaser.Scene {
 
         gameRoom.subscribe("game-over", (msg) => {
             gameOn = false;
-            localStorage.setItem("totalPlayers", msg.data.totalPlayers);
-            localStorage.setItem("winner", msg.data.winner);
             gameRoom.unsubscribe();
             myChannel.unsubscribe();
-            if (msg.data.winner == "Nobody") {
-                window.location.replace(BASE_SERVER_URL + "/gameover");
-            } else {
-                window.location.replace(BASE_SERVER_URL + "/winner");
-            }
+            window.location.replace(BASE_SERVER_URL + "/");
         });
-
     }
 
     //update the attributes of various game objects per game logic

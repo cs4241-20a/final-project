@@ -120,7 +120,7 @@ const PLAYER_SCORE_INCREMENT = 5;
 const P2_WORLD_TIME_STEP = 1 / 16;
 const OTHER_AXIS_RANGE = 20;
 const SAME_AXIS_RANGE = 12;
-const MIN_PLAYERS_TO_START_GAME = 2;
+const MIN_PLAYERS_TO_START_GAME = 4;
 const PLAYER_MOVEMENT_OFFSET = PLAYER_MOVEMENT_INCREMENT / 2;
 
 const GAME_TICKER_MS = 500;
@@ -170,7 +170,11 @@ let gameRoom;
 let gameTickerOn = false;
 
 // spawn locations - these are currently hardcoded for a 1400x750px board
-let spawnLocations = [ {x: 1362.5,y: 712.5, occupied: false}, {x: 37.5,y: 712.5, occupied: false}, {x: 1362.5,y: 37.5, occupied: false}, {x: 37.5,y: 37.5, occupied: false} ]
+let spawnLocations = [{x: 1362.5, y: 712.5, occupied: false}, {x: 37.5, y: 712.5, occupied: false}, {
+    x: 1362.5,
+    y: 37.5,
+    occupied: false
+}, {x: 37.5, y: 37.5, occupied: false}]
 let avatarColors = ["green", "cyan", "yellow"];
 let avatarTypes = ["A", "B", "C"];
 
@@ -199,7 +203,7 @@ function subscribeToPlayerInput(channelInstance, playerId) {
         //  + ", Player X: " + players[playerId].x
         //  + ", Player Y: " + players[playerId].y )
     });
-    
+
 }
 
 // move all present players based on their keyboard input
@@ -212,7 +216,7 @@ function moveEveryPlayer() {
             let tryDirection = player.direction;
             let previousX = player.x;
             let previousY = player.y;
-            
+
             let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
 
             if (player.isAlive === false) {
@@ -221,7 +225,7 @@ function moveEveryPlayer() {
                 console.log("FOUND DEAD PLAYER: " + player.id);
                 //delete players[player.id];
             }
-            
+
             // can move in the current direction
             if (player.isAlive !== false && canMove(tryDirection, player.id)) {
                 // console.log( "We can move in this direction: " + tryDirection )
@@ -242,7 +246,7 @@ function moveEveryPlayer() {
                     checkIfDead(player.id, player.x, previousX, previousY, movementDirection)
                 }
             }
-        
+
             //console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
         }
         //console.log("My player's updated position: x = " + player.x + ", y = " + player.y)
@@ -282,12 +286,11 @@ function collectCoin(x, y) {
 
 
 function checkRange(positionVal, minimalRange, maxRange, constant) {
-    if ( (positionVal >= (minimalRange - constant)) &&
-        (positionVal <= (maxRange + constant)) ) 
-    {
+    if ((positionVal >= (minimalRange - constant)) &&
+        (positionVal <= (maxRange + constant))) {
         return true;
 
-    }  
+    }
 
     return false;
 }
@@ -301,18 +304,16 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
         if (player.id !== id) {
             // direction was vertical (SAME AXIS WOULD BE Y-AXIS)
             if (direction === 0) {
-                
-                if ( checkRange(player.y, minRange, maxRange, SAME_AXIS_RANGE) &&
-                    checkRange(player.x, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE) )
-                {
+
+                if (checkRange(player.y, minRange, maxRange, SAME_AXIS_RANGE) &&
+                    checkRange(player.x, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
                     inRange = true;
                 }
 
             } else { // direction was horizontal (SAME AXIS WOULD BE X-AXIS)
 
-                if ( checkRange(player.x, minRange, maxRange, SAME_AXIS_RANGE) &&
-                    checkRange(player.y, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE) )
-                {
+                if (checkRange(player.x, minRange, maxRange, SAME_AXIS_RANGE) &&
+                    checkRange(player.y, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
                     inRange = true;
                 }
             }
@@ -322,7 +323,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
                 deadPlayers.push(player)
                 player.isAlive = false;
             }
-        }  
+        }
     })
 
     if (currentPlayerDead) {
@@ -330,9 +331,9 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
         deadPlayers.push(players[id]);
         collection
             .updateOne(
-                { username: players[id].nickname},
+                {username: players[id].nickname},
                 {
-                    $set: { "score": players[id].score }
+                    $set: {"score": players[id].score}
                 }
             )
         //players[id].score =100; for testing purposes
@@ -364,7 +365,7 @@ function gameHasEnded() {
         if (numOfDeadPlayers === totalPlayers || numOfDeadPlayers === (totalPlayers - 1)) {
             return true;
         }
-        
+
     }
 
     return false;
@@ -385,9 +386,9 @@ function finishGame() {
         });
         collection
             .updateOne(
-                { username: player.nickname},
+                {username: player.nickname},
                 {
-                    $set: { "score": player.score }
+                    $set: {"score": player.score}
                 }
             )
     });
@@ -403,8 +404,8 @@ function finishGame() {
     gameRoom.publish("game-over", {
         winner: winnerName,
         totalPlayers: totalPlayers,
-    }); 
-    
+    });
+
     console.log("GAME OVER");
     resetServerState();
 }
@@ -455,6 +456,7 @@ function canMove(direction, id) {
     }
 
     //checking if wall is present
+
     //console.log( "destination coordinates: Pixels - " + positionX + ", " + positionY + ". Array - " + positionYArray + ", " + positionXArray )
     // console.log( "That space contains: " + walls[positionYArray][positionXArray] )
     if (walls[positionYArray][positionXArray] === 1) {
@@ -489,8 +491,7 @@ const startGameDataTicker = function () {
                 players: players,
                 playerCount: totalPlayers,
                 gameOn: gameOn,
-                deadPlayers: deadPlayers,
-                coins,
+                coins
             });
 
             // right here check for end game
@@ -509,7 +510,7 @@ const handlePlayerEntered = function (player) {
 
     let xPos;
     let yPos;
-    if (totalPlayers >= 1) {
+    if (totalPlayers === 1) {
         gameTickerOn = true;
         startGameDataTicker();
     }
@@ -522,8 +523,9 @@ const handlePlayerEntered = function (player) {
 
     // check through the spawn locations to find a location that has not been used yet
 
-    for( location of spawnLocations ){
-        if( location.occupied === false ){
+
+    for (location of spawnLocations) {
+        if (location.occupied === false) {
             xPos = location.x
             yPos = location.y
             location.occupied = true
@@ -541,7 +543,6 @@ const handlePlayerEntered = function (player) {
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
         direction: 1,
         score: 0,
-        nickname: player.data,
         isAlive: true
     };
 
@@ -602,9 +603,12 @@ app.get("/auth/game", (request, response) => {
 app.get("/getBoard", bodyParser.json(), (req, res) => res.json(walls))
 
 app.get("/topScores", bodyParser.json(), (req, res) => {
-    collection.find().project({username:1, score:1}).sort({score:-1}).limit(10).toArray().then(result => res.json(result))
+    collection.find().project({
+        username: 1,
+        score: 1
+    }).sort({score: -1}).limit(10).toArray().then(result => res.json(result))
 })
-// routes
+
 app.get('/', ensureAuth, (req, res) => {
     console.log(req.user);
     res.sendFile(__dirname + "/views/home.html");
@@ -615,7 +619,13 @@ app.get('/login', ensureGuest, (req, res) => {
 });
 
 app.get('/game', ensureAuth, (req, res) => {
-    res.sendFile(__dirname + "/views/game.html");
+    peopleAccessingTheWebsite++;
+
+    if (peopleAccessingTheWebsite > MIN_PLAYERS_TO_START_GAME) {
+        res.sendFile(__dirname + "/views/gameRoomFull.html")
+    } else {
+        res.sendFile(__dirname + "/views/game.html");
+    }
 });
 
 app.get('/auth/logout', (req, res) => {
