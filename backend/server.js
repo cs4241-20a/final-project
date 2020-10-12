@@ -48,6 +48,17 @@ const authenticate = (req, /** @type {import('express').Response} */ res, /** @t
     res.status(401).send("You must be logged in to perform that action.");
 };
 
+app.get('/api/challenge/all', async (req, res) => {
+    const challenges = await getCollection('challenges');
+    /** @type {import('../frontend/js/types/challenge.js').ChallengeShort[]} */
+    const shortChallenges = await challenges.find({}, {projection: {
+        _id: 0,
+        author: 1,
+        title: 1
+    }}).toArray();
+    res.json(shortChallenges);
+});
+
 app.post('/api/challenge', authenticate, jsonBodyParser, async (req, res) => {
     const { title, description, starterCode, solution, tests } = req.body;
     if ([typeof title, typeof description, typeof starterCode, typeof solution, typeof tests].every(x => x === 'string')) {
