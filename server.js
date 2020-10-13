@@ -127,7 +127,7 @@ const GAME_TICKER_MS = 500;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
-let monsters = {"Ada": {x: 5, y: 10, direction: 1}};
+let monsters = {"Ada": {x: 687.5, y: 362.5, direction: 1}};
 let deadPlayers = new Array();
 let rankings = new Array();
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
@@ -225,7 +225,7 @@ function moveEveryPlayer() {
             }
 
             // can move in the current direction
-            if (player.isAlive !== false && canMove(tryDirection, player.id)) {
+            if (player.isAlive !== false && canMove(tryDirection, player)) {
                 // console.log( "We can move in this direction: " + tryDirection )
                 if (tryDirection === 1) { // direction is North
                     player.y -= PLAYER_MOVEMENT_INCREMENT
@@ -420,14 +420,14 @@ function finishGame() {
 // check if a player's move would be valid
 // check against game boundaries
 // check against wall locations
-function canMove(direction, id) {
+function canMove(direction, player) {
 
-    if (players[id] === null) {
+    if (players[player.id] === null) {
         return false;
     }
 
-    let positionX = players[id].x;
-    let positionY = players[id].y;
+    let positionX = player.x;
+    let positionY = player.y;
 
     // console.log( "My current location: Pixels - " + positionX + ", " + positionY ". Array - " )
 
@@ -476,40 +476,50 @@ function canMove(direction, id) {
 
 function moveAllMonsters() {
     Object.values(monsters).forEach(function (monster) {
-            let tryDirection = monster.direction;
-            let newDirection = null;
-
-            if (canMove(tryDirection, monster)) {
-                newDirection = tryDirection
-            } else {
-                newDirection = getRandomAvailableDir(monster, tryDirection)
+        let backwards = 1
+            switch(monster.direction){
+                case 1:
+                    backwards = 3
+                    break
+                case 2:
+                    backwards = 4
+                    break
+                case 3:
+                    backwards = 1
+                    break
+                case 4:
+                    backwards = 2
+                    break
             }
+            let newDirection = getRandomAvailableDir(monster, backwards)
+        monster.direction = newDirection
 
-            if (newDirection === 1) { // direction is North
-                monster.y -= PLAYER_MOVEMENT_INCREMENT
+                if (newDirection === 1) { // direction is North
+                    monster.y -= PLAYER_MOVEMENT_INCREMENT
 
-            } else if (newDirection === 2) { // direction is West
-                monster.x += PLAYER_MOVEMENT_INCREMENT
+                } else if (newDirection === 2) { // direction is West
+                    monster.x += PLAYER_MOVEMENT_INCREMENT
 
-            } else if (newDirection === 3) { // direction is South
-                monster.y += PLAYER_MOVEMENT_INCREMENT
+                } else if (newDirection === 3) { // direction is South
+                    monster.y += PLAYER_MOVEMENT_INCREMENT
 
-            } else if (newDirection === 4) { // direction is East
-                monster.x -= PLAYER_MOVEMENT_INCREMENT
-            }
-            console.log("Monster's new position: " +monster.x + ", " +monster.y)
+                } else if (newDirection === 4) { // direction is East
+                    monster.x -= PLAYER_MOVEMENT_INCREMENT
+                }
+               // console.log("Monster's new position: " + monster.x + ", " + monster.y)
         }
     )
 }
 
-function getRandomAvailableDir(monster, current) {
+function getRandomAvailableDir(monster, backwards) {
     let available = []
     for (let i = 1; i < 5; i++) {
-        if (i === current) continue;
-        if (canMove(i, monster)) {
+        if (i !== backwards && canMove(i, monster)) {
             available.push(i)
         }
     }
+    //console.log(available, backwards)
+    if(available.length === 0) return backwards
     return available[Math.floor(Math.random() * available.length)]
 }
 
@@ -532,7 +542,7 @@ const startGameDataTicker = function () {
         } else {
             // move every player
             moveEveryPlayer();
-
+            moveAllMonsters();
             gameRoom.publish("game-state", {
                 players: players,
                 playerCount: totalPlayers,
