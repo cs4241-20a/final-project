@@ -5,6 +5,7 @@ const express = require("express");
 
 const Message = require("../../models/Message");
 const Group = require("../../models/Group");
+const User = require("../../models/User");
 const githubAuth = require("../auth/github-auth");
 
 const router = express.Router();
@@ -14,7 +15,7 @@ const {ensureAuthenticated} = githubAuth;
  * Route: /api/messages/:groupId
  * Method: GET
  * Auth: Required
- * Gets all messages in the given group. User must belong to the group. Verified by session.
+ * Desc: Gets all messages in the given group. User must belong to the group. Verified by session.
  */
 router.get("/:groupId", ensureAuthenticated, (req, res) => {
 	// Gather request parameters
@@ -66,7 +67,7 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 });
 
 /*
- * Route: /api//:groupId/:messageId
+ * Route: /api/messages/:groupId/:messageId
  * Method: DELETE
  * Auth: Required
  * Desc: Deletes the message with the given id. User must belong to the group and have sent the message or be admin of the group.
