@@ -61,10 +61,12 @@
       <!-- <h1 id="filifili_title" class="col-md-1">
         Filifili
       </h1> -->
+      
       <div
         class="main"
         style="position: relative; width: 1024px; height: 800px"
       >
+      
         <div class="container" style="position: absolute">
           <div class="movie text-center">
             <iframe
@@ -87,12 +89,6 @@
       </div>
     </div>
 
-    <!--     <div>
-      <input type="text" id="comment" />
-      <button>
-        Submit
-      </button>
-    </div> -->
     <!-- <div id="background"></div> -->
 
     <script>
@@ -106,17 +102,13 @@
         var video = document.getElementById("video");
 
         if (videoType === "music") {
-          type.innerHTML = "Relaxing Guitar Music";
           video.src = "https://www.youtube.com/embed/oFEKYxjYDIc";
         } else if (videoType === "cooking") {
-          type.innerHTML = "Cooking Tutorial";
           video.src = "https://www.youtube.com/embed/mhDJNfV7hjk";
         } else if (videoType === "talkShow") {
-          type.innerHTML = "Talk Show";
-          video.src = "https://www.youtube.com/embed/v=odtAJ2kPdqc";
+          video.src = "https://www.youtube.com/embed/odtAJ2kPdqc";
         }
 
-        //         type.innerHTML = videoType;
         function getUrlVars() {
           var vars = {};
           var parts = window.location.href.replace(
