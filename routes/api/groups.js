@@ -37,7 +37,7 @@ router.post("/", githubAuth.ensureAuthenticated, async (req, res) => {
 		currentUser.groups = [...currentUser.groups, groupId];
 		// TODO: finish this
 
-		res.status(204).json({success: true, data: });
+		//res.status(204).json({success: true, data: });
 	} catch (err) {
 		res.status(404).send({success: false, error: err});
 	}
