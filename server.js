@@ -41,4 +41,13 @@ app.post("/add", bodyParser.json(), (req, res) => {
   })
 })
 
+app.get('/tasks', bodyParser.json(), (request, response) => {
+	//console.log("Here's our group: " + request.group)
+	//Leaving out accessing a specific group for right now
+  collection.find().toArray()
+    .then(docs => {
+    response.json(docs)
+  })
+})
+
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

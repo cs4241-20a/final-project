@@ -1,11 +1,11 @@
 // Get the modal
 var modal = document.getElementById("myModal");
 
-const newTask = function() {
+var makeTask = function() {
   modal.style.display = "block";
 }
 
-const cancelTask = function(){
+var cancelTask = function(){
   modal.style.display = "none";
 }
 
@@ -15,7 +15,34 @@ window.onclick = function(event) {
   }
 }
 
-const addTask = function (e) {
+function getTasks() {
+
+  //event.preventDefault()
+
+  var h = document.getElementById('group_name')
+  var name = h.innerHTML
+  fetch('/tasks', {
+    method: 'GET',
+    headers: {
+      "Content-type": "application/json"
+    }
+  })
+  .then(function(response) {
+      return response.json();
+  })
+  .then(function(json) {
+    console.log("Array: " + JSON.stringify(json))
+    for(var i = 0; i < json.length; i++)
+    {
+      var task = json[i]
+      //if(todo.username == uname)
+      console.log("append")
+      appendNewInfo(task)
+    }
+  })
+}
+
+var addTask = function (e) {
 
   e.preventDefault()
 
@@ -58,7 +85,7 @@ function appendNewInfo(task) {
   var due = document.createElement("p");
   var assigned = document.createElement("p");
   const col = document.getElementsByClassName('task_lists')
-  div.setAttribute('class', 'task_card')
+  div.setAttribute('class', 'task_card card-panel col s1')
   name.setAttribute('class', 'task_item')
   due.setAttribute('class', 'task_item')
   assigned.setAttribute('class', 'task_item')
@@ -76,30 +103,32 @@ function appendNewInfo(task) {
   col[0].appendChild(div)
 }
 
-const addCol = function() {
+var addCol = function() {
   //<div class="task_lists">
   //  <h2 class="list_name">List Name</h2>
-  const contain = document.getElementsByClassName("container")
+  const contain = document.getElementsByClassName("inner-container")
   console.log(contain)
   var newCol = document.createElement("div");
-  newCol.setAttribute('class', 'task_lists')
+  newCol.setAttribute('class', 'task_lists card-panel materialize-red lighten-2')
   var newlistName = document.createElement("h2")
   newlistName.setAttribute('class', 'list_name')
   newCol.appendChild(newlistName)
   contain[0].appendChild(newCol)
 }
 
-const delCol = function() {
-  const contain = document.getElementsByClassName("container")
+var delCol = function() {
+  const contain = document.getElementsByClassName("inner-container")
   contain[0].removeChild(contain[0].lastChild)
 }
 
 window.onload = function() {
+    getTasks()
+
     const tsButton = document.querySelector( '#task_submit' )
     tsButton.onclick = addTask
 
-    const ntButton = document.getElementById("addTask")
-    ntButton.onclick = newTask
+    const ntButton = document.getElementById("add_task")
+    ntButton.onclick = makeTask
 
     const cButton = document.getElementById("cancel")
     cButton.onclick = cancelTask
