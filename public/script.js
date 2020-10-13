@@ -273,12 +273,12 @@ class GameScene extends Phaser.Scene {
 
             if (this.monsterAvatars[monsterId]) {
                 // update monsters positions
-                this.monsterAvatars[monsterId].x = ((monsters[monsterId].x + 1) * RATIO) - Math.floor(RATIO / 2);
-                this.monsterAvatars[monsterId].y = ((monsters[monsterId].y + 1) * RATIO) - Math.floor(RATIO / 2);
+                this.monsterAvatars[monsterId].x = monsters[monsterId].x;
+                this.monsterAvatars[monsterId].y = monsters[monsterId].y;
             } else if (!this.monsterAvatars[monsterId]) {
                 // init monster
                 this.monsterAvatars[monsterId] = this.physics.add
-                    .sprite(((monsters[monsterId].x + 1) * RATIO) - Math.floor(RATIO / 2), ((monsters[monsterId].y + 1) * RATIO) - Math.floor(RATIO / 2), monsterId)
+                    .sprite(monsters[monsterId].x, monsters[monsterId].y, monsterId)
                     .setOrigin(0.5, 0.5);
 
                 this.monsterAvatars[monsterId].setCollideWorldBounds(true);
