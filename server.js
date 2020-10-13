@@ -321,6 +321,29 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
         inRange = false
     })
 
+    Object.values(monsters).forEach(function (monster) {
+        if (direction === 0) {
+
+            if (checkRange(monster.y, minRange, maxRange, SAME_AXIS_RANGE) &&
+                checkRange(monster.x, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
+                inRange = true;
+            }
+
+        } else { // direction was horizontal (SAME AXIS WOULD BE X-AXIS)
+
+            if (checkRange(monster.x, minRange, maxRange, SAME_AXIS_RANGE) &&
+                checkRange(monster.y, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
+                inRange = true;
+            }
+        }
+
+        if (inRange) {
+            currentPlayerDead = true;
+        }
+
+    inRange = false
+    })
+
     if (currentPlayerDead) {
         if (players[id].isAlive) {
             console.log("Killing Current")
