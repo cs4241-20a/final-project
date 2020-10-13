@@ -395,11 +395,16 @@ function gameHasEnded() {
     //console.log(numOfDeadPlayers)
     //console.log(totalPlayers)
 
-    if (totalPlayers >= 1) {
+    if (totalPlayers > 1) {
         if (numOfDeadPlayers === totalPlayers || numOfDeadPlayers === (totalPlayers - 1)) {
             return true;
         }
-    } 
+    
+    } else if (totalPlayers == 1) {
+        if (numOfDeadPlayers === totalPlayers) {
+            return true;
+        }
+    }
 
 
     return false;
