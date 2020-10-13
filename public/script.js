@@ -195,7 +195,7 @@ class GameScene extends Phaser.Scene {
             gameOn = false;
             gameRoom.unsubscribe();
             myChannel.unsubscribe();
-            window.location.replace(BASE_SERVER_URL + "/");
+            //window.location.replace(BASE_SERVER_URL + "/");
         });
     }
 
