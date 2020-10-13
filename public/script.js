@@ -13,7 +13,7 @@ let prevKey = "";
 let board = []; // init
 const RATIO = 25;
 
-const BASE_SERVER_URL = "http://localhost:4000";
+const BASE_SERVER_URL = "https://pac-people.herokuapp.com";
 let myNickname = "";
 
 const realtime = Ably.Realtime({
