@@ -23,50 +23,46 @@ export const Login: FunctionComponent = () => {
     const classes = useStyles();
     return (
         <Box margin="auto">
-            <form className={classes.form} noValidate>
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-            />
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-            />
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-            >
-                Sign In
-            </Button>
-            <Grid container>
-                <Grid item xs>
-                <Typography component={Link} to="/" variant="body2">
-                    Forgot password?
-                </Typography>
+            <form className={classes.form} action="/login" method="post" noValidate>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    name="username"
+                    label="Username"
+                    required
+                    autoFocus
+                />
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    type="password"
+                    name="password"
+                    label="Password"
+                    required
+                />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                >
+                    Sign In
+                </Button>
+                <Grid container>
+                    <Grid item xs>
+                    <Typography component={Link} to="/" variant="body2">
+                        Forgot password?
+                    </Typography>
+                    </Grid>
+                    <Grid item>
+                    <Typography component={Link} to="/" variant="body2">
+                        {"Don't have an account? Sign Up"}
+                    </Typography>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                <Typography component={Link} to="/" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                </Typography>
-                </Grid>
-            </Grid>
             </form>
         </Box>
     );

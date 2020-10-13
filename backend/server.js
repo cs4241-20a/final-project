@@ -10,8 +10,6 @@ const PORT = 3000;
 
 const app = express();
 
-const jsonBodyParser = bodyParser.json();
-
 passport.use(new LocalStrategy(async (username, password, done) => {
     const users = await getCollection('users');
     const user = await users.findOne({username, password}, {projection: {
@@ -41,6 +39,23 @@ passport.use('local-signup', new LocalStrategy(async (username, password, done) 
     }
 }));
 
+passport.serializeUser((user, cb) => {
+    cb(null, user.username);
+});
+  
+passport.deserializeUser(async (id, cb) => {
+    cb(null, await users.findOne({id}, {projection: {
+        _id: 0,
+        username: 1
+    }}));
+});
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ extended: true }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 const authenticate = (req, /** @type {import('express').Response} */ res, /** @type {import('express').NextFunction} */ next) => {
     if (req.user) {
         return next();
@@ -59,7 +74,7 @@ app.get('/api/challenge/all', async (req, res) => {
     res.json(shortChallenges);
 });
 
-app.post('/api/challenge', authenticate, jsonBodyParser, async (req, res) => {
+app.post('/api/challenge', authenticate, async (req, res) => {
     const { title, description, starterCode, solution, tests } = req.body;
     if ([typeof title, typeof description, typeof starterCode, typeof solution, typeof tests].every(x => x === 'string')) {
         /** @type {import('mongodb').Collection<import('../frontend/js/types/challenge').Challenge>} */
