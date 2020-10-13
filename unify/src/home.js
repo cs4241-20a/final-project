@@ -11,9 +11,9 @@ export default class Home extends React.Component {
         super(props)
 
         this.state = {
-            songs: [{ id: 0, title: "song0" }, { id: 1, title: "song1" }, { id: 2, title: "song2" }, { id: 3, title: "song3" }, { id: 4, title: "song4" }, { id: 5, title: "song5" }, { id: 6, title: "song6" }, { id: 7, title: "song7" }, { id: 8, title: "song8" }, { id: 9, title: "song9" }, { id: 10, title: "song10" }, { id: 11, title: "song11" }, { id: 12, title: "song12" }, { id: 13, title: "song13"}],
+            songsJSON: [],
             columns: [],
-            //songs: [],
+            songs: [],
             showTable: false,
             user1: "", 
             user2: "",
@@ -36,6 +36,7 @@ export default class Home extends React.Component {
         this.toggleOverlay = this.toggleOverlay.bind(this)
         this.handleMessageChange = this.handleMessageChange.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
+        this.parseSongs = this.parseSongs.bind(this)
     }
 
 
@@ -62,12 +63,13 @@ export default class Home extends React.Component {
             let staticUser1 = this.state.user1;
             let staticUser2 = this.state.user2;
             this.setState({
-                songs: json,
+                songsJSON: json,
                 columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
                 showTable: true,
                 user1: "",
                 user2: ""
             })
+            this.parseSongs()
         });
 
         // TEMP FOR FRONT END TESTING
@@ -84,6 +86,15 @@ export default class Home extends React.Component {
         //     user2: ""
         // });
 
+    }
+
+    parseSongs() {
+        let songNames = []
+        for (let i = 0; i < this.state.songsJSON.length; i++){
+            songNames.push({ id: i, title: this.state.songsJSON[i].name })
+        }
+        console.log(songNames)
+        this.setState({ songs: songNames })
     }
 
     login() {
