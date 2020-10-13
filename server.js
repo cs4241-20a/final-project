@@ -294,7 +294,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     let currentPlayerDead = false;
 
     Object.values(players).forEach(function (player) {
-        if (player.id !== id) {
+        if (player.id !== id && player.isAlive) {
             // direction was vertical (SAME AXIS WOULD BE Y-AXIS)
             if (direction === 0) {
 
@@ -322,10 +322,8 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     })
 
     if (currentPlayerDead) {
-        if (players[id].isAlive) {
-            deadPlayers.push(players[id])
-            players[id].isAlive = false;
-        }
+        deadPlayers.push(players[id])
+        players[id].isAlive = false;
 
         collection
             .updateOne(
