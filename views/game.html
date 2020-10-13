@@ -16,9 +16,16 @@
 <body>
 <div class="content-container">
     <div id="score"></div>
+    <button onclick="playMusic()" type="button">Play Music</button>
+    <button onclick="pauseMusic()" type="button">Pause Music</button>
     <!--this div will house our game canvas-->
     <div class="game-div" id="gameContainer"></div>
 </div>
+
+<audio loop id="music">
+    <source src="/music/Pacpeople.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+    </audio>
 <script src="/script.js"></script>
 <script src="/explosion.js"></script>
 </body>
