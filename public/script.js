@@ -211,7 +211,7 @@ class GameScene extends Phaser.Scene {
             gameOn = false;
             gameRoom.unsubscribe();
             myChannel.unsubscribe();
-            //window.location.replace(BASE_SERVER_URL + "/");
+            window.location.replace(BASE_SERVER_URL + "/");
         });
     }
 
@@ -344,7 +344,7 @@ class GameScene extends Phaser.Scene {
             });
             prevKey = "up";
         }
-        
+
     }
 
     updateScores(scores) {
