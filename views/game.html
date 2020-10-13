@@ -16,10 +16,14 @@
 <body>
 <div class="content-container">
     <div id="score"></div>
-    <button onclick="playMusic()" type="button">Play Music</button>
-    <button onclick="pauseMusic()" type="button">Pause Music</button>
+
     <!--this div will house our game canvas-->
     <div class="game-div" id="gameContainer"></div>
+
+    <div style="display: flex; flex-direction: row">
+        <button onclick="playMusic()" type="button">Play Music</button>
+        <button onclick="pauseMusic()" type="button">Pause Music</button>
+    </div>
 </div>
 
 <audio loop id="music">
