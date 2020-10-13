@@ -45,19 +45,14 @@ const addTask = function (e) {
     })
     .then( function( json ) {
       console.log( json )
-      //var count = 0
-      //var tableCount = tbod.rows.length
       var task = json
       appendNewInfo(task)
   })
+  console.log(modal)
+  modal.style.display = "none";
 }
 
 function appendNewInfo(task) {
-  //<div class="task_card">
-    //<p class="task_item" class="task_name">Task Name</p>
-    //<p class="task_item" class="task_date">Due Date</p>
-    //<p class="task_item" class="assignees">Assigned To</p>
-  //</div>
   var div = document.createElement("div");
   var name = document.createElement("p");
   var due = document.createElement("p");
@@ -73,8 +68,30 @@ function appendNewInfo(task) {
   div.appendChild(name)
   div.appendChild(due)
   div.appendChild(assigned)
-  console.log(col[0])
+  // Need to figure out how to get the button below the cards but for now I'm not worrying about it
+  //console.log(col[0])
+  //var addBtn = document.getElementById("addTask")
+  //console.log("Anything? " + col[0].task_card)
+  //col[0].parentNode.insertBefore(div, col.nextSibling)
   col[0].appendChild(div)
+}
+
+const addCol = function() {
+  //<div class="task_lists">
+  //  <h2 class="list_name">List Name</h2>
+  const contain = document.getElementsByClassName("container")
+  console.log(contain)
+  var newCol = document.createElement("div");
+  newCol.setAttribute('class', 'task_lists')
+  var newlistName = document.createElement("h2")
+  newlistName.setAttribute('class', 'list_name')
+  newCol.appendChild(newlistName)
+  contain[0].appendChild(newCol)
+}
+
+const delCol = function() {
+  const contain = document.getElementsByClassName("container")
+  contain[0].removeChild(contain[0].lastChild)
 }
 
 window.onload = function() {
@@ -87,12 +104,9 @@ window.onload = function() {
     const cButton = document.getElementById("cancel")
     cButton.onclick = cancelTask
 
-    //const button2 = document.querySelector( '#edit' )
-    //button2.onclick = edit
+    const ncButton = document.getElementById("add_list")
+    ncButton.onclick = addCol
 
-    //const button3 = document.querySelector( '#delete' )
-    //button3.onclick = remove
-
-    //const button4 = document.querySelector('#signout')
-    //button4.onclick = signout
+    const rcButton = document.getElementById("delete_list")
+    rcButton.onclick = delCol
   }
