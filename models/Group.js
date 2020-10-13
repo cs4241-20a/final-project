@@ -9,12 +9,12 @@ const GroupSchema = new Schema({
 		type: String,
 		required: true
 	},
-	admin_id: {
+	admin: {
 		type: String,
 		required: true
 	},
 	members: {
-		type: Array,
+		type: [String],
 		required: true	
 	}
 });

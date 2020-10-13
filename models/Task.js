@@ -22,11 +22,11 @@ const TaskSchema = new Schema({
 		required: true
 	},
 	assignees: {
-		type: Array,
+		type: [String],
 		required: false
 	},
 	tags: {
-		type: Array,
+		type: [String],
 		required: false
 	},
 	date_due: {

@@ -14,7 +14,7 @@ const UserSchema = new Schema({
 		required: true
 	},
 	groups: {
-		type: Array,
+		type: [String],
 		required: true
 	}
 });
