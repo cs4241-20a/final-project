@@ -566,6 +566,12 @@ function resetServerState() {
     totalPlayers = 0;
     alivePlayers = 0;
     deadPlayers = [];
+    spawnLocations = [{x: 1362.5, y: 712.5, occupied: false}, {x: 37.5, y: 712.5, occupied: false}, {
+        x: 1362.5,
+        y: 37.5,
+        occupied: false
+    }, {x: 37.5, y: 37.5, occupied: false}]
+
     for (let item in playerChannels) {
         playerChannels[item].unsubscribe();
     }
