@@ -565,6 +565,7 @@ function resetServerState() {
     gameTickerOn = false;
     totalPlayers = 0;
     alivePlayers = 0;
+    deadPlayers = [];
     for (let item in playerChannels) {
         playerChannels[item].unsubscribe();
     }
