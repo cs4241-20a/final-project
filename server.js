@@ -324,7 +324,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
         deadPlayers.push(players[id]);
         collection
             .updateOne(
-                {username: players[id].nickname},
+                {_id: players[id].id},
                 {
                     $set: {"score": players[id].score}
                 }
@@ -379,7 +379,7 @@ function finishGame() {
         });
         collection
             .updateOne(
-                {username: player.nickname},
+                {_id: player.id},
                 {
                     $set: {"score": player.score}
                 }
