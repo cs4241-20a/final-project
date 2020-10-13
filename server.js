@@ -5,6 +5,7 @@ const express = require('express'),
       mongodb = require('mongodb'),
       mongoose = require('mongoose'),
       passport = require('passport'),
+      session = require('express-session'),
       app = express(),
       ws = require('ws'),
       http = require('http')
@@ -67,6 +68,15 @@ require('./config/passport.js')(passport)
 // Bodyparser
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(bodyparser.json())
+
+// Express session
+app.use(
+    session({
+        secret: 'secret',
+        resave: true,
+        saveUninitialized: true
+    })
+)
 
 app.use(passport.initialize())
 app.use(passport.session())

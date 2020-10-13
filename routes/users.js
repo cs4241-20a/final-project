@@ -24,18 +24,25 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
     const username = req.user.name
-    console.log(username)
-    res.send({ message: `User ${username} has signed in.` })
+    res.send({ success: `User ${username} has signed in.` })
 })
 
 // router.post('/login', (req, res, next) => {
 //     passport.authenticate('local', {
-//       successRedirect: '/home',
+//       successRedirect: '/',
 //       failureRedirect: '/login',
 //       failureFlash: true
 //     })(req, res, next)
 // })
 
+
+
+router.get("/logout", function(req, res) {
+  req.session.destroy(() => {
+   req.logout();
+   res.redirect("/login");
+  });
+ });
 
 // router.post('/login', (req, res) => passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', })(req, res))
 module.exports = router
