@@ -79,7 +79,6 @@ io.on("connection", socket => {
 		console.log("A user has disconnected");
 		io.emit("message", "A user has disconnected");
 	});
-
 });
 
 
