@@ -349,8 +349,10 @@ function withinBoundary(x, y) {
 function gameHasEnded() {
     let numOfDeadPlayers = deadPlayers.length
 
+    let count = Object.keys(coins).length
+    
     // do no know if this works
-    if (coins === null) {
+    if (count === 0) {
         return true;
     }
 
@@ -390,9 +392,13 @@ function finishGame() {
         return b.score - a.score;
     });
 
-    if (rankings[0].score !== rankings[1].score) {
+    if (totalPlayers === 1) {
+        winnerName = rankings[0].name;
+    
+    } else if (rankings[0].score !== rankings[1].score) {
         winnerName = rankings[0].name;
     }
+
 
     gameRoom.publish("game-over", {
         winner: winnerName,
