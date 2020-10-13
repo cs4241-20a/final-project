@@ -6,7 +6,7 @@ let players = {};
 let totalPlayers = 0;
 let amIalive = false;
 let game;
-
+let music;
 let backendCoins = null;
 let clientCoins = {};
 let prevKey = "";
@@ -28,6 +28,14 @@ realtime.connection.once("connected", () => {
     gameRoom.presence.enter(myNickname);
     game = new Phaser.Game(config);
 });
+var myMusic= document.getElementById("music");
+function playMusic() {
+myMusic.play();
+}
+
+function pauseMusic() {
+myMusic.pause();
+}
 
 class Explosion extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y) {
@@ -42,7 +50,6 @@ class GameScene extends Phaser.Scene {
     constructor() {
         super("gameScene");
     }
-
 
     //load assets
     preload() {
@@ -181,7 +188,6 @@ class GameScene extends Phaser.Scene {
 
         this.renderBoardAndCoins();
 
-
         gameRoom.subscribe("game-state", (msg) => {
             if (msg.data.gameOn) {
                 gameOn = true;
@@ -312,6 +318,7 @@ class GameScene extends Phaser.Scene {
             });
             prevKey = "up";
         }
+        
     }
 
     updateScores(scores) {
@@ -355,6 +362,7 @@ class GameScene extends Phaser.Scene {
         }
     }
 }
+
 
 const config = {
     width: 1400,
