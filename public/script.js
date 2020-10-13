@@ -7,6 +7,8 @@ let totalPlayers = 0;
 let amIalive = false;
 let game;
 
+let monsters = {}
+
 let backendCoins = null;
 let clientCoins = {};
 let prevKey = "";
@@ -160,6 +162,14 @@ class GameScene extends Phaser.Scene {
             }
         )
 
+        this.load.spritesheet(
+            "Ada",
+            "/assets/monsterOne.png", {
+                frameWidth: 25,
+                frameHeight: 25
+            }
+        )
+
         //load board
         fetch("/getBoard", {headers: {'Content-Type': 'application/json'}})
             .then((response) => response.json())
@@ -168,6 +178,7 @@ class GameScene extends Phaser.Scene {
 
     //init variables, define animations & sounds, and display assets
     create() {
+        this.monsterAvatars = {};
         this.avatars = {};
         this.cursorKeys = this.input.keyboard.createCursorKeys();
 
@@ -189,6 +200,7 @@ class GameScene extends Phaser.Scene {
             players = msg.data.players;
             totalPlayers = msg.data.playerCount;
             backendCoins = msg.data.coins;
+            monsters = msg.data.monsters;
         });
 
         gameRoom.subscribe("game-over", (msg) => {
@@ -254,6 +266,22 @@ class GameScene extends Phaser.Scene {
                 if (players[item].id === myClientId) {
                     amIalive = false;
                 }
+            }
+        }
+
+        for (let monsterId in monsters) {
+
+            if (this.monsterAvatars[monsterId]) {
+                // update monsters positions
+                this.monsterAvatars[monsterId].x = ((monsters[monsterId].x + 1) * RATIO) - Math.floor(RATIO / 2);
+                this.monsterAvatars[monsterId].y = ((monsters[monsterId].y + 1) * RATIO) - Math.floor(RATIO / 2);
+            } else if (!this.monsterAvatars[monsterId]) {
+                // init monster
+                this.monsterAvatars[monsterId] = this.physics.add
+                    .sprite(((monsters[monsterId].x + 1) * RATIO) - Math.floor(RATIO / 2), ((monsters[monsterId].y + 1) * RATIO) - Math.floor(RATIO / 2), monsterId)
+                    .setOrigin(0.5, 0.5);
+
+                this.monsterAvatars[monsterId].setCollideWorldBounds(true);
             }
         }
 
