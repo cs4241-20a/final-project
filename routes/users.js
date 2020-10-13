@@ -36,5 +36,13 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 // })
 
 
+
+router.get("/logout", function(req, res) {
+  req.session.destroy(() => {
+   req.logout();
+   res.redirect("/login");
+  });
+ });
+
 // router.post('/login', (req, res) => passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', })(req, res))
 module.exports = router

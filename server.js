@@ -89,10 +89,6 @@ app.get("/video", (request, response) => {
   response.sendFile(__dirname + "/public/html/video.html");
 });
 
-app.delete("/logout", (req, res)=>{
-  req.logOut()
-  res.redirect("/login")
-})
 
 // const listener = server.listen( process.env.PORT || 3000, function() {
 //   console.log( 'Your app is listening on port ' + listener.address().port )
