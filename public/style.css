@@ -50,7 +50,7 @@ body {
 
 .leaders-title {
     font-size: 30px;
-    color: darkblue;
+    color: yellow;
 }
 
 .leaderboard {
@@ -61,7 +61,7 @@ body {
     overflow-y: scroll;
     height:300px;
     font-size: 20px;
-    color: darkblue;
+    color: yellow;
     margin-left: 15px;
 }
 

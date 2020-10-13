@@ -253,13 +253,6 @@ function moveEveryPlayer() {
 
         player.score += collectCoin(Math.floor(player.x / 25), (Math.floor(player.y / 25)))
     })
-
-
-    // check if player picked a coin
-    // on every tick, publish the number of coins left
-
-
-    // check if players die
 }
 
 function getCoinId(x, y) {
