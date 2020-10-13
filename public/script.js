@@ -13,7 +13,7 @@ let prevKey = "";
 let board = []; // init
 const RATIO = 25;
 
-const BASE_SERVER_URL = "http://localhost:4000";
+const BASE_SERVER_URL = "https://pac-people.herokuapp.com";
 let myNickname = "";
 
 const realtime = Ably.Realtime({
@@ -144,10 +144,10 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "explosion",
-            "/assets/.png",
+            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fexplosion57%20(2).png?v=1589491279459",
             {
-                frameWidth: 25,
-                frameHeight: 25
+                frameWidth: 48,
+                frameHeight: 48
             }
         );
         this.load.image("wall", "/assets/wall_actual.png");
