@@ -127,7 +127,7 @@ const GAME_TICKER_MS = 500;
 
 let peopleAccessingTheWebsite = 0;
 let players = {};
-let monsters = {"Ada": {x: 500, y: 500, direction: 1}};
+let monsters = {"Ada": {x: 5, y: 10, direction: 1}};
 let deadPlayers = new Array();
 let rankings = new Array();
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
