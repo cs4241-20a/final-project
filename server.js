@@ -354,7 +354,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
         if (players[id].isAlive) {
             console.log("Killing Current")
             console.log(id)
-            //deadPlayers.push(players[id])
+            deadPlayers.push(players[id])
             players[id].isAlive = false;
         }
 
@@ -392,12 +392,15 @@ function gameHasEnded() {
         return true;
     }
 
-    if (totalPlayers > 1) {
+    //console.log(numOfDeadPlayers)
+    //console.log(totalPlayers)
+
+    if (totalPlayers >= 1) {
         if (numOfDeadPlayers === totalPlayers || numOfDeadPlayers === (totalPlayers - 1)) {
             return true;
         }
+    } 
 
-    }
 
     return false;
 }
