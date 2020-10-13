@@ -474,6 +474,46 @@ function canMove(direction, id) {
 
 }
 
+function moveAllMonsters() {
+    Object.values(monsters).forEach(function (monster) {
+            let tryDirection = monster.direction;
+            let newDirection = null;
+
+            if (canMove(tryDirection, monster)) {
+                newDirection = tryDirection
+            } else {
+                newDirection = getRandomAvailableDir(monster, tryDirection)
+            }
+
+            if (newDirection === 1) { // direction is North
+                monster.y -= PLAYER_MOVEMENT_INCREMENT
+
+            } else if (newDirection === 2) { // direction is West
+                monster.x += PLAYER_MOVEMENT_INCREMENT
+
+            } else if (newDirection === 3) { // direction is South
+                monster.y += PLAYER_MOVEMENT_INCREMENT
+
+            } else if (newDirection === 4) { // direction is East
+                monster.x -= PLAYER_MOVEMENT_INCREMENT
+            }
+            console.log("Monster's new position: " +monster.x + ", " +monster.y)
+        }
+    )
+}
+
+function getRandomAvailableDir(monster, current) {
+    let available = []
+    for (let i = 1; i < 5; i++) {
+        if (i === current) continue;
+        if (canMove(i, monster)) {
+            available.push(i)
+        }
+    }
+    return available[Math.floor(Math.random() * available.length)]
+}
+
+
 const startGameDataTicker = function () {
 
     for (let i = 0; i < walls[0].length; i++) {
