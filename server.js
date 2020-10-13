@@ -3,16 +3,42 @@ const express = require('express'),
       bodyparser = require('body-parser'),
       cookie = require('cookie-session'),
       mongodb = require('mongodb'),
-      app = express()
+      mongoose = require('mongoose'),
+      passport = require('passport'),
+      app = express(),
+      ws = require('ws'),
+      http = require('http')
 
-const client_id = process.env.GITHUB_CLIENT_ID
-const client_secret = process.env.GITHUB_CLIENT_SECRET
-const cookie_secret = process.env.COOKIE_SECRET
+// const client_id = process.env.GITHUB_CLIENT_ID
+// const client_secret = process.env.GITHUB_CLIENT_SECRET
+// const cookie_secret = process.env.COOKIE_SECRET
 // const dbpass = process.env.DBPASSWORD
 
 var StatsD = require('node-statsd')
 var favicon = require('serve-favicon')
 var path = require('path')
+
+// const server = http.createServer(app)
+// const socketServer = new ws.Server({ server })
+
+// const clients = []
+
+// socketServer.on( 'connection', client => {
+//   // when the server receives a message from this client...
+//   client.on( 'message', msg => {
+// 	  // send msg to every client EXCEPT
+//     // the one who originally sent it
+//     clients.forEach( c => {
+//       if( c !== client )
+//         c.send( msg )
+//     })
+//   })
+
+//   // add clien to client list
+//   clients.push( client )
+// })
+
+// server.listen( 3000 )
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
@@ -21,38 +47,49 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 //     secret: cookie_secret
 //   })
 // );
- 
-app.use(bodyparser.json())
 
-// const MongoClient = mongodb.MongoClient;
-// const uri = `mongodb+srv://liumxiris:${dbpass}@cluster0.lgqqz.mongodb.net/<dbname>?retryWrites=true&w=majority`;
-// const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true });
 
-//handling the get request
-// app.get('/', function(request, response) {
-//   console.log('GET: ',request.url)
-//   if(request.session.githubId){
-//     response.sendFile( __dirname + '/public/index.html' )
-//   }else{
-//     response.sendFile(__dirname + '/public/login.html') 
-//   }
-// })
-// app.get('/githubid',function(request,response){
-//   if(request.session.githubId){
-//     response.send(JSON.stringify(request.session.githubId))
-//     console.log("sent githubId:" + request.session.githubId)
-//   }else{
-//     response.send("User is not authorzied")
-//   }
-// })
-
-// //User login
-// app.get('/login/github',(request,response) => {
-//   const url = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri = http://localhost:3000/login/github/callback`
-//   response.redirect(url)
-// })
 
 app.use(express.static('public'))
+
+// Mongodb Config
+// const uri = process.env.MONGO_URI
+// mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }
+// )
+// const connection = mongoose.connection
+// connection.once('open', () => {
+//   console.log("MongoDB database connection established successfully");
+// })
+
+// Passport config
+require('./config/passport.js')(passport)
+
+// Bodyparser
+app.use(bodyparser.urlencoded({ extended: true }))
+app.use(bodyparser.json())
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+// User route
+app.use('/users', require('./routes/users'))
+app.use('/', require('./routes/index'))
+
+app.get("/video", (request, response) => {
+  response.sendFile(__dirname + "/public/html/video.html");
+});
+
+
+// const listener = server.listen( process.env.PORT || 3000, function() {
+//   console.log( 'Your app is listening on port ' + listener.address().port )
+// })
+
+
+const listener = app.listen( process.env.PORT || 3000, function() {
+  console.log( 'Your app is listening on port ' + listener.address().port )
+})
+
+
 
 // async function getAccessToken(code){
 //   const token_url = 'https://github.com/login/oauth/access_token'
@@ -103,8 +140,26 @@ app.use(express.static('public'))
 //   response.redirect('/login.html')
 //   console.log("log out in server")
 // })
+// handling the get request
+// app.get('/', function(request, response) {
+//   console.log('GET: ',request.url)
+  // if(request.session.githubId){
+  //   response.sendFile( __dirname + '/public/index.html' )
+  // }else{
+  //   response.sendFile(__dirname + '/public/login.html') 
+  // }
+// })
+// app.get('/githubid',function(request,response){
+//   if(request.session.githubId){
+//     response.send(JSON.stringify(request.session.githubId))
+//     console.log("sent githubId:" + request.session.githubId)
+//   }else{
+//     response.send("User is not authorzied")
+//   }
+// })
 
-
-const listener = app.listen( process.env.PORT || 3000, function() {
-  console.log( 'Your app is listening on port ' + listener.address().port )
-})
+//User login
+// app.get('/login/github',(request,response) => {
+//   const url = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri = http://localhost:3000/login/github/callback`
+//   response.redirect(url)
+// })
