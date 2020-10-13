@@ -278,7 +278,7 @@ class GameScene extends Phaser.Scene {
             } else if (!this.monsterAvatars[monsterId]) {
                 // init monster
                 this.monsterAvatars[monsterId] = this.physics.add
-                    .sprite(monsters[monsterId].x, monsters[monsterId].y, monsterId)
+                    .sprite(monsters[monsterId].x, monsters[monsterId].y, "Ada")
                     .setOrigin(0.5, 0.5);
 
                 this.monsterAvatars[monsterId].setCollideWorldBounds(true);
