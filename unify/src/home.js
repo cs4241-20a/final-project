@@ -5,6 +5,9 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
+import * as d3 from 'd3'
+import { entries } from 'd3'
+
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -17,6 +20,8 @@ export default class Home extends React.Component {
             showTable: false,
             user1: "", 
             user2: "",
+            staticUser1: "", 
+            staticUser2: "",
             showChat: false,
             messages: [
                 new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
@@ -24,7 +29,13 @@ export default class Home extends React.Component {
               ],
             overlay: false,
             overlayStyle: "none", 
-            typedMsg: ""
+            typedMsg: "",
+            testArtistsA: [{name: "aaa"}, {name: "bbb"}, {name: "ccc"}, {name: "ddd"}, {name: "eee"}, {name: "ddd"}, {name: "eee"}, {name: "ddd"}, {name: "eee"}],
+            testArtistsB: [{name: "bbb"}, {name: "fff"}, {name: "ccc"}, {name: "aaa"}, {name: "ggg"}, {name: "fff"}, {name: "ccc"}, {name: "aaa"}, {name: "ggg"}], 
+            testAlbumsA: [{name: "zzz"}, {name: "zzz"}, {name: "yyy"}, {name: "zzz"}, {name: "xxx"}, {name: "vvv"}, {name: "yyy"}, {name: "ddd"}, {name: "vvv"}],
+            testAlbumsB: [{name: "zzz"}, {name: "yyy"}, {name: "xxx"}, {name: "www"}, {name: "www"}, {name: "www"}, {name: "vvv"}, {name: "www"}, {name: "zzz"}],
+            testPopularityA: [{popularity: 0}, {popularity: 93}, {popularity: 45}, {popularity: 17}, {popularity: 56}, {popularity: 90}, {popularity: 3}, {popularity: 82}], 
+            testPopularityB: [{popularity: 55}, {popularity: 23}, {popularity: 48}, {popularity: 47}, {popularity: 58}, {popularity: 90}, {popularity: 32}, {popularity: 12}]
         }
 
         this.overlayDiv = React.createRef()
@@ -143,17 +154,22 @@ export default class Home extends React.Component {
         // Show table on recieving data from server
         const renderTable = () => {
             if (this.state.showTable) {
-                return (                
-                <div className="mt-5 mb-10">
-                    <BootstrapTable 
-                    rowStyle={{ backgroundColor: '#ffffff' }}
-                    
-                    border={true}
-                    keyField='id' data={ this.state.songs } 
-                    columns={ this.state.columns } 
-                    pagination={ paginationFactory() } 
-                    bootstrap4={true} />
-                </div>
+                return (   
+                    <div>    
+                        <h2 className="mt-5 mb-10 user-title">{this.state.staticUser1} and {this.state.staticUser2}</h2>
+
+                        <div className="mt-5 mb-10">
+                            <h4 className="subtitle">Songs in Common</h4>
+                            <BootstrapTable 
+                            rowStyle={{ backgroundColor: '#ffffff' }}
+                            
+                            border={true}
+                            keyField='id' data={ this.state.songs } 
+                            columns={ this.state.columns } 
+                            pagination={ paginationFactory() } 
+                            bootstrap4={true} />
+                        </div>
+                    </div>  
                 )
             }
         }
@@ -203,6 +219,114 @@ export default class Home extends React.Component {
                     )
             }
         }
+
+        const renderArtists = () => {
+            let group1Map = d3.rollup(this.state.testArtistsA, v => v.length, d => d.name)
+            let group2Map = d3.rollup(this.state.testArtistsB, v => v.length, d => d.name)
+
+            let group1Keys = []
+            for (let [key, value] of Array.from(group1Map)) {
+                group1Keys.push(key)
+            }
+
+            let group2Keys = []
+            for (let [key, value] of Array.from(group2Map)) {
+                group2Keys.push(key)
+            }
+
+            let combinedKeys = (d3.intersection(group1Keys, group2Keys))
+
+            let groupValues = []
+            for (let item of combinedKeys.values()) {
+                let sum = group1Map.get(item) + group2Map.get(item)
+                groupValues.push({ title: item, sum: sum})
+            }
+
+            groupValues.sort(function(x, y){
+                return d3.descending(x.sum, y.sum);
+            })
+
+            groupValues = groupValues.slice(0, 3)
+
+            if (this.state.showTable && groupValues.length > 0) {
+                return (
+                    <Container className="mt-5 mb-10">
+                        <h4 className="subtitle">Top Artists in Common</h4>
+
+                        <div className="artistDiv">
+                            {groupValues.map(value => (
+                                // add images too 
+                                <div className="artistName">{value.title}</div>
+                            ))}
+                        </div>
+                    </Container>
+                )
+            }
+        }
+
+        const renderAlbums = () => {
+            let group1Map = d3.rollup(this.state.testAlbumsA, v => v.length, d => d.name)
+            let group2Map = d3.rollup(this.state.testAlbumsB, v => v.length, d => d.name)
+
+            let group1Keys = []
+            for (let [key, value] of Array.from(group1Map)) {
+                group1Keys.push(key)
+            }
+
+            let group2Keys = []
+            for (let [key, value] of Array.from(group2Map)) {
+                group2Keys.push(key)
+            }
+
+            let combinedKeys = (d3.intersection(group1Keys, group2Keys))
+
+            let groupValues = []
+            for (let item of combinedKeys.values()) {
+                let sum = group1Map.get(item) + group2Map.get(item)
+                groupValues.push({ title: item, sum: sum})
+            }
+
+            groupValues.sort(function(x, y){
+                return d3.descending(x.sum, y.sum);
+            })
+
+            groupValues = groupValues.slice(0, 3)
+
+            if (this.state.showTable && groupValues.length > 0) {
+                return (
+                    <Container className="mt-5 mb-10">
+                        <h4 className="subtitle">Top Albums in Common</h4>
+
+                        <div className="artistDiv">
+                            {groupValues.map(value => (
+                                // add images too 
+                                <div className="artistName">{value.title}</div>
+                            ))}
+                        </div>
+                    </Container>
+                )
+            }
+        }
+        
+        const renderPopularity = () => {
+            let pop1Calc = (d3.mean(this.state.testPopularityA, d => d.popularity)).toFixed(2)
+            let pop2Calc = (d3.mean(this.state.testPopularityB, d => d.popularity)).toFixed(2)
+
+            if (this.state.showTable) {
+                return (
+                    <Container className="mt-5 mb-10">
+                        <h4 className="subtitle">Average Song Popularity</h4>
+
+                        <div className="artistDiv">
+                            {/* <div id="pop1"></div> */}
+                            <div className="artistName">{ pop1Calc }%</div>
+                            {/* <div id="pop2"></div> */}
+                            <div className="artistName">{ pop2Calc }%</div>
+                        </div> 
+                    </Container>
+                )
+            }
+        }
  
 
         return (
@@ -231,6 +355,12 @@ export default class Home extends React.Component {
                     </div>
 
                     { renderTable() }
+
+                    { renderArtists() }
+
+                    { renderAlbums() }
+
+                    { renderPopularity() }
 
                     <FontAwesomeIcon icon={faComment} className="fas-3x sticky-chat" onClick={this.setChatState} />
 

@@ -107,3 +107,22 @@ a {
   background-color: #1DB954 !important;
   border-color: #1db954 !important;
 }
+
+.user-title {
+  color: #fff; 
+}
+
+.artistDiv {
+  display: flex; 
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.subtitle {
+  color: #fff;
+  text-align: left;
+}
+
+.artistName {
+  color: #fff;
+}
