@@ -19,7 +19,8 @@
     />
   </head>
   <body>
-    <div class = "bg">
+    <div id="background"></div>
+    <div class="bg">
       <div class="navbarbody">
         <nav class="navbar navbar-expand-lg navbar-dark">
           <a class="navbar-brand" href="/">Filifili</a>
@@ -36,67 +37,61 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav2">
             <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="#"
+              <li class="nav-item">
+                <a class="nav-link" href="/"
                   >Home <span class="sr-only">(current)</span></a
                 >
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/video?video=music"
-                  >Relaxing Guitar Music</a
-                >
+              <li class="nav-item" id="music">
+                <a class="nav-link" href="/video?video=music">Music Channel</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" id="cooking">
                 <a class="nav-link" href="/video?video=cooking"
-                  >Cooking tutorial</a
+                  >Cooking Channel</a
                 >
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/video?video=talkShow">Talk Show</a>
+              <li class="nav-item" id="talkshow">
+                <a class="nav-link" href="/video?video=talkShow"
+                  >Talkshow Channel</a
+                >
               </li>
             </ul>
           </div>
+          <form action="/users/logout">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+              Log out
+            </button>
+          </form>
         </nav>
       </div>
-      <!-- <h1 id="filifili_title" class="col-md-1">
-        Filifili
-      </h1> -->
       <div
         class="main"
-        style="position: relative; width: 1024px; height: 800px"
+        style="position: relative;height: 300px"
       >
-        <div class="container" style="position: absolute">
+        <div class="movie-container">
           <div class="movie text-center">
             <iframe
               id="video"
               frameborder="0"
               allowfullscreen
-              style="position: relative; height: auto"
+              style="position: relative; height: 480px; width: 854px"
             ></iframe>
           </div>
-          <div class="danmu text-center">
-            <input
-              type="text"
-              class="input"
-              placeholder="Please enter flying comments"
-            />
-            <div id="btn">Comment</div>
-          </div>
-          <div class="al">You should input something and then send!</div>
         </div>
+        <div class="danmu text-center">
+          <input
+            type="text"
+            class="input"
+            placeholder="Please enter flying comments"
+          />
+          <div id="btn">Comment</div>
+        </div>
+        <div class="al">You should input something and then send!</div>
       </div>
     </div>
 
-    <!--     <div>
-      <input type="text" id="comment" />
-      <button>
-        Submit
-      </button>
-    </div> -->
-    <!-- <div id="background"></div> -->
-
     <script>
-      var videoType;
+      var videoType, video_link;
       // let ws, msgs = [];
       window.onload = function () {
         videoType = getUrlVars()["video"];
@@ -105,18 +100,23 @@
         var type = document.getElementById("type");
         var video = document.getElementById("video");
 
+        //type.innerHTML = videoType;
+
         if (videoType === "music") {
-          type.innerHTML = "Relaxing Guitar Music";
           video.src = "https://www.youtube.com/embed/oFEKYxjYDIc";
         } else if (videoType === "cooking") {
-          type.innerHTML = "Cooking Tutorial";
           video.src = "https://www.youtube.com/embed/mhDJNfV7hjk";
         } else if (videoType === "talkShow") {
-          type.innerHTML = "Talk Show";
-          video.src = "https://www.youtube.com/embed/v=odtAJ2kPdqc";
+          video.src = "https://www.youtube.com/embed/odtAJ2kPdqc";
         }
 
-        //         type.innerHTML = videoType;
+        //high light the current tag
+        var pathname = window.location.pathname;
+        video_link = pathname + window.location.search;
+        var parentclass = $('.navbar-nav > li > a[href="' + video_link + '"]')
+          .parent()
+          .addClass("active");
+
         function getUrlVars() {
           var vars = {};
           var parts = window.location.href.replace(
@@ -215,6 +215,12 @@
       function random(start, end) {
         return Math.floor(Math.random() * (end + 1 - start) + start);
       }
+
+      // function activeBtn(videotype){
+      //   console.log("activebTN is called on " + videotype)
+      //   document.getElementById(videotype).className += " active"
+      //   console.log(document.getElementById(videotype).className)
+      // }
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
