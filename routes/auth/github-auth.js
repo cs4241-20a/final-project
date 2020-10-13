@@ -6,6 +6,7 @@ const GitHubStrategy = require("passport-github2").Strategy;
 
 const router = express.Router();
 
+//? Consider moving to different file (not necessarily specific to GitHub auth)
 const ensureAuthenticated = (req, res, next) => {
 	if (req.isAuthenticated()) {
 		return next();
@@ -13,6 +14,7 @@ const ensureAuthenticated = (req, res, next) => {
 	res.status(401).redirect("/login");
 }
 
+//? Consider moving to different file (not necessarily specific to GitHub auth)
 const setupPassport = () => {
 	const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 	const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;

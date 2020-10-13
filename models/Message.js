@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const MessageSchema = new Schema({
-	group_id: {
+	groupId: {
 		type: String,
 		required: true
 	},
-	sender_id: {
+	senderId: {
 		type: String,
 		required: true	
 	},
@@ -17,7 +17,7 @@ const MessageSchema = new Schema({
 		type: String,
 		required: true
 	},
-	date_sent: {
+	dateSent: {
 		type: Date,
 		required: true,
 		default: Date.now

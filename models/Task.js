@@ -13,11 +13,11 @@ const TaskSchema = new Schema({
 		type: String,
 		required: false
 	},
-	group_id: {
+	groupId: {
 		type: String,
 		required: true
 	},
-	column_name: {
+	columnName: {
 		type: String,
 		required: true
 	},
@@ -29,11 +29,11 @@ const TaskSchema = new Schema({
 		type: [String],
 		required: false
 	},
-	date_due: {
+	dateDue: {
 		type: Date,
 		required: false
 	},
-	date_created: {
+	dateCreated: {
 		type: Date,
 		required: true,
 		default: Date.now

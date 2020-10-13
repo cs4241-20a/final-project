@@ -11,7 +11,7 @@ const morgan = require("morgan");
 const compression = require("compression");
 const methodOverride = require("method-override");
 const helmet = require("helmet");
-const session = require("helmet");
+const session = require("session");
 
 const apiRouter = require("./routes/api/api-router");
 const githubAuth = require("./routes/auth/github-auth");
@@ -19,6 +19,7 @@ const githubAuth = require("./routes/auth/github-auth");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+//? Why did I do this? Look into why this is accessed from a module export instead of required separately.
 const passport = githubAuth.passport;
 
 dotenv.config();
@@ -29,6 +30,7 @@ const MONGO_URI = process.env.MONGO_URI;
 
 githubAuth.setupPassport();
 
+// Connect to database
 try {
 	mongoose.connect(MONGO_URI, {
 		useNewUrlParser: true, 
@@ -38,6 +40,7 @@ try {
 	console.error(err);
 }
 
+// Enable logging middleware based on environment
 if (NODE_ENV === "development") {
 	app.use(morgan("dev"));
 } else if (NODE_ENV === "production") {
@@ -47,6 +50,7 @@ if (NODE_ENV === "development") {
 	}));
 }
 
+// Middleware processing
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
@@ -58,19 +62,18 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(express.static(path.join(__dirname, "public")));
 
+// Routing
 app.use("/api", apiRouter.router);
-
 app.get("/", (req, res) => {
 	res.send("Hello world");
 });
-
 app.get("*", (req, res) => {
 	res.status(404).send("Error 404. Not found.");
 });
 
+// Web socket handling
 io.on("connection", socket => {
 	console.log("A user has connected");
 	socket.broadcast.emit("message", "A user has connected");
@@ -80,6 +83,5 @@ io.on("connection", socket => {
 		io.emit("message", "A user has disconnected");
 	});
 });
-
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

@@ -9,7 +9,7 @@ const GroupSchema = new Schema({
 		type: String,
 		required: true
 	},
-	admin_id: {
+	adminId: {
 		type: String,
 		required: true
 	},

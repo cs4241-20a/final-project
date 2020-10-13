@@ -6,66 +6,88 @@ const User = require("../../models/User");
 const githubAuth = require("../auth/github-auth");
 
 const router = express.Router();
+const {ensureAuthenticated} = githubAuth;
 
-/**
+/*
  * Route: /api/users
  * Method: GET
  * Auth: Required
- * Returns the current user based on the session token.
+ * Gets the current user based on the session.
  */
-router.get("/", githubAuth.ensureAuthenticated, async (req, res) => {
-	const username = req.user.username
+router.get("/", ensureAuthenticated, async (req, res) => {
+	// Gather request parameters
+	const {username} = req.user;
+
 	try {
-		res.status(200).json(await User.findOne({username}));
+		// Find the user with the given username
+		const user = await User.findOne({username});
+		// Send result
+		res.status(200).json({success: true, data: user});
 	} catch (err) {
+		// Report errors
 		res.status(500).send({success: false, error: err});
 	}
 });
 
-/**
+/*
  * Route: /api/users/:id
  * Method: GET
  * Auth: Not required
- * Returns the user with the given id.
+ * Gets the user with the given id.
  */
 router.get("/:id", async (req, res) => {
-	const _id = req.params.id;
+	// Gather request parameters
+	const userId = req.params.id;
+
 	try {
-		res.status(200).res.json(await User.findOneById({_id}));
+		// Find the user with the given id
+		const user = await User.findOneById(userId);
+		// Send result
+		res.status(200).res.json({success: true, data: user});
 	} catch (err) {
+		// Report errors
 		res.status(500).send({success: false, error: err});
 	}
 });
 
-/**
+/*
  * Route: /api/users
  * Method: POST
  * Auth: Required
- * Adds a new user with the display name and username determined by the session token.
+ * Adds a new user with the display name and username determined by the session.
  */
-router.post("/", githubAuth.ensureAuthenticated, async (req, res) => {
-	const name = req.user.displayName;
-	const username = req.user.username;
-	const newUser = new User({name, username, groups: []});
+router.post("/", ensureAuthenticated, async (req, res) => {
+	// Gather request parameters
+	const {username, displayName} = req.user;
+
 	try {
-		res.status(201).json({success: true, data: await newUser.save()});
+		// Create a new user with the given username and display name
+		const newUser = await new User({username, displayName}).save();
+		// Send result
+		res.status(201).json({success: true, data: newUser});
 	} catch (err) {
+		// Report errors
 		res.status(500).send({success: false, error: err});
 	}
 });
 
-/**
+/*
  * Route: /api/users/
  * Method: DELETE
  * Auth: Required
- * Deletes the current user determined by the session token.
+ * Deletes the current user determined by the session.
  */
-router.delete("/", githubAuth.ensureAuthenticated, async (req, res) => {
+router.delete("/", ensureAuthenticated, async (req, res) => {
+	// Gather request parameters
 	const {username} = req.user;
+
 	try {
+		// Find and delete the user with the given username
 		await User.findOneAndDelete({username});
+		// Send result
 		res.status(204).send({success: true});
 	} catch (err) {
+		// Report errors
 		res.status(500).send({success: false, error: err});
 	}
 });
