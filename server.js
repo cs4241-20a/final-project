@@ -629,7 +629,7 @@ const handlePlayerEntered = function (player) {
         y: yPos,
         invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
         invaderAvatarColor: avatarColors[randomAvatarSelector()],
-        direction: 1,
+        direction: 0,
         score: 0,
         isAlive: true
     };
