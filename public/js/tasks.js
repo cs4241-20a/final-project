@@ -16,9 +16,6 @@ window.onclick = function(event) {
 }
 
 function getTasks() {
-
-  //event.preventDefault()
-
   var h = document.getElementById('group_name')
   var name = h.innerHTML
   fetch('/tasks', {
@@ -35,7 +32,6 @@ function getTasks() {
     for(var i = 0; i < json.length; i++)
     {
       var task = json[i]
-      //if(todo.username == uname)
       console.log("append")
       appendNewInfo(task)
     }
@@ -99,7 +95,6 @@ function appendNewInfo(task) {
 }
 
 var addCol = function() {
-  // <a class="centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task"><i class="material-icons right">add</i>  New Task</a>
   const contain = document.getElementsByClassName("inner-container")
   console.log(contain)
   // Create all the necessary elements
@@ -110,7 +105,7 @@ var addCol = function() {
   var newlistName = document.createElement("h4")
   newlistName.setAttribute('class', 'white-text center-align row')
   var addBtn = document.createElement("a")
-  addBtn.setAttribute('class', 'centerwaves-effect waves-light btn-large')
+  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
   addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
   var plus = document.createElement("i")
   plus.setAttribute('class', 'material-icons right')
@@ -118,6 +113,7 @@ var addCol = function() {
   plus.appendChild(document.createTextNode("add"))
   addBtn.appendChild(plus)
   addBtn.appendChild(document.createTextNode(" New Task"))
+  addBtn.onclick = makeTask
   newlistName.appendChild(document.createTextNode("New List"))
   newCol.appendChild(newlistName)
   newCol.appendChild(newList)
