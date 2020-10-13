@@ -62,7 +62,8 @@ function appendNewInfo(task) {
   var name = document.createElement("p");
   var due = document.createElement("p");
   var assigned = document.createElement("p");
-  const col = document.getElementsByClassName('list_name')
+  const col = document.getElementsByClassName('task_lists')
+  div.setAttribute('class', 'task_card')
   name.setAttribute('class', 'task_item')
   due.setAttribute('class', 'task_item')
   assigned.setAttribute('class', 'task_item')
@@ -72,7 +73,8 @@ function appendNewInfo(task) {
   div.appendChild(name)
   div.appendChild(due)
   div.appendChild(assigned)
-  col.appendChild(div)
+  console.log(col[0])
+  col[0].appendChild(div)
 }
 
 window.onload = function() {

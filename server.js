@@ -2,12 +2,16 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient;
 
+//console.log(process.env.DBPASSWORD)
 const uri = `mongodb+srv://nchintada:${process.env.DBPASSWORD}@cluster0.impei.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
