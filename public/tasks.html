@@ -2,39 +2,51 @@
 <html lang="en">
 <head>
   <title>CS4241 Team 19 Final Project</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
 </head>
 <body>
-<header>
-  <h1 id="group_name">Group's Tasks</h1>
-  <button id="back_btn" class="header_btns">Back</button>
-  <button id="invite_btn" class="header_btns">Invite People +</button>
-</header>
+<nav>
+  <div class="nav-wrapper">
+    <div class="row">
+      <div class="col s12">
+        <a href="#" class="brand-logo" id="group_name">Group's Tasks</a>
+        <div class="container task-btns">
+          <a class="right waves-effect waves-light btn-large" id="back_btn"><i class="material-icons right">arrow_back</i>Back</a>
+          <a class="right waves-effect waves-light btn-large" id="invite_btn"><i class="material-icons right">group_add</i>Invite People</a>
+        </div>
+      </div></div>
+  </div>
+</nav>
 <div id="main_container">
   <div id="task_container">
-    <div class="container">
-      <div class="task_lists">
-        <h2 class="list_name">List Name</h2>
-        <div class="task_card">
+    <div class="inner-container">
+      <div class="task_lists card-panel materialize-red lighten-2">
+        <h4 class="white-text center-align row">List Name</h4>
+        <div class="task_card card-panel col s1">
           <p class="task_item" id="task_name">Task Name</p>
           <p class="task_item" id="task_date">Due Date</p>
           <p class="task_item" id="assignees">Assigned To</p>
         </div>
-        <button id="addTask" class="task_contents">+</button>
+        <a class="centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task"><i class="material-icons right">add</i>  New Task</a>
       </div>
       <div class="btn_container">
-        <button id="add_list">+</button>
-        <button id="delete_list">-</button>
+        <a class="centerwaves-effect waves-light btn-large" id="add_list"><i class="material-icons right">add</i></a>
+        <a class="centerwaves-effect waves-light btn-large" id="delete_list"><i class="material-icons right">delete</i></a>
       </div>
     </div>
   </div>
-  <div id="chat_box">
-    <div id="chat_head" style="height: 7%;background-color: black;color: white;text-align: center;margin-bottom: 5px">Chat</div>
-    <div id="chat_feed" style="height: 85%;width: 92%;margin: 0 auto;border: solid 1px"></div>
-    <form name="message" action="" style="margin: 5px;bottom: 5px">
-      <label for="chat_input"></label><input type="text" id="chat_input" name="chat_msg" style="width: 200px">
-      <input name="submitmsg" type="submit" id="submit_chat" value=">" >
-    </form>
+  <div id="chat_box" class="right container card-panel materialize-red lighten-2">
+    <div id="chat_head" style="height: 7%;background-color: teal;color: white;text-align: center;margin-bottom: 5px">Chat</div>
+    <div id="chat_feed" class="container white" style="height: 75%;width: 92%;margin: 0 auto;border: solid 1px"></div>
+    <div class="container white" style="bottom: 2px">
+      <form name="message" action="" class="right" >
+        <label for="chat_input"></label><input type="text" id="chat_input" name="chat_msg" style="width: 100%">
+        <input name="submitmsg" type="submit" id="submit_chat" value=">" class="teal">
+      </form>
+    </div>
   </div>
 </div>
 
@@ -58,5 +70,8 @@
 
 <script src="js/tasks.js" type="text/javascript"></script>
 
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/materialize.js"></script>
+<script src="js/tasks.js"></script>
 </body>
 </html>
