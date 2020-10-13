@@ -320,8 +320,6 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     })
 
     if (currentPlayerDead) {
-        players[id].isAlive = false;
-        deadPlayers.push(players[id]);
         collection
             .updateOne(
                 {username: players[id].id},
