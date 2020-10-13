@@ -14,9 +14,9 @@ export default class Home extends React.Component {
         super(props)
 
         this.state = {
-            songs: [{ id: 0, title: "song0" }, { id: 1, title: "song1" }, { id: 2, title: "song2" }, { id: 3, title: "song3" }, { id: 4, title: "song4" }, { id: 5, title: "song5" }, { id: 6, title: "song6" }, { id: 7, title: "song7" }, { id: 8, title: "song8" }, { id: 9, title: "song9" }, { id: 10, title: "song10" }, { id: 11, title: "song11" }, { id: 12, title: "song12" }, { id: 13, title: "song13"}],
+            songsJSON: [],
             columns: [],
-            //songs: [],
+            songs: [],
             showTable: false,
             user1: "", 
             user2: "",
@@ -47,6 +47,7 @@ export default class Home extends React.Component {
         this.toggleOverlay = this.toggleOverlay.bind(this)
         this.handleMessageChange = this.handleMessageChange.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
+        this.parseSongs = this.parseSongs.bind(this)
     }
 
 
@@ -59,43 +60,63 @@ export default class Home extends React.Component {
     // Send request to server for songs in common
     getSongs() {
         // FOR WHEN SERVER IS SET UP
-        // let bodyJson = {user1: this.state.user1, user2: this.state.user2}
-        // fetch('/getSongs', {
-        //     method: 'POST',
-        //     body: JSON.stringify(bodyJson),
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // }).then(response => response.json())
-        // .then(json => {
-        //     console.log("SONGS FROM SERVER: " + json)
-        //     let staticUser1 = this.state.user1
-        //     let staticUser2 = this.state.user2
-        //     this.setState({
-        //         songs: json,
-        //         columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
-        //         showTable: true,
-        //          staticUser1: this.state.user1,
-        //          staticUser2: this.state.user2,
-        //         user1: "",
-        //         user2: ""
-        //     })
-        // }) 
+        let bodyJson = {user1: this.state.user1, user2: this.state.user2};
+        fetch('/getSongs', {
+            method: 'POST',
+            body: JSON.stringify(bodyJson),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => response.json()).then(json => {
+            for(let i = 0; i < json.length; i++){
+                console.log(json[i]);
+            }
+            let staticUser1 = this.state.user1;
+            let staticUser2 = this.state.user2;
+            this.setState({
+                songsJSON: json,
+                columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
+                showTable: true,
+                user1: "",
+                user2: ""
+            })
+            this.parseSongs()
+        });
 
         // TEMP FOR FRONT END TESTING
-        this.setState({ 
-            showTable: true,
-            columns: [
-                { dataField: 'title', text: ``, 
-                headerStyle: { backgroundColor: "#ffffff"}
+        // let staticUser1 = this.state.user1
+        // let staticUser2 = this.state.user2
+        // this.setState({
+        //     showTable: true,
+        //     columns: [
+        //         { dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`,
+        //         headerStyle: { backgroundColor: "#ffffff"}
+        //     }
+        //     ],
+        //     user1: "",
+        //     user2: ""
+        // });
+
+    }
+
+    parseSongs() {
+        let songNames = []
+        for (let i = 0; i < this.state.songsJSON.length; i++){
+            songNames.push({ id: i, title: this.state.songsJSON[i].name })
+        }
+        console.log(songNames)
+        this.setState({ songs: songNames })
+    }
+
+    login() {
+        fetch('/login', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             }
-            ],
-            staticUser1: this.state.user1,
-            staticUser2: this.state.user2,
-            user1: "",
-            user2: ""
-        })
-        
+        }).then((response) => response.json()).then((link) => {
+            window.open(link['link'], '_blank');
+        });
     }
 
     setChatState() {
@@ -109,7 +130,7 @@ export default class Home extends React.Component {
             this.setState({ 
                 overlayStyle: "none",
                 showChat: false 
-            })
+            });
             document.body.style.overflow = "unset"
         }
     }
@@ -323,6 +344,9 @@ export default class Home extends React.Component {
                             </FormGroup>                    
                             <FormGroup>
                                 <Input type="text" placeholder="Enter another username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
+                            </FormGroup>
+                            <FormGroup>
+                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.login}>Login</Button>
                             </FormGroup>
                             <FormGroup>
                                 <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Compare data</Button>
