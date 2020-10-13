@@ -9,6 +9,7 @@ const express = require('express'),
       app = express(),
       ws = require('ws'),
       http = require('http')
+      
 
 // const client_id = process.env.GITHUB_CLIENT_ID
 // const client_secret = process.env.GITHUB_CLIENT_SECRET
@@ -62,6 +63,7 @@ connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
 })
 
+require('dotenv'). config()
 // Passport config
 require('./config/passport.js')(passport)
 
