@@ -277,11 +277,11 @@ class GameScene extends Phaser.Scene {
 
     explodeAndKill(deadPlayerId) {
         this.avatars[deadPlayerId].disableBody(true, true);
-        let explosion = new Explosion(
-            this,
-            this.avatars[deadPlayerId].x,
-            this.avatars[deadPlayerId].y
-        );
+        // let explosion = new Explosion(
+        //     this,
+        //     this.avatars[deadPlayerId].x,
+        //     this.avatars[deadPlayerId].y
+        // );
         delete this.avatars[deadPlayerId];
     }
 
