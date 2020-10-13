@@ -84,7 +84,7 @@ function appendNewInfo(task) {
   var name = document.createElement("p");
   var due = document.createElement("p");
   var assigned = document.createElement("p");
-  const col = document.getElementsByClassName('task_lists')
+  const col = document.getElementsByClassName('tasks')
   div.setAttribute('class', 'task_card card-panel col s1')
   name.setAttribute('class', 'task_item')
   due.setAttribute('class', 'task_item')
@@ -95,24 +95,33 @@ function appendNewInfo(task) {
   div.appendChild(name)
   div.appendChild(due)
   div.appendChild(assigned)
-  // Need to figure out how to get the button below the cards but for now I'm not worrying about it
-  //console.log(col[0])
-  //var addBtn = document.getElementById("addTask")
-  //console.log("Anything? " + col[0].task_card)
-  //col[0].parentNode.insertBefore(div, col.nextSibling)
   col[0].appendChild(div)
 }
 
 var addCol = function() {
-  //<div class="task_lists">
-  //  <h2 class="list_name">List Name</h2>
+  // <a class="centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task"><i class="material-icons right">add</i>  New Task</a>
   const contain = document.getElementsByClassName("inner-container")
   console.log(contain)
+  // Create all the necessary elements
   var newCol = document.createElement("div");
   newCol.setAttribute('class', 'task_lists card-panel materialize-red lighten-2')
-  var newlistName = document.createElement("h2")
-  newlistName.setAttribute('class', 'list_name')
+  var newList = document.createElement("div")
+  newList.setAttribute('class', 'tasks')
+  var newlistName = document.createElement("h4")
+  newlistName.setAttribute('class', 'white-text center-align row')
+  var addBtn = document.createElement("a")
+  addBtn.setAttribute('class', 'centerwaves-effect waves-light btn-large')
+  addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
+  var plus = document.createElement("i")
+  plus.setAttribute('class', 'material-icons right')
+  // Add everything
+  plus.appendChild(document.createTextNode("add"))
+  addBtn.appendChild(plus)
+  addBtn.appendChild(document.createTextNode(" New Task"))
+  newlistName.appendChild(document.createTextNode("New List"))
   newCol.appendChild(newlistName)
+  newCol.appendChild(newList)
+  newCol.appendChild(addBtn)
   contain[0].appendChild(newCol)
 }
 
