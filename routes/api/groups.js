@@ -1,3 +1,4 @@
+// @author: Luke Bodwell
 "use strict";
 
 const express = require("express");
@@ -25,6 +26,7 @@ router.get("/:id", ensureAuthenticated, async (req, res) => {
 		const currentUser = await User.findOne({username});
 		// Find the group with the given group id, ensuring the current user belongs to it
 		const group = await Group.findOne({_id: groupId, members: currentUser._id});
+
 		// Send result
 		res.status(200).json({success: true, data: group});
 	} catch (err) {
@@ -50,6 +52,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 		const adminId = await User.findOne({username})._id;
 		// Create a new group with the given name and admin id
 		const newGroup = await new Group({name, adminId, members: [adminId]}).save();
+
 		// Send result
 		res.status(201).json({success: true, data: newGroup});
 	} catch (err) {
@@ -72,8 +75,9 @@ router.delete("/:id", ensureAuthenticated, async (req, res) => {
 	try {
 		// Find the user with the given username
 		const currentUser = await User.findOne({username});
-		// Find and delete the group with the given id, ensuring the current user is the admin
+		// Find and delete the group with the given id if the current user is the admin
 		await Group.findOneAndDelete({_id: groupId, adminId: currentUser._id});
+
 		// Send result
 		res.status(204).send({success: true});
 	} catch (err) {
@@ -99,13 +103,13 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		// Find the user with the given username
 		const currentUser = await User.findOne({username});
 		// Find and update member list of the group with the given id, ensuring the current user is a member of the group
-		const currentGroup = await Group.findOneAndUpdate({_id: groupId, members: currentUser._id}, {members});
+		const group = await Group.findOneAndUpdate({_id: groupId, members: currentUser._id}, {members});
 		// Send result
-		res.status(200).send({success: true, data: currentGroup});
+		res.status(200).send({success: true, data: group});
 	} catch (err) {
 		// Report errors
 		res.status(500).send({success: false, error: err});
 	}
-})
+});
 
 module.exports = {router};

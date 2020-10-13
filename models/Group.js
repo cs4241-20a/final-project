@@ -1,3 +1,4 @@
+// @author: Luke Bodwell
 "use strict";
 
 const mongoose = require("mongoose");
@@ -10,7 +11,7 @@ const GroupSchema = new Schema({
 		required: true
 	},
 	adminId: {
-		type: String,
+		type: Schema.Types.ObjectId,
 		required: true
 	},
 	members: {

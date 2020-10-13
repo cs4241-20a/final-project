@@ -1,3 +1,4 @@
+// @author: Luke Bodwell
 "use strict";
 
 const express = require("express");
@@ -12,7 +13,7 @@ const {ensureAuthenticated} = githubAuth;
  * Route: /api/users
  * Method: GET
  * Auth: Required
- * Gets the current user based on the session.
+ * Desc: Gets the current user based on the session.
  */
 router.get("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
@@ -21,6 +22,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 	try {
 		// Find the user with the given username
 		const user = await User.findOne({username});
+
 		// Send result
 		res.status(200).json({success: true, data: user});
 	} catch (err) {
@@ -33,7 +35,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
  * Route: /api/users/:id
  * Method: GET
  * Auth: Not required
- * Gets the user with the given id.
+ * Desc: Gets the user with the given id.
  */
 router.get("/:id", async (req, res) => {
 	// Gather request parameters
@@ -42,6 +44,7 @@ router.get("/:id", async (req, res) => {
 	try {
 		// Find the user with the given id
 		const user = await User.findOneById(userId);
+
 		// Send result
 		res.status(200).res.json({success: true, data: user});
 	} catch (err) {
@@ -54,7 +57,7 @@ router.get("/:id", async (req, res) => {
  * Route: /api/users
  * Method: POST
  * Auth: Required
- * Adds a new user with the display name and username determined by the session.
+ * Desc: Adds a new user with the display name and username determined by the session.
  */
 router.post("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
@@ -63,6 +66,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 	try {
 		// Create a new user with the given username and display name
 		const newUser = await new User({username, displayName}).save();
+
 		// Send result
 		res.status(201).json({success: true, data: newUser});
 	} catch (err) {
@@ -75,7 +79,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
  * Route: /api/users/
  * Method: DELETE
  * Auth: Required
- * Deletes the current user determined by the session.
+ * Desc: Deletes the current user determined by the session.
  */
 router.delete("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
@@ -84,6 +88,7 @@ router.delete("/", ensureAuthenticated, async (req, res) => {
 	try {
 		// Find and delete the user with the given username
 		await User.findOneAndDelete({username});
+
 		// Send result
 		res.status(204).send({success: true});
 	} catch (err) {

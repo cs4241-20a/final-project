@@ -1,3 +1,4 @@
+// @author: Luke Bodwell
 "use strict";
 
 const mongoose = require("mongoose");
@@ -14,7 +15,7 @@ const TaskSchema = new Schema({
 		required: false
 	},
 	groupId: {
-		type: String,
+		type: Schema.Types.ObjectId,
 		required: true
 	},
 	columnName: {
@@ -22,7 +23,7 @@ const TaskSchema = new Schema({
 		required: true
 	},
 	assignees: {
-		type: [String],
+		type: [Schema.Types.ObjectId],
 		required: false
 	},
 	tags: {
