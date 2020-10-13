@@ -324,7 +324,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
         deadPlayers.push(players[id]);
         collection
             .updateOne(
-                {_id: players[id].id},
+                {username: players[id].id},
                 {
                     $set: {"score": players[id].score}
                 }
@@ -350,7 +350,7 @@ function gameHasEnded() {
     let numOfDeadPlayers = deadPlayers.length
 
     let count = Object.keys(coins).length
-    
+
     // do no know if this works
     if (count === 0) {
         return true;
@@ -381,7 +381,7 @@ function finishGame() {
         });
         collection
             .updateOne(
-                {_id: player.id},
+                {username: player.id},
                 {
                     $set: {"score": player.score}
                 }
@@ -394,7 +394,7 @@ function finishGame() {
 
     if (totalPlayers === 1) {
         winnerName = rankings[0].name;
-    
+
     } else if (rankings[0].score !== rankings[1].score) {
         winnerName = rankings[0].name;
     }
