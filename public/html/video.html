@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="css/style.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/videostyle.css" />
     <!-- Bootstrap CDN -->
     <link
       rel="stylesheet"
@@ -16,68 +17,71 @@
       href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap"
       rel="stylesheet"
     />
-    <title>Filifili</title>
   </head>
   <body>
-    <div class="navbarbody">
-      <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="/">Filifili</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav2"
-          aria-controls="navbarNav2"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav2">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="#"
-                >Home <span class="sr-only">(current)</span></a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/video?video=music">Relaxing Guitar Music</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/video?video=cooking">Cooking tutorial</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/video?video=talkShow">Talk Show</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-      <h1 id="filifili_title" class="col-md-1">
+    <div class = "bg">
+      <div class="navbarbody">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          <a class="navbar-brand" href="/">Filifili</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav2"
+            aria-controls="navbarNav2"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav2">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" href="#"
+                  >Home <span class="sr-only">(current)</span></a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/video?video=music"
+                  >Relaxing Guitar Music</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/video?video=cooking"
+                  >Cooking tutorial</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/video?video=talkShow">Talk Show</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <!-- <h1 id="filifili_title" class="col-md-1">
         Filifili
-      </h1>
-    <p id="type">Video Type</p>
-    <div class="main" style="position:relative; width:1024px;height:1024px">
-      <div class="container" style="position:absolute">
-        <div class="movie text-center">
-          <iframe
-            id="video"
-            frameborder="0"
-            allowfullscreen
-            style="position: relative;
-    height: auto;"
-          ></iframe>
-        </div>
-        <div class="danmu text-center">
-          <input
-            type="text"
-            class="input"
-            placeholder="Please enter flying comments"
-          />
-          <div id="btn">Comment</div>  <!-- 发送弹幕 -->
-        </div>
-        <div class="al">
-          You should input something and then send!
+      </h1> -->
+      <div
+        class="main">
+        <!-- style="position: relative; width: 1024px; height: 1024px" -->
+        <div class="container" style="position: absolute">
+          <div class="movie text-center">
+            <iframe
+              id="video"
+              frameborder="0"
+              allowfullscreen
+              style="position: relative; height: auto"
+            ></iframe>
+          </div>
+          <div class="danmu text-center">
+            <input
+              type="text"
+              class="input"
+              placeholder="Please enter flying comments"
+            />
+            <div id="btn">Comment</div>
+          </div>
+          <div class="al">You should input something and then send!</div>
         </div>
       </div>
     </div>
@@ -88,11 +92,12 @@
         Submit
       </button>
     </div> -->
+    <!-- <div id="background"></div> -->
 
     <script>
       var videoType;
       // let ws, msgs = [];
-      window.onload = function() {
+      window.onload = function () {
         videoType = getUrlVars()["video"];
         console.log("video type: " + videoType);
 
@@ -115,7 +120,7 @@
           var vars = {};
           var parts = window.location.href.replace(
             /[?&]+([^=&]+)=([^&]*)/gi,
-            function(m, key, value) {
+            function (m, key, value) {
               vars[key] = value;
             }
           );
@@ -148,25 +153,24 @@
       var timer2;
 
       oBtn.onclick = send;
-      oInput.onkeydown = function(e) {
+      oInput.onkeydown = function (e) {
         if (e.keyCode == 13) {
           send();
         }
       };
       // var iframeVideo = document.getElementById("video")
-      // setTimeout(function(){ console.log(iframeVideo.getCurrentTime()) }, 1000); 
+      // setTimeout(function(){ console.log(iframeVideo.getCurrentTime()) }, 1000);
       function send() {
         if (oInput.value.length <= 0 || /^\s+$/.test(oInput.value)) {
           oAl.style.display = "block";
-          timer2 = setTimeout(function() {
+          timer2 = setTimeout(function () {
             oAl.style.display = "none";
           }, 1500);
           return;
         }
         createSpan(oInput.value);
         console.log("send clicked");
-        
-        
+
         oInput.value = "";
       }
 
@@ -190,7 +194,7 @@
         dom.style.fontSize = random(8, 24) + "px";
         var domW = dom.offsetWidth;
         var speed = [0, 1, 2][random(0, 2)];
-        dom.timer = setInterval(function() {
+        dom.timer = setInterval(function () {
           switch (speed) {
             case 0:
               dom.style.left = dom.offsetLeft - 2 + "px";
@@ -211,7 +215,7 @@
         return Math.floor(Math.random() * (end + 1 - start) + start);
       }
     </script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!--   Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>

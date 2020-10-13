@@ -13,68 +13,6 @@
   height: 100vh;
 }
 
-#filifili_title{
-  
-}
-
-.movie span{
-    position: absolute;
-    white-space: nowrap;
-    /* left: 100px; */
-    /* top: 50px; */
-    /* font-size: 20px; */
-    /* color: red; */
-}
-
-.danmu{
-    position: relative;
-    margin: 0 auto;
-    overflow: hidden;
-    width: 500px;
-    height: 25px;
-    border-radius: 5px;
-}
-.danmu .input{
-    margin: 0;
-    padding: 0;
-    outline: none;
-    border: 0;
-    width: 420px;
-    height: 25px;
-    text-indent: 8px;
-}
-#btn{
-    text-align: center;
-    position: absolute;
-    letter-spacing: 1px;
-    top: 0;
-    right: 0;
-    height: 25px;
-    width: 80px;
-    font-size: 14px;
-    line-height: 25px;
-    color: white;
-    background: #ff6700;
-    cursor: pointer;
-}
-.al{
-    position: absolute;
-    bottom: 80px;
-    margin-left: -90px;
-    left: 50%;
-    width: 180px;
-    height: 24px;
-    color: white;
-    font-size: 14px;
-    line-height: 24px;
-    text-align: center;
-    letter-spacing: 1px;
-    display: none;
-    border-radius: 8px;
-    background: orangered;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-}
-
 .info-container{
    display:flex;
    justify-content: center;
