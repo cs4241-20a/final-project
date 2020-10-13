@@ -12,11 +12,7 @@ const UserSchema = new Schema({
 	name: {
 		type: String,
 		required: true
-	},
-	groups: {
-		type: [String],
-		required: true
 	}
 });
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

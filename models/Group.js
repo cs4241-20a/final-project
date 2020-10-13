@@ -9,14 +9,15 @@ const GroupSchema = new Schema({
 		type: String,
 		required: true
 	},
-	admin: {
+	admin_id: {
 		type: String,
 		required: true
 	},
 	members: {
-		type: [String],
+		type: [Schema.Types.ObjectId],
+		ref: "User",
 		required: true	
 	}
 });
 
-module.exports = mongoose.model("group", GroupSchema);
+module.exports = mongoose.model("Group", GroupSchema);
