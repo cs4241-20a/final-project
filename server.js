@@ -220,10 +220,7 @@ function moveEveryPlayer() {
             let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
 
             if (player.isAlive === false) {
-                //deadPlayers.push(player);
-                //console.log("Deleted " + player.id);
-                console.log("FOUND DEAD PLAYER: " + player.id);
-                //delete players[player.id];
+                //console.log("FOUND DEAD PLAYER: " + player.id);
             }
 
             // can move in the current direction
@@ -313,17 +310,21 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 
             if (inRange) {
                 currentPlayerDead = true;
-
-                deadPlayers.push(player)
+                console.log("Killed " + player.id)
+                console.log(player.id)
                 player.isAlive = false;
 
             }
         }
+
+        inRange = false
     })
 
     if (currentPlayerDead) {
         if (players[id].isAlive) {
-            deadPlayers.push(players[id])
+            console.log("Killing Current")
+            console.log(id)
+            //deadPlayers.push(players[id])
             players[id].isAlive = false;
         }
 
