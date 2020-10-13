@@ -144,10 +144,10 @@ class GameScene extends Phaser.Scene {
         );
         this.load.spritesheet(
             "explosion",
-            "/assets/.png",
+            "https://cdn.glitch.com/f66772e3-bbf6-4f6d-b5d5-94559e3c1c6f%2Fexplosion57%20(2).png?v=1589491279459",
             {
-                frameWidth: 25,
-                frameHeight: 25
+                frameWidth: 48,
+                frameHeight: 48
             }
         );
         this.load.image("wall", "/assets/wall_actual.png");
@@ -277,11 +277,11 @@ class GameScene extends Phaser.Scene {
 
     explodeAndKill(deadPlayerId) {
         this.avatars[deadPlayerId].disableBody(true, true);
-        // let explosion = new Explosion(
-        //     this,
-        //     this.avatars[deadPlayerId].x,
-        //     this.avatars[deadPlayerId].y
-        // );
+        let explosion = new Explosion(
+            this,
+            this.avatars[deadPlayerId].x,
+            this.avatars[deadPlayerId].y
+        );
         delete this.avatars[deadPlayerId];
     }
 
