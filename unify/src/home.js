@@ -48,41 +48,53 @@ export default class Home extends React.Component {
     // Send request to server for songs in common
     getSongs() {
         // FOR WHEN SERVER IS SET UP
-        // let bodyJson = {user1: this.state.user1, user2: this.state.user2}
-        // fetch('/getSongs', {
-        //     method: 'POST',
-        //     body: JSON.stringify(bodyJson),
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // }).then(response => response.json())
-        // .then(json => {
-        //     console.log("SONGS FROM SERVER: " + json)
-        //     let staticUser1 = this.state.user1
-        //     let staticUser2 = this.state.user2
-        //     this.setState({
-        //         songs: json,
-        //         columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
-        //         showTable: true,
-        //         user1: "",
-        //         user2: ""
-        //     })
-        // }) 
+        let bodyJson = {user1: this.state.user1, user2: this.state.user2};
+        fetch('/getSongs', {
+            method: 'POST',
+            body: JSON.stringify(bodyJson),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => response.json()).then(json => {
+            for(let i = 0; i < json.length; i++){
+                console.log(json[i]);
+            }
+            let staticUser1 = this.state.user1;
+            let staticUser2 = this.state.user2;
+            this.setState({
+                songs: json,
+                columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
+                showTable: true,
+                user1: "",
+                user2: ""
+            })
+        });
 
         // TEMP FOR FRONT END TESTING
-        let staticUser1 = this.state.user1
-        let staticUser2 = this.state.user2
-        this.setState({ 
-            showTable: true,
-            columns: [
-                { dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`, 
-                headerStyle: { backgroundColor: "#ffffff"}
+        // let staticUser1 = this.state.user1
+        // let staticUser2 = this.state.user2
+        // this.setState({
+        //     showTable: true,
+        //     columns: [
+        //         { dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`,
+        //         headerStyle: { backgroundColor: "#ffffff"}
+        //     }
+        //     ],
+        //     user1: "",
+        //     user2: ""
+        // });
+
+    }
+
+    login() {
+        fetch('/login', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             }
-            ],
-            user1: "",
-            user2: ""
-        })
-        
+        }).then((response) => response.json()).then((link) => {
+            window.open(link['link'], '_blank');
+        });
     }
 
     setChatState() {
@@ -96,7 +108,7 @@ export default class Home extends React.Component {
             this.setState({ 
                 overlayStyle: "none",
                 showChat: false 
-            })
+            });
             document.body.style.overflow = "unset"
         }
     }
@@ -197,6 +209,9 @@ export default class Home extends React.Component {
                             </FormGroup>                    
                             <FormGroup>
                                 <Input type="text" placeholder="Enter another username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
+                            </FormGroup>
+                            <FormGroup>
+                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.login}>Login</Button>
                             </FormGroup>
                             <FormGroup>
                                 <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Compare data</Button>
