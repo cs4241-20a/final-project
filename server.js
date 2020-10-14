@@ -87,13 +87,19 @@ app.post('/getSongs', async (req, res) => {
     let user1Artists = getUserArtists(user1Tracks);
     let user2Artists = getUserArtists(user2Tracks);
 
+    // get all albums of all user's tracks
+    let user1Albums = getUserAlbums(user1Tracks);
+    let user2Albums = getUserAlbums(user2Tracks);
+
     // map the tracks for each user according to (key: id, value: {name, artists})
     let user1Map = mapTracks(user1Tracks);
     let user2Map = mapTracks(user2Tracks);
 
+    console.log(user1Artists)
+
     let intersection = getIntersection(user1Map, user2Map);
     console.log("RETURNING INTERSECTION BETWEEN " + user1 + " AND " + user2);
-    res.send(JSON.stringify( { user1: user1Artists, user2: user2Artists, intersection: intersection } ));
+    res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection } ));
 });
 
 app.post('/login', (req, res) => {
@@ -107,10 +113,20 @@ function getUserArtists(tracks) {
     let artists = []
     for (let i = 0 ; i < tracks.length ; i++) {
         for (let j = 0 ; j < tracks[i].artists.length; j++) {
-            artists.push({name: tracks[i].artists[j].name})
+            console.log(tracks[i].artists)
+            artists.push({name: tracks[i].artists[j].name, images: tracks[i].artists[0].images})
         }
     }
     return artists
+}
+
+// gets all album names and images of songs in a user's playlists
+function getUserAlbums(tracks) {
+    let albums = []
+    for (let i = 0 ; i < tracks.length ; i++) {
+        albums.push({name: tracks[i].album.name, images: tracks[i].album.images, artists: tracks[i].album.artists[0]})
+    }
+    return albums
 }
 
 // gets the ids of the playlist for an individual user

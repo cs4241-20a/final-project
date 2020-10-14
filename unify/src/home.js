@@ -21,6 +21,8 @@ export default class Home extends React.Component {
             songNames: [],
             user1Artists: [],
             user2Artists: [],
+            user1Albums: [],
+            user2Albums: [],
             songPops: [],
             showTable: false,
             user1: "", 
@@ -82,8 +84,10 @@ export default class Home extends React.Component {
                 showTable: true,
                 user1: "",
                 user2: "", 
-                user1Artists: json.user1, 
-                user2Artists: json.user2
+                user1Artists: json.user1Artists, 
+                user2Artists: json.user2Artists, 
+                user1Albums: json.user1Albums, 
+                user2Albums: json.user2Albums
             })
             this.parseSongs()
         });
@@ -93,7 +97,8 @@ export default class Home extends React.Component {
     parseSongs() {
         let songNames = []
         let songPops = []
-        
+        console.log(this.state.songsJSON)
+
         for (let i = 0; i < this.state.songsJSON.length; i++) {
             songPops.push({ popularity: this.state.songsJSON[i].popularity })
             songNames.push({ id: i, title: this.state.songsJSON[i].name })            
@@ -221,9 +226,11 @@ export default class Home extends React.Component {
             let group1Map = d3.rollup(this.state.user1Artists, v => v.length, d => d.name)
             let group2Map = d3.rollup(this.state.user2Artists, v => v.length, d => d.name)
 
+            let group1MapAll = d3.group(this.state.user2Artists, d => d.name)
+
             let group1Keys = []
             for (let [key, value] of Array.from(group1Map)) {
-                console.log("key: " + key + " value: " + value)
+                //console.log("key: " + key + " value: " + value)
                 group1Keys.push(key)
             }
 
@@ -237,7 +244,7 @@ export default class Home extends React.Component {
             let groupValues = []
             for (let item of combinedKeys.values()) {
                 let sum = group1Map.get(item) + group2Map.get(item)
-                groupValues.push({ title: item, sum: sum})
+                groupValues.push({ title: item, sum: sum })
             }
 
             groupValues.sort(function(x, y){
@@ -245,6 +252,13 @@ export default class Home extends React.Component {
             })
 
             groupValues = groupValues.slice(0, 3)
+
+            groupValues = groupValues.slice(0, 3)
+            for (let i = 0 ; i < groupValues.length ; i++) {
+                let fullObj = group1MapAll.get(groupValues[i].title)
+                console.log(fullObj)
+                //groupValues[i].image = fullObj[0].images[1]
+            }
 
             if (this.state.showTable && groupValues.length > 0) {
                 return (
@@ -253,8 +267,12 @@ export default class Home extends React.Component {
 
                         <div className="artistDiv">
                             {groupValues.map(value => (
-                                // add images too 
-                                <div className="artistName">{value.title}</div>
+                                <div className="artistName">
+                                    <div>
+                                        {/* <img src={value.image.url}/> */}
+                                    </div>
+                                    <div>{value.title}</div>
+                                </div>
                             ))}
                         </div>
                     </Container>
@@ -263,8 +281,10 @@ export default class Home extends React.Component {
         }
 
         const renderAlbums = () => {
-            let group1Map = d3.rollup(this.state.testAlbumsA, v => v.length, d => d.name)
-            let group2Map = d3.rollup(this.state.testAlbumsB, v => v.length, d => d.name)
+            let group1Map = d3.rollup(this.state.user1Albums, v => v.length, d => d.name)
+            let group2Map = d3.rollup(this.state.user2Albums, v => v.length, d => d.name)
+
+            let group1MapAll = d3.group(this.state.user1Albums, d => d.name)
 
             let group1Keys = []
             for (let [key, value] of Array.from(group1Map)) {
@@ -281,7 +301,7 @@ export default class Home extends React.Component {
             let groupValues = []
             for (let item of combinedKeys.values()) {
                 let sum = group1Map.get(item) + group2Map.get(item)
-                groupValues.push({ title: item, sum: sum})
+                groupValues.push({ title: item, sum: sum })
             }
 
             groupValues.sort(function(x, y){
@@ -289,6 +309,12 @@ export default class Home extends React.Component {
             })
 
             groupValues = groupValues.slice(0, 3)
+
+            for (let i = 0 ; i < groupValues.length ; i++) {
+                let fullObj = group1MapAll.get(groupValues[i].title)
+                groupValues[i].artist = fullObj[0].artists.name
+                groupValues[i].image = fullObj[0].images[1]
+            }
 
             if (this.state.showTable && groupValues.length > 0) {
                 return (
@@ -298,7 +324,13 @@ export default class Home extends React.Component {
                         <div className="artistDiv">
                             {groupValues.map(value => (
                                 // add images too 
-                                <div className="artistName">{value.title}</div>
+                                <div className="artistName">
+                                    <div>
+                                        <img src={value.image.url}/>
+                                    </div>
+                                    <div>{value.title}</div>
+                                    <div>{value.artist}</div>
+                                </div>
                             ))}
                         </div>
                     </Container>
