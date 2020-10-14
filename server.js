@@ -647,6 +647,8 @@ const handlePlayerEntered = function (player) {
 
     let playedBefore = false;
 
+    console.log(player.clientId);
+
     deadPlayers.forEach((player) => {
         if (player.id === player.clientId)
             playedBefore = true;
@@ -796,6 +798,8 @@ app.get('/game', ensureAuth, (req, res) => {
 
     deadPlayers.forEach((player) => {
         if (player.id === req.user) {
+            console.log("dead player: ", player.id);
+            console.log("user entering ", req.user);
             personPlayedBefore = true;
         }
     })
