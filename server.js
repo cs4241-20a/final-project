@@ -360,17 +360,21 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
             players[id].isAlive = false;
         }
 
-        collection
-            .updateOne(
-                {username: players[id].id},
-                {
-                    $set: {"score": players[id].score}
-                }
-            )
+        savePlayerScore(id)
         //players[id].score =100; for testing purposes
         //console.log("Deleted " + players[id].id);
         //delete players[id];
     }
+}
+
+function savePlayerScore(id) {
+    collection
+        .updateOne(
+            {username: players[id].id},
+            {
+                $set: {"score": players[id].score}
+            }
+        )
 }
 
 
@@ -552,7 +556,7 @@ function moveAllMonsters() {
 
 function moveBoss() {
     // get the closes player target
-    let agroRange = 1300; //TODO: change later
+    let agroRange = 1300; //TODO: maybe change later
     let closestPlayerSoFar = null;
     let closestDistanceSoFar = 1000000;
     for (let playerId in players) {
@@ -575,12 +579,17 @@ function moveBoss() {
         let pathToTheUser = findPathAStar(currentGridNode, targetGridNode);
 
         console.log("path length: ", pathToTheUser.length);
-        if (pathToTheUser.length <= 1) {
-            boss.x = ((pathToTheUser[0].x + 1) * 25) - Math.floor(25 / 2)
-            boss.y = ((pathToTheUser[0].y + 1) * 25) - Math.floor(25 / 2)
-        } else {
+        if (pathToTheUser.length > 1) {
             boss.x = ((pathToTheUser[1].x + 1) * 25) - Math.floor(25 / 2)
             boss.y = ((pathToTheUser[1].y + 1) * 25) - Math.floor(25 / 2)
+
+            // check if boss kills the player
+            if (pathToTheUser[1].x === targetGridNode.x && pathToTheUser[1].y === targetGridNode.y) {
+                // death
+                players[closestPlayerSoFar.id].isAlive = false;
+                deadPlayers.push(closestPlayerSoFar);
+                savePlayerScore(closestPlayerSoFar.id);
+            }
         }
     }
 }
@@ -831,6 +840,8 @@ function findPathAStar(startGridNode, targetGridNode) {
 function generatePath(startGridNode, targetGridNode, cameFrom) {
     let path = [];
     let currentId = `${targetGridNode.x}|${targetGridNode.y}`;
+
+    path.unshift(targetGridNode)
 
     console.log("start node: ", startGridNode);
     console.log("end node ", targetGridNode);
