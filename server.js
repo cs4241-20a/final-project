@@ -714,6 +714,16 @@ function resetServerState() {
         occupied: false
     }, {x: 37.5, y: 37.5, occupied: false}]
 
+    monsters = {
+        "Ada": {x: 687.5, y: 362.5, direction: 1},
+        "Johny": {x: 687.5, y: 362.5, direction: 1},
+        "Clay": {x: 687.5, y: 362.5, direction: 1},
+        "Ivan": {x: 687.5, y: 362.5, direction: 1},
+        "Bob": {x: 687.5, y: 362.5, direction: 1}
+    };
+
+    boss = {x: 687.5, y: 362.5};
+
     for (let item in playerChannels) {
         playerChannels[item].unsubscribe();
     }
