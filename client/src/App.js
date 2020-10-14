@@ -12,6 +12,7 @@ import API from './API'
 import Home from './screens/home'
 import UserUploads from './screens/user_uploads'
 import AllUploads from './screens/all_uploads'
+import DrawScreen from './screens/draw'
 
 import 'bootswatch/dist/sketchy/bootstrap.min.css'
 import './App.css'
@@ -82,6 +83,9 @@ class App extends React.Component{
 							<Nav.Item>
 								<Nav.Link as={NavLink} exact to="/">Home</Nav.Link>
 							</Nav.Item>
+							<Nav.Item>
+								<Nav.Link as={NavLink} to="/draw">Draw</Nav.Link>
+							</Nav.Item>
 							{my_uploads_link}
 							<Nav.Item>
 								<Nav.Link as={NavLink} to="/uploads">All Uploads</Nav.Link>
@@ -98,6 +102,7 @@ class App extends React.Component{
 				<Switch>
 					<Route path="/user" render={(props) => (<UserUploads {...props} states={states}/>)}/>
 					<Route path="/uploads" render={(props) => (<AllUploads {...props} states={states}/>)}/>
+					<Route path="/draw" render={(props) => (<DrawScreen {...props} states={states}/>)}/>
 					<Route path="/" exact render={(props) => (<Home {...props} states={states}/>)}/>
 				</Switch>
 			</Router>
