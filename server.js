@@ -322,7 +322,8 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
                 console.log("Killed " + player.id)
                 console.log(player.id)
                 player.isAlive = false;
-
+                deadPlayers.push(player);
+                deadPlayers.push(players[id]);
             }
         }
 
