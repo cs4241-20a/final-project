@@ -1,5 +1,6 @@
 .selected {
-    background-color: red;
+    border: solid;
+    background-color: antiquewhite;
 }
 
 .wrapper {
@@ -15,12 +16,13 @@
 }
 
 body {
-    font: 13px Helvetica, Arial;
+    font: 16px Helvetica, Arial;
 }
 
 form {
     background: #000;
-    padding: 3px;
+    padding-top: 20px;
+    padding-bottom: 3px;
     position: fixed;
     bottom: 0;
     width: 50%;
@@ -32,6 +34,7 @@ form input {
     width: 90%;
     margin-right: 0.5%;
     height: 4vh;
+    box-sizing: border-box;
 }
 
 form button {
@@ -58,3 +61,128 @@ form button {
 #messages li:nth-child(odd) {
     background: #eee;
 }
+
+#background {
+    width: 100%;
+    height: 450px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url('/img/main.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to (rbga(0,0,0,0)));
+    opacity: 0.7;
+    z-index: -1;
+}
+
+.color{
+    border:none;
+    display: inline-block;
+    font-size: 12px;
+    text-align:center;
+    color: black;
+}
+.brush {
+    border:thin;
+    display: inline-block;
+    font-size: 12px;
+    text-align: center;
+    color: black;
+}
+
+#red{
+    background-color: red;
+    margin-left: 475px;
+}
+
+#blue{
+    background-color: dodgerblue;
+}
+
+#yellow{
+    background-color: yellow;
+}
+
+#green{
+    background-color: forestgreen;
+}
+
+#orange{
+    background-color:darkorange;
+}
+
+#violet{
+    background-color: mediumvioletred;
+}
+
+#username{
+    border: 2px solid red;
+    border-radius: 3px;
+    background-color: antiquewhite;
+    position: absolute;
+    left: 100px;
+    bottom: 20px;
+}
+
+#logoutButton {
+    position: absolute;
+    left: 300px;
+    bottom: 20px;
+}
+
+label {
+    position: absolute;
+    left: 10px;
+    bottom: 20px;
+}
+
+#send {
+    margin-left: 530px;
+    padding-left: 20px;
+    padding-right: 20px;
+    justify-content: center;
+    display: flex;
+}
+
+#clear {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: 530px;
+    justify-content: center;
+    display: flex;
+}
+
+h3{
+    padding-top: 20px;
+    padding-bottom:20px;
+    padding-left: 160px;
+    justify-content: center;
+    display: flex;
+}
+
+h1{
+    padding-left: 180px;
+    justify-content: center;
+    display: flex;
+}
+
+p {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 180px;
+    justify-content: center;
+    display: flex;
+}
+
+#centralCanvas{
+    justify-content: center;
+    display: flex;
+    margin-left: 250px;
+}
+
+
+
+
