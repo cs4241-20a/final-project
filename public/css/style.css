@@ -1,5 +1,5 @@
 /*Style your own assignment! This is fun! */
-/* #background{
+#background{
   background-image: url('../resources/background.jpg');
   mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
   -webkit-mask-image:-webkit-gradient(linear, left top, left bottom,
@@ -8,40 +8,23 @@
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
-
   width: 100%;
   height: 100vh;
-} */
+}
 
-
-body{
-  background-image: url('../resources/background.jpg');
-/*   mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
-  -webkit-mask-image:-webkit-gradient(linear, left top, left bottom,
-      from(rgba(0,0,0,1)), to(rgba(0,0,0,0))); */
-  background-repeat:no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-
-  width: 100%;
-  height: 100vh;
-  
+.infocontainer{
+  position: relative;
+  margin-top:-600px;
+  height: 500px;
 } 
 
-
-.info-container{
-   display:flex;
-   justify-content: center;
-   align-items: center;
-   position: relative;
-   margin-top:-800px;
- }
+.bannerinfo{
+  margin-left: 20px;
+}
 
 #information{
   font-family: 'Crimson Text', serif;
   color: #363b3f;
-
 }
 
 #intro{
@@ -62,6 +45,7 @@ body{
   background-size: cover;
   background-position: center;
   padding: 80px 0;
+  margin-top: 50px;
 }
 
 .banner h1 {
@@ -109,5 +93,4 @@ body{
   font-size: 70px;
   text-align: center;
   color: red;
-
 }
