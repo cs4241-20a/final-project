@@ -4,15 +4,15 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const { json } = require('body-parser');
-app.use(express.static('./'));
+const serveStatic = require('serve-static');
+const path = require('path');
+// app.use(express.static('./'));
 app.use(bodyParser.urlencoded({extended: true}));
 
-
-
-//default get method
-app.get('/', (req, res) => {
-    res.sendFile('./views/index.html', { root: __dirname })
-})
+// //default get method
+// app.get('/', (req, res) => {
+//     res.sendFile('./views/index.html', { root: __dirname })
+// })
 
 //skeleton get method
 app.get("/get", (req, res) => {
@@ -27,6 +27,19 @@ app.post("/post", bodyParser.json(), (req, res) => {
     res.end();
 })
 
+
+//Serving the React App
+app.use(
+    serveStatic(path.join(__dirname, "build"), {
+        index: "index.html",
+        extensions: ["html"]
+    })
+)
+
+//Catching all urls to point to the react app to be caught by the react router
+app.get("*", (req,res) => {
+    res.sendFile(path.join(__dirname, "build/index.html"))
+})
 
 //listen to port
 app.listen(port, () => {
