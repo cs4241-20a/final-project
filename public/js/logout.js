@@ -1,6 +1,8 @@
 const logout = function( e ) {
     e.preventDefault();
 
+    console.log("logging")
+
     fetch('/logout', {
         method:'POST'
     })
@@ -11,8 +13,9 @@ const logout = function( e ) {
     return false;
 }
 
-window.onload = function() {
+window.addEventListener('load', () => {
+    console.log("logout.js loaded");
     const logoutButton = document.querySelector('#logoutButton');
     logoutButton.onclick = logout;
-}
+});
 

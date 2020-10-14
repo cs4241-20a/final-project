@@ -126,6 +126,10 @@ app.get("/chatroom/js/paper-full.js", (req, res) => {
     res.sendFile(__dirname + "/public/js/paper-full.js");
 });
 
+app.get("/chatroom/js/logout.js", (req, res) => {
+    res.sendFile(__dirname + "/public/js/logout.js");
+});
+
 app.get("/chatroom/js/script.js", (req, res) => {
     res.sendFile(__dirname + "/public/js/script.js");
 });
