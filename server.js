@@ -399,7 +399,7 @@ function gameHasEnded() {
         if (numOfDeadPlayers === totalPlayers || numOfDeadPlayers === (totalPlayers - 1)) {
             return true;
         }
-    
+
     } else if (totalPlayers == 1) {
         if (numOfDeadPlayers === totalPlayers) {
             return true;
