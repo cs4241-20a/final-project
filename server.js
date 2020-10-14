@@ -356,8 +356,9 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
         if (players[id].isAlive) {
             console.log("Killing Current")
             console.log(id)
-            deadPlayers.push(players[id])
             players[id].isAlive = false;
+            deadPlayers.push(players[id])
+
         }
 
         savePlayerScore(id)
