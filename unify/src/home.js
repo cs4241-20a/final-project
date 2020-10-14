@@ -21,7 +21,8 @@ export default class Home extends React.Component {
             user2Artists: [],
             user1Albums: [],
             user2Albums: [],
-            songPops: [],
+            user1Pops: [],
+            user2Pops: [],
             showTable: false,
             user1: "", 
             user2: "",
@@ -35,12 +36,6 @@ export default class Home extends React.Component {
             overlay: false,
             overlayStyle: "none", 
             typedMsg: "",
-            testArtistsA: [{name: "aaa"}, {name: "bbb"}, {name: "ccc"}, {name: "ddd"}, {name: "eee"}, {name: "ddd"}, {name: "eee"}, {name: "ddd"}, {name: "eee"}],
-            testArtistsB: [{name: "bbb"}, {name: "fff"}, {name: "ccc"}, {name: "aaa"}, {name: "ggg"}, {name: "fff"}, {name: "ccc"}, {name: "aaa"}, {name: "ggg"}], 
-            testAlbumsA: [{name: "zzz"}, {name: "zzz"}, {name: "yyy"}, {name: "zzz"}, {name: "xxx"}, {name: "vvv"}, {name: "yyy"}, {name: "ddd"}, {name: "vvv"}],
-            testAlbumsB: [{name: "zzz"}, {name: "yyy"}, {name: "xxx"}, {name: "www"}, {name: "www"}, {name: "www"}, {name: "vvv"}, {name: "www"}, {name: "zzz"}],
-            testPopularityA: [{popularity: 0}, {popularity: 93}, {popularity: 45}, {popularity: 17}, {popularity: 56}, {popularity: 90}, {popularity: 3}, {popularity: 82}], 
-            testPopularityB: [{popularity: 55}, {popularity: 23}, {popularity: 48}, {popularity: 47}, {popularity: 58}, {popularity: 90}, {popularity: 32}, {popularity: 12}]
         }
 
         this.overlayDiv = React.createRef()
@@ -85,7 +80,9 @@ export default class Home extends React.Component {
                 user1Artists: json.user1Artists, 
                 user2Artists: json.user2Artists, 
                 user1Albums: json.user1Albums, 
-                user2Albums: json.user2Albums
+                user2Albums: json.user2Albums, 
+                user1Songs: json.user1Songs,
+                user2Songs: json.user2Songs
             })
             this.parseSongs()
         });
@@ -94,16 +91,29 @@ export default class Home extends React.Component {
 
     parseSongs() {
         let songNames = []
-        let songPops = []
+        let user1Pops = []
+        let user2Pops = []
+
+        console.log(this.state.user1Songs)
 
         for (let i = 0; i < this.state.songsJSON.length; i++) {
-            songPops.push({ popularity: this.state.songsJSON[i].popularity })
             songNames.push({ id: i, title: this.state.songsJSON[i].name, artists: this.state.songsJSON[i].artists[0].name })    
         }
 
+        for (let i = 0; i < this.state.user1Songs.length; i++) {
+            user1Pops.push( { popularity: this.state.user1Songs[i].popularity } )
+        }
+
+        for (let i = 0; i < this.state.user2Songs.length; i++) {
+            user2Pops.push({ popularity: this.state.user2Songs[i].popularity })
+        }
+
+        console.log(user1Pops)
+
         this.setState({ 
             songNames: songNames, 
-            songPops: songPops 
+            user1Pops: user1Pops,
+            user2Pops: user2Pops 
         })
     }
 
@@ -333,8 +343,13 @@ export default class Home extends React.Component {
         }
         
         const renderPopularity = () => {
-            let pop1Calc = (d3.mean(this.state.testPopularityA, d => d.popularity)).toFixed(2)
-            let pop2Calc = (d3.mean(this.state.testPopularityB, d => d.popularity)).toFixed(2)
+            let pop1Calc = (d3.mean(this.state.user1Pops, d => d.popularity))
+            let pop2Calc = (d3.mean(this.state.user2Pops, d => d.popularity))
+
+            if (pop1Calc != undefined || pop2Calc != undefined) {
+                pop1Calc = pop1Calc.toFixed(2)
+                pop2Calc = pop2Calc.toFixed(2)
+            }
 
             if (this.state.showTable) {
                 return (
@@ -342,12 +357,22 @@ export default class Home extends React.Component {
                         <h4 className="subtitle">Average Song Popularity</h4>
 
                         <div className="statsDiv">
-                            <div className="artistName">
-                                <p className="statsTitle">{ pop1Calc }%</p>
+                            <div className="barDiv">
+                                <div className="fullBar">
+                                    <div className="percentBar" style={{width: `${pop1Calc}%` }}></div>
+                                </div>
+                                <p className="statsTitle" style={{ color: "#fff" }}>{this.state.staticUser1}</p>
+                                <p style={{ color: "#fff" }}>{ pop1Calc }%</p>
                             </div>
-                            <div className="artistName">
-                                <p className="statsTitle">{ pop2Calc }%</p>
-                            </div>                        
+
+                            <div className="barDiv">
+                                <div className="fullBar">
+                                    <div className="percentBar" style={{width: `${pop2Calc}%` }}></div>
+                                </div>
+                                <p className="statsTitle" style={{ color: "#fff" }}>{this.state.staticUser2}</p>
+                                <p style={{ color: "#fff" }}>{ pop2Calc }%</p>
+                            </div>
+
                         </div> 
                     </Container>
                 )

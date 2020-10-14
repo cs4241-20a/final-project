@@ -95,11 +95,9 @@ app.post('/getSongs', async (req, res) => {
     let user1Map = mapTracks(user1Tracks);
     let user2Map = mapTracks(user2Tracks);
 
-    console.log(user1Artists)
-
     let intersection = getIntersection(user1Map, user2Map);
     console.log("RETURNING INTERSECTION BETWEEN " + user1 + " AND " + user2);
-    res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection } ));
+    res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks } ));
 });
 
 app.post('/login', (req, res) => {
@@ -113,7 +111,6 @@ function getUserArtists(tracks) {
     let artists = []
     for (let i = 0 ; i < tracks.length ; i++) {
         for (let j = 0 ; j < tracks[i].artists.length; j++) {
-            console.log(tracks[i].artists)
             artists.push({name: tracks[i].artists[j].name, images: tracks[i].artists[0].images})
         }
     }
