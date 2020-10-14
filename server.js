@@ -83,14 +83,17 @@ app.post('/getSongs', async (req, res) => {
     let user1Tracks = await getUserTracks(user1Playlists);
     let user2Tracks = await getUserTracks(user2Playlists);
 
+    // get all artists of all user's tracks
+    let user1Artists = getUserArtists(user1Tracks);
+    let user2Artists = getUserArtists(user2Tracks);
+
     // map the tracks for each user according to (key: id, value: {name, artists})
     let user1Map = mapTracks(user1Tracks);
     let user2Map = mapTracks(user2Tracks);
 
     let intersection = getIntersection(user1Map, user2Map);
     console.log("RETURNING INTERSECTION BETWEEN " + user1 + " AND " + user2);
-    res.send(intersection);
-
+    res.send(JSON.stringify( { user1: user1Artists, user2: user2Artists, intersection: intersection } ));
 });
 
 app.post('/login', (req, res) => {
@@ -98,6 +101,17 @@ app.post('/login', (req, res) => {
     let response = {link: spotifyApi.createAuthorizeURL(scopes)};
     res.send(response);
 });
+
+// gets all artist names of songs in a user's playlists
+function getUserArtists(tracks) {
+    let artists = []
+    for (let i = 0 ; i < tracks.length ; i++) {
+        for (let j = 0 ; j < tracks[i].artists.length; j++) {
+            artists.push({name: tracks[i].artists[j].name})
+        }
+    }
+    return artists
+}
 
 // gets the ids of the playlist for an individual user
 async function getUserPlaylists(user){

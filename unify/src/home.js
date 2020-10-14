@@ -15,8 +15,13 @@ export default class Home extends React.Component {
 
         this.state = {
             songsJSON: [],
+            user1Songs: [],
+            user2Songs: [],
             columns: [],
-            songs: [],
+            songNames: [],
+            user1Artists: [],
+            user2Artists: [],
+            songPops: [],
             showTable: false,
             user1: "", 
             user2: "",
@@ -68,44 +73,36 @@ export default class Home extends React.Component {
                 "Content-Type": "application/json"
             }
         }).then(response => response.json()).then(json => {
-            for(let i = 0; i < json.length; i++){
-                console.log(json[i]);
-            }
-            let staticUser1 = this.state.user1;
-            let staticUser2 = this.state.user2;
+
             this.setState({
-                songsJSON: json,
-                columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
+                staticUser1: this.state.user1, 
+                staticUser2: this.state.user2, 
+                songsJSON: json.intersection,
+                columns: [{ dataField: 'title', text: ``}],
                 showTable: true,
                 user1: "",
-                user2: ""
+                user2: "", 
+                user1Artists: json.user1, 
+                user2Artists: json.user2
             })
             this.parseSongs()
         });
-
-        // TEMP FOR FRONT END TESTING
-        // let staticUser1 = this.state.user1
-        // let staticUser2 = this.state.user2
-        // this.setState({
-        //     showTable: true,
-        //     columns: [
-        //         { dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`,
-        //         headerStyle: { backgroundColor: "#ffffff"}
-        //     }
-        //     ],
-        //     user1: "",
-        //     user2: ""
-        // });
 
     }
 
     parseSongs() {
         let songNames = []
-        for (let i = 0; i < this.state.songsJSON.length; i++){
-            songNames.push({ id: i, title: this.state.songsJSON[i].name })
+        let songPops = []
+        
+        for (let i = 0; i < this.state.songsJSON.length; i++) {
+            songPops.push({ popularity: this.state.songsJSON[i].popularity })
+            songNames.push({ id: i, title: this.state.songsJSON[i].name })            
         }
-        console.log(songNames)
-        this.setState({ songs: songNames })
+
+        this.setState({ 
+            songNames: songNames, 
+            songPops: songPops 
+        })
     }
 
     login() {
@@ -164,7 +161,7 @@ export default class Home extends React.Component {
                             rowStyle={{ backgroundColor: '#ffffff' }}
                             
                             border={true}
-                            keyField='id' data={ this.state.songs } 
+                            keyField='id' data={ this.state.songNames } 
                             columns={ this.state.columns } 
                             pagination={ paginationFactory() } 
                             bootstrap4={true} />
@@ -221,11 +218,12 @@ export default class Home extends React.Component {
         }
 
         const renderArtists = () => {
-            let group1Map = d3.rollup(this.state.testArtistsA, v => v.length, d => d.name)
-            let group2Map = d3.rollup(this.state.testArtistsB, v => v.length, d => d.name)
+            let group1Map = d3.rollup(this.state.user1Artists, v => v.length, d => d.name)
+            let group2Map = d3.rollup(this.state.user2Artists, v => v.length, d => d.name)
 
             let group1Keys = []
             for (let [key, value] of Array.from(group1Map)) {
+                console.log("key: " + key + " value: " + value)
                 group1Keys.push(key)
             }
 
