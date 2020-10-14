@@ -700,6 +700,9 @@ const handlePlayerLeft = function (player) {
     if (totalPlayers <= 0) {
         resetServerState();
     }
+
+    // unsubscribe from players channel
+    playerChannels[player.clientId].unsubscribe();
 }
 
 function resetServerState() {
