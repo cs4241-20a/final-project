@@ -406,7 +406,7 @@ function gameHasEnded() {
             return true;
         }
 
-    } else if (totalPlayers == 1) {
+    } else if (totalPlayers === 1) {
         if (numOfDeadPlayers === totalPlayers) {
             return true;
         }
