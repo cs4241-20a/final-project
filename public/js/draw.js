@@ -5,9 +5,13 @@ var text = new PointText(new Point(4, 20));
 text.fontSize = "20px";
 text.fillColor = "black";
 
-var content = document.getElementById("username").value;
+var content = document.querySelector("#username").value;
 text.content = content;
-
+//THIS IS A HACK
+setTimeout(function() {
+    content = document.querySelector("#username").value;
+    text.content = content;
+}, 100)
 
 function clearCanvas(e) {
     project.clear();
