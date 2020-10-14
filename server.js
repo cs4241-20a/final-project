@@ -646,50 +646,61 @@ const startGameDataTicker = function () {
 
 
 const handlePlayerEntered = function (player) {
-    let newPlayerId;
-    alivePlayers++;
-    totalPlayers++;
 
-    let xPos;
-    let yPos;
-    if (totalPlayers === 1) {
-        gameTickerOn = true;
-        startGameDataTicker();
-    }
+    let playedBefore = false;
 
-    newPlayerId = player.clientId;
-    playerChannels[newPlayerId] = realtime.channels.get(
-        "clientChannel-" + player.clientId
-    );
+    deadPlayers.forEach((player) => {
+        if (player.id === player.clientId)
+            playedBefore = true;
+    })
 
+    if (!playedBefore) {
 
-    // check through the spawn locations to find a location that has not been used yet
+        let newPlayerId;
+        alivePlayers++;
+        totalPlayers++;
 
-
-    for (location of spawnLocations) {
-        if (location.occupied === false) {
-            xPos = location.x
-            yPos = location.y
-            location.occupied = true
-            break;
+        let xPos;
+        let yPos;
+        if (totalPlayers === 1) {
+            gameTickerOn = true;
+            startGameDataTicker();
         }
+
+        newPlayerId = player.clientId;
+        playerChannels[newPlayerId] = realtime.channels.get(
+            "clientChannel-" + player.clientId
+        );
+
+
+        // check through the spawn locations to find a location that has not been used yet
+
+
+        for (location of spawnLocations) {
+            if (location.occupied === false) {
+                xPos = location.x
+                yPos = location.y
+                location.occupied = true
+                break;
+            }
+        }
+
+        //TODO figure out how to spawn them in a smarter way
+
+        let newPlayerObject = {
+            id: newPlayerId,
+            x: xPos,
+            y: yPos,
+            invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
+            invaderAvatarColor: avatarColors[randomAvatarSelector()],
+            direction: 0,
+            score: 0,
+            isAlive: true
+        };
+
+        players[newPlayerId] = newPlayerObject;
+        subscribeToPlayerInput(playerChannels[newPlayerId], newPlayerId);
     }
-
-    //TODO figure out how to spawn them in a smarter way
-
-    let newPlayerObject = {
-        id: newPlayerId,
-        x: xPos,
-        y: yPos,
-        invaderAvatarType: avatarTypes[randomAvatarSelector()], // get from db
-        invaderAvatarColor: avatarColors[randomAvatarSelector()],
-        direction: 0,
-        score: 0,
-        isAlive: true
-    };
-
-    players[newPlayerId] = newPlayerObject;
-    subscribeToPlayerInput(playerChannels[newPlayerId], newPlayerId);
 }
 
 const handlePlayerLeft = function (player) {
@@ -702,7 +713,7 @@ const handlePlayerLeft = function (player) {
     }
 
     // unsubscribe from players channel
-    playerChannels[player.clientId].unsubscribe();
+    playerChannels[leavingPlayer].unsubscribe();
 }
 
 function resetServerState() {
