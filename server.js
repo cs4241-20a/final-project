@@ -101,7 +101,7 @@ app.get("/video", (request, response) => {
 // const listener = server.listen( process.env.PORT || 3000, function() {
 //   console.log( 'Your app is listening on port ' + listener.address().port )
 // })
-const listener = app.listen( process.env.PORT || 3000, function() {
+const listener = http.listen( process.env.PORT || 3000, function() {
   console.log( 'Your app is listening on port ' + listener.address().port )
 });
 
