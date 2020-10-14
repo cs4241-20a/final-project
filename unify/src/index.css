@@ -108,11 +108,22 @@ a {
   border-color: #1db954 !important;
 }
 
+tr {
+  background-color: #ffffff;
+}
+
+th, td {
+  width: 50%;
+}
+
+
+
+
 .user-title {
   color: #fff; 
 }
 
-.artistDiv {
+.statsDiv {
   display: flex; 
   flex-direction: row;
   justify-content: space-evenly;
@@ -121,8 +132,17 @@ a {
 .subtitle {
   color: #fff;
   text-align: left;
+  margin: 20px;
+  margin-left: 0px;
 }
 
 .artistName {
   color: #fff;
+  padding: 20px;
+}
+
+.statsTitle {
+  font-weight: bold;
+  margin: 10px; 
+  margin-bottom: 5px;
 }

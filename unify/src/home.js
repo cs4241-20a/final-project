@@ -6,8 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
 import * as d3 from 'd3'
-import { entries } from 'd3'
-
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -80,7 +78,7 @@ export default class Home extends React.Component {
                 staticUser1: this.state.user1, 
                 staticUser2: this.state.user2, 
                 songsJSON: json.intersection,
-                columns: [{ dataField: 'title', text: ``}],
+                columns: [{ dataField: 'title', text: 'Songs'}, { dataField: 'artists', text: 'Artist'}],
                 showTable: true,
                 user1: "",
                 user2: "", 
@@ -97,11 +95,10 @@ export default class Home extends React.Component {
     parseSongs() {
         let songNames = []
         let songPops = []
-        console.log(this.state.songsJSON)
 
         for (let i = 0; i < this.state.songsJSON.length; i++) {
             songPops.push({ popularity: this.state.songsJSON[i].popularity })
-            songNames.push({ id: i, title: this.state.songsJSON[i].name })            
+            songNames.push({ id: i, title: this.state.songsJSON[i].name, artists: this.state.songsJSON[i].artists[0].name })    
         }
 
         this.setState({ 
@@ -163,8 +160,8 @@ export default class Home extends React.Component {
                         <div className="mt-5 mb-10">
                             <h4 className="subtitle">Songs in Common</h4>
                             <BootstrapTable 
+                            headerStyle={{ backgroundColor: '#ffffff' }}
                             rowStyle={{ backgroundColor: '#ffffff' }}
-                            
                             border={true}
                             keyField='id' data={ this.state.songNames } 
                             columns={ this.state.columns } 
@@ -230,7 +227,6 @@ export default class Home extends React.Component {
 
             let group1Keys = []
             for (let [key, value] of Array.from(group1Map)) {
-                //console.log("key: " + key + " value: " + value)
                 group1Keys.push(key)
             }
 
@@ -256,22 +252,20 @@ export default class Home extends React.Component {
             groupValues = groupValues.slice(0, 3)
             for (let i = 0 ; i < groupValues.length ; i++) {
                 let fullObj = group1MapAll.get(groupValues[i].title)
-                console.log(fullObj)
-                //groupValues[i].image = fullObj[0].images[1]
             }
 
             if (this.state.showTable && groupValues.length > 0) {
                 return (
-                    <Container className="mt-5 mb-10">
+                    <Container className="mt-5 mb-10 statsWrapper">
                         <h4 className="subtitle">Top Artists in Common</h4>
 
-                        <div className="artistDiv">
+                        <div className="statsDiv">
                             {groupValues.map(value => (
                                 <div className="artistName">
                                     <div>
                                         {/* <img src={value.image.url}/> */}
                                     </div>
-                                    <div>{value.title}</div>
+                                    <p className="statsTitle">{value.title}</p>
                                 </div>
                             ))}
                         </div>
@@ -321,15 +315,15 @@ export default class Home extends React.Component {
                     <Container className="mt-5 mb-10">
                         <h4 className="subtitle">Top Albums in Common</h4>
 
-                        <div className="artistDiv">
+                        <div className="statsDiv">
                             {groupValues.map(value => (
                                 // add images too 
                                 <div className="artistName">
                                     <div>
-                                        <img src={value.image.url}/>
+                                        <img style={{width: "100%", height: "100%"}} alt="album art" src={value.image.url}/>
                                     </div>
-                                    <div>{value.title}</div>
-                                    <div>{value.artist}</div>
+                                    <p className="statsTitle">{value.title}</p>
+                                    <p>{value.artist}</p>
                                 </div>
                             ))}
                         </div>
@@ -347,11 +341,13 @@ export default class Home extends React.Component {
                     <Container className="mt-5 mb-10">
                         <h4 className="subtitle">Average Song Popularity</h4>
 
-                        <div className="artistDiv">
-                            {/* <div id="pop1"></div> */}
-                            <div className="artistName">{ pop1Calc }%</div>
-                            {/* <div id="pop2"></div> */}
-                            <div className="artistName">{ pop2Calc }%</div>
+                        <div className="statsDiv">
+                            <div className="artistName">
+                                <p className="statsTitle">{ pop1Calc }%</p>
+                            </div>
+                            <div className="artistName">
+                                <p className="statsTitle">{ pop2Calc }%</p>
+                            </div>                        
                         </div> 
                     </Container>
                 )
@@ -365,21 +361,22 @@ export default class Home extends React.Component {
                 <div id="overlay" onClick={this.toggleOverlay} ref="overlayDiv" style={{display: this.state.overlayStyle}}></div>
                 <Container id="mainDiv" >
 
-                    <h1 className="mt-5 mb-10" style={{color: "#ffffff"}}>Unify</h1>
+                    <h1 className="mt-5" style={{color: "#ffffff"}}>Unify</h1>
+                    <p className="subtitle" className="mb-10" style={{ textAlign: "center", color: "#ffffff" }}>Compare Spotify playlists!</p>
 
                     <div className="mt-5 mb-10">
                         <Form>
                             <FormGroup>
-                                <Input type="text" placeholder="login_username else placeholder text" className="form-control" value={this.state.user1} onChange={this.handleUser1Change} required></Input>
+                                <Input type="text" placeholder="Enter your Spotify username" className="form-control" value={this.state.user1} onChange={this.handleUser1Change} required></Input>
                             </FormGroup>                    
                             <FormGroup>
-                                <Input type="text" placeholder="Enter another username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
+                                <Input type="text" placeholder="Enter another Spotify username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
                             </FormGroup>
                             <FormGroup>
                                 <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.login}>Login</Button>
                             </FormGroup>
                             <FormGroup>
-                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Compare data</Button>
+                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Analyze data</Button>
                             </FormGroup>
                         </Form>
                     </div>
