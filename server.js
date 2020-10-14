@@ -578,7 +578,6 @@ function moveBoss() {
 
         let pathToTheUser = findPathAStar(currentGridNode, targetGridNode);
 
-        console.log("path length: ", pathToTheUser.length);
         if (pathToTheUser.length > 1) {
             boss.x = ((pathToTheUser[1].x + 1) * 25) - Math.floor(25 / 2)
             boss.y = ((pathToTheUser[1].y + 1) * 25) - Math.floor(25 / 2)
