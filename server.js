@@ -134,6 +134,7 @@ let monsters = {
     "Ivan": {x: 687.5, y: 362.5, direction: 1},
     "Bob": {x: 687.5, y: 362.5, direction: 1}
 };
+let deadPlayersLeft = [];
 let deadPlayers = new Array();
 let rankings = new Array();
 let coins = {}; // idea was to store this as an object so we can check if the size of the coins is 0 - at that point, the game is over
@@ -649,7 +650,7 @@ const handlePlayerEntered = function (player) {
 
     console.log(player.clientId);
 
-    deadPlayers.forEach((player) => {
+    deadPlayersLeft.forEach((player) => {
         if (player.id === player.clientId)
             playedBefore = true;
     })
@@ -707,6 +708,11 @@ const handlePlayerLeft = function (player) {
     let leavingPlayer = player.clientId;
     alivePlayers--;
     totalPlayers--;
+
+    deadPlayersLeft = deadPlayers;
+
+    deadPlayers = deadPlayers.filter((deadPlayer) => deadPlayer.id !== player.id);
+
     delete players[leavingPlayer];
     if (totalPlayers <= 0) {
         resetServerState();
@@ -728,6 +734,8 @@ function resetServerState() {
         y: 37.5,
         occupied: false
     }, {x: 37.5, y: 37.5, occupied: false}]
+
+    deadPlayersLeft = []
 
     monsters = {
         "Ada": {x: 687.5, y: 362.5, direction: 1},
@@ -796,7 +804,7 @@ app.get('/game', ensureAuth, (req, res) => {
 
     let personPlayedBefore = false;
 
-    deadPlayers.forEach((player) => {
+    deadPlayersLeft.forEach((player) => {
         if (player.id === req.user) {
             console.log("dead player: ", player.id);
             console.log("user entering ", req.user);
