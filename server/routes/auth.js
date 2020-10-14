@@ -1,12 +1,9 @@
 const router = require('express').Router()
-const axios = require('axios')
+const {OAuth2Client} = require('google-auth-library')
 const User = require('../user')
 
-// const CLIENT_ID = process.env.GOOGLE_OAUTH_ID
-// const CLIENT_SECRET = process.env.GOOGLE_OAUTH_SECRET
-// const port = process.env.HOSTED_PORT? ':' + process.env.HOSTED_PORT : ''
-// // const callback_url = `http://${process.env.HOST}${port}${process.env.PREFIX || ''}/auth/callback`
-// const callback_url = '/auth/callback'
+const CLIENT_ID = process.env.GOOGLE_OAUTH_ID
+const oauth_client = new OAuth2Client(CLIENT_ID)
 
 
 router.get('/check', function(req, res){
@@ -20,21 +17,37 @@ router.get('/check', function(req, res){
 })
 
 router.get('/callback', async function(req, res){
-	const {auth_token} = req.query
-	if (auth_token == undefined) {
-		res.status(400).send({error: 'OAuth token parameter required'})
+	const {id_token} = req.query
+	if (id_token == undefined) {
+		res.status(400).json({error: 'OAuth id_token parameter required.'})
 		return
 	}
-	const profile_response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + auth_token).catch((err) => {res.status(403).json({error: err}); return})
-	const ginfo = profile_response.data
+	const ticket = await oauth_client.verifyIdToken({idToken: id_token, audience: CLIENT_ID})
+		.catch((err) => {
+			res.status(500).status({error: err})
+			return
+		})
+	if(ticket === undefined){
+		res.status(400).json({error: 'Invalid or expired id_token.'})
+		return
+	}
+
+	const ginfo = ticket.getPayload()
+
 	let user = await User.findOne({google_id: ginfo.sub})
+	let new_user = false
 	if(user == null) {
-		user = new User({google_id: ginfo.sub, email: ginfo.email, name: (ginfo.name || 'Unnamed User')})
-		await user.save().catch((err) => {console.error(err); res.status(500).json({error: err}); return})
+		new_user = true
+		user = new User({google_id: ginfo.sub, email: ginfo.email, name: (ginfo.name || 'Unnamed User'), profile_url: ginfo.picture})
+		await user.save().catch((err) => {res.status(500).json({error: err}); return})
 	}
 	req.session.user = user
 	req.session.authenticated = true
-	res.json(user.toJSON())
+	const result = Object.assign({authenticated: true}, {user: user.toJSON()})
+	if(new_user)
+		res.status(201).json(result)
+	else
+		res.json(result)
 })
 
 router.get('/signout', function(req, res){

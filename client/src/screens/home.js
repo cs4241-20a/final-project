@@ -14,7 +14,7 @@ const responseGoogle = (response) => {
 }
 
 const login_callback = (response) => {
-	const token = response.accessToken
+	const token = response.tokenId
 	API.authenticate(token)
 }
 
