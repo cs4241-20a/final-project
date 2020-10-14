@@ -711,7 +711,11 @@ const handlePlayerLeft = function (player) {
 
     deadPlayersLeft = deadPlayers;
 
-    deadPlayers = deadPlayers.filter((deadPlayer) => deadPlayer.id !== player.id);
+    console.log("before: ", deadPlayers.length);
+
+    deadPlayers = deadPlayers.filter((deadPlayer) => deadPlayer.id === player.id);
+
+    console.log("after: ", deadPlayers.length);
 
     delete players[leavingPlayer];
     if (totalPlayers <= 0) {
