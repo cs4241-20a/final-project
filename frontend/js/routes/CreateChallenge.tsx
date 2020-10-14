@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, DialogActions, DialogContent, DialogTitle, Paper, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FunctionComponent } from "react";
-import { handleChange } from '../util';
+import { handleChange } from '../utils/util';
 import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
-import { ControlledEditor as Editor, monaco } from '@monaco-editor/react';
+import { ControlledEditor as Editor } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { Send as SendIcon } from '@material-ui/icons';
-import editorTypes from '!!raw-loader!../../assets/challengelib.d.ts';
 import { SiteSettings } from './App';
 import { useHistory } from 'react-router-dom';
 import { useDialog } from '../components/DialogProvider';
 import { Challenge } from '../types/challenge';
+import { initMonaco } from '../utils/monaco';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     challengeControlsHeader: {
         display: "flex",
         alignItems: "center",
+        margin: `0 ${theme.spacing(2)}px`,
         "& > :first-child": {
             flexGrow: 1
         },
@@ -55,19 +56,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-monaco.config({
-    paths: {
-        vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.21.2/min/vs'
-    }
-})
-
-monaco.init().then(async monaco => {
-    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        ...monaco.languages.typescript.javascriptDefaults.getCompilerOptions(),
-        lib: ["es2019"]
-    });
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(editorTypes, "challengelib.d.ts");
-});
+initMonaco();
 
 export const CreateChallenge: FunctionComponent<{siteSettings: SiteSettings}> = ({siteSettings}) => {
     const classes = useStyles();
@@ -107,7 +96,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                 starterCode,
                 solution,
                 tests
-            } as Omit<Challenge, 'author'>)
+            } as Omit<Challenge, 'id' | 'author'>)
         });
         if (response.ok) {
             const body = await response.json();

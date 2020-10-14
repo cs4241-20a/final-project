@@ -4,6 +4,7 @@ export interface ChallengeShort {
 }
 
 export interface Challenge extends ChallengeShort {
+    id: string;
     author: string;
     title: string;
     description: string;

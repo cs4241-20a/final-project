@@ -2,7 +2,7 @@ import { CssBaseline, Typography, useMediaQuery } from "@material-ui/core";
 import { createMuiTheme, makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import React, { FunctionComponent, useState } from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'; 
+import { BrowserRouter as Router, match, Route, Switch } from 'react-router-dom'; 
 import { TopBar } from "../components/TopBar";
 import { FourOhFour } from "./404";
 import { Home } from "./Home";
@@ -11,6 +11,7 @@ import "../../css/main.css";
 import { blue, pink } from "@material-ui/core/colors";
 import { Login } from "./Login";
 import DialogProvider from "../components/DialogProvider";
+import { PlayChallenge } from "./PlayChallenge";
 
 export interface SiteSettings {
     theme: 'light' | 'dark';
@@ -65,6 +66,9 @@ const App: FunctionComponent = props => {
                     <Route path="/create">
                         <CreateChallenge siteSettings={siteSettings}/>
                     </Route>
+                    <Route path="/play/:id" render={({match}) => (
+                        <PlayChallenge challengeId={(match as match<{id: string}>).params.id} siteSettings={siteSettings}/>
+                    )}/>
                     <Route path="*">
                         <FourOhFour/>
                     </Route>

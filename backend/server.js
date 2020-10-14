@@ -5,6 +5,7 @@ import path from 'path';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { getCollection } from './db.js';
 import bodyParser from 'body-parser';
+import { ObjectId } from 'mongodb';
 
 const PORT = 3000;
 
@@ -26,10 +27,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 
 passport.use('local-signup', new LocalStrategy(async (username, password, done) => {
     const users = await getCollection('users');
-    const user = await users.findOne({username, password}, {projection: {
-        _id: 0,
-        username: 1
-    }});
+    const user = await users.findOne({username, password});
     if (user) {
         done(null, false);
     }
@@ -63,6 +61,14 @@ const authenticate = (req, /** @type {import('express').Response} */ res, /** @t
     res.status(401).send("You must be logged in to perform that action.");
 };
 
+function fixChallenge(challenge) {
+    if (challenge.id === null) {
+        challenge.id = challenge._id.toString();
+    }
+    delete challenge._id;
+    return challenge;
+}
+
 app.get('/api/challenge/all', async (req, res) => {
     const challenges = await getCollection('challenges');
     /** @type {import('../frontend/js/types/challenge.js').ChallengeShort[]} */
@@ -83,14 +89,31 @@ app.post('/api/challenge', authenticate, async (req, res) => {
             author: req.user.username,
             title, description, starterCode, solution, tests
         });
-        const newChallenge = result.ops[0];
-        newChallenge.id = newChallenge._id;
-        delete newChallenge._id;
-        res.json(newChallenge);
+        res.json(fixChallenge(result.ops[0]));
     }
     else {
         res.status(400).send("Invalid arguments to /api/challenge");
     }
+});
+
+app.get('/api/challenge/:id', async (req, res) => {
+    /** @type {import('mongodb').Collection<import('../frontend/js/types/challenge').Challenge>} */
+    const challenges = await getCollection('challenges');
+    const challenge = await challenges.findOne({_id: new ObjectId(req.params.id)}, {projection: {
+        _id: 1,
+        author: 1,
+        title: 1,
+        description: 1,
+        starterCode: 1
+    }});
+    if (!challenge) {
+        return res.sendStatus(404);
+    }
+    res.json(fixChallenge(challenge));
+});
+
+app.get('/api/challenge/:id/solve', authenticate, (req, res) => {
+
 });
 
 // Unknown API endpoint
