@@ -298,9 +298,10 @@ function checkRange(positionVal, minimalRange, maxRange, constant) {
 
 function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     let inRange = false;
-    let currentPlayerDead = false;
 
     Object.values(players).forEach(function (player) {
+
+        // checking players
         if (player.id !== id && player.isAlive) {
             // direction was vertical (SAME AXIS WOULD BE Y-AXIS)
             if (direction === 0) {
@@ -319,52 +320,44 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
             }
 
             if (inRange) {
-                currentPlayerDead = true;
+                players[id].isAlive = false;
                 player.isAlive = false;
                 deadPlayers.push(player);
                 deadPlayers.push(players[id]);
+                savePlayerScore(id);
             }
         }
 
         inRange = false
     })
 
-    Object.values(monsters).forEach(function (monster) {
-        if (direction === 0) {
+    if (players[id].isAlive) {
+        Object.values(monsters).forEach((monster) => {
+            let monsterPosGrid = {x: Math.floor(monster.x / 25), y: (Math.floor(monster.y / 25))}
+            let playerPosGrid = {x: Math.floor(players[id].x / 25), y: (Math.floor(players[id].y / 25))}
 
-            if (checkRange(monster.y, minRange, maxRange, SAME_AXIS_RANGE) &&
-                checkRange(monster.x, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
-                inRange = true;
+            if (monsterPosGrid.x === playerPosGrid.x && monsterPosGrid.y === playerPosGrid.y) {
+                // player died
+                players[id].isAlive = false;
+                deadPlayers.push(players[id]);
+                savePlayerScore(id);
             }
-
-        } else { // direction was horizontal (SAME AXIS WOULD BE X-AXIS)
-
-            if (checkRange(monster.x, minRange, maxRange, SAME_AXIS_RANGE) &&
-                checkRange(monster.y, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
-                inRange = true;
-            }
-        }
-
-        if (inRange) {
-            currentPlayerDead = true;
-        }
-
-        inRange = false
-    })
-
-    if (currentPlayerDead) {
-        if (players[id].isAlive) {
-            console.log("Killing Current")
-            console.log(id)
-            deadPlayers.push(players[id])
-            players[id].isAlive = false;
-        }
-
-        savePlayerScore(id)
-        //players[id].score =100; for testing purposes
-        //console.log("Deleted " + players[id].id);
-        //delete players[id];
+        });
     }
+
+    // if (currentPlayerDead) {
+    //     if (players[id].isAlive) {
+    //         console.log("Killing Current")
+    //         console.log(id)
+    //         deadPlayers.push(players[id])
+    //         players[id].isAlive = false;
+    //     }
+    //
+    //     savePlayerScore(id)
+    //     //players[id].score =100; for testing purposes
+    //     //console.log("Deleted " + players[id].id);
+    //     //delete players[id];
+    // }
 }
 
 function savePlayerScore(id) {
