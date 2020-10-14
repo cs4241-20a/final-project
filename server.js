@@ -5,6 +5,7 @@ const fetch = require("node-fetch");
 const cookieSession = require("cookie-session");
 const { request, response } = require("express");
 const dotenv = require("dotenv").config(); //is this necessary?
+const bodyparser = require('body-parser');
 
 const app = express();
 app.use(express.json()); // body-parser
@@ -90,11 +91,10 @@ app.get('/login/github/callback', async (req, res) => {
     }
 });
 
-app.post("/logout", (req, res) => {
-    req.session = null;
-    res.clearCookie();
-    res.redirect('/login.html');
-});
+app.get("/chatroom/username", bodyparser.json(), (req, res) => {
+    const username = req.session.username;
+    res.json(username);
+})
 
 app.use(express.static("public", { extensions: "html" }));
 
@@ -140,6 +140,12 @@ app.get("/chatroom/css/style.css", (req, res) => {
 
 app.get("/chatroom/js/draw.js", (req, res) => {
     res.sendFile(__dirname + "/public/js/draw.js");
+});
+
+app.post("/logout", (req, res) => {
+    req.session = null;
+    res.clearCookie();
+    res.redirect('/login.html');
 });
 
 const port = process.env.PORT || 3000;

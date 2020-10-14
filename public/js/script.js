@@ -42,10 +42,20 @@ window.onload = function (e) {
 var socket;
 var roomID = window.location.pathname.split("/")[2];
 var username;
-$(document).ready(function () {
+$(document).ready( async function () {
     socket = io();
     socket.emit("join", roomID);
-    username = document.getElementById("username").value;
+    await fetch('/chatroom/username', {
+        method: 'GET',
+        headers: {'Content-Type' : 'application/json' },
+    })
+    .then( response => response.json())
+    .then( response => {
+        console.log(response);
+        username = response;
+    })
+    const usernameField = document.querySelector('#username');
+    usernameField.value = username;
     socket.emit("chat", {
         roomID,
         message: username + " has joined"
