@@ -78,6 +78,7 @@
             ></iframe>
           </div>
         </div>
+      <form id="form">
         <div class="danmu text-center">
           <input
             type="text"
@@ -85,22 +86,22 @@
             placeholder="Please enter flying comments"
           />
           <div id="btn">Comment</div>
+          <!-- <button id="btn" type="submit">Comment</button> -->
         </div>
         <div class="al">You should input something and then send!</div>
       </div>
     </div>
-
+  </form>
+  <script src="socket.io/socket.io.js"></script>
     <script>
+      var socket = io('http://localhost:3000');
       var videoType, video_link;
-      // let ws, msgs = [];
       window.onload = function () {
         videoType = getUrlVars()["video"];
         console.log("video type: " + videoType);
 
         var type = document.getElementById("type");
         var video = document.getElementById("video");
-
-        //type.innerHTML = videoType;
 
         if (videoType === "music") {
           video.src = "https://www.youtube.com/embed/oFEKYxjYDIc";
@@ -127,25 +128,16 @@
           );
           return vars;
         }
+        socket.on('connect', function () {
+                console.log('connected');
+        });
 
-        // ws = new WebSocket("ws://127.0.0.1:3000");
-        // // when connection is established...
-        // ws.onopen = () => {
-        //   ws.send("a new client has connected.");
-        //   ws.onmessage = msg => {
-        //     // add message to end of msgs array,
-        //     // re-assign to trigger UI update
-        //     msgs = msgs.concat([msg.data]);
-        //   };
-        // };
+        socket.on('message', function (message) {
+                console.log('message', message);
+                createSpan(message.content);
+            });
       };
 
-      // const send = function() {
-      //   const txt = document.querySelector("input").value;
-      //   ws.send(txt);
-      //   // re-assigning to msgs variable triggers UI update
-      //   msgs = msgs.concat([txt]);
-      // };
       var oMovie = document.getElementsByClassName("movie")[0],
         oInput = document.getElementsByClassName("input")[0],
         oBtn = document.getElementById("btn"),
@@ -162,6 +154,7 @@
       // var iframeVideo = document.getElementById("video")
       // setTimeout(function(){ console.log(iframeVideo.getCurrentTime()) }, 1000);
       function send() {
+        var oForm = document.getElementById('form');
         if (oInput.value.length <= 0 || /^\s+$/.test(oInput.value)) {
           oAl.style.display = "block";
           timer2 = setTimeout(function () {
@@ -169,12 +162,13 @@
           }, 1500);
           return;
         }
+        var content = oInput.value;
+        socket.emit('message', { content });
         createSpan(oInput.value);
         console.log("send clicked");
 
         oInput.value = "";
       }
-
       function createSpan(text) {
         var oSpan = document.createElement("span");
         oSpan.innerText = text;
