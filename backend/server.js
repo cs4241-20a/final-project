@@ -3,9 +3,14 @@ import expressStaticGzip from 'express-static-gzip';
 import passport from 'passport';
 import path from 'path';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { getCollection } from './db.js';
+import { getCollection, mongoSessionStore } from './db.js';
 import bodyParser from 'body-parser';
 import { ObjectId } from 'mongodb';
+import session from 'express-session';
+import { loadEnv } from './util.js';
+import { testCodeCompletesWithoutError } from './sandbox.js';
+
+loadEnv();
 
 const PORT = 3000;
 
@@ -42,14 +47,23 @@ passport.serializeUser((user, cb) => {
 });
   
 passport.deserializeUser(async (id, cb) => {
-    cb(null, await users.findOne({id}, {projection: {
+    const users = await getCollection('users');
+    cb(null, await users.findOne({username: id}, {projection: {
         _id: 0,
         username: 1
     }}));
 });
 
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ extended: true }));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: mongoSessionStore
+}))
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -112,8 +126,21 @@ app.get('/api/challenge/:id', async (req, res) => {
     res.json(fixChallenge(challenge));
 });
 
-app.get('/api/challenge/:id/solve', authenticate, (req, res) => {
+app.post('/api/challenge/:id/solve', authenticate, async (req, res) => {
+    const challenges = await getCollection('challenges');
 
+    const solution = req.body.solution;
+    const challenge = await challenges.findOne({_id: new ObjectId(req.params.id)}, {projection: { tests: 1 }});
+    if (!challenge) {
+        return res.status(400).send("A challenge with that id does not exist");
+    }
+    const challengeTests = challenge.tests;
+    if (await testCodeCompletesWithoutError(`${solution}\n${challengeTests}`)) {
+        return res.status(200).send("OK");
+    }
+    else {
+        return res.status(200).send("BadSolution");
+    }
 });
 
 // Unknown API endpoint

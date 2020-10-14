@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@material-ui/core";
+import { Button, DialogActions, DialogContent, DialogTitle, Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FunctionComponent } from "react";
 import { handleChange } from '../utils/util';
@@ -94,40 +94,31 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         })();
     }, []);
 
+    const [isVerifyingSolution, setIsVerifyingSolution] = useState(false);
+
     async function submit() {
+        setIsVerifyingSolution(true);
         const response = await fetch(`/api/challenge/${challengeId}/solve`, {
             method: "POST",
             body: JSON.stringify({
                 solution
             })
         });
-        if (response.ok) {
-            // const body = await response.json();
-            openDialog({
-                children: <>
-                    <DialogTitle>Solved!</DialogTitle>
-                    <DialogContent>
-                        You solved this challenge. Good job!
-                    </DialogContent>
-                    <DialogActions>
-                        <Button color="secondary" onClick={closeDialog}>Close</Button>
-                    </DialogActions>
-                </>
-            });
-        }
-        else {
-            openDialog({
-                children: <>
-                    <DialogTitle>Publish Failed</DialogTitle>
-                    <DialogContent>
-                        {await response.text() ?? "An unexpected error occurred"}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button color="secondary" onClick={closeDialog}>Close</Button>
-                    </DialogActions>
-                </>
-            });
-        }
+        const responseText = await response.text();
+        setIsVerifyingSolution(false);
+        const [responseTitle, responseMessage] = {
+            "OK": ["Solved!", "You solved this challenge. Good job!"],
+            "BadSolution": ["Not quite there...", "Your solution didn't manage to pass the provided tests. Keep trying!"]
+        }[responseText] ?? ["Error", "An unexpected error occurred: " + responseText];
+        openDialog({
+            children: <>
+                <DialogTitle>{responseTitle}</DialogTitle>
+                <DialogContent>{responseMessage}</DialogContent>
+                <DialogActions>
+                    <Button color="secondary" onClick={closeDialog}>Close</Button>
+                </DialogActions>
+            </>
+        });
     }
 
     const editorOptions: editor.IEditorConstructionOptions = {
@@ -173,6 +164,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
                     </Paper>
                 </Pane>
             </SplitPane>
+            <Snackbar open={isVerifyingSolution} anchorOrigin={{vertical: "bottom", horizontal: "left"}} message="Verifying solution..."/>
         </div>
     );
 };

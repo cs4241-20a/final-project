@@ -1,9 +1,8 @@
 import mongodb from "mongodb";
-import dotenv from "dotenv";
+import { loadEnv } from "./util.js";
+const MongoDBStore = require('connect-mongodb-session')(require('express-session'));
 
-dotenv.config({
-    path: "../.env"
-});
+loadEnv();
 
 const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_DATABASE}`;
 
@@ -18,3 +17,8 @@ export async function getCollection(name) {
     if (collection) return collection;
     return await db.createCollection(name);
 }
+
+export const mongoSessionStore = new MongoDBStore({
+    uri: MONGODB_URI,
+    collection: 'sessions'
+});
