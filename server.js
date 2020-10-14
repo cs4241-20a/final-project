@@ -182,6 +182,8 @@ let spawnLocations = [{x: 1362.5, y: 712.5, occupied: false}, {x: 37.5, y: 712.5
     y: 37.5,
     occupied: false
 }, {x: 37.5, y: 37.5, occupied: false}]
+let boss = {x: 687.5, y: 362.5}
+
 let avatarColors = ["green", "cyan", "yellow"];
 let avatarTypes = ["A", "B", "C"];
 
@@ -358,17 +360,21 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
             players[id].isAlive = false;
         }
 
-        collection
-            .updateOne(
-                {username: players[id].id},
-                {
-                    $set: {"score": players[id].score}
-                }
-            )
+        savePlayerScore(id)
         //players[id].score =100; for testing purposes
         //console.log("Deleted " + players[id].id);
         //delete players[id];
     }
+}
+
+function savePlayerScore(id) {
+    collection
+        .updateOne(
+            {username: players[id].id},
+            {
+                $set: {"score": players[id].score}
+            }
+        )
 }
 
 
@@ -548,6 +554,45 @@ function moveAllMonsters() {
     )
 }
 
+function moveBoss() {
+    // get the closes player target
+    let agroRange = 1300; //TODO: maybe change later
+    let closestPlayerSoFar = null;
+    let closestDistanceSoFar = 1000000;
+    for (let playerId in players) {
+        if (players[playerId].isAlive) {
+            let distance = Math.sqrt(Math.pow(boss.x - players[playerId].x, 2) + Math.pow(boss.y - players[playerId].y, 2));
+
+            if (distance < closestDistanceSoFar && distance <= agroRange) {
+                closestPlayerSoFar = players[playerId]
+                closestDistanceSoFar = distance
+            }
+        }
+    }
+
+    if (closestPlayerSoFar != null) {
+        // we have a target
+
+        let targetGridNode = {x: Math.floor(closestPlayerSoFar.x / 25), y: (Math.floor(closestPlayerSoFar.y / 25))};
+        let currentGridNode = {x: Math.floor(boss.x / 25), y: (Math.floor(boss.y / 25))};
+
+        let pathToTheUser = findPathAStar(currentGridNode, targetGridNode);
+
+        if (pathToTheUser.length > 1) {
+            boss.x = ((pathToTheUser[1].x + 1) * 25) - Math.floor(25 / 2)
+            boss.y = ((pathToTheUser[1].y + 1) * 25) - Math.floor(25 / 2)
+
+            // check if boss kills the player
+            if (pathToTheUser[1].x === targetGridNode.x && pathToTheUser[1].y === targetGridNode.y) {
+                // death
+                players[closestPlayerSoFar.id].isAlive = false;
+                deadPlayers.push(closestPlayerSoFar);
+                savePlayerScore(closestPlayerSoFar.id);
+            }
+        }
+    }
+}
+
 function getRandomAvailableDir(monster, backwards) {
     let available = []
     for (let i = 1; i < 5; i++) {
@@ -580,11 +625,13 @@ const startGameDataTicker = function () {
             // move every player
             moveEveryPlayer();
             moveAllMonsters();
+            moveBoss();
             gameRoom.publish("game-state", {
                 players: players,
                 playerCount: totalPlayers,
                 gameOn: gameOn,
                 monsters: monsters,
+                boss: boss,
                 coins
             });
 
@@ -676,6 +723,7 @@ function randomAvatarSelector() {
     return Math.floor(Math.random() * 3);
 }
 
+
 ///////////////////// END GAME LOGIC ////////////////////////
 
 // initialize channels and channel-listeners
@@ -741,3 +789,191 @@ app.post("/auth/signin", passport.authenticate('local', {failureRedirect: '/logi
 app.listen(process.env.PORT, () => {
     console.log("Server is listening on port: ", process.env.PORT);
 });
+
+
+////////////////// A* stuff //////////////////
+
+function findPathAStar(startGridNode, targetGridNode) {
+    let frontier = new PriorityQueue();
+    let cameFrom = {};
+    let costSoFar = {};
+    frontier.enqueue(startGridNode, 0);
+    cameFrom[`${startGridNode.x}|${startGridNode.y}`] = "";
+    costSoFar[`${startGridNode.x}|${startGridNode.y}`] = 0;
+
+    while (!frontier.isEmpty()) {
+        let currentGridNode = frontier.dequeue().element;
+        let currentNodeId = `${currentGridNode.x}|${currentGridNode.y}`;
+
+        // if the target nod was found, break
+        if (currentGridNode.x === targetGridNode.x && currentGridNode.y === targetGridNode.y) {
+            break;
+        }
+
+        // for every legal node current node has edge to:
+        let legalNodes = getLegalGridConnections(currentGridNode);
+        legalNodes.forEach(nextNode => {
+            let nextNodeId = `${nextNode.x}|${nextNode.y}`;
+
+            // calculate the cost of next node
+            let newCost = costSoFar[currentNodeId] + cost(nextNode, currentGridNode);
+
+            if (!costSoFar[nextNodeId] || newCost < costSoFar[nextNodeId]) {
+                // update the cost of next node
+                costSoFar[nextNodeId] = newCost;
+
+                // calculate and update the priority of nextNode
+                let priority = newCost + heuristic(nextNode, targetGridNode);
+                frontier.enqueue(nextNode, priority);
+
+                // keep track of where nodes come from
+                // to generate the path to goal node
+                cameFrom[nextNodeId] = currentNodeId;
+            }
+        })
+    }
+
+    return generatePath(startGridNode, targetGridNode, cameFrom);
+}
+
+function generatePath(startGridNode, targetGridNode, cameFrom) {
+    let path = [];
+    let currentId = `${targetGridNode.x}|${targetGridNode.y}`;
+
+    path.unshift(targetGridNode)
+
+    console.log("start node: ", startGridNode);
+    console.log("end node ", targetGridNode);
+
+    while (currentId !== `${startGridNode.x}|${startGridNode.y}`) {
+        currentId = cameFrom[currentId];
+
+        let coordArray = currentId.split("|");
+        let node = {x: parseInt(coordArray[0]), y: parseInt(coordArray[1])}
+
+        path.unshift(node)
+    }
+
+    console.log("step we're making ", path[0]);
+
+    return path;
+}
+
+function getLegalGridConnections(gridNode) {
+    let legalNodes = [];
+
+    if (walls[gridNode.y + 1][gridNode.x] !== 1) {
+        legalNodes.push({x: gridNode.x, y: gridNode.y + 1})
+    }
+    if (walls[gridNode.y - 1][gridNode.x] !== 1) {
+        legalNodes.push({x: gridNode.x, y: gridNode.y - 1})
+    }
+    if (walls[gridNode.y][gridNode.x + 1] !== 1) {
+        legalNodes.push({x: gridNode.x + 1, y: gridNode.y})
+    }
+    if (walls[gridNode.y][gridNode.x - 1] !== 1) {
+        legalNodes.push({x: gridNode.x - 1, y: gridNode.y})
+    }
+
+    return legalNodes;
+}
+
+
+function cost(currentLocation, nextLocation) {
+    return Math.sqrt(Math.pow(currentLocation.x - nextLocation.x, 2) + Math.pow(currentLocation.y - nextLocation.y, 2));
+}
+
+function heuristic(currentLocation, goalLocation) {
+    return Math.abs(goalLocation.x - currentLocation.x) + Math.abs(goalLocation.y - currentLocation.y);
+}
+
+// User defined class
+// to store element and its priority
+class QElement {
+    constructor(element, priority) {
+        this.element = element;
+        this.priority = priority;
+    }
+}
+
+// PriorityQueue class
+class PriorityQueue {
+
+    // An array is used to implement priority
+    constructor() {
+        this.items = [];
+    }
+
+    // enqueue function to add element
+    // to the queue as per priority
+    enqueue(element, priority) {
+        // creating object from queue element
+        let qElement = new QElement(element, priority);
+        let contain = false;
+
+        // iterating through the entire
+        // item array to add element at the
+        // correct location of the Queue
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].priority > qElement.priority) {
+                // Once the correct location is found it is
+                // enqueued
+                this.items.splice(i, 0, qElement);
+                contain = true;
+                break;
+            }
+        }
+
+        // if the element have the highest priority
+        // it is added at the end of the queue
+        if (!contain) {
+            this.items.push(qElement);
+        }
+    }
+
+    // dequeue method to remove
+    // element from the queue
+    dequeue() {
+        // return the dequeued element
+        // and remove it.
+        // if the queue is empty
+        // returns null
+        if (this.isEmpty())
+            return null;
+        return this.items.shift();
+    }
+
+    // front function
+    front() {
+        // returns the highest priority element
+        // in the Priority queue without removing it.
+        if (this.isEmpty())
+            return null;
+        let item = this.items[0];
+        return item;
+    }
+
+    // rear function
+    rear() {
+        // returns the lowest priorty
+        // element of the queue
+        if (this.isEmpty())
+            return null;
+        return this.items[this.items.length - 1];
+    }
+
+    // isEmpty function
+    isEmpty() {
+        // return true if the queue is empty.
+        return this.items.length === 0;
+    }
+
+    // printQueue function
+    // prints all the element of the queue
+    printPQueue() {
+        let str = "";
+        for (let i = 0; i < this.items.length; i++)
+            str += this.items[i].element + " ";
+        return str;
+    }
+}

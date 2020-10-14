@@ -11,6 +11,8 @@ let backendCoins = null;
 let clientCoins = {};
 let prevKey = "";
 let board = []; // init
+let boss = {};
+
 const RATIO = 25;
 
 const BASE_SERVER_URL = "https://pac-people.herokuapp.com";
@@ -175,6 +177,14 @@ class GameScene extends Phaser.Scene {
             }
         )
 
+        this.load.spritesheet(
+            "boss",
+            "/assets/boss.png", {
+                frameWidth: 25,
+                frameHeight: 25
+            }
+        )
+
         //load board
         fetch("/getBoard", {headers: {'Content-Type': 'application/json'}})
             .then((response) => response.json())
@@ -183,6 +193,7 @@ class GameScene extends Phaser.Scene {
 
     //init variables, define animations & sounds, and display assets
     create() {
+        this.bossAvatar = {}
         this.monsterAvatars = {};
         this.avatars = {};
         this.cursorKeys = this.input.keyboard.createCursorKeys();
@@ -205,6 +216,7 @@ class GameScene extends Phaser.Scene {
             totalPlayers = msg.data.playerCount;
             backendCoins = msg.data.coins;
             monsters = msg.data.monsters;
+            boss = msg.data.boss;
         });
 
         gameRoom.subscribe("game-over", (msg) => {
@@ -288,6 +300,21 @@ class GameScene extends Phaser.Scene {
                 this.monsterAvatars[monsterId].setCollideWorldBounds(true);
             }
         }
+
+        // was initialized
+        if (Object.keys(boss).length !== 0) {
+            if (Object.keys(this.bossAvatar).length !== 0) {
+                this.bossAvatar.x = boss.x;
+                this.bossAvatar.y = boss.y;
+            } else {
+                this.bossAvatar = this.physics.add
+                    .sprite(boss.x, boss.y, "boss")
+                    .setOrigin(0.5, 0.5);
+
+                this.bossAvatar.setCollideWorldBounds(true);
+            }
+        }
+
 
         this.updateCoinsOnClient()
         this.updateScores(scores);
