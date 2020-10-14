@@ -80,9 +80,9 @@ form button {
 
 #navbg {
     width: 100%;
-    height: 450px;
+    height: 550px;
     position: absolute;
-    top: 150px;
+    top: 30%;
     left: 0;
     background-image: url('/img/nav.jpg');
     background-position: center center;
@@ -154,6 +154,11 @@ form button {
     text-align: center;
     display: inline-block;
     font-size: 15px;
+}
+
+#logoutButton:hover{
+    background-color: orangered;
+    border:thin;
 }
 
 label {
