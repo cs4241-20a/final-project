@@ -21,6 +21,7 @@ Game Link: https://pac-people.herokuapp.com
 - Ivan Eroshenko
   - Implemented UI
   - Helped to give a head start on project implementation
+  - Implemented the boss with A*
 
 - Adrianna Staszewska
   - Coin collection by players
