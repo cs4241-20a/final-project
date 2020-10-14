@@ -23,18 +23,21 @@
 <div id="main_container">
   <div id="task_container">
     <div class="inner-container">
-      <div class="task_lists card-panel materialize-red lighten-2">
+      <div class="task_lists card-panel materialize-red lighten-2" onclick="listClicked()">
         <h4 class="white-text center-align row">List Name</h4>
-        <div class="task_card card-panel col s1">
+        <div class="task_card card-panel col s1" id="card1" onclick="editTask()">
           <p class="task_name task_item">Task Name</p>
           <p class="task_date task_item">Due Date</p>
           <p class="assignees task_item">Assigned To</p>
+          <div style="display:flex; flex-direction: row; justify-items: center">
+            <a class="centerwaves-effect waves-light btn-small btn" id="delete_task" onclick="deleteBtn()"><i class="material-icons right">delete_forever</i></a>
+          </div>
         </div>
         <a class="centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task" onclick="addTask()"><i class="material-icons right">add</i>  New Task</a>
       </div>
-      <div class="btn_container">
-        <a class="centerwaves-effect waves-light btn-large" id="add_list"><i class="material-icons right">add</i></a>
-        <a class="centerwaves-effect waves-light btn-large" id="delete_list"><i class="material-icons right">delete</i></a>
+      <div class="btn_container" id="btn_container">
+        <a class="centerwaves-effect waves-light btn-small" id="add_list"><i class="material-icons right">add</i></a>
+        <a class="centerwaves-effect waves-light btn-small" id="delete_list"><i class="material-icons right">delete</i></a>
       </div>
     </div>
   </div>
@@ -68,16 +71,58 @@
 
 </div>
 
+<!-- The Modal -->
+<div id="editModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <form style="padding: 10px">
+      <label for="tname">Task Name: </label><input type="text" id="t_name" placeholder="Task name"><br>
+      <label for="due_date">Due Date: </label><input type="date" id="due__date"><br>
+      <label for="tassignee">Assigned To: </label><input type="text" id="t_assignee" placeholder="Assignees"><br>
+      <label for="tags">Tags: </label><input type="text" id="t_tags" placeholder="Tags"><br>
+      <label for="tdesc">Task Description: </label><input type="text" id="t_desc" placeholder="Task Description"><br>
+      <input type="submit" id="task_edit" value="Confirm">
+      <button onclick="closeBtn()">Cancel</button>
+    </form>
+  </div>
+
+</div>
+
 <script>
   // Get the modal
   var modal = document.getElementById("myModal");
+  var editmodal = document.getElementById("editModal");
+  var card1=document.getElementById("card1")
+  var btnContainer=document.getElementById("btn_container")
+
+  var clicked=false
 
   function addTask() {
     modal.style.display = "block";
   }
 
+  function editTask() {
+    editmodal.style.display = "block";
+  }
+
   function closeBtn(){
     modal.style.display = "none";
+  }
+
+  function deleteBtn(){
+    card1.style.display = "none";
+  }
+
+  function listClicked(){
+    if(clicked){
+      btnContainer.style.display="none"
+      clicked=false
+    }else{
+      btnContainer.style.display="block"
+      clicked=true
+    }
+
   }
 
   window.onclick = function(event) {

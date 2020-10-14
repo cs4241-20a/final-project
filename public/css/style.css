@@ -44,9 +44,22 @@ body{
 .task_lists{
     width: 250px;
     height: 75vh;
-    /*overflow-y: auto;*/
+    overflow-y: auto;
     float: left;
 }
+
+.task_lists:hover{
+    cursor: pointer;
+}
+
+.task_lists:hover + .btn_container{
+    display: block;
+}
+
+.btn_container{
+    display: none;
+}
+
 
 /*.task_contents{*/
 /*    width: 95%;*/
@@ -69,10 +82,19 @@ body{
 }
 
 .task_card{
-    height: 150px;
+    height: 180px;
     width: 84%;
     padding: 5px;
     margin: 16px;
+}
+
+.task_card:hover{
+    cursor: pointer;
+}
+
+.btn{
+    width: 50px;
+    margin: 5px;
 }
 
 /*.task_item{*/
@@ -83,7 +105,7 @@ body{
 /*    text-align: center;*/
 /*}*/
 
-/*!* The Modal (background) *!*/
+/* The Modal (background) */
 /*.modal {*/
 /*    display: none; !* Hidden by default *!*/
 /*    position: fixed; !* Stay in place *!*/
