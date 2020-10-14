@@ -25,12 +25,15 @@
     <div class="inner-container">
       <div class="task_lists card-panel materialize-red lighten-2">
         <h4 class="white-text center-align row">List Name</h4>
-        <div class="task_card card-panel col s1">
-          <p class="task_name task_item">Task Name</p>
-          <p class="task_date task_item">Due Date</p>
-          <p class="assignees task_item">Assigned To</p>
+        <!-- Added in a div to make sure tasks appear before the button-->
+        <div class="tasks">
+          <div class="task_card card-panel col s1">
+            <p class="task_item" id="task_name">Task Name</p>
+            <p class="task_item" id="task_date">Due Date</p>
+            <p class="task_item" id="assignees">Assigned To</p>
+          </div>
         </div>
-        <a class="centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task" onclick="addTask()"><i class="material-icons right">add</i>  New Task</a>
+        <a class="add_task centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task"><i class="material-icons right">add</i>  New Task</a>
       </div>
       <div class="btn_container">
         <a class="centerwaves-effect waves-light btn-large" id="add_list"><i class="material-icons right">add</i></a>
@@ -62,34 +65,17 @@
       <label for="tags">Tags: </label><input type="text" id="tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="tdesc" placeholder="Task Description"><br>
       <input type="submit" id="task_submit" value="Confirm">
-      <button onclick="closeBtn()">Cancel</button>
+      <button id="cancel">Cancel</button>
     </form>
   </div>
 
 </div>
 
-<script>
-  // Get the modal
-  var modal = document.getElementById("myModal");
-
-  function addTask() {
-    modal.style.display = "block";
-  }
-
-  function closeBtn(){
-    modal.style.display = "none";
-  }
-
-  window.onclick = function(event) {
-    if (modal === event.target) {
-      modal.style.display = "none";
-    }
-  }
-</script>
+<script src="js/tasks.js" type="text/javascript"></script>
 
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="js/materialize.js"></script>
+<!-- There's no materialize.js file as far as I can tell... -->
+<!-- <script src="js/materialize.js"></script> -->
 <script src="js/tasks.js"></script>
 </body>
 </html>
-
