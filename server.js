@@ -254,6 +254,20 @@ function moveEveryPlayer() {
                 }
             }
 
+            if (player.isAlive) {
+                Object.values(monsters).forEach((monster) => {
+                    let monsterPosGrid = {x: Math.floor(monster.x / 25), y: (Math.floor(monster.y / 25))}
+                    let playerPosGrid = {x: Math.floor(player.x / 25), y: (Math.floor(player.y / 25))}
+
+                    if (monsterPosGrid.x === playerPosGrid.x && monsterPosGrid.y === playerPosGrid.y) {
+                        // player died
+                        player.isAlive = false;
+                        deadPlayers.push(player);
+                        savePlayerScore(player.id);
+                    }
+                });
+            }
+
             //console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
         }
         //console.log("My player's updated position: x = " + player.x + ", y = " + player.y)
@@ -330,20 +344,6 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 
         inRange = false
     })
-
-    if (players[id].isAlive) {
-        Object.values(monsters).forEach((monster) => {
-            let monsterPosGrid = {x: Math.floor(monster.x / 25), y: (Math.floor(monster.y / 25))}
-            let playerPosGrid = {x: Math.floor(players[id].x / 25), y: (Math.floor(players[id].y / 25))}
-
-            if (monsterPosGrid.x === playerPosGrid.x && monsterPosGrid.y === playerPosGrid.y) {
-                // player died
-                players[id].isAlive = false;
-                deadPlayers.push(players[id]);
-                savePlayerScore(id);
-            }
-        });
-    }
 
     // if (currentPlayerDead) {
     //     if (players[id].isAlive) {
