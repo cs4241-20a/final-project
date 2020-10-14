@@ -109,9 +109,12 @@ form button {
     color: black;
 }
 
+.buttonbar {
+    margin-left: 50%;
+}
+
 #red{
     background-color: red;
-    margin-left: 475px;
 }
 
 #blue{
@@ -226,5 +229,4 @@ a{
 a:hover, a:active{
     background-color: orangered;
 }
-
 
