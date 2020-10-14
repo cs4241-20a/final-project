@@ -1,4 +1,3 @@
-const { default: fetch } = require("node-fetch");
 
 var path;
 
@@ -53,16 +52,3 @@ function onMouseUp(event) {
 // }
 
 document.getElementById("clear").addEventListener("click", clearCanvas);
-
-window.addEventListener('load', () => {
-    console.log('thing');
-    await fetch('/chatroom/username', {
-        method: 'GET',
-        headers: {'Content-Type' : 'application/json' },
-    })
-    .then( response => response.json())
-    .then( response => {
-        text.content = response;
-    })
-    console.log("uwu" + text.content);
-});
