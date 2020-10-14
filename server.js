@@ -319,8 +319,6 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 
             if (inRange) {
                 currentPlayerDead = true;
-                console.log("Killed " + player.id)
-                console.log(player.id)
                 player.isAlive = false;
                 deadPlayers.push(player);
                 deadPlayers.push(players[id]);
@@ -784,7 +782,6 @@ app.get("/topScores", bodyParser.json(), (req, res) => {
 })
 
 app.get('/', ensureAuth, (req, res) => {
-    console.log(req.user);
     res.sendFile(__dirname + "/views/home.html");
 });
 
@@ -876,9 +873,6 @@ function generatePath(startGridNode, targetGridNode, cameFrom) {
 
     path.unshift(targetGridNode)
 
-    console.log("start node: ", startGridNode);
-    console.log("end node ", targetGridNode);
-
     while (currentId !== `${startGridNode.x}|${startGridNode.y}`) {
         currentId = cameFrom[currentId];
 
@@ -887,8 +881,6 @@ function generatePath(startGridNode, targetGridNode, cameFrom) {
 
         path.unshift(node)
     }
-
-    console.log("step we're making ", path[0]);
 
     return path;
 }
