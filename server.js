@@ -780,7 +780,16 @@ app.get('/login', ensureGuest, (req, res) => {
 app.get('/game', ensureAuth, (req, res) => {
     peopleAccessingTheWebsite++;
 
-    if (peopleAccessingTheWebsite > MIN_PLAYERS_TO_START_GAME) {
+    let personPlayedBefore = false;
+
+    deadPlayers.forEach((player) => {
+        if (player.id === req.user) {
+            personPlayedBefore = true;
+        }
+    })
+
+
+    if (peopleAccessingTheWebsite > MIN_PLAYERS_TO_START_GAME || personPlayedBefore) {
         res.sendFile(__dirname + "/views/gameRoomFull.html")
     } else {
         res.sendFile(__dirname + "/views/game.html");
