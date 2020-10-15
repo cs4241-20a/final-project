@@ -26,8 +26,8 @@ export default class Home extends React.Component {
             user2: "",
             showChat: false,
             messages: [
-                new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
-                new Message({ id: 0, message: "I'm you -- the blue bubble!" }),
+                // new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
+                // new Message({ id: 0, message: "I'm you -- the blue bubble!" }),
               ],
             overlay: false,
             overlayStyle: "none", 
@@ -35,8 +35,6 @@ export default class Home extends React.Component {
         }
 
          
-    
-
         this.overlayDiv = React.createRef()
 
         // this.send = this.send.bind(this)
@@ -140,27 +138,35 @@ export default class Home extends React.Component {
 
 
     onButtonClicked = (value) => {
+        // const txt = document.getElementById('chatinput').value
         ws.send(JSON.stringify({
             type: "message",
-            msg: value
+            msg: document.getElementById('chatinput').value
         }));
     }
 
 
     componentDidMount() {
+
         ws.onopen = () => {
             console.log("connection to websocket server");
     };
         ws.onmessage = (message) => {
             const dataFromServer = JSON.parse(message.data);
             console.log("got reply!", dataFromServer);
+            if(dataFromServer.type === "message") {
+                this.setState((state) =>
+                ({
+                    messages: [...state.messages,
+                    {
+                        msg: dataFromServer.msg
+                    }]
+                })
+                
+                );
+            }
         };
     }
-
-
-
-
-
 
     //  sendMessage() {
     //     let msgs = this.state.messages
@@ -185,10 +191,7 @@ export default class Home extends React.Component {
     //      // re-assigning to msgs variable triggers UI update
     //    msgs = msgs.concat([txt])
      
-
-     
-
-    render () {
+render () {
         // Show table on recieving data from server
         const renderTable = () => {
             if (this.state.showTable) {
@@ -200,7 +203,7 @@ export default class Home extends React.Component {
                     border={true}
                     keyField='id' data={ this.state.songs } 
                     columns={ this.state.columns } 
-                    pagination={ paginationFactory() } 
+                    pagination={ paginationFactory()} 
                     bootstrap4={true} />
                 </div>
                 )
@@ -220,7 +223,8 @@ export default class Home extends React.Component {
                         <Container>
                             <h1 style={{color: "#191414"}} className="mt-5 mb-10">Chat</h1>
                                 <ChatFeed
-                                messages={this.state.messages} // Array: list of message objects
+                                messages={this.state.messages.map(message => <p>{message.msg}</p>)}
+                                // messages={this.state.messages} // Array: list of message objects
                                 isTyping={this.state.is_typing} // Boolean: is the recipient typing
                                 hasInputField={false} // Boolean: use our input, or use your own
                                 showSenderName // show the name of the user who sent the message
@@ -244,15 +248,10 @@ export default class Home extends React.Component {
                         </Container>
 
                         <div id="writeMsgDiv">
-
-                                
-
                             <Input type="text" id="chatinput" placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} 
                             value={this.state.typedMsg} ></Input>
-                            <Button className="btn btn-primary" onClick={() => this.onButtonClicked("hello")}>Send</Button>
-
+                            <Button className="btn btn-primary" onClick={() => this.onButtonClicked(this.state.messages)}>Send</Button>
                         </div>
-
                     </div>
 
 // onClick={this.componentDidMount}
