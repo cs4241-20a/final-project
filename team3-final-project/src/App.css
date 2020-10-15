@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
+div{
+  display: block;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+*{
+  box-sizing: border-box;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.team1{
+  width: 50%;
+  float: right;
+  text-align: right;
+  position: relative;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.team2{
+  width: 50%;
+  text-align: left; 
+  position: relative;
+  float: left;
+}
+.picks{
+  background: black;
+  border-radius: 5px;
+  padding: 2px;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.pick{
+  width: 19%;
+  display: inline-block;
+  position: relative;
+  padding: 2px;
+  text-align: center;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.bans{
+  background: black;
+  border-radius: 5px;
+  padding: 2px;
+  color: white;
+}
+.ban{
+  width: 19%;
+  display: inline-block;
+  position: relative;
+  padding: 2px;
+  text-align: center; 
+}
+.pickImage img{
+  width: 100%;
+  position: relative;
+}
+body{
+  background-color: #151726;
+  color: white;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.teamheader1{
+  background-image: linear-gradient(to left, black, #000001, #000002, #000003, #000004, #00014a);
+}
+.teamheader2{
+  background-image: linear-gradient(to right, black, #000001, #000002, #000003, #000004, #4a0000);
+}
+.results{
+  height: auto;
+  position: relative;
+}
+.selectionBox{
+  height: auto;
+  position: relative;
+}
+.input{
+  margin: 0 auto;
 }

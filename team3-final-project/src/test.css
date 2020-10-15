@@ -1,0 +1,72 @@
+div{
+    display: block;
+}
+*{
+    box-sizing: border-box;
+}
+.team1{
+    width: 50%;
+    float: right;
+    text-align: right;
+    position: relative;
+}
+.team2{
+    width: 50%;
+    text-align: left; 
+    position: relative;
+    float: left;
+}
+.picks{
+    background: black;
+    border-radius: 5px;
+    padding: 2px;
+    color: white;
+}
+.pick{
+    width: 19%;
+    display: inline-block;
+    position: relative;
+    padding: 2px;
+    text-align: center;
+}
+.bans{
+    background: black;
+    border-radius: 5px;
+    padding: 2px;
+    color: white;
+}
+.ban{
+    width: 19%;
+    display: inline-block;
+    position: relative;
+    padding: 2px;
+    text-align: center; 
+}
+.pickImage img{
+    width: 100%;
+    position: relative;
+}
+body{
+    background-color: #151726;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.teamheader1{
+    background-image: linear-gradient(to left, black, #000001, #000002, #000003, #000004, #00014a);
+}
+.teamheader2{
+    background-image: linear-gradient(to right, black, #000001, #000002, #000003, #000004, #4a0000);
+}
+.results{
+    height: auto;
+    position: relative;
+}
+.selectionBox{
+    height: auto;
+    position: relative;
+}
+.input{
+    margin: 0 auto;
+}
