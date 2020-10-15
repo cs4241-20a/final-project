@@ -1,32 +1,36 @@
-import React, { FunctionComponent } from 'react';
-import { Avatar, Button, Typography, TextField, Box } from "@material-ui/core";
-import { Link } from 'react-router-dom';
+import React, { FunctionComponent, useState } from 'react';
+import { Button, TextField, Box, Link as MaterialLink, Typography } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    root: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%"
+    },
+    form: {
+        width: `min(400px, calc(100% - ${theme.spacing(2) * 2}px))`
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
 }));
 
+  
+
 export const Login: FunctionComponent = () => {
+  
+    const [isSignup, setIsSignup] = useState(false);
+
     const classes = useStyles();
     return (
-        <Box margin="auto">
-            <form className={classes.form} action="/login" method="post" noValidate>
+        <div className={classes.root}>
+            <form className={classes.form} action={isSignup ? "/login" : "/register"} method="post" noValidate>
                 <TextField
                     fullWidth
-                    variant="outlined"
+                    variant="filled"
                     margin="normal"
                     name="username"
                     label="Username"
@@ -35,7 +39,7 @@ export const Login: FunctionComponent = () => {
                 />
                 <TextField
                     fullWidth
-                    variant="outlined"
+                    variant="filled"
                     margin="normal"
                     type="password"
                     name="password"
@@ -49,21 +53,18 @@ export const Login: FunctionComponent = () => {
                     color="primary"
                     className={classes.submit}
                 >
-                    Sign In
+                    {isSignup ? "Register" : "Sign in"}
                 </Button>
                 <Grid container>
                     <Grid item xs>
-                    <Typography component={Link} to="/" variant="body2">
-                        Forgot password?
-                    </Typography>
                     </Grid>
                     <Grid item>
-                    <Typography component={Link} to="/" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                    </Typography>
+                    <MaterialLink variant="body2" onClick={() => setIsSignup(!isSignup)}>
+                        {isSignup ? "Already registered?" : "Don't have an account?"}
+                    </MaterialLink>
                     </Grid>
                 </Grid>
             </form>
-        </Box>
+        </div>
     );
 };
