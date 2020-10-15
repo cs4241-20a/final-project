@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/style.css">
+    <!-- core style only -->
+    <link href="https://unpkg.com/nes.css/css/nes-core.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+</head>
+<body>
+
+<div class="content-container">
+    <img
+            alt="Space invaders"
+            width="580"
+            height="250"
+            src="/assets/pac_people.png"
+            style="align-self: center"
+    />
+    <div class="form-container">
+        <form id="the-form" onsubmit="function submit(e) {
+      e.preventDefault();
+    }">
+            <label for="username"/>
+            <input id="username" name="username" type="text" placeholder="Enter username" spellcheck="false"/>
+
+            <label for="password"/>
+            <input id="password" name="password" type="password" placeholder="Enter password"/>
+
+            <button id="log-in" onclick="handleSignUpOrLogin()">Log in / Sign up</button>
+        </form>
+
+        <div id="error-message"></div>
+    </div>
+
+    <div style="width: 70%">If you do not have an account already, it will be created once you hit that Log in / Sign up button</div>
+
+</div>
+
+<script src="/login.js"></script>
+</body>
+</html>
