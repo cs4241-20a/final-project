@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 class PickBan extends React.Component {
 
@@ -7,11 +7,10 @@ class PickBan extends React.Component {
         let image = <div></div>
         let name  = "" // {this.props.selectionNumber}
         
-        if (this.props.name != ""){
-            image = <img src={process.env.PUBLIC_URL+this.props.image}/>
+        if (this.props.name !== ""){
             name  = this.props.name
+            image = <img src={process.env.PUBLIC_URL+this.props.image} alt={name}/>
         }
-        console.log("In pickban = " + this.props.image)
 
 
         return (<div>
