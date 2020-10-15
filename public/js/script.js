@@ -81,3 +81,16 @@ $(function () {
         }
     });
 });
+
+//sound effects
+var sound1 = document.getElementById("sound1");
+document.getElementById("send").onclick = () => {
+    sound1.play();
+}
+
+var sound2 = document.getElementById("sound2");
+document.getElementById("clear").onclick = () => {
+    sound2.play();
+}
+
+document.getElementById("music").volume = 0.3;
