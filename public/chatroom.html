@@ -26,37 +26,43 @@
         <div class="wrapper">
             <div class="left">
                 <div class="avatar center-block"> </div>
-                <h1>Pictochat 2</h1>
-                <h3>Type or draw something!</h3>
-                <button id="send" class="mui-btn mui-btn--raised mui-btn-primary">Send</button>
-                <button id="clear" class="mui-btn mui-btn--raised mui-btn-danger">Clear</button>
-                <p>Brush Size Selection</p>
-                <div class="buttonbar1">
-                    <button id="5" class="brush selected">5px</button>
-                    <button id="10" class="brush">10px</button>
-                    <button id="15" class="brush">15px</button>
-                    <button id="20" class="brush">20px</button>
-                    <button id="30" class="brush">30px</button>
-                    <button id="40" class="brush">40px</button>
+                <h1 id="title">Pictochat 2</h1>
+                <h3 id="subtitle">Type or draw something!</h3>
+                <div>
+                    <button id="send" class="mui-btn mui-btn--primary">Send</button>
+                    <button id="clear" class="mui-btn mui-btn--danger">Clear</button>
                 </div>
+                <br>
+                <p>Brush Size Selection</p>
+                <div>
+                    <button id="5" class="selected brush mui-btn mui-btn--small mui-btn--primary">5px</button>
+                    <button id="10" class="brush mui-btn mui-btn--small mui-btn--primary">10px</button>
+                    <button id="15" class="brush mui-btn mui-btn--small mui-btn--primary">15px</button>
+                    <button id="20" class="brush mui-btn mui-btn--small mui-btn--primary">20px</button>
+                    <button id="30" class="brush mui-btn mui-btn--small mui-btn--primary">30px</button>
+                    <button id="40" class="brush mui-btn mui-btn--small mui-btn--primary">40px</button>
+                </div>
+                <br>
                 <p>Brush Color Selection</p>
-                <div class="buttonbar2">
-                    <button id="red" class="color selected">Red</button>
-                    <button id="blue" class="color">Blue</button>
-                    <button id="yellow" class="color">Yellow</button>
-                    <button id="orange" class="color">Orange</button>
-                    <button id="green" class="color">Green</button>
-                    <button id="violet" class="color">Violet</button>
-                    <button id="white" class="color">Eraser</button>
+                <div>
+                    <button id="red" class="selected color mui-btn mui-btn--small mui-btn--primary">Red</button>
+                    <button id="blue" class="color mui-btn mui-btn--small mui-btn--primary">Blue</button>
+                    <button id="yellow" class="color mui-btn mui-btn--small mui-btn--primary">Yellow</button>
+                    <button id="orange" class="color mui-btn mui-btn--small mui-btn--primary">Orange</button>
+                    <button id="green" class="color mui-btn mui-btn--small mui-btn--primary">Green</button>
+                    <button id="violet" class="color mui-btn mui-btn--small mui-btn--primary">Violet</button>
+                    <button id="white" class="color mui-btn mui-btn--small mui-btn--primary">Eraser</button>
                 </div>
                 <canvas id="centralCanvas"
                         width="650"
                         height="300"
                         style="border: 2px solid #000000"></canvas>
-                <label for="username"><strong>Username:</strong></label>
-                <input id="username" type="text" value="" readonly>
-                <button id="logoutButton" class="mui-btn mui-btn--danger">Log Out</button>
-                <button id="backButton" class="mui-btn mui-btn--danger" onclick="goBack()">Back</button>
+                <div class="footer">
+                    <span id=usernamelabel><strong>Username: </strong></span>
+                    <input id="username" type="text" value="" readonly>
+                    <button id="logoutButton" class="mui-btn mui-btn--accent">Log Out</button>
+                    <button id="backButton" class="mui-btn mui-btn--danger" onclick="goBack()">Back</button>
+                </div>
                 <script>
                     function goBack() {
                         window.history.back();

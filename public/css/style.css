@@ -1,22 +1,12 @@
-.selected {
-    border: solid;
-    background-color: antiquewhite;
-}
-
 .wrapper {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 100px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-body {
-    font: 16px Helvetica, Arial;
+html, body {
+    font-family: 'Montserrat', Arial;
     
     background: url(/img/main.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -28,14 +18,6 @@ body {
 p{
     color: antiquewhite;
 }
-/*
-#left {
-    background: url(/img/main.jpg) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}*/
 
 form {
     background: #000;
@@ -127,35 +109,24 @@ form {
 }
 
 .color {
-    border: none;
+    justify-content: center;
     display: inline-block;
-    font-size: 12px;
-    text-align: center;
+    height: 40px;
     color: black;
-    padding-left: 7px;
-    padding-right: 7px;
-    padding-top: 2.5px;
-    padding-bottom: 1px;
+
 }
 
 .brush {
-    border: 2px solid red;
+    justify-content: center;
     display: inline-block;
-    font-size: 15px;
     text-align: center;
     color: black;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top:7px;
-    padding-bottom: 3px;
+
+    background-color: white;
 }
 
-.buttonbar1 {
-    margin-left: 40%;
-}
-
-.buttonbar2{
-    margin-left: 43.5%;
+.brush:hover {
+    background-color: antiquewhite;
 }
 
 #red {
@@ -182,111 +153,61 @@ form {
     background-color: mediumvioletred;
 }
 
+.selected {
+    background-color: antiquewhite;
+    width: 70px;
+    height: 45px;
+}
+
+#title {
+    color: mediumvioletred;
+}
+#subtitle{
+    color: forestgreen;
+}
+
+#send, #clear {
+    width: 100px;
+}
+
+.left {
+    position: relative;
+    text-align: center;
+    height: 100vh;
+}
+
+.footer {
+    text-align: left;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
 #username {
+    padding-left: 10px;
     border: none;
     border-radius: 3px;
     background-color: antiquewhite;
-    position: absolute;
-    left: 6%;
-    bottom: 2.2%;
+}
+
+#usernamelabel {
+    padding-left: 10px;
+    font-size: 20px;
+    color:grey;
 }
 
 #logoutButton {
-    border: 2px solid red;
-    border-radius: 4px;
-    position: absolute;
-    left: 15%;
-    bottom: 1%;
-    background-color: palevioletred;
-    padding: 12px 20px;
-    justify-content: center;
-    font-size: 12px;
 
-}
-
-    #logoutButton:hover {
-        background-color: orangered;
-        border: thin;
-    }
-
-label {
-    position: absolute;
-    left: 1%;
-    bottom: 1.5%;
-    color:antiquewhite;
-    font-size: 20px;
-}
-
-#send {
-    margin-left: 55%;
-    padding-left: 20px;
-    padding-right: 20px;
-    justify-content: center;
-    display: flex;
-}
-
-    #send:hover{
-        background-color: antiquewhite;
-    }
-
-#clear {
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-left: 54.5%;
-    justify-content: center;
-    display: flex;
-}
-
-    #clear:hover {
-        background-color: antiquewhite;
-    }
-
-h3 {
-    padding-top: 20px;
-    padding-bottom: 5px;
-    padding-left: 18%;
-    justify-content: center;
-    display: flex;
-    color: darkseagreen;
-    font-style: italic;
-}
-
-h1 {
-    padding-left: 20%;
-    justify-content: center;
-    display: flex;
-    color: mediumvioletred  ;
-}
-
-p {
-    padding-top: 20px;
-    padding-bottom: 5px;
-    padding-left: 20%;
-    justify-content: center;
-    display: flex;
-    font-size: 16px;
-}
-
-canvas {
-    padding-top: 10px;
-    justify-content: center;
-    display: flex;
-    margin-left: 30%;
-    background-color: white;
 }
 
 #backButton {
-    border: 2px solid blue;
-    border-radius: 4px;
-    position: absolute;
-    left: 43%;
-    bottom: 1%;
-    background-color: dodgerblue;
-    padding: 12px 20px;
-    justify-content: center;
-    font-size: 12px;
+    float: right;
+    margin-right: 10px;
 }
 
-#backButton:hover{
-    background-color: mediumblue;
+#centralCanvas {
+    padding-top: 10px;
+    justify-content: center;
+    background-color: white;
 }

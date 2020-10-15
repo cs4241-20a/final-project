@@ -1,13 +1,13 @@
 "use strict";
 
 function colorClick(e) {
-    document.getElementsByClassName("color selected")[0].className = "color";
-    e.target.className = "color selected";
+    document.getElementsByClassName("selected color mui-btn mui-btn--small mui-btn--primary")[0].className = "color mui-btn mui-btn--small mui-btn--primary";
+    e.target.className = "selected color mui-btn mui-btn--small mui-btn--primary";
 }
 
 function brushClick(e) {
-    document.getElementsByClassName("brush selected")[0].className = "brush";
-    e.target.className = "brush selected";
+    document.getElementsByClassName("selected brush mui-btn mui-btn--small mui-btn--primary")[0].className = "brush mui-btn mui-btn--small mui-btn--primary";
+    e.target.className = "selected brush mui-btn mui-btn--small mui-btn--primary";
 }
 
 function getImage(e) {
@@ -81,16 +81,3 @@ $(function () {
         }
     });
 });
-
-//sound effects
-var sound1 = document.getElementById("sound1");
-document.getElementById("send").onclick = () => {
-    sound1.play();
-}
-
-var sound2 = document.getElementById("sound2");
-document.getElementById("clear").onclick = () => {
-    sound2.play();
-}
-
-document.getElementById("music").volume = 0.3;
