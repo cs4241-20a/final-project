@@ -20,8 +20,18 @@ window.onclick = function(event) {
   }
 }
 
-var openTask = function() {
+var openTask = function(task) {
   editmodal.style.display = "block";
+  const input = document.querySelector( '#t_name' )
+  const input2 = document.querySelector( '#due__date' )
+  const input3 = document.querySelector( '#t_assignee')
+  const input4 = document.querySelector( '#t_tags')
+  const input5 = document.querySelector( '#t_desc')
+  input.value = task.task
+  input2.value = task.duedate
+  input3.value = task.assignee
+  input4.value = task.tags
+  input5.value = task.description
 }
 
 var listClicked = function(){
@@ -94,15 +104,20 @@ var addTask = function (e) {
   modal.style.display = "none";
 }
 
+var editTask = function (e) {
+  e.preventDefault()
+  //Edit the task
+}
+
 var delTask = function (e) {
   e.preventDefault()
   //Remove the task
 }
 
+// Tells us which task was just clicked on
+const ids = []
+
 function appendNewInfo(task) {
-  //<div style="display:flex; flex-direction: row; justify-items: center">
-  //  <a class="centerwaves-effect waves-light btn-small btn" id="delete_task" onclick="deleteBtn()"><i class="material-icons right">delete_forever</i></a>
-  //</div>
   // Create elements
   var div = document.createElement("div");
   var name = document.createElement("p");
@@ -132,6 +147,10 @@ function appendNewInfo(task) {
   div.appendChild(due)
   div.appendChild(assigned)
   div.appendChild(btnDiv)
+  div.onclick = function() {
+    openTask(task)
+    ids.push(task)
+  }
   col[0].appendChild(div)
 }
 
@@ -186,4 +205,7 @@ window.onload = function() {
 
     const rcButton = document.getElementById("delete_list")
     rcButton.onclick = delCol
+
+    const teButton = document.querySelector( '#task_edit' )
+    teButton.onclick = editTask
   }
