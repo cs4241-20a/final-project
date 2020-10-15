@@ -26,18 +26,22 @@ export default class Home extends React.Component {
             user2: "",
             showChat: false,
             messages: [
-                // new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
+                // new Message({ id: 0, message: this.state.messages.map(message => <p>{message.msg}</p>) }), 
                 // new Message({ id: 0, message: "I'm you -- the blue bubble!" }),
+                
+
               ],
             overlay: false,
             overlayStyle: "none", 
-            typedMsg: ""
+            typedMsg: "",
+            chatInput: ""
         }
 
          
         this.overlayDiv = React.createRef()
 
         // this.send = this.send.bind(this)
+        
         this.getSongs = this.getSongs.bind(this)
         this.handleUser1Change = this.handleUser1Change.bind(this)
         this.handleUser2Change = this.handleUser2Change.bind(this)
@@ -142,7 +146,11 @@ export default class Home extends React.Component {
         ws.send(JSON.stringify({
             type: "message",
             msg: document.getElementById('chatinput').value
+
         }));
+        this.setState ({
+            typedMsg: ""
+        })      
     }
 
 
@@ -155,12 +163,11 @@ export default class Home extends React.Component {
             const dataFromServer = JSON.parse(message.data);
             console.log("got reply!", dataFromServer);
             if(dataFromServer.type === "message") {
+                // const  = ([new Message({id: 0, message: dataFromServer.msg})])
                 this.setState((state) =>
                 ({
-                    messages: [...state.messages,
-                    {
-                        msg: dataFromServer.msg
-                    }]
+                    messages: this.state.messages.concat([new Message({id: 0, message: dataFromServer.msg})])
+                    
                 })
                 
                 );
@@ -168,29 +175,9 @@ export default class Home extends React.Component {
         };
     }
 
-    //  sendMessage() {
-    //     let msgs = this.state.messages
-    //     let ws = new W3CWebSocket('ws://localhost:3000')
-    //     window.onload = function() {
-        
-    //    // when connection is established...
-    //     ws.onopen = () => {
-    //         console.log("connection to client")
-    //         ws.send( 'a new client has connected.' )
-    //         ws.onmessage = msg => {
-    //          // add message to end of msgs array,
-    //          // re-assign to trigger UI update
-    //        msgs = msgs.concat([ msg.data ])
-    //      }
-    //    }
-    //  }
-    //     console.log("sending message")
-    //    const txt = document.getElementById('chatinput').value
-    //    console.log("message.sent")
-    //    ws.send( txt )
-    //      // re-assigning to msgs variable triggers UI update
-    //    msgs = msgs.concat([txt])
+   
      
+
 render () {
         // Show table on recieving data from server
         const renderTable = () => {
@@ -223,8 +210,8 @@ render () {
                         <Container>
                             <h1 style={{color: "#191414"}} className="mt-5 mb-10">Chat</h1>
                                 <ChatFeed
-                                messages={this.state.messages.map(message => <p>{message.msg}</p>)}
-                                // messages={this.state.messages} // Array: list of message objects
+                                // messages={this.state.messages.map(message => <p>{message.msg}</p>)}
+                                messages={this.state.messages} // Array: list of message objects
                                 isTyping={this.state.is_typing} // Boolean: is the recipient typing
                                 hasInputField={false} // Boolean: use our input, or use your own
                                 showSenderName // show the name of the user who sent the message
@@ -248,7 +235,7 @@ render () {
                         </Container>
 
                         <div id="writeMsgDiv">
-                            <Input type="text" id="chatinput" placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} 
+                            <Input type="text" id="chatinput" value={this.state.chatInput} placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} 
                             value={this.state.typedMsg} ></Input>
                             <Button className="btn btn-primary" onClick={() => this.onButtonClicked(this.state.messages)}>Send</Button>
                         </div>
