@@ -1,5 +1,10 @@
 // Get the modal
 var modal = document.getElementById("myModal");
+var editmodal = document.getElementById("editModal");
+var card1=document.getElementById("card1")
+var btnContainer=document.getElementById("btn_container")
+
+var clicked=false
 
 var makeTask = function() {
   modal.style.display = "block";
@@ -12,6 +17,20 @@ var cancelTask = function(){
 window.onclick = function(event) {
   if (modal === event.target) {
     modal.style.display = "none";
+  }
+}
+
+var openTask = function() {
+  editmodal.style.display = "block";
+}
+
+var listClicked = function(){
+  if(clicked){
+    btnContainer.style.display="none"
+    clicked=false
+  }else{
+    btnContainer.style.display="block"
+    clicked=true
   }
 }
 
@@ -75,22 +94,44 @@ var addTask = function (e) {
   modal.style.display = "none";
 }
 
+var delTask = function (e) {
+  e.preventDefault()
+  //Remove the task
+}
+
 function appendNewInfo(task) {
+  //<div style="display:flex; flex-direction: row; justify-items: center">
+  //  <a class="centerwaves-effect waves-light btn-small btn" id="delete_task" onclick="deleteBtn()"><i class="material-icons right">delete_forever</i></a>
+  //</div>
+  // Create elements
   var div = document.createElement("div");
   var name = document.createElement("p");
   var due = document.createElement("p");
   var assigned = document.createElement("p");
   const col = document.getElementsByClassName('tasks')
+  var btnDiv = document.createElement("div");
+  var deleteBtn = document.createElement("a")
+  var del = document.createElement("i")
+  // Set attributes
   div.setAttribute('class', 'task_card card-panel col s1')
   name.setAttribute('class', 'task_item')
   due.setAttribute('class', 'task_item')
   assigned.setAttribute('class', 'task_item')
+  del.setAttribute('class', 'material-icons right')
+  deleteBtn.setAttribute('class', 'centerwaves-effect waves-light btn-small btn')
+  btnDiv.setAttribute('style', 'display:flex; flex-direction: row; justify-items: center')
+  // Add things
+  del.appendChild(document.createTextNode("delete_forever"))
+  deleteBtn.appendChild(del)
+  deleteBtn.onclick = delTask
+  btnDiv.appendChild(deleteBtn)
   name.appendChild(document.createTextNode(task.task))
   due.appendChild(document.createTextNode(task.duedate))
   assigned.appendChild(document.createTextNode(task.assignee))
   div.appendChild(name)
   div.appendChild(due)
   div.appendChild(assigned)
+  div.appendChild(btnDiv)
   col[0].appendChild(div)
 }
 
