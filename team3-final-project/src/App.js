@@ -32,9 +32,7 @@ const ydoc = new Y.Doc()
 
 // this allows you to instantly get the (cached) documents data
 const indexeddbProvider = new IndexeddbPersistence('string-demo', ydoc)
-indexeddbProvider.whenSynced.then(() => {
-  console.log('loaded data from indexed db')
-})
+
 
 // Sync clients with the y-webrtc provider.
 const webrtcProvider = new WebrtcProvider('string-demo', ydoc)
@@ -50,60 +48,55 @@ class App extends React.Component {
   constructor( props ) {
     super( props )
     // initialize our state
-    const yBarray = ydoc.getArray('bans')
-    const yParray = ydoc.getArray('picks')
+    const yjsArray = ydoc.getArray('selections')
+    const yjsNum   = ydoc.getText('selectionNumber')
     //0, 2, 4, 6, 8 blue bans, 
     let selectionsArray = [];
     for (let i = 0; i<20;i++)
         selectionsArray.push("")
     let selectionsImagesArray = [];
+     // ensures yjs array is empty
     for (let i = 0; i<20;i++)
         selectionsImagesArray.push("")
-    this.state = {bans:yBarray,
-                  picks:yParray,
+    this.state = {observable:yjsArray,
                   selections: selectionsArray,
                   selectionsImages: selectionsImagesArray,
                   selectionNumber: 0,
                   searchTerm: "",
                   champNames: ['Aatrox','Ahri','Akali','Alistar','Amumu','Anivia','Annie','Aphelios','Ashe','AurelionSol','Azir','Bard','Blitzcrank','Brand','Braum','Caitlyn','Camille','Cassiopeia','Chogath','Corki','Darius','Diana','Draven','DrMundo','Ekko','Elise','Evelynn','Ezreal','FiddleSticks','Fiora','Fizz','Galio','Gangplank','Garen','Gnar','Gragas','Graves','Hecarim','Heimerdinger','Illaoi','Irelia','Ivern','Janna','JarvanIV','Jax','Jayce','Jhin','Jinx','Kaisa','Kalista','Karma','Karthus','Kassadin','Katarina','Kayle','Kennen','Khazix','Kindred','Kled','KogMaw','Leblanc','LeeSin','Leona','Lilia','Lissandra','Lucian','Lulu','Lux','Malphite','Malzahar','Maokai','MasterYi','MissFortune','MonkeyKing','Mordekaiser','Morgana','Nami','Nasus','Nautilus','Neeko','Nidalee','Nocturne','Nunu','Olaf','Orianna','Ornn','Pantheon','Poppy','Pyke','Qiyana','Quinn','Rakan','Rammus','RekSai','Renekton','Rengar','Riven','Rumble','Ryze','Samira','Sejuani','Senna','Sett','Shaco','Shen','Shyvana','Singed','Sion','Sivir','Skarner','Sona','Soraka','Swain','Sylas','Syndra','TahmKench','Taliyah','Talon','Taric','Teemo','Thresh','Tristana','Trundle','Tryndamere','TwistedFate','Twitch','Udyr','Urgot','Varus','Vayne','Veigar','Velkoz','Vi','Viktor','Vladimir','Volibear','Warwick','Xayah','Xerath','XinZhao','Yasuo','Yone','Yorick','Yummi','Zac','Zed','Ziggs','Zilean','Zoe','Zyra']
                 }
-    
-
+    console.log(yjsArray)
+    //yjsArray.delete(0, yjsArray.length)
+    indexeddbProvider.whenSynced.then(() => {
+        console.log('loaded data from indexed db')
+        
+        yjsArray.delete(0, yjsArray.length)
+        yjsArray.observe(event => {
+            // print updates when the data changes
+            this.setState({observable:yjsArray})
+           
+            let tempSelections = this.state.selections
+            let tempSelectionsImages = this.state.selectionsImages;
+            let tempSelectionNumber = this.state.selectionNumber;
+            let name = yjsArray.toArray()[tempSelectionNumber]
+            console.log("observe " + yjsArray.toArray()[tempSelectionNumber])
+            tempSelections[tempSelectionNumber] = name;
+            tempSelectionsImages[tempSelectionNumber] = "/champion/loading/"+name+"_0.jpg";
+            this.setState({selections:tempSelections});
+            this.setState({selectionsImages : tempSelectionsImages});
+            this.setState({selectionNumber : ++tempSelectionNumber});
+            //console.log(yarray)
+          })
+    })
     // array of numbers which produce a sum
     
     // this.setState({strings:yarray})
     // observe changes of the sum
-    yBarray.observe(event => {
-      // print updates when the data changes
-      this.setState({bans:yBarray})
-      //console.log(yarray)
-    })
-
-    yParray.observe(event => {
-      // print updates when the data changes
-      
-      this.setState({picks:yParray})
-      //console.log(yarray)
-    })
-
-  }
-
-  updateBArray(yarray){
     
   }
-  
 
-  pushBan(e){
-    this.state.bans.push([document.querySelector('#ban').value])
-  }
-
-  pushPick(e){
-    this.state.picks.push([document.querySelector('#pick').value])
-  }
-
-  clearAll(){
-    this.state.bans. delete(0, this.state.bans.length)
-    this.state.picks.delete(0, this.state.picks.length)
+  clearYjsArray(){
+    this.state.observable.delete(0, 20)
   }
   formatSelection(e){
     let str = e;
@@ -116,6 +109,7 @@ class App extends React.Component {
     let tempSelectionsImages = this.state.selectionsImages;
     let tempSelectionNumber = this.state.selectionNumber;
     tempSelections[tempSelectionNumber] = name;
+    this.state.observable.push([name])
     tempSelectionsImages[tempSelectionNumber] = "/champion/loading/"+name+"_0.jpg";
     this.setState({selections:tempSelections});
     this.setState({selectionsImages : tempSelectionsImages});
