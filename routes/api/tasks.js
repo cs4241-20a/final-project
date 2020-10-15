@@ -32,10 +32,10 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 		const tasks = await Task.find({groupId}).sort({dateCreated: -1});
 
 		// Send result
-		res.status(200).res.json({success: true, data: tasks});
+		res.status(200).json({success: true, data: tasks});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -59,10 +59,10 @@ router.get("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 		const task = await Task.findOne({_id: taskId, groupId});
 
 		// Send result
-		res.status(200).res.json({success: true, data: task});
+		res.status(200).json({success: true, data: task});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -92,7 +92,7 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 		res.status(201).json({success: true, data: newTask});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -116,10 +116,10 @@ router.delete("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 		await Task.findOneAndDelete({_id: taskId, groupId: group._id});
 
 		// Send result
-		res.status(204).send({success: true});
+		res.status(204).json({success: true});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -156,10 +156,10 @@ router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 		task = await task.save();
 
 		// Send result
-		res.status(200).send({success: true, data: task});
+		res.status(200).json({success: true, data: task});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 

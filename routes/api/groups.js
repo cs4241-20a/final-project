@@ -30,7 +30,7 @@ router.get("/:id", ensureAuthenticated, async (req, res) => {
 		res.status(200).json({success: true, data: groups});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -55,7 +55,7 @@ router.get("/:id", ensureAuthenticated, async (req, res) => {
 		res.status(200).json({success: true, data: group});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -81,7 +81,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 		res.status(201).json({success: true, data: newGroup});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -103,10 +103,10 @@ router.delete("/:id", ensureAuthenticated, async (req, res) => {
 		await Group.findOneAndDelete({_id: groupId, adminId: currentUser._id});
 
 		// Send result
-		res.status(204).send({success: true});
+		res.status(204).json({success: true});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -129,10 +129,10 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		// Find and update member list of the group with the given id, ensuring the current user is a member of the group
 		const group = await Group.findOneAndUpdate({_id: groupId, members: currentUser._id}, {members});
 		// Send result
-		res.status(200).send({success: true, data: group});
+		res.status(200).json({success: true, data: group});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 

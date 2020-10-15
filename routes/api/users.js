@@ -27,7 +27,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 		res.status(200).json({success: true, data: user});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -46,10 +46,10 @@ router.get("/:id", async (req, res) => {
 		const user = await User.findOneById(userId);
 
 		// Send result
-		res.status(200).res.json({success: true, data: user});
+		res.status(200).json({success: true, data: user});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -71,7 +71,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 		res.status(201).json({success: true, data: newUser});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -90,10 +90,10 @@ router.delete("/", ensureAuthenticated, async (req, res) => {
 		await User.findOneAndDelete({username});
 
 		// Send result
-		res.status(204).send({success: true});
+		res.status(204).json({success: true});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 

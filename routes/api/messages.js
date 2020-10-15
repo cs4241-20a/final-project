@@ -31,10 +31,10 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 		const messages = await Message.find({groupId}).sort({dateSent: 1});
 
 		// Send result
-		res.status(200).res.json({success: true, data: messages});
+		res.status(200).json({success: true, data: messages});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -58,10 +58,10 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 		const message = await Message.findOne({_id: groupId, messageId}).sort({dateSent: 1});
 
 		// Send result
-		res.status(200).res.json({success: true, data: message});
+		res.status(200).json({success: true, data: message});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -89,7 +89,7 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 		res.status(201).json({success: true, data: newMessage});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -119,10 +119,10 @@ router.delete("/:groupId/:messageId", ensureAuthenticated, async (req, res) => {
 		}
 
 		// Send result
-		res.status(204).send({success: true});
+		res.status(204).json({success: true});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 
@@ -147,10 +147,10 @@ router.patch("/:groupId/:messageId", ensureAuthenticated, async (req, res) => {
 		// Find and update content and status of the message with the given id in the given group if the current user was the sender
 		const message = await Message.findOneAndUpdate({_id: messageId, groupId, senderId}, {content, edited: true});
 		// Send result
-		res.status(200).send({success: true, data: message});
+		res.status(200).json({success: true, data: message});
 	} catch (err) {
 		// Report errors
-		res.status(500).send({success: false, error: err});
+		res.status(500).json({success: false, error: err});
 	}
 });
 

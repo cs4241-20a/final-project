@@ -5,6 +5,8 @@ const express = require("express");
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 
+const User = require("../../models/User");
+
 const router = express.Router();
 
 //? Consider moving to different file (not necessarily specific to GitHub auth)
@@ -36,7 +38,22 @@ router.get('/login', passport.authenticate("github", {
 
 router.get("/callback", passport.authenticate("github", {
 	failureRedirect: "/login" 
-}), (req, res) => res.redirect("../../"));
+}), async (req, res) => {
+	// TODO: Abstract re-used code from routes into functions
+	const {username, displayName} = (req.user);
+
+	try {
+		const user = await User.findOne({username});
+		if (!user) {
+			const newUser = new User({username, displayName});
+			await newUser.save();
+		}
+		// TODO: Look into how to send a JSON response (ie: user creation successful) with a redirect
+		res.redirect("../../");
+	} catch (err) {
+		res.status(500).json({success: false, error: err});
+	}
+});
 
 router.get("/account", (req, res) => {
 	if (req.isAuthenticated()) {
