@@ -362,7 +362,7 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 }
 
 function savePlayerScore(id) {
-    collection.getOne({username: id}).then((user) => {
+    collection.findOne({username: id}).then((user) => {
         if (user.score < players[id].score) {
             collection
                 .updateOne(
