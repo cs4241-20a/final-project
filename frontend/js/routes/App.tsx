@@ -18,8 +18,15 @@ export interface SiteSettings {
 }
 
 const App: FunctionComponent = props => {
-    // const prefersDarkTheme = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
-    const prefersDarkTheme = false;
+    let prefersDarkTheme;
+    const storedThemePreference = localStorage.getItem('prefers-color-scheme');
+    const browserThemePreference = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
+    if (storedThemePreference) {
+        prefersDarkTheme = storedThemePreference === 'dark';
+    }
+    else {
+        prefersDarkTheme = browserThemePreference;
+    }
     const [siteSettings, setSiteSettings] = useState({
         theme: prefersDarkTheme ? 'dark' : 'light'
     } as SiteSettings);
