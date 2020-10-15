@@ -37,9 +37,9 @@ export default class Home extends React.Component {
             staticUser2: "",
             showChat: false,
             messages: [
-                new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
-                new Message({ id: 0, message: "I'm you -- the blue bubble!" }),
-              ],
+                
+                
+            ],
             overlay: false,
             overlayStyle: "none", 
             typedMsg: "",
@@ -53,7 +53,7 @@ export default class Home extends React.Component {
         this.setChatState = this.setChatState.bind(this)
         this.toggleOverlay = this.toggleOverlay.bind(this)
         this.handleMessageChange = this.handleMessageChange.bind(this)
-        this.sendMessage = this.sendMessage.bind(this)
+        // this.sendMessage = this.sendMessage.bind(this)
         this.parseSongs = this.parseSongs.bind(this)
     }
 
@@ -150,19 +150,42 @@ export default class Home extends React.Component {
         }
     }
 
-    // NEED TO WATCH LECTURES FOR THIS PART (i think)
-    sendMessage() {
-        // FOR WHEN SERVER IS SET UP
-        //let bodyJson = {id: this.state.latestId, message: this.state.typedMsg}
-        // fetch('/postMsg', {
-        //     method: 'POST',
-        //     body: JSON.stringify(bodyJson),
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // }).then(response => response.json())
-        this.setState({ typedMsg: "" })
-    }
+        // chat functionality
+        onButtonClicked = (value) => {
+            ws.send(JSON.stringify({
+                type: "message",
+                msg: document.getElementById('chatinput').value
+
+            }));
+            this.setState ({
+                typedMsg: ""
+            })      
+        }
+
+
+        componentDidMount() {
+
+            ws.onopen = () => {
+                console.log("connection to websocket server");
+        };
+            ws.onmessage = (message) => {
+                const dataFromServer = JSON.parse(message.data);
+                console.log("got reply!", dataFromServer);
+                if(dataFromServer.type === "message") {
+                    
+                    this.setState((state) =>
+                    ({
+                        messages: this.state.messages.concat([new Message({id: 0, message: dataFromServer.msg})])
+                        
+                    })
+                    
+                    );
+                }
+            };
+        }
+
+
+
 
 
     render () {
@@ -226,8 +249,8 @@ export default class Home extends React.Component {
                         </Container>
 
                         <div id="writeMsgDiv">
-                            <Input type="text" placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} value={this.state.typedMsg} ></Input>
-                            <Button className="btn btn-primary" onClick={this.sendMessage}>Send</Button>
+                            <Input type="text" id="chatinput" placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} value={this.state.typedMsg} ></Input>
+                            <Button className="btn btn-primary" onClick={() => this.onButtonClicked(this.state.messages)}>Send</Button>
                         </div>
 
                     </div>
