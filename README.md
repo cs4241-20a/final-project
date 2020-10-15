@@ -1,56 +1,63 @@
-# cs4241-FinalProject
+Nicole Jutras and Lara Padir
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+Link to Project: https://finalproject-idea.glitch.me/
 
-## General description
+Link to Project Video: https://youtu.be/rm74jkPVEmg
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+## Final Project Summary and Walkthrough
+We created a chatbot application where a user can ask questions about the 
+WPI admissions process. These questions and answers were found and compiled 
+from the WPI website. From this information, we made a dataset to pull answers
+for frequently asked questions about WPI and admissions.
+The user first provides some basic information 
+to the application consisting of their full name, email, and date of birth.
+This information is then sent to the server after being entered, where
+it is stored in a database as their user information. The user can then 
+click the continue button to proceed to the chatbot. Once on that page, the 
+user can click on the red recording button and ask the chatbot verbally any 
+question they have about the admissions topics listed on the page. 
+Note that when speaking to the chatbot, you must speak slowly and clearly. The 
+conversation between the user and the chatbot is then displayed on the screen 
+as a text conversation. In this case, the user is a high school student
+who is interested in learning more about WPI and WPI's application process. 
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+## Technologies Utilized
+We utilized MongoDB as our database to store the user's information.
+We also used a CSS styling format called Wing. The link to Wing is
+found in both html pages. Another technology we used was every function
+we implemented, mainly in script.js, that allow the site to access the 
+mic of the device, process the verbal response, and pick out key words
+to answer a question correctly with the chatbot. In addition to this, we also
+generated speech for the chatbot's responses. 
 
-## Project ideation
+## Challenges
+One of the main challenges we faced was trying to get the Enter button
+on our userinfo page to both upload information to the server and then the database,
+and also proceed to the chatbot page. We were unable to successfully do this. 
+To accomodate this, we placed a Continue button to proceed to the next page.
+We also had some issues with actually getting the user's data to store in the database.
+We were able to overcome bugs and errors to make this work correctly after some
+debugging. Another challenge was that there was only two of us working on the project. 
+Because of this, our project scope was narrowed. 
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+## Group Breakdown Of Work
+We both worked on the chatbot together (js code). 
+Nicole focused on the CSS of the project and Lara focused on the database/server side code.
+We both helped with debugging of our code as well.
 
-## Logistics
+## Design and Tech Achievements
+Some design and tech achievements we had were actually implementing the verbal and 
+auditory portions of the chatbot. We had never covered this in class, but
+it was something we really wanted to accomplish and learn about. It was very interesting 
+and cool to impletement a voice to text chat bot. We also 
+were able to display all of the audio recorded on the screen in text bubbles. 
+We also added chatbot images to show when the user or the chatbot was speaking.
+We styled the page with WPI colors, while also utilizing Wing as our main CSS 
+style model. We were able to process user data through the server and to the
+database. Neither of us had any skills in front end coding before the 
+beginning of this course, and we were able to apply what we learned in the course to 
+create a really cool application. Our knowledge grew tremendously over the past
+7 weeks. 
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
 
-### Deliverables
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
-
-There are no other scheduled checkpoints for your project. 
-
-#### Turning in Your Outline / Project
-
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
-
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
-
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
-
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
-
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
-
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
