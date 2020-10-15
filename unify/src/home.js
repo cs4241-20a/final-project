@@ -8,7 +8,7 @@ import { ChatFeed, Message } from 'react-chat-ui'
 import WebSocket from 'websocket'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-// const ws = require('ws');
+
 
 const ws = new W3CWebSocket('ws://localhost:8000');
 
@@ -26,10 +26,8 @@ export default class Home extends React.Component {
             user2: "",
             showChat: false,
             messages: [
-                // new Message({ id: 0, message: this.state.messages.map(message => <p>{message.msg}</p>) }), 
-                // new Message({ id: 0, message: "I'm you -- the blue bubble!" }),
                 
-
+                
               ],
             overlay: false,
             overlayStyle: "none", 
@@ -40,7 +38,7 @@ export default class Home extends React.Component {
          
         this.overlayDiv = React.createRef()
 
-        // this.send = this.send.bind(this)
+        
         
         this.getSongs = this.getSongs.bind(this)
         this.handleUser1Change = this.handleUser1Change.bind(this)
@@ -48,7 +46,7 @@ export default class Home extends React.Component {
         this.setChatState = this.setChatState.bind(this)
         this.toggleOverlay = this.toggleOverlay.bind(this)
         this.handleMessageChange = this.handleMessageChange.bind(this)
-        // this.sendMessage = this.sendMessage.bind(this)
+        
     }
 
 
@@ -141,8 +139,8 @@ export default class Home extends React.Component {
     // }
 
 
+    // chat functionality
     onButtonClicked = (value) => {
-        // const txt = document.getElementById('chatinput').value
         ws.send(JSON.stringify({
             type: "message",
             msg: document.getElementById('chatinput').value
@@ -163,7 +161,7 @@ export default class Home extends React.Component {
             const dataFromServer = JSON.parse(message.data);
             console.log("got reply!", dataFromServer);
             if(dataFromServer.type === "message") {
-                // const  = ([new Message({id: 0, message: dataFromServer.msg})])
+                
                 this.setState((state) =>
                 ({
                     messages: this.state.messages.concat([new Message({id: 0, message: dataFromServer.msg})])
@@ -210,7 +208,7 @@ render () {
                         <Container>
                             <h1 style={{color: "#191414"}} className="mt-5 mb-10">Chat</h1>
                                 <ChatFeed
-                                // messages={this.state.messages.map(message => <p>{message.msg}</p>)}
+                               
                                 messages={this.state.messages} // Array: list of message objects
                                 isTyping={this.state.is_typing} // Boolean: is the recipient typing
                                 hasInputField={false} // Boolean: use our input, or use your own
@@ -241,7 +239,7 @@ render () {
                         </div>
                     </div>
 
-// onClick={this.componentDidMount}
+
 
                     )
             }
