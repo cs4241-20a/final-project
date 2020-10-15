@@ -70,6 +70,8 @@ app.use(passport.session());
 
 const authenticate = (req, /** @type {import('express').Response} */ res, /** @type {import('express').NextFunction} */ next) => {
     
+    return next();
+
     if (req.user) {
         return next();
     }
@@ -131,17 +133,17 @@ app.post('/api/challenge/:id/solve', authenticate, async (req, res) => {
     const challenges = await getCollection('challenges');
 
     const solution = req.body.solution;
-    const challenge = await challenges.findOne({_id: new ObjectId(req.params.id)}, {projection: { tests: 1 }});
-    if (!challenge) {
-        return res.status(400).send("A challenge with that id does not exist");
-    }
-    const challengeTests = challenge.tests;
-    if (await testCodeCompletesWithoutError([solution,challengeTests])) {
-        return res.status(200).send("OK");
-    }
-    else {
-        return res.status(200).send("BadSolution");
-    }
+    const challengeTests = req.body.testCode;
+
+    // const challenge = await challenges.findOne({_id: new ObjectId(req.params.id)}, {projection: { tests: 1 }});
+    // if (!challenge) {
+    //     return res.status(400).send("A challenge with that id does not exist");
+    // }
+    // const challengeTests = challenge.tests;
+
+    // testResult = [0: true for pass, fasle for fail; 1: error type; 2: error message]
+    const testResult = await testCodeCompletesWithoutError([solution,challengeTests])
+    return res.status(200).json({"passed":testResult[0], "errorType": testResult[1], "errorMessage": testResult[2]});
 });
 
 // Unknown API endpoint
