@@ -58,6 +58,15 @@ app.post('/edit', bodyParser.json(), (request, response) => {
   })
 })
 
+app.post('/delete', bodyParser.json(), (request, response) => {
+  console.log("Delete: ", request.body)
+  collection
+    .deleteOne({ _id:mongodb.ObjectID( request.body.id ) })
+    .then( result => {
+      response.json( result )
+  })
+})
+
 app.get('/tasks', bodyParser.json(), (request, response) => {
 	//console.log("Here's our group: " + request.group)
 	//Leaving out accessing a specific group for right now

@@ -20,18 +20,20 @@ window.onclick = function(event) {
   }
 }
 
-var openTask = function(task) {
-  editmodal.style.display = "block";
-  const input = document.querySelector( '#t_name' )
-  const input2 = document.querySelector( '#due__date' )
-  const input3 = document.querySelector( '#t_assignee')
-  const input4 = document.querySelector( '#t_tags')
-  const input5 = document.querySelector( '#t_desc')
-  input.value = task.task
-  input2.value = task.duedate
-  input3.value = task.assignee
-  input4.value = task.tags
-  input5.value = task.description
+var openTask = function(task, edit) {
+  if(edit == true) {
+    editmodal.style.display = "block";
+    const input = document.querySelector( '#t_name' )
+    const input2 = document.querySelector( '#due__date' )
+    const input3 = document.querySelector( '#t_assignee')
+    const input4 = document.querySelector( '#t_tags')
+    const input5 = document.querySelector( '#t_desc')
+    input.value = task.task
+    input2.value = task.duedate
+    input3.value = task.assignee
+    input4.value = task.tags
+    input5.value = task.description
+  }
 }
 
 var listClicked = function(){
@@ -132,9 +134,17 @@ var editTask = function (e) {
     })
 }
 
-var delTask = function (e) {
-  e.preventDefault()
-  //Remove the task
+function delTask(task) {
+  fetch('/delete', {
+    method: 'POST',
+    body: JSON.stringify({id: task._id}),
+    headers: {
+      "Content-type": "application/json"
+    }
+  })
+  .then( function( response ) {
+    location.reload()
+  })
 }
 
 // Tells us which task was just clicked on
@@ -150,6 +160,8 @@ function appendNewInfo(task) {
   var btnDiv = document.createElement("div");
   var deleteBtn = document.createElement("a")
   var del = document.createElement("i")
+  // Are we editing?
+  var editing = true
   // Set attributes
   div.setAttribute('class', 'task_card card-panel col s1')
   name.setAttribute('class', 'task_item')
@@ -161,7 +173,10 @@ function appendNewInfo(task) {
   // Add things
   del.appendChild(document.createTextNode("delete_forever"))
   deleteBtn.appendChild(del)
-  deleteBtn.onclick = delTask
+  deleteBtn.onclick = function() {
+    delTask(task)
+    editing = false
+  }
   btnDiv.appendChild(deleteBtn)
   name.appendChild(document.createTextNode(task.task))
   due.appendChild(document.createTextNode(task.duedate))
@@ -171,8 +186,11 @@ function appendNewInfo(task) {
   div.appendChild(assigned)
   div.appendChild(btnDiv)
   div.onclick = function() {
-    openTask(task)
+    console.log(editing)
+    openTask(task, editing)
     ids.push(task)
+    console.log(ids[ids.length-1])
+    editing = true
   }
   col[0].appendChild(div)
 }
