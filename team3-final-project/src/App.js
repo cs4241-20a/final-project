@@ -57,9 +57,15 @@ class App extends React.Component {
     let selectionsArray = [];
     for (let i = 0; i<20;i++)
         selectionsArray.push("")
-    
-    if (true) { // will be false if match code is undefined
-        let matchCode = '1234'
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const matchCode = urlParams.get('matchCode');
+    let hasCode = false;
+    if(matchCode){
+      hasCode = true;
+    }
+    if (hasCode) { // will be false if match code is undefined
         yjsArray = ydoc.getArray(matchCode + 'selections');
         yjsNum   = ydoc.getMap  (matchCode + 'selectionNumber');
 
@@ -106,7 +112,7 @@ class App extends React.Component {
                   selections   : selectionsArray,
                   selectionNumber: 0,
                   searchTerm: "",
-                  hasRoom: 0,
+                  hasRoom: hasCode,
                   roomCode: "",
                   champNames: ['Aatrox','Ahri','Akali','Alistar','Amumu','Anivia','Annie','Aphelios','Ashe','AurelionSol','Azir','Bard','Blitzcrank','Brand','Braum','Caitlyn','Camille','Cassiopeia','Chogath','Corki','Darius','Diana','Draven','DrMundo','Ekko','Elise','Evelynn','Ezreal','FiddleSticks','Fiora','Fizz','Galio','Gangplank','Garen','Gnar','Gragas','Graves','Hecarim','Heimerdinger','Illaoi','Irelia','Ivern','Janna','JarvanIV','Jax','Jayce','Jhin','Jinx','Kaisa','Kalista','Karma','Karthus','Kassadin','Katarina','Kayle','Kennen','Khazix','Kindred','Kled','KogMaw','Leblanc','LeeSin','Leona','Lilia','Lissandra','Lucian','Lulu','Lux','Malphite','Malzahar','Maokai','MasterYi','MissFortune','MonkeyKing','Mordekaiser','Morgana','Nami','Nasus','Nautilus','Neeko','Nidalee','Nocturne','Nunu','Olaf','Orianna','Ornn','Pantheon','Poppy','Pyke','Qiyana','Quinn','Rakan','Rammus','RekSai','Renekton','Rengar','Riven','Rumble','Ryze','Samira','Sejuani','Senna','Sett','Shaco','Shen','Shyvana','Singed','Sion','Sivir','Skarner','Sona','Soraka','Swain','Sylas','Syndra','TahmKench','Taliyah','Talon','Taric','Teemo','Thresh','Tristana','Trundle','Tryndamere','TwistedFate','Twitch','Udyr','Urgot','Varus','Vayne','Veigar','Velkoz','Vi','Viktor','Vladimir','Volibear','Warwick','Xayah','Xerath','XinZhao','Yasuo','Yone','Yorick','Yummi','Zac','Zed','Ziggs','Zilean','Zoe','Zyra']
     }
@@ -141,7 +147,8 @@ class App extends React.Component {
     return this.state.champNames.filter(champ=>champ.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
   }
   checkCode(code){
-    this.setState({hasRoom:1})
+    let newUrl = "/?matchCode="+code;
+    window.location.replace(newUrl);
   }
   createCode(){
     let code = "";
@@ -266,7 +273,7 @@ class App extends React.Component {
             <div class = "entryBox">
                 <form>
                     <input id="roomCode" type="text" placeholder="ROOM CODE"/>
-                    <button type="submit" onClick = {(e)=>this.checkCode(e)}>Go to Room</button>
+                    <button type="button" onClick = {(e)=>this.checkCode(document.querySelector("#roomCode").value)}>Go to Room</button>
                 </form>
                 <br></br>
             </div>
