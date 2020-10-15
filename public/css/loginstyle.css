@@ -1,17 +1,40 @@
-#background{
-    background-image: url('../resources/loginbg.jpg');
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
-    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom,
-        from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
-    background-repeat:no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 100vh;
-  }
-  
-  .infocontainer{
-      margin-top: -600px;
-      position: relative;
-  }
+#background {
+  background-image: url("../resources/background.jpg");
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+  -webkit-mask-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(0, 0, 0, 1)),
+    to(rgba(0, 0, 0, 0))
+  );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.infocontainer {
+  font-family: 'Crimson Text', serif;
+  color: #363b3f;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  margin-top: -600px;
+  margin-left:auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  background-color: rgba(151, 136, 113, 0.6);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1),
+    0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1),
+    0 16px 16px rgba(0, 0, 0, 0.1);
+}
+
+.form-group{
+    width: 300px;
+}
