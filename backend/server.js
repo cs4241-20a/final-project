@@ -69,6 +69,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const authenticate = (req, /** @type {import('express').Response} */ res, /** @type {import('express').NextFunction} */ next) => {
+    
     if (req.user) {
         return next();
     }
@@ -135,7 +136,7 @@ app.post('/api/challenge/:id/solve', authenticate, async (req, res) => {
         return res.status(400).send("A challenge with that id does not exist");
     }
     const challengeTests = challenge.tests;
-    if (await testCodeCompletesWithoutError(`${solution}\n${challengeTests}`)) {
+    if (await testCodeCompletesWithoutError([solution,challengeTests])) {
         return res.status(200).send("OK");
     }
     else {
