@@ -4,16 +4,13 @@ const path = require('path');
 const app = express();
 require('dotenv').config();
 
+//static directory
+app.use(express.static('build/static'));
+
 // port value
 let port;
 
-
-
-app.use( express.static('public') )
-
-
 // chat port server
-
 const webSocketServer = require('websocket').server;
 const http = require('http');
 const wsServerPort = '8000';
@@ -25,7 +22,7 @@ const wsServer = new webSocketServer({
     httpServer: server
   });
 
-const clients = []
+const clients = [];
 
 const getUniqueID = () => {
     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -212,10 +209,14 @@ app.post('/getSongs', async (req, res) => {
 // get the artists in common between two users
 function getArtistIntersection(intersection) {
     let artists = [];
-    for (let i = 0 ; i < intersection.length ; i++) {
-        artists.push(intersection[i].artists[0].id)
+    for (let i = 0; i < intersection.length; i++) {
+        try {
+            artists.push(intersection[i].artists[0].id)
+        }catch (e) {
+            console.log(e);
+        }
     }
-    return artists
+    return artists;
 }
 
 // Get full artist objects of shared artists
@@ -227,7 +228,11 @@ async function getFullArtists(ids) {
     }).then((artists) => {        
         let images = []
         for(let i = 0; i < artists['artists'].length; i++) {
-            images.push(artists['artists'][i])
+            try {
+                images.push(artists['artists'][i])
+            }catch (e) {
+                console.log(e);
+            }
         }
         return images
     })
@@ -237,7 +242,11 @@ async function getFullArtists(ids) {
 function getUserArtists(tracks) {
     let artists = [];
     for (let i = 0 ; i < tracks.length ; i++) {
-        artists.push({name: tracks[i].artists[0].name, images: tracks[i].artists[0].images})
+        try {
+            artists.push({name: tracks[i].artists[0].name, images: tracks[i].artists[0].images})
+        }catch (e) {
+            console.log(e);
+        }
     }
     return artists
 }
@@ -246,7 +255,15 @@ function getUserArtists(tracks) {
 function getUserAlbums(tracks) {
     let albums = [];
     for (let i = 0 ; i < tracks.length ; i++) {
-        albums.push({name: tracks[i].album.name, images: tracks[i].album.images, artists: tracks[i].album.artists[0]})
+        try {
+            albums.push({
+                name: tracks[i].album.name,
+                images: tracks[i].album.images,
+                artists: tracks[i].album.artists[0]
+            })
+        }catch (e) {
+            console.log(e);
+        }
     }
     return albums
 }

@@ -76,7 +76,7 @@ export default class Home extends React.Component {
                 "Content-Type": "application/json"
             }
         }).then(response => response.json()).then(json => {
-
+            console.log(json);
             this.setState({
                 staticUser1: this.state.user1, 
                 staticUser2: this.state.user2, 

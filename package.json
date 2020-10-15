@@ -8,10 +8,10 @@
     "development": "NODE_ENV=development concurrently --kill-others \"npm run client\" \"npm run server\"",
     "production": "npm run build && NODE_ENV=production npm run server",
     "server": "node server.js",
-    "client": "unify/node_modules/.bin/react-scripts start",
-    "build": "unify/node_modules/.bin/react-scripts build",
-    "test": "unify/node_modules/.bin/react-scripts test",
-    "eject": "unify/node_modules/.bin/react-scripts eject"
+    "client": "node_modules/.bin/react-scripts start",
+    "build": "node_modules/.bin/react-scripts build",
+    "test": "node_modules/.bin/react-scripts test",
+    "eject": "node_modules/.bin/react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -49,7 +49,8 @@
     "reactstrap": "^8.6.0",
     "request": "^2.88.2",
     "spotify-web-api-node": "^5.0.0",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "websocket": "^1.0.32"
   },
   "browserslist": {
     "production": [
