@@ -5,18 +5,32 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
+import * as d3 from 'd3'
+import spinner from './spinner.gif'
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
 
 export default class Home extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            songs: [{ id: 0, title: "song0" }, { id: 1, title: "song1" }, { id: 2, title: "song2" }, { id: 3, title: "song3" }, { id: 4, title: "song4" }, { id: 5, title: "song5" }, { id: 6, title: "song6" }, { id: 7, title: "song7" }, { id: 8, title: "song8" }, { id: 9, title: "song9" }, { id: 10, title: "song10" }, { id: 11, title: "song11" }, { id: 12, title: "song12" }, { id: 13, title: "song13"}],
+            songsJSON: [],
+            user1Songs: [],
+            user2Songs: [],
             columns: [],
-            //songs: [],
+            songNames: [],
+            user1Artists: [],
+            user2Artists: [],
+            user1Albums: [],
+            user2Albums: [],
+            user1Pops: [],
+            user2Pops: [],
+            artistImages: [],
             showTable: false,
             user1: "", 
             user2: "",
+            staticUser1: "", 
+            staticUser2: "",
             showChat: false,
             messages: [
                 new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)" }), 
@@ -24,7 +38,7 @@ export default class Home extends React.Component {
               ],
             overlay: false,
             overlayStyle: "none", 
-            typedMsg: ""
+            typedMsg: "",
         }
 
         this.overlayDiv = React.createRef()
@@ -36,6 +50,7 @@ export default class Home extends React.Component {
         this.toggleOverlay = this.toggleOverlay.bind(this)
         this.handleMessageChange = this.handleMessageChange.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
+        this.parseSongs = this.parseSongs.bind(this)
     }
 
 
@@ -49,6 +64,7 @@ export default class Home extends React.Component {
     getSongs() {
         // FOR WHEN SERVER IS SET UP
         let bodyJson = {user1: this.state.user1, user2: this.state.user2};
+        trackPromise(
         fetch('/getSongs', {
             method: 'POST',
             body: JSON.stringify(bodyJson),
@@ -56,34 +72,51 @@ export default class Home extends React.Component {
                 "Content-Type": "application/json"
             }
         }).then(response => response.json()).then(json => {
-            for(let i = 0; i < json.length; i++){
-                console.log(json[i]);
-            }
-            let staticUser1 = this.state.user1;
-            let staticUser2 = this.state.user2;
+
             this.setState({
-                songs: json,
-                columns: [{ dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`}],
+                staticUser1: this.state.user1, 
+                staticUser2: this.state.user2, 
+                songsJSON: json.intersection,
+                columns: [{ dataField: 'title', text: 'Songs'}, { dataField: 'artists', text: 'Artist'}],
                 showTable: true,
                 user1: "",
-                user2: ""
+                user2: "", 
+                user1Artists: json.user1Artists, 
+                user2Artists: json.user2Artists, 
+                user1Albums: json.user1Albums, 
+                user2Albums: json.user2Albums, 
+                user1Songs: json.user1Songs,
+                user2Songs: json.user2Songs, 
+                artistImages: json.artistImages
             })
-        });
+            this.parseSongs()
+        })
+        )
 
-        // TEMP FOR FRONT END TESTING
-        // let staticUser1 = this.state.user1
-        // let staticUser2 = this.state.user2
-        // this.setState({
-        //     showTable: true,
-        //     columns: [
-        //         { dataField: 'title', text: `Songs in Common Between ${staticUser1} and ${staticUser2}`,
-        //         headerStyle: { backgroundColor: "#ffffff"}
-        //     }
-        //     ],
-        //     user1: "",
-        //     user2: ""
-        // });
+    }
 
+    parseSongs() {
+        let songNames = []
+        let user1Pops = []
+        let user2Pops = []
+
+        for (let i = 0; i < this.state.songsJSON.length; i++) {
+            songNames.push({ id: i, title: this.state.songsJSON[i].name, artists: this.state.songsJSON[i].artists[0].name })    
+        }
+
+        for (let i = 0; i < this.state.user1Songs.length; i++) {
+            user1Pops.push( { popularity: this.state.user1Songs[i].popularity } )
+        }
+
+        for (let i = 0; i < this.state.user2Songs.length; i++) {
+            user2Pops.push({ popularity: this.state.user2Songs[i].popularity })
+        }
+
+        this.setState({ 
+            songNames: songNames, 
+            user1Pops: user1Pops,
+            user2Pops: user2Pops 
+        })
     }
 
     login() {
@@ -132,17 +165,22 @@ export default class Home extends React.Component {
         // Show table on recieving data from server
         const renderTable = () => {
             if (this.state.showTable) {
-                return (                
-                <div className="mt-5 mb-10">
-                    <BootstrapTable 
-                    rowStyle={{ backgroundColor: '#ffffff' }}
-                    
-                    border={true}
-                    keyField='id' data={ this.state.songs } 
-                    columns={ this.state.columns } 
-                    pagination={ paginationFactory() } 
-                    bootstrap4={true} />
-                </div>
+                return (   
+                    <div>    
+                        <h2 className="mt-5 mb-10 user-title">{this.state.staticUser1} and {this.state.staticUser2}</h2>
+
+                        <div className="mt-5 mb-10">
+                            <h4 className="subtitle">Songs in Common</h4>
+                            <BootstrapTable 
+                            headerStyle={{ backgroundColor: '#ffffff' }}
+                            rowStyle={{ backgroundColor: '#ffffff' }}
+                            border={true}
+                            keyField='id' data={ this.state.songNames } 
+                            columns={ this.state.columns } 
+                            pagination={ paginationFactory() } 
+                            bootstrap4={true} />
+                        </div>
+                    </div>  
                 )
             }
         }
@@ -192,34 +230,202 @@ export default class Home extends React.Component {
                     )
             }
         }
- 
 
+        const renderArtists = () => {
+            let group1Map = d3.rollup(this.state.user1Artists, v => v.length, d => d.name)
+            let group2Map = d3.rollup(this.state.user2Artists, v => v.length, d => d.name)
+
+            let artists1MapAll = d3.group(this.state.artistImages, d => d.name)
+
+            let group1Keys = []
+            for (let [key, value] of Array.from(group1Map)) {
+                group1Keys.push(key)
+            }
+
+            let group2Keys = []
+            for (let [key, value] of Array.from(group2Map)) {
+                group2Keys.push(key)
+            }
+
+            let combinedKeys = (d3.intersection(group1Keys, group2Keys))
+
+            let groupValues = []
+            for (let item of combinedKeys.values()) {
+                let sum = group1Map.get(item) + group2Map.get(item)
+                groupValues.push({ title: item, sum: sum })
+            }
+
+            groupValues.sort(function(x, y){
+                return d3.descending(x.sum, y.sum);
+            })
+
+            groupValues = groupValues.slice(0, 3)
+            
+            for (let i = 0 ; i < groupValues.length ; i++) {
+                if (groupValues[i] === undefined) { return }
+                let artist = artists1MapAll.get(groupValues[i].title)
+                groupValues[i].image = artist[0].images[1]
+            }
+
+            if (this.state.showTable && groupValues.length > 0) {
+                return (
+                    <Container className="mt-5 mb-10 statsWrapper">
+                        <h4 className="subtitle">Top Artists in Common</h4>
+
+                        <div className="statsDiv">
+                            {groupValues.map(value => (
+                                <div className="artistName">
+                                    <div>
+                                        <img style={{width: "100%", height: "100%"}} alt="artist image" src={value.image.url}/>
+                                    </div>
+                                    <p className="statsTitle">{value.title}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </Container>
+                )
+            }
+        }
+
+        const renderAlbums = () => {
+            let group1Map = d3.rollup(this.state.user1Albums, v => v.length, d => d.name)
+            let group2Map = d3.rollup(this.state.user2Albums, v => v.length, d => d.name)
+
+            let group1MapAll = d3.group(this.state.user1Albums, d => d.name)
+
+            let group1Keys = []
+            for (let [key, value] of Array.from(group1Map)) {
+                group1Keys.push(key)
+            }
+
+            let group2Keys = []
+            for (let [key, value] of Array.from(group2Map)) {
+                group2Keys.push(key)
+            }
+
+            let combinedKeys = (d3.intersection(group1Keys, group2Keys))
+
+            let groupValues = []
+            for (let item of combinedKeys.values()) {
+                let sum = group1Map.get(item) + group2Map.get(item)
+                groupValues.push({ title: item, sum: sum })
+            }
+
+            groupValues.sort(function(x, y){
+                return d3.descending(x.sum, y.sum);
+            })
+
+            groupValues = groupValues.slice(0, 3)
+
+            for (let i = 0 ; i < groupValues.length ; i++) {
+                if (groupValues[i] === undefined) { return }
+                let fullObj = group1MapAll.get(groupValues[i].title)
+                groupValues[i].artist = fullObj[0].artists.name
+                groupValues[i].image = fullObj[0].images[1]
+            }
+
+            if (this.state.showTable && groupValues.length > 0) {
+                return (
+                    <Container className="mt-5 mb-10">
+                        <h4 className="subtitle">Top Albums in Common</h4>
+
+                        <div className="statsDiv">
+                            {groupValues.map(value => (
+                                // add images too 
+                                <div className="artistName">
+                                    <div>
+                                        <img style={{width: "100%", height: "100%"}} alt="album art" src={value.image.url}/>
+                                    </div>
+                                    <p className="statsTitle">{value.title}</p>
+                                    <p>{value.artist}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </Container>
+                )
+            }
+        }
+        
+        const renderPopularity = () => {
+            let pop1Calc = (d3.mean(this.state.user1Pops, d => d.popularity))
+            let pop2Calc = (d3.mean(this.state.user2Pops, d => d.popularity))
+
+            if (pop1Calc != undefined || pop2Calc != undefined) {
+                pop1Calc = pop1Calc.toFixed(2)
+                pop2Calc = pop2Calc.toFixed(2)
+            }
+
+            if (this.state.showTable) {
+                return (
+                    <Container className="mt-5 mb-10">
+                        <h4 className="subtitle">Average Song Popularity</h4>
+
+                        <div className="statsDiv">
+                            <div className="barDiv">
+                                <div className="fullBar">
+                                    <div className="percentBar" style={{width: `${pop1Calc}%` }}></div>
+                                </div>
+                                <p className="statsTitle" style={{ color: "#fff" }}>{this.state.staticUser1}</p>
+                                <p style={{ color: "#fff" }}>{ pop1Calc }%</p>
+                            </div>
+
+                            <div className="barDiv">
+                                <div className="fullBar">
+                                    <div className="percentBar" style={{width: `${pop2Calc}%` }}></div>
+                                </div>
+                                <p className="statsTitle" style={{ color: "#fff" }}>{this.state.staticUser2}</p>
+                                <p style={{ color: "#fff" }}>{ pop2Calc }%</p>
+                            </div>
+
+                        </div> 
+                    </Container>
+                )
+            }
+        }
+
+        const Loader = props => {
+            const { promiseInProgress } = usePromiseTracker()
+            return (
+                promiseInProgress &&
+                <img src={spinner} alt="loading" style={{width: "5rem", height: "5rem"}}/>
+            )
+        }
+ 
         return (
             <div id="wrapperDiv">
 
                 <div id="overlay" onClick={this.toggleOverlay} ref="overlayDiv" style={{display: this.state.overlayStyle}}></div>
                 <Container id="mainDiv" >
 
-                    <h1 className="mt-5 mb-10" style={{color: "#ffffff"}}>Unify</h1>
+                    <h1 className="mt-5" style={{color: "#ffffff"}}>Unify</h1>
+                    <p className="subtitle" className="mb-10" style={{ textAlign: "center", color: "#ffffff" }}>Compare Spotify playlists!</p>
 
                     <div className="mt-5 mb-10">
                         <Form>
                             <FormGroup>
-                                <Input type="text" placeholder="login_username else placeholder text" className="form-control" value={this.state.user1} onChange={this.handleUser1Change} required></Input>
+                                <Input type="text" placeholder="Enter your Spotify username" className="form-control" value={this.state.user1} onChange={this.handleUser1Change} required></Input>
                             </FormGroup>                    
                             <FormGroup>
-                                <Input type="text" placeholder="Enter another username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
+                                <Input type="text" placeholder="Enter another Spotify username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
                             </FormGroup>
                             <FormGroup>
                                 <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.login}>Login</Button>
                             </FormGroup>
                             <FormGroup>
-                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Compare data</Button>
+                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Analyze data</Button>
                             </FormGroup>
                         </Form>
                     </div>
 
+                    <Loader />
+
                     { renderTable() }
+
+                    { renderArtists() }
+
+                    { renderAlbums() }
+
+                    { renderPopularity() }
 
                     <FontAwesomeIcon icon={faComment} className="fas-3x sticky-chat" onClick={this.setChatState} />
 

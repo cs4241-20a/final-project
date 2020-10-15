@@ -114,21 +114,77 @@ app.post('/getSongs', async (req, res) => {
         let user1Playlists = await getUserPlaylists(user1);
         let user2Playlists = await getUserPlaylists(user2);
 
+
         // get all of the tracks in all of the public playlists
         let user1Tracks = await getUserTracks(user1Playlists);
         let user2Tracks = await getUserTracks(user2Playlists);
+
+        // get all artists of all user's tracks
+        let user1Artists = getUserArtists(user1Tracks);
+        let user2Artists = getUserArtists(user2Tracks);
+
+        // get all albums of all user's tracks
+        let user1Albums = getUserAlbums(user1Tracks);
+        let user2Albums = getUserAlbums(user2Tracks);
 
         // map the tracks for each user according to (key: id, value: {name, artists})
         let user1Map = mapTracks(user1Tracks);
         let user2Map = mapTracks(user2Tracks);
 
         let intersection = getIntersection(user1Map, user2Map);
+        let intersectionArtistsId = getArtistIntersection(intersection);
+        let intersectionArtistsImages = await getFullArtists(intersectionArtistsId);
+
         console.log("RETURNING INTERSECTION BETWEEN " + user1 + " AND " + user2);
-        res.send(intersection);
+        res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks, artistImages: intersectionArtistsImages } ));
+
     }catch (e) {
         console.log(e);
     }
 });
+
+
+// get the artists in common between two users
+function getArtistIntersection(intersection) {
+    let artists = [];
+    for (let i = 0 ; i < intersection.length ; i++) {
+        artists.push(intersection[i].artists[0].id)
+    }
+    return artists
+}
+
+// Get full artist objects of shared artists
+async function getFullArtists(ids) {
+    return spotifyApi.getArtists(ids).then((data) => {
+        return data.body;
+    }, function(err) {
+        console.log('Something went wrong!', err);
+    }).then((artists) => {        
+        let images = []
+        for(let i = 0; i < artists['artists'].length; i++) {
+            images.push(artists['artists'][i])
+        }
+        return images
+    })
+}
+
+// gets all artist names of songs in a user's playlists
+function getUserArtists(tracks) {
+    let artists = [];
+    for (let i = 0 ; i < tracks.length ; i++) {
+        artists.push({name: tracks[i].artists[0].name, images: tracks[i].artists[0].images})
+    }
+    return artists
+}
+
+// gets all album names and images of songs in a user's playlists
+function getUserAlbums(tracks) {
+    let albums = [];
+    for (let i = 0 ; i < tracks.length ; i++) {
+        albums.push({name: tracks[i].album.name, images: tracks[i].album.images, artists: tracks[i].album.artists[0]})
+    }
+    return albums
+}
 
 /* Function Name: getUserPlaylists
  * Author: Connor
