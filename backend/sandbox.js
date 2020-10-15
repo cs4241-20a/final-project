@@ -3,7 +3,10 @@ import { debug } from 'webpack';
 const debugMode = false
 
 const {VM, VMScript} = require('vm2');
-const vm = new VM();
+const vm = new VM({
+    timeout: 1000,
+    sandbox: {}
+});
 
 const assertMethod = `
     function assert(booleanExpression, errorMessage){
