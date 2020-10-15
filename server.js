@@ -22,7 +22,7 @@ const server = http.createServer(app);
 const io = socketio(server);
 //? Why did I do this?
 //TODO: Look into why this is accessed from a module export instead of required separately
-const passport = githubAuth.passport;
+const {passport, ensureAuthenticated} = githubAuth;
 
 dotenv.config();
 
@@ -68,9 +68,22 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routing
 app.use("/api", apiRouter.router);
-app.get("/", (req, res) => {
-	res.send("Hello world");
+app.use("/auth/github", githubAuth.router);
+
+app.get("/", ensureAuthenticated, (req, res) => {
+	res.sendFile(path.join(__dirname, "public/home.html"));
 });
+app.get("/tasks", ensureAuthenticated, (req, res) => {
+	res.sendFile(path.join(__dirname, "public/tasks.html"));
+});
+app.get("/login", (req, res) => {
+	res.sendFile(path.join(__dirname, "public/login.html"));
+});
+app.get("/logout", (req, res) => {
+	req.logout();
+	res.redirect("/login");
+});
+
 app.get("*", (req, res) => {
 	res.status(404).send("Error 404. Not found.");
 });
