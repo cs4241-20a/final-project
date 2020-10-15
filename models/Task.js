@@ -14,10 +14,6 @@ const TaskSchema = new Schema({
 		type: String,
 		required: false
 	},
-	groupId: {
-		type: Schema.Types.ObjectId,
-		required: true
-	},
 	columnName: {
 		type: String,
 		required: true

@@ -11,6 +11,30 @@ const router = express.Router();
 const ensureAuthenticated = {githubAuth};
 
 /*
+ * Route: /api/groups/
+ * Method: GET
+ * Auth: Required
+ * Desc: Gets all groups the current user belongs to. Verified by session.
+ */
+router.get("/:id", ensureAuthenticated, async (req, res) => {
+	// Gather request parameters
+	const {username} = req.user;
+
+	try {
+		// Find the user with the given username
+		const currentUser = await User.findOne({username});
+		// Find the groups the user with the given id belongs to
+		const groups = await Group.find({members: currentUser._id});
+
+		// Send result
+		res.status(200).json({success: true, data: groups});
+	} catch (err) {
+		// Report errors
+		res.status(500).send({success: false, error: err});
+	}
+});
+
+/*
  * Route: /api/groups/:id
  * Method: GET
  * Auth: Required

@@ -2,6 +2,7 @@
 "use strict";
 
 const express = require("express");
+const moment = require("moment");
 
 const Task = require("../../models/Task");
 const Group = require("../../models/Group");
@@ -9,6 +10,7 @@ const User = require("../../models/User");
 const githubAuth = require("../auth/github-auth");
 
 const router = express.Router();
+const {ensureAuthenticated} = githubAuth;
 
 /*
  * Route: /api/tasks/:groupId
@@ -17,7 +19,24 @@ const router = express.Router();
  * Desc: Gets all tasks in the given group. User must belong to the group. Verified by session.
  */
 router.get("/:groupId", ensureAuthenticated, (req, res) => {
+	// Gather request parameters
+	const {groupId} = req.params;
+	const {username} = req.user;
+	
+	try {
+		// Find the id of the user with the given username
+		const userId = await User.findOne({username})._id;
+		// Verify that a group exists with the given id that the current user is a member of
+		await Group.find({_id: groupId, members: userId});
+		// Find all tasks with the given group id sorted by date sent (descending)
+		const tasks = await Task.find({groupId}).sort({dateCreated: -1});
 
+		// Send result
+		res.status(200).res.json({success: true, data: tasks});
+	} catch (err) {
+		// Report errors
+		res.status(500).send({success: false, error: err});
+	}
 });
 
 /*
@@ -27,7 +46,24 @@ router.get("/:groupId", ensureAuthenticated, (req, res) => {
  * Desc: Gets the tasks with the given id in the given group. User must belong to the group. Verified by session.
  */
 router.get("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
+	// Gather request parameters
+	const {groupId, taskId} = req.params;
+	const {username} = req.user;
+	
+	try {
+		// Find the id of the user with the given username
+		const userId = await User.findOne({username})._id;
+		// Verify that a group exists with the given id that the current user is a member of
+		await Group.find({_id: groupId, members: userId});
+		// Find the task with the given id in the group with the given id
+		const task = await Task.findOne({_id: taskId, groupId});
 
+		// Send result
+		res.status(200).res.json({success: true, data: task});
+	} catch (err) {
+		// Report errors
+		res.status(500).send({success: false, error: err});
+	}
 });
 
 /*
@@ -37,7 +73,25 @@ router.get("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
  * Desc: Adds a new task to the given group with the given information. User must belong to the group. Verified by session.
  */
 router.post("/:groupId", ensureAuthenticated, (req, res) => {
+	// Gather request parameters
+	const {groupId} = req.params;
+	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
+	const {username} = req.user;
 
+	try {
+		// Find the id of the user with the given username
+		const userId = await User.findOne({username})._id;
+		// Verify that a group exists with the given id that the current user is a member of
+		await Group.findOne({_id: groupId, members: userId});
+		// Create a new task with the given name, description, column name, assignees, tags, and due date
+		const newTask = await new Task({name, desc, columnName, assignees, tags, formatDate(dateDue)}).save();
+
+		// Send result
+		res.status(201).json({success: true, data: newTask});
+	} catch (err) {
+		// Report errors
+		res.status(500).send({success: false, error: err});
+	}
 });
 
 /*
@@ -47,7 +101,24 @@ router.post("/:groupId", ensureAuthenticated, (req, res) => {
  * Desc: Deletes the task with the given id. User must belong to the group. Verified by session.
  */
 router.delete("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
+	// Gather request parameters
+	const {groupId, taskId} = req.params;
+	const {username} = req.user;
 
+	try {
+		// Find the the user with the given username
+		const currentUser = await User.findOne({username})._id;
+		// Verify that a group exists with the given id that the current user is a member of
+		const group = await Group.findOne({_id: groupId, members: currentUser._id});
+		// Find and delete the task with the given id from the group with the given id
+		await Task.findOneAndDelete({_id: taskId, groupId: group._id});
+
+		// Send result
+		res.status(204).send({success: true});
+	} catch (err) {
+		// Report errors
+		res.status(500).send({success: false, error: err});
+	}
 });
 
 /*
@@ -58,7 +129,41 @@ router.delete("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
  * Verified by session.
  */
 router.patch("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
+	// Gather request parameters
+	const {groupId, taskId} = req.params;
+	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
+	const {username} = req.user;
 
+	try {
+		// Find the id of the user with the given username
+		const userId = await User.findOne({username})._id;
+		// Verify that a group exists with the given id that the current user is a member of
+		await Group.findOne({_id: groupId, members: userId});
+		// Find the task with the given id in the group with the given id
+		const task = await Task.findOne({_id: taskId, groupId}, {content, edited: true});
+
+		// Update fields provided in request body
+		task.name = name ? name : task.name;
+		task.desc = desc ? desc : task.desc;
+		task.columnName = columnName ? columnName : task.columnName
+		task.assignees = assignees ? assignees : task.assignees;
+		task.tags = tags ? tags : task.tags;
+		task.dateDue = dateDue ? formatDate(dateDue) : task.dateDue;
+
+		// Save updated task to database
+		task = await task.save();
+
+		// Send result
+		res.status(200).send({success: true, data: task});
+	} catch (err) {
+		// Report errors
+		res.status(500).send({success: false, error: err});
+	}
 });
 
-module.exports = {router};
+const formatDate = dateStr => {
+	//* This is expecting a date formatted as a string exactly as outputed from a datepicker.
+	return moment(new Date(dateStr)).add(1, "days").format("MM/DD/YYYY");
+}
+
+module.exports = {router, formatDate};
