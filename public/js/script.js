@@ -83,7 +83,8 @@ $(function () {
 });
 
 //sound effects
-var sound1 = document.getElementById("sound1");
+//😠
+/*var sound1 = document.getElementById("sound1");
 document.getElementById("send").onclick = () => {
     sound1.play();
 }
@@ -91,6 +92,6 @@ document.getElementById("send").onclick = () => {
 var sound2 = document.getElementById("sound2");
 document.getElementById("clear").onclick = () => {
     sound2.play();
-}
+}*/
 
 document.getElementById("music").volume = 0.01;
