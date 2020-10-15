@@ -1,0 +1,53 @@
+﻿html, body {
+    background: url(../img/pc.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    height: 100%;
+    z-index: -1;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+button {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* #background{
+    background-color: palevioletred;
+    width: 100%;
+    height: 550px;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    background-image: url('/img/login.png');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to (rbga(0,0,0,0)));
+    opacity: 0.7;
+    z-index: -1;
+} */
+
+.loginbtn {
+    font-size: 20px;
+    margin: 0;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    width: auto;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#ghlogin {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}

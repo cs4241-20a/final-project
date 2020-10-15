@@ -1,0 +1,209 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 100px;
+}
+
+img {
+    width: 650px;
+    height: 300px;
+}
+
+html, body {
+    font-family: 'Montserrat', Arial;
+    background-image: url('/img/bg.jpg');
+    background-size:cover;
+    z-index: -1;
+}
+
+p{
+    color: darkblue;
+}
+
+form {
+    background: #000;
+    padding-top: 20px;
+    padding-bottom: 3px;
+    position: fixed;
+    bottom: 0;
+    width: 50%;
+}
+
+form input {
+    border: 0;
+    padding: 10px;
+    width: 80%;
+    margin-right: 0.5%;
+    box-sizing: border-box;
+    float: right;
+}
+
+form button {
+    padding: 10px;
+    height: 4vh;
+
+    float: right;
+}
+
+#no {
+    background-color: gray;
+    border: 2px solid black;
+}
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    max-height: 92.5vh;
+    overflow-y: auto;
+    background: #fff;
+    border: 2px solid black;
+}
+
+    #messages li {
+        padding: 5px 10px;
+        border: 2px solid black;
+    }
+
+        #messages li:nth-child(odd) {
+            background: #fff;
+            border: 2px solid black;
+        }
+
+#background {
+}
+    
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    margin: 20px;
+    background-image: url('/img/avatar.png');
+    background-position: center center;
+    background-size: 150px;
+}
+
+    .avatar:hover {
+        background-image: url('/img/avatar-alt.png');
+    }
+
+
+#navbg {
+    background: url(../img/nav.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    height: 100%;
+    z-index: -1;
+}
+
+#music{
+    display: none;
+}
+
+.color {
+    justify-content: center;
+    display: inline-block;
+    text-align: center;
+    color: black;
+}
+
+.brush {
+    justify-content: center;
+    display: inline-block;
+    text-align: center;
+    color: black;
+
+    background-color: lightgray;
+}
+
+.selected {
+    background-color: antiquewhite;
+    height: 40px;
+}
+
+.brush:hover {
+    background-color: antiquewhite;
+}
+
+#red {
+    background-color: red;
+}
+
+#blue {
+    background-color: dodgerblue;
+}
+
+#yellow {
+    background-color: yellow;
+}
+
+#green {
+    background-color: forestgreen;
+}
+
+#orange {
+    background-color: darkorange;
+}
+
+#violet {
+    background-color: mediumvioletred;
+}
+
+#white{
+    background-color: papayawhip;
+}
+
+#title {
+    color: mediumvioletred;
+}
+#subtitle{
+    color: forestgreen;
+}
+
+#send, #clear {
+    width: 100px;
+}
+
+.left {
+    position: relative;
+    text-align: center;
+    height: 100vh;
+}
+
+.footer {
+    border: none;
+    text-align: left;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    left: 0;
+}
+
+#username {
+    padding-left: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: antiquewhite;
+}
+/*
+#no {
+    background-color: transparent;
+}*/
+
+
+#usernamelabel {
+    padding-left: 10px;
+    font-size: 20px;
+    color:grey;
+}
+
+#centralCanvas {
+    padding-top: 10px;
+    justify-content: center;
+    background-color: white;
+}

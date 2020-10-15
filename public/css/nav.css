@@ -1,0 +1,44 @@
+a {
+    box-sizing: border-box;
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    background-color: black;
+}
+
+.column {
+    float: left;
+    width: 20%;
+    padding: 2.5%
+}
+
+.row {
+    margin-top: 20%;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#logoutButton {
+    margin: 0;
+    margin-top: 10%;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.backgroundVid {
+    position:fixed;
+    right:0;
+    bottom:0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index:-1;
+}

@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Final Project</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <script src="js/logout.js"></script>
+    <script src="js/paper-full.js"></script>
+    <script defer src="js/script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script type="text/paperscript"
+            canvas="centralCanvas"
+            src="js/draw.js"></script>
+</head>
+
+    <body>
+        <audio id="sound1" src="/music/send.mp3"></audio>
+        <audio id="sound2" src="/music/clear.mp3"></audio>
+        <audio id="music" src="/music/pictochat.mp3" controls autoplay loop></audio>
+        <div id="background"></div>
+        <div class="wrapper">
+            <div class="left">
+                <div class="avatar center-block"> </div>
+                <h1 id="title">Pictochat 2</h1>
+                <h3 id="subtitle">Type or draw something!</h3>
+                <div>
+                    <button id="send" class="mui-btn mui-btn--primary">Send</button>
+                    <button id="clear" class="mui-btn mui-btn--danger">Clear</button>
+                </div>
+                <br>
+                <p>Brush Size Selection</p>
+                <div>
+                    <button id="5" class="selected brush mui-btn mui-btn--small mui-btn--primary">5px</button>
+                    <button id="10" class="brush mui-btn mui-btn--small mui-btn--primary">10px</button>
+                    <button id="15" class="brush mui-btn mui-btn--small mui-btn--primary">15px</button>
+                    <button id="20" class="brush mui-btn mui-btn--small mui-btn--primary">20px</button>
+                    <button id="30" class="brush mui-btn mui-btn--small mui-btn--primary">30px</button>
+                    <button id="40" class="brush mui-btn mui-btn--small mui-btn--primary">40px</button>
+                </div>
+                <br>
+                <p>Brush Color Selection</p>
+                <div>
+                    <button id="red" class="selected color mui-btn mui-btn--small mui-btn--primary">Red</button>
+                    <button id="blue" class="color mui-btn mui-btn--small mui-btn--primary">Blue</button>
+                    <button id="yellow" class="color mui-btn mui-btn--small mui-btn--primary">Yellow</button>
+                    <button id="orange" class="color mui-btn mui-btn--small mui-btn--primary">Orange</button>
+                    <button id="green" class="color mui-btn mui-btn--small mui-btn--primary">Green</button>
+                    <button id="violet" class="color mui-btn mui-btn--small mui-btn--primary">Violet</button>
+                    <button id="white" class="color mui-btn mui-btn--small mui-btn--primary">Eraser</button>
+                </div>
+                <canvas id="centralCanvas"
+                        width="650"
+                        height="300"
+                        style="border: 2px solid #000000"></canvas>
+                <div class="footer">
+                    <span id=usernamelabel><strong>Username: </strong></span>
+                    <input id="username" type="text" value="" readonly>
+                    <button id="logoutButton" class="mui-btn mui-btn--accent">Log Out</button>
+                    <button id="backButton" class="mui-btn mui-btn--danger" onclick="goBack()">Back</button>
+                </div>
+                <script>
+                    function goBack() {
+                        window.history.back();
+                    }
+
+                    function setWidth() {
+                        return window.setWidth / 6;
+                    }
+                </script>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div class="right">
+                <ul id="messages"></ul>
+                <div clas=footer>
+                    <form id="no" action="">
+                        <button class="mui-btn mui-btn--primary">Send</button>
+                        <input id="userMessage" autocomplete="off" />
+                    </form>
+                </div>
+                <script src="/socket.io/socket.io.js"></script>
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                        crossorigin="anonymous"></script>
+            </div>
+        </div>
+    </body>
+</html>
