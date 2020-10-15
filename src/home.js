@@ -8,6 +8,10 @@ import { ChatFeed, Message } from 'react-chat-ui'
 import * as d3 from 'd3'
 import spinner from './spinner.gif'
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
+import WebSocket from 'websocket'
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+
+const ws = new W3CWebSocket('ws://localhost:8000');
 
 export default class Home extends React.Component {
     constructor(props) {
