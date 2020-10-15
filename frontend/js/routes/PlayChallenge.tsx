@@ -98,21 +98,22 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
 
     async function submit() {
         setIsVerifyingSolution(true);
-        const response = await fetch(`/api/challenge/${challengeId}/solve`, {
+        const response = await (await fetch(`/api/challenge/${challengeId}/solve`, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 solution
             })
-        });
-        const responseText = await response.text();
+        })).json() as { message: string } | { message: 'OK', code: string };
         setIsVerifyingSolution(false);
+
         const [responseTitle, responseMessage] = {
             "OK": ["Solved!", "You solved this challenge. Good job!"],
             "AssertionError": ["Not quite there...", "Your solution didn't manage to pass the provided tests. Keep trying!"],
             "SyntaxError": ["Syntax Error", "Your solution has a syntax error! Fix it and try to re-submit."],
             "Timeout": ["Timeout", "The server timed out while trying to run your code. This could be because of an infinite loop, or your solution may need to be made more performant."],
-        }[responseText] ?? ["Error", "An unexpected error occurred: " + responseText];
+        }[response.message] ?? ["Error", "An unexpected error occurred: " + response.message];
+        
         openDialog({
             children: <>
                 <DialogTitle>{responseTitle}</DialogTitle>

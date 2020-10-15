@@ -1,8 +1,8 @@
 import { CssBaseline, useMediaQuery } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { createContext, FunctionComponent, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, match, Route, Switch } from 'react-router-dom'; 
+import { BrowserRouter as Router, match, Route, Switch, useHistory } from 'react-router-dom'; 
 import { TopBar } from "../components/TopBar";
 import { FourOhFour } from "./404";
 import { Home } from "./Home";
@@ -12,9 +12,13 @@ import { blue, pink } from "@material-ui/core/colors";
 import { Login } from "./Login";
 import DialogProvider from "../components/DialogProvider";
 import { PlayChallenge } from "./PlayChallenge";
+import { useWebsocket } from "../components/WebSocketProvider";
 
 export interface SiteSettings {
     theme: 'light' | 'dark';
+    currentUser: string | null;
+    currentLobbyId: string | null;
+    isLobbyOwner: boolean;
 }
 
 const App: FunctionComponent = props => {
@@ -27,9 +31,16 @@ const App: FunctionComponent = props => {
     else {
         prefersDarkTheme = browserThemePreference;
     }
-    const [siteSettings, setSiteSettings] = useState({
-        theme: prefersDarkTheme ? 'dark' : 'light'
-    } as SiteSettings);
+    const [siteSettings, setSiteSettings] = useState<SiteSettings>({
+        theme: prefersDarkTheme ? 'dark' : 'light',
+        currentUser: null,
+        currentLobbyId: null,
+        isLobbyOwner: false
+    });
+
+    function changeSiteSettings(settings: Partial<SiteSettings>) {
+        setSiteSettings({...siteSettings, ...settings});
+    }
 
     const theme = React.useMemo(() =>
         createMuiTheme({
@@ -57,45 +68,60 @@ const App: FunctionComponent = props => {
         [siteSettings],
     );
 
-    const [currentUser, setCurrentUser] = useState<{username: string} | null>(null);
+    const history = useHistory();
+    const ws = useWebsocket();
+
     useEffect(() => {
         (async () => {
             const response = await fetch('/api/me');
             if (response.ok) {
-                setCurrentUser(await response.json());
+                changeSiteSettings({currentUser: await response.json()});
             }
         })();
+
+        ws.addEventListener("message", e => {
+            const data = JSON.parse(e.data);
+            switch (data.type) {
+                case "joinLobby":
+                    changeSiteSettings({
+                        currentLobbyId: data.lobbyId,
+                        isLobbyOwner: data.owner
+                    });
+                    break;
+                case "startChallenge":
+                    history.push(`/play/${data.challenge}`);
+                    break;
+            }
+        });
     }, []);
 
     return (
         <ThemeProvider theme={theme}>
         <DialogProvider>
             <CssBaseline/>
-            <Router>
-                <TopBar user={currentUser} siteSettings={siteSettings} setSiteSettings={setSiteSettings}/>
-                <Switch>
-                    <Route exact path="/">
-                        <Home/>
-                    </Route>
-                    <Route path="/login">
-                        <Login/>
-                    </Route>
-                    <Route path="/create">
-                        <CreateChallenge siteSettings={siteSettings}/>
-                    </Route>
-                    <Route path="/play/:id" render={({match}) => (
-                        <PlayChallenge challengeId={(match as match<{id: string}>).params.id} siteSettings={siteSettings}/>
-                    )}/>
-                    <Route path="*">
-                        <FourOhFour/>
-                    </Route>
-                </Switch>
-            </Router>
+            <TopBar siteSettings={siteSettings} setSiteSettings={setSiteSettings}/>
+            <Switch>
+                <Route exact path="/">
+                    <Home/>
+                </Route>
+                <Route path="/login">
+                    <Login/>
+                </Route>
+                <Route path="/create">
+                    <CreateChallenge siteSettings={siteSettings}/>
+                </Route>
+                <Route path="/play/:id" render={({match}) => (
+                    <PlayChallenge challengeId={(match as match<{id: string}>).params.id} siteSettings={siteSettings}/>
+                )}/>
+                <Route path="*">
+                    <FourOhFour/>
+                </Route>
+            </Switch>
         </DialogProvider>
         </ThemeProvider>
     );
 }
 
 if (typeof window !== 'undefined') {
-    ReactDOM.render(<App />, document.getElementById('root'));
+    ReactDOM.render(<Router><App /></Router>, document.getElementById('root'));
 }

@@ -9,6 +9,8 @@ import { ObjectId } from 'mongodb';
 import session from 'express-session';
 import { loadEnv } from './util.js';
 import { testCodeCompletesWithoutError } from './sandbox.js';
+import { wsServer } from './ws.js';
+import nanoid from 'nanoid';
 
 loadEnv();
 
@@ -146,19 +148,25 @@ app.post('/api/challenge/:id/solve', authenticate, async (req, res) => {
     }
     const challengeTests = challenge.tests;
 
-    const testResult = await testCodeCompletesWithoutError([solution,challengeTests])
+    const testResult = await testCodeCompletesWithoutError([solution,challengeTests]);
+    
+    const responseData = {message: ""}
     if (testResult[0]) {
-        res.status(200).send("OK");
+        const confirmationCode = nanoid(32);
+        confirmChallengeCompletion(confirmationCode);
+        responseData.message = "OK";
+        responseData.code = confirmationCode;
     }
     else {
         console.log(testResult[2].code || testResult[2].name);
         switch (testResult[2].code || testResult[2].name) {
             case "ERR_SCRIPT_EXECUTION_TIMEOUT":
-                return res.status(200).send("Timeout");
+                responseData.message = "Timeout";
             default:
-                return res.status(200).send(testResult[2].code || testResult[2].name);
+                responseData.message = testResult[2].code || testResult[2].name;
         }
     }
+    req.json(responseData);
 });
 
 // Unknown API endpoint
@@ -195,6 +203,12 @@ app.use('*', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log("Server started on http://localhost:" + PORT);
+});
+
+server.on('upgrade', (req, socket, head) => {
+    wsServer.handleUpgrade(req, socket, head, socket => {
+        wsServer.emit('connection', socket, req);
+    });
 });
