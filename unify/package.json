@@ -1,9 +1,28 @@
 {
-  "name": "unify",
-  "version": "0.1.0",
-  "private": true,
-  "homepage": "./",
-  "proxy": "http://localhost:5000/",
+  "name": "final-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm run development",
+    "development": "NODE_ENV=development concurrently --kill-others \"npm run client\" \"npm run server\"",
+    "production": "npm run build && NODE_ENV=production npm run server",
+    "server": "node server.js",
+    "client": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjburri/final-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cjburri/final-project/issues"
+  },
+  "homepage": "http://localhost:3000",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
@@ -11,9 +30,13 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.20.0",
+    "body-parser": "^1.19.0",
     "bootstrap": "^4.5.2",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
+    "node-fetch": "^2.6.1",
     "react": "^16.13.1",
     "react-bootstrap-table-next": "^4.0.3",
     "react-bootstrap-table2-paginator": "^2.1.2",
@@ -21,16 +44,10 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
     "react-sticky": "^6.0.3",
-    "reactstrap": "^8.6.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "reactstrap": "^8.6.0",
+    "request": "^2.88.2",
+    "spotify-web-api-node": "^5.0.0",
+    "url": "^0.11.0"
   },
   "browserslist": {
     "production": [
