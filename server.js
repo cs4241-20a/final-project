@@ -96,8 +96,11 @@ app.post('/getSongs', async (req, res) => {
     let user2Map = mapTracks(user2Tracks);
 
     let intersection = getIntersection(user1Map, user2Map);
+    let intersectionArtistsId = getArtistIntersection(intersection);
+    let intersectionArtistsImages = await getFullArtists(intersectionArtistsId)
+
     console.log("RETURNING INTERSECTION BETWEEN " + user1 + " AND " + user2);
-    res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks } ));
+    res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks, artistImages: intersectionArtistsImages } ));
 });
 
 app.post('/login', (req, res) => {
@@ -106,13 +109,35 @@ app.post('/login', (req, res) => {
     res.send(response);
 });
 
+// get the artists in common between two users
+function getArtistIntersection(intersection) {
+    let artists = []
+    for (let i = 0 ; i < intersection.length ; i++) {
+        artists.push(intersection[i].artists[0].id)
+    }
+    return artists
+}
+
+// Get full artist objects of shared artists
+async function getFullArtists(ids) {
+    return spotifyApi.getArtists(ids).then((data) => {
+        return data.body;
+    }, function(err) {
+        console.log('Something went wrong!', err);
+    }).then((artists) => {        
+        let images = []
+        for(let i = 0; i < artists['artists'].length; i++) {
+            images.push(artists['artists'][i])
+        }
+        return images
+    })
+}
+
 // gets all artist names of songs in a user's playlists
 function getUserArtists(tracks) {
     let artists = []
     for (let i = 0 ; i < tracks.length ; i++) {
-        for (let j = 0 ; j < tracks[i].artists.length; j++) {
-            artists.push({name: tracks[i].artists[j].name, images: tracks[i].artists[0].images})
-        }
+        artists.push({name: tracks[i].artists[0].name, images: tracks[i].artists[0].images})
     }
     return artists
 }
