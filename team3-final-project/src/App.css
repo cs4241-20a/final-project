@@ -98,3 +98,9 @@ body{
   font-size: 80%;
   text-align: center;
 }
+.waitWarning{
+  float:right;
+}
+.waitWarning2{
+  float:left;
+}

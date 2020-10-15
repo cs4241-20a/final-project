@@ -153,15 +153,33 @@ class App extends React.Component {
   }
 
   selectChampion(name){
-    let tempSelections = this.state.selections;
-    let tempSelectionNumber = this.state.obsSelectNum.get("selectNum")+1;
+    console.log("draft role is: "+this.state.draftRole+"\nselection number is: "+ this.state.selectionNumber);
+    let x = this.state.selectionNumber
+    if((this.state.draftRole == 0) && (x== 6 || x == 9 || x == 10 || x == 17 || x == 18 || x == 0 || x == 2 || x == 4 || x == 13 || x == 15)){
+      let tempSelections = this.state.selections;
+      let tempSelectionNumber = this.state.obsSelectNum.get("selectNum")+1;
 
-    tempSelections[tempSelectionNumber] = name;
-    this.state.obsSelections.push([name])
-    this.state.obsSelectNum.set("selectNum", tempSelectionNumber)
+      tempSelections[tempSelectionNumber] = name;
+      this.state.obsSelections.push([name])
+      this.state.obsSelectNum.set("selectNum", tempSelectionNumber)
 
-    this.setState({selections : tempSelections});
-    this.setState({selectionNumber : tempSelectionNumber});
+      this.setState({selections : tempSelections});
+      this.setState({selectionNumber : tempSelectionNumber});
+    }
+    else if((this.state.draftRole == 1) && (x == 1 || x == 3 || x == 5 || x == 7 || x == 8 || x == 11 || x == 12 || x == 14 || x == 16 || x == 19)){
+      let tempSelections = this.state.selections;
+      let tempSelectionNumber = this.state.obsSelectNum.get("selectNum")+1;
+
+      tempSelections[tempSelectionNumber] = name;
+      this.state.obsSelections.push([name])
+      this.state.obsSelectNum.set("selectNum", tempSelectionNumber)
+
+      this.setState({selections : tempSelections});
+      this.setState({selectionNumber : tempSelectionNumber});
+    }
+    else{
+      window.alert("It is not your turn to pick.")
+    }
   }
   changeSearchTerm(e){
     this.setState({searchTerm: e.target.value});
@@ -185,7 +203,7 @@ class App extends React.Component {
     let tempArray = ydoc.getArray(code + 'selections');
     let tempNum   = ydoc.getMap  (code  + 'selectionNumber');
 
-    tempNum.set("selectNum", -1) // initialize the the selection number
+    tempNum.set("selectNum", 0) // initialize the the selection number
     tempNum.set("draftRole", 0) // init draft number to start at blue side
     tempArray.delete(0, tempArray.length) // ensure the array is empty
 
@@ -195,107 +213,412 @@ class App extends React.Component {
   // render component HTML using JSX 
   render() {
     //let sum = this.state.sum
+    
     if(this.state.hasRoom){
-      return (
-        <div>
-            <div class = "results">
-                <div class = "team1">
-                    <div class = "teamheader1">
-                        <h1>Team 1</h1>
-                        <h3>Picks</h3>
-                    </div>
-                    
-                    <div class = "picks">
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[6]}/>
+      let x = this.state.selectionNumber;
+      if(this.state.draftRole === -1){
+        return (
+          <div>
+              <div class = "results">
+                  <div class = "team1">
+                      <div class = "teamheader1">
+                          <h1>Team 1</h1>
+                          <h3>Picks</h3>
+                      </div>
+                      
+                      <div class = "picks">
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[6]}/>
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[9]}/>
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[10]}/> 
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[17]}/>
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[18]}/>
+                          </div>
+                      </div>
+                      <h3>Bans</h3>
+                      <div class = "bans">
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[0]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[2]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[4]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[13]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[15]}/>
+                          </div>
+                      </div>
+                  </div>
+                  <div class = "team2">
+                      <div class = "teamheader2">
+                          <h1>Team 2</h1>
+                          <h3>Picks</h3>
+                      </div>
+                      <div class = "picks">
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[7]}/>
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[8]}/>
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[11]}/>
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[16]}/>
+                          </div>
+                          <div class = "pick">
+                              <PickBan name={this.state.selections[19]}/>
+                          </div>
+                      </div>
+                      <h3>Bans</h3>
+                      <div class = "bans">
+                          
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[1]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[3]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[5]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[12]}/>
+                          </div>
+                          <div class = "ban">
+                              <PickBan name={this.state.selections[14]}/>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          )
+        }
+        
+        else if(this.state.draftRole == 1 && (x== 6 || x == 9 || x == 10 || x == 17 || x == 18 || x == 0 || x == 2 || x == 4 || x == 13 || x == 15)){
+          return (
+            <div>
+                <div class = "results">
+                    <div class = "team1">
+                        <div class = "teamheader1">
+                            <h1>Team 1</h1>
+                            <h3>Picks</h3>
                         </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[9]}/>
-                        </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[10]}/> 
-                        </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[17]}/>
-                        </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[18]}/>
-                        </div>
-                    </div>
-                    <h3>Bans</h3>
-                    <div class = "bans">
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[0]}/>
-                        </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[2]}/>
-                        </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[4]}/>
-                        </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[13]}/>
-                        </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[15]}/>
-                        </div>
-                    </div>
-                </div>
-                <div class = "team2">
-                    <div class = "teamheader2">
-                        <h1>Team 2</h1>
-                        <h3>Picks</h3>
-                    </div>
-                    <div class = "picks">
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[7]}/>
-                        </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[8]}/>
-                        </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[11]}/>
-                        </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[16]}/>
-                        </div>
-                        <div class = "pick">
-                            <PickBan name={this.state.selections[19]}/>
-                        </div>
-                    </div>
-                    <h3>Bans</h3>
-                    <div class = "bans">
                         
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[1]}/>
+                        <div class = "picks">
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[6]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[9]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[10]}/> 
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[17]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[18]}/>
+                            </div>
                         </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[3]}/>
+                        
+                        <h3>Bans</h3>
+                        <div class = "bans">
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[0]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[2]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[4]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[13]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[15]}/>
+                            </div>
                         </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[5]}/>
+                    </div>
+                    <div class = "team2">
+                        <div class = "teamheader2">
+                            <h1>Team 2</h1>
+                            <h3>Picks</h3>
                         </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[12]}/>
+                        <div class = "picks">
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[7]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[8]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[11]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[16]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[19]}/>
+                            </div>
                         </div>
-                        <div class = "ban">
-                            <PickBan name={this.state.selections[14]}/>
+                        <h2 class="waitWarning">Please wait, blue side is picking.</h2>
+                        <h3>Bans</h3>
+                        <div class = "bans">
+                            
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[1]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[3]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[5]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[12]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[14]}/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="selectionBox">
-                <div class="input">
-                <form id="boxes">
-                    <input id="champ" type="text" placeholder="SEARCH" value = {this.state.searchTerm} onChange = {(e)=>this.changeSearchTerm(e)}/>
-                    <button type="submit" onClick = {(e)=>this.selectChampion(e)}>Select</button>
-                </form>
-                <br></br>
-                <ChampNameList champs = {this.updateList()} onClickCallback={(e)=>this.selectChampion(e)}/>
+                <div class="selectionBox">
+                    <div class="input">
+                    <form id="boxes">
+                        <input id="champ" type="text" placeholder="SEARCH" value = {this.state.searchTerm} onChange = {(e)=>this.changeSearchTerm(e)}/>
+                        <button type="submit" onClick = {(e)=>this.selectChampion(e)}>Select</button>
+                    </form>
+                    <br></br>
+                    <ChampNameList champs = {this.updateList()} onClickCallback={(e)=>this.selectChampion(e)}/>
+                    </div>
                 </div>
             </div>
-        </div>
-        )
+            )
+        }
+        else if(this.state.draftRole == 0 && (x == 1 || x == 3 || x == 5 || x == 7 || x == 8 || x == 11 || x == 12 || x == 14 || x == 16 || x == 19)){
+          return (
+            <div>
+                <div class = "results">
+                    <div class = "team1">
+                        <div class = "teamheader1">
+                            <h1>Team 1</h1>
+                            <h3>Picks</h3>
+                        </div>
+                        
+                        <div class = "picks">
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[6]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[9]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[10]}/> 
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[17]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[18]}/>
+                            </div>
+                        </div>
+                        <h2 class="waitWarning2">Please wait, red side is picking.</h2>
+                        <h3>Bans</h3>
+                        <div class = "bans">
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[0]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[2]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[4]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[13]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[15]}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "team2">
+                        <div class = "teamheader2">
+                            <h1>Team 2</h1>
+                            <h3>Picks</h3>
+                        </div>
+                        <div class = "picks">
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[7]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[8]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[11]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[16]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[19]}/>
+                            </div>
+                        </div>
+                        <h3>Bans</h3>
+                        <div class = "bans">
+                            
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[1]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[3]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[5]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[12]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[14]}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="selectionBox">
+                    <div class="input">
+                    <form id="boxes">
+                        <input id="champ" type="text" placeholder="SEARCH" value = {this.state.searchTerm} onChange = {(e)=>this.changeSearchTerm(e)}/>
+                        <button type="submit" onClick = {(e)=>this.selectChampion(e)}>Select</button>
+                    </form>
+                    <br></br>
+                    <ChampNameList champs = {this.updateList()} onClickCallback={(e)=>this.selectChampion(e)}/>
+                    </div>
+                </div>
+            </div>
+            )
+        }
+        else if((this.state.draftRole == 1 && (x != 6 || x != 9 || x != 10 || x != 17 || x != 18 || x != 0 || x != 2 || x != 4 || x != 13 || x != 15)) || (this.state.draftRole == 0 && (x != 1 || x != 3 || x != 5 || x != 7 || x != 8 || x != 11 || x != 12 || x != 14 || x != 16 || x != 19))){
+          return (
+            <div>
+                <div class = "results">
+                    <div class = "team1">
+                        <div class = "teamheader1">
+                            <h1>Team 1</h1>
+                            <h3>Picks</h3>
+                        </div>
+                        
+                        <div class = "picks">
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[6]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[9]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[10]}/> 
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[17]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[18]}/>
+                            </div>
+                        </div>
+                        
+                        <h3>Bans</h3>
+                        <div class = "bans">
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[0]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[2]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[4]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[13]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[15]}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "team2">
+                        <div class = "teamheader2">
+                            <h1>Team 2</h1>
+                            <h3>Picks</h3>
+                        </div>
+                        <div class = "picks">
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[7]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[8]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[11]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[16]}/>
+                            </div>
+                            <div class = "pick">
+                                <PickBan name={this.state.selections[19]}/>
+                            </div>
+                        </div>
+                        <h3>Bans</h3>
+                        <div class = "bans">
+                            
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[1]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[3]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[5]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[12]}/>
+                            </div>
+                            <div class = "ban">
+                                <PickBan name={this.state.selections[14]}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="selectionBox">
+                    <div class="input">
+                    <form id="boxes">
+                        <input id="champ" type="text" placeholder="SEARCH" value = {this.state.searchTerm} onChange = {(e)=>this.changeSearchTerm(e)}/>
+                        <button type="submit" onClick = {(e)=>this.selectChampion(e)}>Select</button>
+                    </form>
+                    <br></br>
+                    <ChampNameList champs = {this.updateList()} onClickCallback={(e)=>this.selectChampion(e)}/>
+                    </div>
+                </div>
+            </div>
+            )
+        }
     }
     else if(!this.state.hasRoom){
       return(
