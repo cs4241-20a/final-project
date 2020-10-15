@@ -77,11 +77,12 @@ const authenticate = (req, /** @type {import('express').Response} */ res, /** @t
 };
 
 function fixChallenge(challenge) {
-    if (challenge.id === null) {
-        challenge.id = challenge._id.toString();
+    const newChallenge = {...challenge};
+    if (newChallenge.id == null) {
+        newChallenge.id = newChallenge._id.toString();
     }
-    delete challenge._id;
-    return challenge;
+    delete newChallenge._id;
+    return newChallenge;
 }
 
 app.get('/api/challenge/all', async (req, res) => {
@@ -98,6 +99,10 @@ app.get('/api/challenge/all', async (req, res) => {
 app.post('/api/challenge', authenticate, async (req, res) => {
     const { title, description, starterCode, solution, tests } = req.body;
     if ([typeof title, typeof description, typeof starterCode, typeof solution, typeof tests].every(x => x === 'string')) {
+        const testResult = await testCodeCompletesWithoutError([solution, tests]);
+        if (!testResult[0])  {
+            return res.status(400).send("Your solution could not be verified. It may take too long to run, or it may not match your test code.");
+        }
         /** @type {import('mongodb').Collection<import('../frontend/js/types/challenge').Challenge>} */
         const challenges = await getCollection('challenges');
         const result = await challenges.insertOne({
@@ -138,9 +143,19 @@ app.post('/api/challenge/:id/solve', authenticate, async (req, res) => {
     }
     const challengeTests = challenge.tests;
 
-    // testResult = [0: true for pass, fasle for fail; 1: error type; 2: error message]
     const testResult = await testCodeCompletesWithoutError([solution,challengeTests])
-    return res.status(200).json({"passed":testResult[0], "errorType": testResult[1], "errorMessage": testResult[2]});
+    if (testResult[0]) {
+        res.status(200).send("OK");
+    }
+    else {
+        console.log(testResult[2].code || testResult[2].name);
+        switch (testResult[2].code || testResult[2].name) {
+            case "ERR_SCRIPT_EXECUTION_TIMEOUT":
+                return res.status(200).send("Timeout");
+            default:
+                return res.status(200).send(testResult[2].code || testResult[2].name);
+        }
+    }
 });
 
 // Unknown API endpoint

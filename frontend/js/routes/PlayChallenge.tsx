@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, DialogActions, DialogContent, DialogTitle, Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FunctionComponent } from "react";
-import { handleChange } from '../utils/util';
+import { handleChange, handleChangeWithValue } from '../utils/util';
 import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 import { ControlledEditor as Editor, EditorDidMount } from '@monaco-editor/react';
@@ -100,6 +100,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         setIsVerifyingSolution(true);
         const response = await fetch(`/api/challenge/${challengeId}/solve`, {
             method: "POST",
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 solution
             })
@@ -108,7 +109,9 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         setIsVerifyingSolution(false);
         const [responseTitle, responseMessage] = {
             "OK": ["Solved!", "You solved this challenge. Good job!"],
-            "BadSolution": ["Not quite there...", "Your solution didn't manage to pass the provided tests. Keep trying!"]
+            "AssertionError": ["Not quite there...", "Your solution didn't manage to pass the provided tests. Keep trying!"],
+            "SyntaxError": ["Syntax Error", "Your solution has a syntax error! Fix it and try to re-submit."],
+            "Timeout": ["Timeout", "The server timed out while trying to run your code. This could be because of an infinite loop, or your solution may need to be made more performant."],
         }[responseText] ?? ["Error", "An unexpected error occurred: " + responseText];
         openDialog({
             children: <>
@@ -158,7 +161,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
                             theme={siteSettings.theme}
                             options={editorOptions}
                             value={solution}
-                            onChange={handleChange(setSolution)}
+                            onChange={handleChangeWithValue(setSolution)}
                             editorDidMount={handleEditorMount}
                         />
                     </Paper>

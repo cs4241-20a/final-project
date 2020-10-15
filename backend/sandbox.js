@@ -10,32 +10,24 @@ const vm = new VM({
 
 const assertMethod = `
     function assert(booleanExpression, errorMessage){
-
-        message = "Assertion Failed! "
-
-        if (errorMessage && typeof errorMessage === "string"){ // error message set up
-            message = message.concat("Error Message: ", errorMessage)
-        }
-
         if (!booleanExpression) {
-            throw message
+            const error = new Error(errorMessage);
+            error.name = "AssertionError";
+            throw error;
         }
     }
-
-
 `
 
 /**
  * Runs untrusted code in a safe execution environment
  * and returns true if the code runs successfully without throwing any errors.
- * @param {Array} : [solution,challengeTests]
- * @returns {Array} 
+ * @param {[solution: string, tests: string]} argArray
+ * @returns {Promise<[success: boolean, errType: string, errMsg: Error]>} 
  *      [0]: boolean, indicates test success or fail
  *      [1]: Error Type
  *      [2]: Error message
  */
 export async function testCodeCompletesWithoutError(argArray) {
-
     const solution = argArray[0]
     const challengeTests = argArray[1]
     let answer = [false, "", ""]
@@ -98,7 +90,6 @@ export async function testCodeCompletesWithoutError(argArray) {
     try { // Run the test script
         vm.run(testScript)
     } catch (err) {
-
         if (debugMode)
             console.error('Failed to test the solution script.', err);
         else
@@ -108,6 +99,6 @@ export async function testCodeCompletesWithoutError(argArray) {
         return answer
     }
 
-    answer = [true, "NO ERROR", "NO ERROR MESSAGE"]
+    answer = [true, "NO ERROR", {}]
     return answer;
 } 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, DialogActions, DialogContent, DialogTitle, Paper, Snackbar, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FunctionComponent } from "react";
-import { handleChange } from '../utils/util';
+import { handleChange, handleChangeWithValue } from '../utils/util';
 import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 import { ControlledEditor as Editor } from '@monaco-editor/react';
@@ -70,7 +70,8 @@ export const CreateChallenge: FunctionComponent<{siteSettings: SiteSettings}> = 
 In this challenge, you will have to write a Hello, World function.
 
 # Objectives
-- Write a function \`helloWorld\` which returns the string \`"Hello, World!"\``);
+- Write a function \`helloWorld\` which returns the string \`"Hello, World!"\`
+- You can also require the presence of variables with certain values, and check for them in your test code!`);
 
     const [starterCode, setStarterCode] = useState(
 `function helloWorld() {
@@ -85,11 +86,15 @@ In this challenge, you will have to write a Hello, World function.
 
     const [tests, setTests] = useState(
 `// The tests will fail if any error is thrown
-console.assert(helloWorld() == "Hello, World!");`);
+assert(helloWorld() == "Hello, World!");`);
+
+    const [isPublishing, setIsPublishing] = useState(false);
 
     async function publish() {
+        setIsPublishing(true);
         const response = await fetch('/api/challenge', {
             method: "POST",
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 title,
                 description,
@@ -98,9 +103,11 @@ console.assert(helloWorld() == "Hello, World!");`);
                 tests
             } as Omit<Challenge, 'id' | 'author'>)
         });
+        setIsPublishing(false);
         if (response.ok) {
             const body = await response.json();
-            history.push(`/challenge/${body.id}`);
+            console.log(body);
+            history.push(`/play/${body.id}`);
         }
         else {
             openDialog({
@@ -147,7 +154,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                             theme={siteSettings.theme}
                             options={{...editorOptions, wordWrap: 'on'}}
                             value={description}
-                            onChange={handleChange(setDescription)}
+                            onChange={handleChangeWithValue(setDescription)}
                             editorDidMount={(_, e) => editors.push(e)}
                         />
                     </Paper>
@@ -159,7 +166,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                             theme={siteSettings.theme}
                             options={editorOptions}
                             value={starterCode}
-                            onChange={handleChange(setStarterCode)}
+                            onChange={handleChangeWithValue(setStarterCode)}
                             editorDidMount={(_, e) => editors.push(e)}/>
                     </Paper>
                 </Pane>
@@ -172,7 +179,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                             theme={siteSettings.theme}
                             options={editorOptions}
                             value={solution}
-                            onChange={handleChange(setSolution)}
+                            onChange={handleChangeWithValue(setSolution)}
                             editorDidMount={(_, e) => editors.push(e)}
                         />
                     </Paper>
@@ -184,12 +191,13 @@ console.assert(helloWorld() == "Hello, World!");`);
                             theme={siteSettings.theme}
                             options={editorOptions}
                             value={tests}
-                            onChange={handleChange(setTests)}
+                            onChange={handleChangeWithValue(setTests)}
                             editorDidMount={(_, e) => editors.push(e)}
                         />
                     </Paper>
                 </Pane>
             </SplitPane>
+            <Snackbar open={isPublishing} anchorOrigin={{vertical: "bottom", horizontal: "left"}} message="Publishing..."/>
         </div>
     );
 };
