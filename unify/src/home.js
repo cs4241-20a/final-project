@@ -5,8 +5,15 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
+import WebSocket from 'websocket'
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+
+// const ws = require('ws');
+
+const ws = new W3CWebSocket('ws://localhost:8000');
 
 export default class Home extends React.Component {
+    
     constructor(props) {
         super(props)
 
@@ -27,15 +34,19 @@ export default class Home extends React.Component {
             typedMsg: ""
         }
 
+         
+    
+
         this.overlayDiv = React.createRef()
 
+        // this.send = this.send.bind(this)
         this.getSongs = this.getSongs.bind(this)
         this.handleUser1Change = this.handleUser1Change.bind(this)
         this.handleUser2Change = this.handleUser2Change.bind(this)
         this.setChatState = this.setChatState.bind(this)
         this.toggleOverlay = this.toggleOverlay.bind(this)
         this.handleMessageChange = this.handleMessageChange.bind(this)
-        this.sendMessage = this.sendMessage.bind(this)
+        // this.sendMessage = this.sendMessage.bind(this)
     }
 
 
@@ -113,20 +124,69 @@ export default class Home extends React.Component {
         }
     }
 
-    // NEED TO WATCH LECTURES FOR THIS PART (i think)
-    sendMessage() {
-        // FOR WHEN SERVER IS SET UP
-        //let bodyJson = {id: this.state.latestId, message: this.state.typedMsg}
-        // fetch('/postMsg', {
-        //     method: 'POST',
-        //     body: JSON.stringify(bodyJson),
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // }).then(response => response.json())
-        this.setState({ typedMsg: "" })
+    // // NEED TO WATCH LECTURES FOR THIS PART (i think)
+    // sendMessage() {
+    //     // FOR WHEN SERVER IS SET UP
+    //     //let bodyJson = {id: this.state.latestId, message: this.state.typedMsg}
+    //     // fetch('/postMsg', {
+    //     //     method: 'POST',
+    //     //     body: JSON.stringify(bodyJson),
+    //     //     headers: {
+    //     //         "Content-Type": "application/json"
+    //     //     }
+    //     // }).then(response => response.json())
+    //     this.setState({ typedMsg: "" })
+    // }
+
+
+    onButtonClicked = (value) => {
+        ws.send(JSON.stringify({
+            type: "message",
+            msg: value
+        }));
     }
 
+
+    componentDidMount() {
+        ws.onopen = () => {
+            console.log("connection to websocket server");
+    };
+        ws.onmessage = (message) => {
+            const dataFromServer = JSON.parse(message.data);
+            console.log("got reply!", dataFromServer);
+        };
+    }
+
+
+
+
+
+
+    //  sendMessage() {
+    //     let msgs = this.state.messages
+    //     let ws = new W3CWebSocket('ws://localhost:3000')
+    //     window.onload = function() {
+        
+    //    // when connection is established...
+    //     ws.onopen = () => {
+    //         console.log("connection to client")
+    //         ws.send( 'a new client has connected.' )
+    //         ws.onmessage = msg => {
+    //          // add message to end of msgs array,
+    //          // re-assign to trigger UI update
+    //        msgs = msgs.concat([ msg.data ])
+    //      }
+    //    }
+    //  }
+    //     console.log("sending message")
+    //    const txt = document.getElementById('chatinput').value
+    //    console.log("message.sent")
+    //    ws.send( txt )
+    //      // re-assigning to msgs variable triggers UI update
+    //    msgs = msgs.concat([txt])
+     
+
+     
 
     render () {
         // Show table on recieving data from server
@@ -184,11 +244,19 @@ export default class Home extends React.Component {
                         </Container>
 
                         <div id="writeMsgDiv">
-                            <Input type="text" placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} value={this.state.typedMsg} ></Input>
-                            <Button className="btn btn-primary" onClick={this.sendMessage}>Send</Button>
+
+                                
+
+                            <Input type="text" id="chatinput" placeholder="Type a message" style={{width: "80%", marginRight: "20px"}} onChange={this.handleMessageChange} 
+                            value={this.state.typedMsg} ></Input>
+                            <Button className="btn btn-primary" onClick={() => this.onButtonClicked("hello")}>Send</Button>
+
                         </div>
 
                     </div>
+
+// onClick={this.componentDidMount}
+
                     )
             }
         }
