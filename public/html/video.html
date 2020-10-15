@@ -144,6 +144,7 @@
       oMovieWidth = oMovie.offsetWidth;
       var timer2;
 
+
       oBtn.onclick = send;
       oInput.onkeydown = function (e) {
         if (e.keyCode == 13) {
@@ -151,9 +152,22 @@
           send();
         }
       };
+
+      function getPosition(element) {
+        var xPosition = 0;
+
+        while(element) {
+          xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+          element = element.offsetParent;
+        }
+
+        return xPosition;
+      }
+
       // var iframeVideo = document.getElementById("video")
       // setTimeout(function(){ console.log(iframeVideo.getCurrentTime()) }, 1000);
       function send() {
+        console.log("width ",oMovieWidth)
         var oForm = document.getElementById('form');
         if (oInput.value.length <= 0 || /^\s+$/.test(oInput.value)) {
           oAl.style.display = "block";
@@ -172,12 +186,13 @@
       function createSpan(text) {
         var oSpan = document.createElement("span");
         oSpan.innerText = text;
-        oSpan.style.left = oMovieWidth + "px";
+        oSpan.style.left = oMovieWidth+getPosition(oMovie)-oSpan.offsetWidth + "px";
         oMovie.appendChild(oSpan);
         styleSpan(oSpan);
       }
       function styleSpan(dom) {
         dom.style.top = random(0, 180) + "px";
+        dom.style.fontWeight = "bold"
         dom.style.color =
           "rgb(" +
           random(0, 255) +
@@ -186,7 +201,7 @@
           "," +
           random(0, 255) +
           ")";
-        dom.style.fontSize = random(8, 24) + "px";
+        dom.style.fontSize = random(24, 30) + "px";
         var domW = dom.offsetWidth;
         var speed = [0, 1, 2][random(0, 2)];
         dom.timer = setInterval(function () {
@@ -200,7 +215,7 @@
             case 2:
               dom.style.left = dom.offsetLeft - 4 + "px";
           }
-          if (dom.offsetLeft <= -domW) {
+          if (dom.offsetLeft <= getPosition(oMovie)) {
             clearInterval(dom.timer);
             oMovie.removeChild(dom);
           }
