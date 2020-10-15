@@ -1,4 +1,4 @@
-export function init() {
+export function init(user) {
   var webgl_canvas = null;
 
   LiteGraph.node_images_path = "../nodes_data/";
@@ -35,10 +35,10 @@ export function init() {
 
   elem.querySelector("#save").addEventListener("click", function() {
     console.log("saved");
-    const user = document.getElementById("username").innerHTML;
+    // const user = document.getElementById("username").innerHTML;
     const now = new Date();  
     const secondsSinceEpoch = Math.round(now.getTime() / 1000);
-    const insertString = JSON.stringify({user: user, time: secondsSinceEpoch, graph: graph.serialize()});
+    const insertString = JSON.stringify({user: user.username, time: secondsSinceEpoch, graph: graph.serialize()});
     
     fetch( '/add', {
     method:  'POST',
@@ -52,11 +52,11 @@ export function init() {
   });
 
   elem.querySelector("#load").addEventListener("click", function() {
-    const user = document.getElementById("username").innerHTML;
+    // const user = document.getElementById("username").innerHTML;
     fetch('/load',{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({user:user})
+      body: JSON.stringify({user:user.username})
     })
     .then( function( response ) { 
         console.log(response.json().then((data) => {

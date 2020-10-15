@@ -2381,7 +2381,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.init = init;
 
-function init() {
+function init(user) {
   var webgl_canvas = null;
   LiteGraph.node_images_path = "../nodes_data/";
   var editor = new LiteGraph.Editor("main", {
@@ -2413,12 +2413,12 @@ function init() {
     if (url) graph.load(url);else if (option.callback) option.callback();else graph.clear();
   });
   elem.querySelector("#save").addEventListener("click", function () {
-    console.log("saved");
-    const user = document.getElementById("username").innerHTML;
+    console.log("saved"); // const user = document.getElementById("username").innerHTML;
+
     const now = new Date();
     const secondsSinceEpoch = Math.round(now.getTime() / 1000);
     const insertString = JSON.stringify({
-      user: user,
+      user: user.username,
       time: secondsSinceEpoch,
       graph: graph.serialize()
     });
@@ -2434,14 +2434,14 @@ function init() {
     });
   });
   elem.querySelector("#load").addEventListener("click", function () {
-    const user = document.getElementById("username").innerHTML;
+    // const user = document.getElementById("username").innerHTML;
     fetch('/load', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        user: user
+        user: user.username
       })
     }).then(function (response) {
       console.log(response.json().then(data => {
@@ -2562,6 +2562,16 @@ function init() {
     note: [220, 330, 440]
   };
   let list = [{
+    name: "Clap",
+    function: () => Clap(),
+    key: "trigger",
+    props: {
+      gain: 1,
+      spacing: 100,
+      decay: 0.2,
+      loudness: 1
+    }
+  }, {
     name: "Conga",
     function: () => Conga(),
     key: "trigger",
@@ -2574,41 +2584,79 @@ function init() {
   }, {
     name: "Cowbell",
     function: () => Cowbell(),
-    key: "trigger"
+    key: "trigger",
+    props: {
+      gain: 1,
+      decay: 0.5,
+      loudness: 1
+    }
   }, {
-    name: "Clap",
-    function: () => Clap(),
-    key: "trigger"
+    name: "FM",
+    function: () => FM(),
+    key: "note",
+    props: {
+      gain: 0.5,
+      attack: 44,
+      decay: 22050
+    }
   }, {
     name: "Hat",
     function: () => Hat(),
-    key: "trigger"
+    key: "trigger",
+    props: {
+      gain: 0.5,
+      tune: 0.6,
+      decay: 0.1,
+      loudness: 1
+    }
   }, {
     name: "Kick",
     function: () => Kick(),
-    key: "trigger"
+    key: "trigger",
+    props: {
+      gain: 1,
+      frequency: 85,
+      tone: 0.25,
+      decay: 0.9,
+      loudness: 1
+    }
   }, {
     name: "Snare",
     function: () => Snare(),
-    key: "trigger"
+    key: "trigger",
+    props: {
+      gain: 0.5,
+      tune: 0,
+      snappy: 1,
+      decay: 0.1,
+      loudness: 1
+    }
   }, {
     name: "Synth",
     function: () => Synth(),
-    key: "note"
+    key: "note",
+    props: {
+      gain: 0.5,
+      attack: 44,
+      decay: 22050
+    }
   }, {
     name: "Tom",
     function: () => Tom(),
-    key: "trigger"
+    key: "trigger",
+    props: {
+      gain: 1,
+      decay: 0.7,
+      frequency: 120,
+      loudness: 1
+    }
   }];
   list.forEach(instrument => {
-    console.log(Object.getOwnPropertyNames(instrument.function()));
-
     function Node() {
       this.addOutput("Instrument", "instrument");
-      instrument.props.forEach(prop => {
-        this.addInput("");
+      Object.keys(instrument.props).forEach(key => {
+        this.addInput(key, "number");
       });
-      this.addInput("Gain", "number");
     } //name to show
 
 
@@ -2616,19 +2664,25 @@ function init() {
 
     Node.prototype.onStart = function () {
       this.setOutputData(0, {
-        sound: this.sound,
-        key: this.key
+        sound: this.gibberishInstrument,
+        key: this.gibberishKey
       });
     };
 
     Node.prototype.onAdded = function () {
-      this.sound = instrument.function();
-      this.key = instrument.key;
+      this.gibberishInstrument = instrument.function();
+      this.gibberishKey = instrument.key;
+      this.setOutputData(0, {
+        sound: this.gibberishInstrument,
+        key: this.gibberishKey
+      });
     };
 
     Node.prototype.onExecute = function () {
-      let gain = isNaN(this.getInputData(0)) ? 1.0 : this.getInputData(0);
-      this.sound.gain = gain;
+      Object.keys(instrument.props).forEach((key, i) => {
+        let value = isNaN(this.getInputData(i)) ? instrument.props[key] : this.getInputData(i);
+        this.gibberishInstrument[key] = value;
+      });
     };
 
     Node.prototype.onConnectionsChange = function (connection, slot, connected, link_info) {
@@ -2640,8 +2694,8 @@ function init() {
       if (connected) {
         if (link_info.origin_slot === 0) {
           this.setOutputData(0, {
-            sound: this.sound,
-            key: this.key
+            sound: this.gibberishInstrument,
+            key: this.gibberishKey
           });
         }
       }
@@ -2657,31 +2711,49 @@ function init() {
     this.addInput("Timings", "array");
   }
 
+  function mapSequencerInput(node, instrument) {
+    node.gibberishInstrument = instrument.sound;
+    node.gibberishSequencer.target = node.gibberishInstrument;
+    node.gibberishSequencer.values = defaults[instrument.key];
+    node.gibberishSequencer.key = instrument.key;
+
+    if (graph.status === LGraph.STATUS_RUNNING) {
+      node.gibberishInstrument.connect();
+      node.gibberishSequencer.start();
+    }
+  }
+
   SequencerNode.title = "Sequencer";
 
   SequencerNode.prototype.onAdded = function () {
-    this.source;
-    this.sequencer = Sequencer.make(defaults["trigger"], [10000], this.source, "trigger");
+    this.gibberishInstrument;
+    this.gibberishSequencer = Sequencer.make(defaults["trigger"], [15000], this.gibberishInstrument, "trigger");
+
+    if (this.getInputData(0)) {
+      mapSequencerInput(this, this.getInputData(0));
+    }
   };
 
   SequencerNode.prototype.onRemoved = function () {
-    if (this.source) {
-      this.sequencer.stop();
-      this.source.disconnect();
+    if (this.gibberishInstrument) {
+      this.gibberishSequencer.stop();
+      this.gibberishInstrument.disconnect();
     }
   };
 
   SequencerNode.prototype.onStop = function () {
-    if (this.source) {
-      this.sequencer.stop();
-      this.source.disconnect();
+    if (this.gibberishInstrument) {
+      this.gibberishSequencer.stop();
+      this.gibberishInstrument.disconnect();
     }
   };
 
   SequencerNode.prototype.onStart = function () {
-    if (this.source) {
-      this.source.connect();
-      this.sequencer.start();
+    if (this.gibberishInstrument) {
+      this.gibberishInstrument.connect();
+      this.gibberishSequencer.start();
+    } else if (this.getInputData(0)) {
+      mapSequencerInput(this, this.getInputData(0));
     }
   };
 
@@ -2690,40 +2762,32 @@ function init() {
     let timings = this.getInputData(2);
 
     if (values) {
-      values = values.some(isNaN) ? defaults[this.sequencer.key] : values;
-      this.sequencer.values = values;
+      values = values.some(isNaN) ? defaults[this.gibberishSequencer.key] : values;
+      this.gibberishSequencer.values = values;
     }
 
     if (timings) {
       timings = timings.some(isNaN) ? [10000] : timings;
-      this.sequencer.timings = timings;
+      this.gibberishSequencer.timings = timings;
     }
   };
 
   SequencerNode.prototype.onConnectionsChange = function (connection, slot, connected, link_info) {
-    //only process the outputs events
+    //only process the inputs events
     if (connection != LiteGraph.INPUT) {
       return;
     }
 
     if (connected && link_info && link_info.data) {
       if (link_info.target_slot === 0) {
-        this.source = link_info.data.sound;
-        this.sequencer.target = this.source;
-        this.sequencer.values = defaults[link_info.data.key];
-        this.sequencer.key = link_info.data.key;
-
-        if (graph.status === LGraph.STATUS_RUNNING) {
-          this.source.connect();
-          this.sequencer.start();
-        }
+        mapSequencerInput(this, link_info.data);
       }
     } else if (link_info) {
       if (link_info.target_slot === 0) {
-        if (this.source) {
-          this.sequencer.stop();
-          this.source.disconnect();
-          this.source = false;
+        if (this.gibberishInstrument) {
+          this.gibberishSequencer.stop();
+          this.gibberishInstrument.disconnect();
+          this.gibberishInstrument = false;
         }
       }
     }
@@ -2741,6 +2805,18 @@ exports.init = init;
 
 function init() {
   let list = [{
+    name: "Noise",
+    function: () => Noise()
+  }, {
+    name: "PWM",
+    function: () => PWM()
+  }, {
+    name: "ReverseSaw",
+    function: () => ReverseSaw()
+  }, {
+    name: "Saw",
+    function: () => Saw()
+  }, {
     name: "Sine",
     function: () => Sine()
   }, {
@@ -2749,11 +2825,8 @@ function init() {
   }, {
     name: "Triangle",
     function: () => Triangle()
-  }, {
-    name: "Saw",
-    function: () => Saw()
   }];
-  list.forEach(instrument => {
+  list.forEach(oscillator => {
     function Node() {
       this.addOutput("Oscillator", "oscillator");
       this.addInput("Frequency", "number");
@@ -2761,21 +2834,22 @@ function init() {
     } //name to show
 
 
-    Node.title = instrument.name;
+    Node.title = oscillator.name;
 
     Node.prototype.onStart = function () {
-      this.setOutputData(0, this.sound);
+      this.setOutputData(0, this.gibberishOscillator);
     };
 
     Node.prototype.onAdded = function () {
-      this.sound = instrument.function();
+      this.gibberishOscillator = oscillator.function();
+      this.setOutputData(0, this.gibberishOscillator);
     };
 
     Node.prototype.onExecute = function () {
       let freq = isNaN(this.getInputData(0)) ? 300 : this.getInputData(0);
       let gain = isNaN(this.getInputData(1)) ? 1.0 : this.getInputData(1);
-      this.sound.frequency = freq;
-      this.sound.gain = gain;
+      this.gibberishOscillator.frequency = freq;
+      this.gibberishOscillator.gain = gain;
     };
 
     Node.prototype.onConnectionsChange = function (connection, slot, connected, link_info) {
@@ -2786,36 +2860,52 @@ function init() {
 
       if (connected) {
         if (link_info.origin_slot === 0) {
-          this.setOutputData(0, this.sound);
+          this.setOutputData(0, this.gibberishOscillator);
         }
       }
     }; //register in the system
 
 
-    LiteGraph.registerNodeType("oscillator/" + instrument.name, Node);
+    LiteGraph.registerNodeType("oscillator/" + oscillator.name, Node);
   });
 
   function OutputNode() {
     this.addInput("Oscillator", "oscillator");
   }
 
+  function mapOutputInput(node, input) {
+    node.gibberishOscillator = input;
+
+    if (graph.status === LGraph.STATUS_RUNNING) {
+      node.gibberishOscillator.connect();
+    }
+  }
+
   OutputNode.title = "Output";
 
   OutputNode.prototype.onStart = function () {
-    if (this.source) {
-      this.source.connect();
+    if (this.gibberishOscillator) {
+      this.gibberishOscillator.connect();
+    } else if (this.getInputData(0)) {
+      mapOutputInput(this, this.getInputData(0));
+    }
+  };
+
+  OutputNode.prototype.onAdded = function () {
+    if (this.getInputData(0)) {
+      mapOutputInput(this, this.getInputData(0));
     }
   };
 
   OutputNode.prototype.onStop = function () {
-    if (this.source) {
-      this.source.disconnect();
+    if (this.gibberishOscillator) {
+      this.gibberishOscillator.disconnect();
     }
   };
 
   OutputNode.prototype.onRemoved = function () {
-    if (this.source) {
-      this.source.disconnect();
+    if (this.gibberishOscillator) {
+      this.gibberishOscillator.disconnect();
     }
   };
 
@@ -2827,70 +2917,152 @@ function init() {
 
     if (connected && link_info && link_info.data) {
       if (link_info.target_slot === 0) {
-        this.source = link_info.data;
-
-        if (graph.status === LGraph.STATUS_RUNNING) {
-          this.source.connect();
-        }
+        mapOutputInput(this, link_info.data);
       }
     } else if (link_info) {
       if (link_info.target_slot === 0) {
-        this.source.disconnect();
-        this.source = false;
+        this.gibberishOscillator.disconnect();
+        this.gibberishOscillator = false;
       }
     }
   };
 
   LiteGraph.registerNodeType("oscillator/Output", OutputNode);
-  /*     
-    function reverseSawNode() {
-      this.addOutput("Output", "gibber");
-      this.properties = {
-        precision: 1
-      };
-      this.saw = ReverseSaw();
+}
+},{}],"nodes/effects.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.init = init;
+
+function init() {
+  let list = [{
+    name: "BitCrusher",
+    function: () => BitCrusher(),
+    props: {
+      bitDepth: 0.5,
+      sampleRate: 0.5
     }
-     ReserveSaw.title = "ReserveSaw";
-     //function to call when the node is executed
-    reverseSawNode.prototype.onStart = function() {
-      this.setOutputData(0, this.saw);
-      console.log("reversesaw output start");
-    };
-     reverseSawNode.prototype.onStop = function() {
-      this.setOutputData(0, false);
-      console.log("saw output stop");
-    };
-    LiteGraph.registerNodeType("gibber/reversesaw", reverseSawNode); //reverse 
-     var node_rsaw = LiteGraph.createNode("gibber/reversesaw"); //reverse
-    node_rsaw.pos = [400, 200];
-    graph.add(node_rsaw);
-    
-  ///need to get Conga to get Cowbell??
-     function CowBellNode() {
-      this.addOutput("Output", "gibber");
-      this.properties = {
-        precision: 1
-      };
+  }, {
+    name: "Buffer Shuffler",
+    function: () => Shuffler(),
+    props: {
+      rate: 22050,
+      chance: 0.25,
+      reverseChance: 0.5,
+      repitchChance: 0.5,
+      repitchMin: 0.5,
+      repitchMax: 2,
+      pan: 0.5,
+      mix: 0.5
     }
-     CowBellNode.title = "Cowbell";
-     //function to call when the node is executed
-    CowBellNode.prototype.onStart = function() {
-      this.cowbell = Cowbell();
-      this.cowbell.connect();
-      this.setOutputData(0, this.cowbell);
-       console.log("cowbell output start");
+  }, {
+    name: "Chorus",
+    function: () => Chorus(),
+    props: {
+      slowFrequency: 0.18,
+      slowGain: 3,
+      fastFrequency: 6,
+      fastGain: 1,
+      inputGain: 1
+    }
+  }, {
+    name: "Delay",
+    function: () => Delay(),
+    props: {
+      feedback: 0.5,
+      time: 11025,
+      wetdry: 0.5
+    }
+  }, {
+    name: "Distortion",
+    function: () => Distortion(),
+    props: {
+      shape1: 0.1,
+      shape2: 0.1,
+      pregain: 5,
+      postgain: 0.5
+    }
+  }, {
+    name: "Flanger",
+    function: () => Flanger(),
+    props: {
+      feedback: 0.81,
+      offset: 0.125,
+      frequency: 1
+    }
+  }, {
+    name: "Ring Mod",
+    function: () => RingMod(),
+    props: {
+      frequency: 220,
+      gain: 1,
+      mix: 1
+    }
+  }, {
+    name: "Reverb",
+    function: () => Reverb(),
+    props: {
+      wet1: 1,
+      wet2: 0,
+      dry: 0.5,
+      roomSize: 0.925,
+      damping: 0.5
+    }
+  }, {
+    name: "Vibrato",
+    function: () => Vibrato(),
+    props: {
+      feedback: 0.01,
+      amount: 0.5,
+      frequency: 4
+    }
+  }];
+  list.forEach(object => {
+    function Node() {
+      this.addOutput("Instrument", "instrument");
+      this.addInput("Instrument", "instrument");
+      Object.keys(object.props).forEach(key => {
+        this.addInput(key, "number");
+      });
+    } //name to show
+
+
+    Node.title = object.name;
+
+    Node.prototype.onStart = function () {
+      this.setOutputData(0, this.source);
     };
-     CowBellNode.prototype.onStop = function() {
-      this.cowbell.disconnect();
-      this.cowbell = false;
-      this.setOutputData(0, this.cowbell);
-       console.log("cowbell output stop");
+
+    Node.prototype.onAdded = function () {
+      this.gibberishEffect = object.function(); ///
+      // this is a Gibberish Effect
+      //this.effect = object.function();
+      // this is a Gibberish Instrument
+      //this.input = this.getInputData(0);
     };
-     //register in the system
-    LiteGraph.registerNodeType("gibber/cowbell", CowBellNode);
-     var node_cowbell = LiteGraph.createNode("gibber/cowbell");
-    node_cowbell.pos = [400, 200];
-    graph.add(node_cowbell); */
+
+    Node.prototype.onExecute = function () {
+      //connect this.gibberishEffect and set input on that object to gibberishInput object
+      Object.keys(object.props).forEach((key, i) => {
+        let value = isNaN(this.getInputData(i + 1)) ? object.props[key] : this.getInputData(i + 1);
+        this.gibberishEffect[key] = value;
+      });
+    };
+
+    Node.prototype.onConnectionsChange = function (connection, slot, connected, link_info) {
+      //only process the outputs events
+      if (connection != LiteGraph.OUTPUT) {
+        return;
+      } //alex needs to fix what this does lol
+
+    }; //register in the system
+
+
+    LiteGraph.registerNodeType("effect/" + object.name, Node);
+  });
 }
 },{}],"nodes/helpers.js":[function(require,module,exports) {
 "use strict";
@@ -2939,6 +3111,8 @@ var Instruments = _interopRequireWildcard(require("../nodes/instruments.js"));
 
 var Oscillators = _interopRequireWildcard(require("../nodes/oscillators.js"));
 
+var Effects = _interopRequireWildcard(require("../nodes/effects.js"));
+
 var Helpers = _interopRequireWildcard(require("../nodes/helpers.js"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -2952,10 +3126,11 @@ function init() {
     Gibberish.export(window);
     Instruments.init();
     Oscillators.init();
+    Effects.init();
     Helpers.init();
   });
 }
-},{"../nodes/instruments.js":"nodes/instruments.js","../nodes/oscillators.js":"nodes/oscillators.js","../nodes/helpers.js":"nodes/helpers.js"}],"components/LiteGraph.svelte":[function(require,module,exports) {
+},{"../nodes/instruments.js":"nodes/instruments.js","../nodes/oscillators.js":"nodes/oscillators.js","../nodes/effects.js":"nodes/effects.js","../nodes/helpers.js":"nodes/helpers.js"}],"components/LiteGraph.svelte":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2984,7 +3159,7 @@ function create_fragment(ctx) {
     c: function create() {
       div = (0, _internal.element)("div");
       (0, _internal.attr_dev)(div, "id", "main");
-      (0, _internal.add_location)(div, file, 22, 0, 414);
+      (0, _internal.add_location)(div, file, 24, 0, 440);
     },
     l: function claim(nodes) {
       throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3015,34 +3190,75 @@ function instance($$self, $$props, $$invalidate) {
     $$scope
   } = $$props;
   (0, _internal.validate_slots)("LiteGraph", slots, []);
+  let {
+    user
+  } = $$props; // $(document).ready(function(){
+  //     $("#dropdown").on("click", function()
+  //       $(this).append("<option>1</option><option>2</option>");
+  //     });
+  //   });
+
   (0, _svelte.onMount)(async () => {
-    Editor.init();
+    Editor.init(user);
     Gibb.init();
   });
-  const writable_props = [];
+  const writable_props = ["user"];
   Object.keys($$props).forEach(key => {
     if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<LiteGraph> was created with unknown prop '".concat(key, "'"));
   });
 
+  $$self.$$set = $$props => {
+    if ("user" in $$props) $$invalidate(0, user = $$props.user);
+  };
+
   $$self.$capture_state = () => ({
     onMount: _svelte.onMount,
     Editor,
-    Gibb
+    Gibb,
+    user
   });
 
-  return [];
+  $$self.$inject_state = $$props => {
+    if ("user" in $$props) $$invalidate(0, user = $$props.user);
+  };
+
+  if ($$props && "$$inject" in $$props) {
+    $$self.$inject_state($$props.$$inject);
+  }
+
+  return [user];
 }
 
 class LiteGraph extends _internal.SvelteComponentDev {
   constructor(options) {
     super(options);
-    (0, _internal.init)(this, options, instance, create_fragment, _internal.safe_not_equal, {});
+    (0, _internal.init)(this, options, instance, create_fragment, _internal.safe_not_equal, {
+      user: 0
+    });
     (0, _internal.dispatch_dev)("SvelteRegisterComponent", {
       component: this,
       tagName: "LiteGraph",
       options,
       id: create_fragment.name
     });
+    const {
+      ctx
+    } = this.$$;
+    const props = options.props || {};
+
+    if (
+    /*user*/
+    ctx[0] === undefined && !("user" in props)) {
+      console.warn("<LiteGraph> was created without expected prop 'user'");
+    }
+  }
+
+  get user() {
+    throw new Error("<LiteGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+  }
+
+  set user(value) {
+    throw new Error("<LiteGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
   }
 
 }
@@ -3066,149 +3282,215 @@ var _LiteGraph = _interopRequireDefault(require("./LiteGraph.svelte"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* components/App.svelte generated by Svelte v3.29.0 */
-const file = "components/App.svelte"; // (26:2) {#if !user.loggedIn}
+const file = "components/App.svelte";
+
+function add_css() {
+  var style = (0, _internal.element)("style");
+  style.id = "svelte-pmjj87-style";
+  style.textContent = ".navbar-brand.svelte-pmjj87{color:white !important}\n";
+  (0, _internal.append_dev)(document.head, style);
+} // (32:2) {#if !user.loggedIn}
+
 
 function create_if_block_1(ctx) {
-  let p;
+  let div3;
+  let div2;
+  let div0;
+  let h5;
   let t1;
-  let form;
-  let button;
+  let p;
   let t2;
-  let i;
+  let i0;
+  let t3;
+  let br;
+  let t4;
+  let a0;
+  let t5;
+  let i1;
+  let t6;
+  let div1;
+  let a1;
+  let t8;
+  let a2;
+  let t10;
+  let a3;
+  let t12;
+  let a4;
   const block = {
     c: function create() {
-      p = (0, _internal.element)("p");
-      p.textContent = "Hello, please login!";
+      div3 = (0, _internal.element)("div");
+      div2 = (0, _internal.element)("div");
+      div0 = (0, _internal.element)("div");
+      h5 = (0, _internal.element)("h5");
+      h5.textContent = "Gibber Graph";
       t1 = (0, _internal.space)();
-      form = (0, _internal.element)("form");
-      button = (0, _internal.element)("button");
-      t2 = (0, _internal.text)("Log In with GitHub\n        ");
-      i = (0, _internal.element)("i");
-      (0, _internal.add_location)(p, file, 26, 4, 527);
-      (0, _internal.attr_dev)(i, "class", "fab fa-github");
-      (0, _internal.add_location)(i, file, 32, 8, 715);
-      (0, _internal.set_style)(button, "background-color", "blue");
-      (0, _internal.set_style)(button, "color", "white");
-      (0, _internal.add_location)(button, file, 30, 6, 626);
-      (0, _internal.attr_dev)(form, "class", "form-inline");
-      (0, _internal.attr_dev)(form, "action", "/auth/github");
-      (0, _internal.add_location)(form, file, 29, 4, 571);
+      p = (0, _internal.element)("p");
+      t2 = (0, _internal.text)("Gibberish ");
+      i0 = (0, _internal.element)("i");
+      t3 = (0, _internal.text)(" LiteGraph");
+      br = (0, _internal.element)("br");
+      t4 = (0, _internal.space)();
+      a0 = (0, _internal.element)("a");
+      t5 = (0, _internal.text)("Login with Github ");
+      i1 = (0, _internal.element)("i");
+      t6 = (0, _internal.space)();
+      div1 = (0, _internal.element)("div");
+      a1 = (0, _internal.element)("a");
+      a1.textContent = "Robear Mankaryous";
+      t8 = (0, _internal.text)(", \n    ");
+      a2 = (0, _internal.element)("a");
+      a2.textContent = "Alexander Simoneau";
+      t10 = (0, _internal.text)(",\n    ");
+      a3 = (0, _internal.element)("a");
+      a3.textContent = "Kyle Mikolajczyk";
+      t12 = (0, _internal.text)(",\n    ");
+      a4 = (0, _internal.element)("a");
+      a4.textContent = "Alexa Freglette";
+      (0, _internal.attr_dev)(h5, "class", "card-title display-4");
+      (0, _internal.add_location)(h5, file, 36, 4, 695);
+      (0, _internal.attr_dev)(i0, "class", "fas fa-heart");
+      (0, _internal.set_style)(i0, "color", "red");
+      (0, _internal.add_location)(i0, file, 37, 35, 781);
+      (0, _internal.add_location)(br, file, 37, 93, 839);
+      (0, _internal.attr_dev)(p, "class", "card-text");
+      (0, _internal.add_location)(p, file, 37, 4, 750);
+      (0, _internal.attr_dev)(i1, "class", "fab fa-github");
+      (0, _internal.add_location)(i1, file, 38, 69, 917);
+      (0, _internal.attr_dev)(a0, "href", "/auth/github");
+      (0, _internal.attr_dev)(a0, "class", "btn btn-primary");
+      (0, _internal.add_location)(a0, file, 38, 4, 852);
+      (0, _internal.attr_dev)(div0, "class", "card-body");
+      (0, _internal.add_location)(div0, file, 35, 2, 667);
+      (0, _internal.attr_dev)(a1, "target", "_blank");
+      (0, _internal.attr_dev)(a1, "href", "https://github.com/rmanky");
+      (0, _internal.add_location)(a1, file, 41, 4, 1000);
+      (0, _internal.attr_dev)(a2, "target", "_blank");
+      (0, _internal.attr_dev)(a2, "href", "https://github.com/afsimoneau");
+      (0, _internal.add_location)(a2, file, 42, 4, 1080);
+      (0, _internal.attr_dev)(a3, "target", "_blank");
+      (0, _internal.attr_dev)(a3, "href", "https://github.com/kylemikableh");
+      (0, _internal.add_location)(a3, file, 43, 4, 1164);
+      (0, _internal.attr_dev)(a4, "target", "_blank");
+      (0, _internal.attr_dev)(a4, "href", "https://github.com/afreglett");
+      (0, _internal.add_location)(a4, file, 44, 4, 1248);
+      (0, _internal.attr_dev)(div1, "class", "card-footer text-muted");
+      (0, _internal.add_location)(div1, file, 40, 2, 959);
+      (0, _internal.attr_dev)(div2, "class", "card text-center");
+      (0, _internal.add_location)(div2, file, 34, 2, 634);
+      (0, _internal.attr_dev)(div3, "class", "wrapper fadeInDown");
+      (0, _internal.add_location)(div3, file, 33, 4, 599);
     },
     m: function mount(target, anchor) {
-      (0, _internal.insert_dev)(target, p, anchor);
-      (0, _internal.insert_dev)(target, t1, anchor);
-      (0, _internal.insert_dev)(target, form, anchor);
-      (0, _internal.append_dev)(form, button);
-      (0, _internal.append_dev)(button, t2);
-      (0, _internal.append_dev)(button, i);
+      (0, _internal.insert_dev)(target, div3, anchor);
+      (0, _internal.append_dev)(div3, div2);
+      (0, _internal.append_dev)(div2, div0);
+      (0, _internal.append_dev)(div0, h5);
+      (0, _internal.append_dev)(div0, t1);
+      (0, _internal.append_dev)(div0, p);
+      (0, _internal.append_dev)(p, t2);
+      (0, _internal.append_dev)(p, i0);
+      (0, _internal.append_dev)(p, t3);
+      (0, _internal.append_dev)(p, br);
+      (0, _internal.append_dev)(div0, t4);
+      (0, _internal.append_dev)(div0, a0);
+      (0, _internal.append_dev)(a0, t5);
+      (0, _internal.append_dev)(a0, i1);
+      (0, _internal.append_dev)(div2, t6);
+      (0, _internal.append_dev)(div2, div1);
+      (0, _internal.append_dev)(div1, a1);
+      (0, _internal.append_dev)(div1, t8);
+      (0, _internal.append_dev)(div1, a2);
+      (0, _internal.append_dev)(div1, t10);
+      (0, _internal.append_dev)(div1, a3);
+      (0, _internal.append_dev)(div1, t12);
+      (0, _internal.append_dev)(div1, a4);
     },
     d: function destroy(detaching) {
-      if (detaching) (0, _internal.detach_dev)(p);
-      if (detaching) (0, _internal.detach_dev)(t1);
-      if (detaching) (0, _internal.detach_dev)(form);
+      if (detaching) (0, _internal.detach_dev)(div3);
     }
   };
   (0, _internal.dispatch_dev)("SvelteRegisterBlock", {
     block,
     id: create_if_block_1.name,
     type: "if",
-    source: "(26:2) {#if !user.loggedIn}",
+    source: "(32:2) {#if !user.loggedIn}",
     ctx
   });
   return block;
-} // (37:2) {#if user.loggedIn}
+} // (51:2) {#if user.loggedIn}
 
 
 function create_if_block(ctx) {
-  let h3;
-  let t1;
-  let h1;
-  let t2_value =
+  let nav;
+  let a0;
+  let t0;
+  let t1_value =
   /*user*/
   ctx[0].username + "";
+  let t1;
   let t2;
+  let a1;
   let t3;
-  let form;
-  let button;
-  let t4;
   let i;
-  let t5;
-  let label;
-  let t7;
-  let select;
-  let option;
-  let t9;
+  let t4;
   let litegraph;
   let current;
   litegraph = new _LiteGraph.default({
+    props: {
+      user:
+      /*user*/
+      ctx[0]
+    },
     $$inline: true
   });
   const block = {
     c: function create() {
-      h3 = (0, _internal.element)("h3");
-      h3.textContent = "Hello,";
-      t1 = (0, _internal.space)();
-      h1 = (0, _internal.element)("h1");
-      t2 = (0, _internal.text)(t2_value);
-      t3 = (0, _internal.space)();
-      form = (0, _internal.element)("form");
-      button = (0, _internal.element)("button");
-      t4 = (0, _internal.text)("Log Out\n        ");
+      nav = (0, _internal.element)("nav");
+      a0 = (0, _internal.element)("a");
+      t0 = (0, _internal.text)("Hello, ");
+      t1 = (0, _internal.text)(t1_value);
+      t2 = (0, _internal.space)();
+      a1 = (0, _internal.element)("a");
+      t3 = (0, _internal.text)("Log Out\n        ");
       i = (0, _internal.element)("i");
-      t5 = (0, _internal.space)();
-      label = (0, _internal.element)("label");
-      label.textContent = "Dropdown:";
-      t7 = (0, _internal.space)();
-      select = (0, _internal.element)("select");
-      option = (0, _internal.element)("option");
-      option.textContent = "Graph1";
-      t9 = (0, _internal.space)();
+      t4 = (0, _internal.space)();
       (0, _internal.create_component)(litegraph.$$.fragment);
-      (0, _internal.add_location)(h3, file, 37, 2, 803);
-      (0, _internal.attr_dev)(h1, "id", "username");
-      (0, _internal.add_location)(h1, file, 38, 2, 821);
+      (0, _internal.attr_dev)(a0, "class", "navbar-brand svelte-pmjj87");
+      (0, _internal.add_location)(a0, file, 52, 2, 1431);
       (0, _internal.attr_dev)(i, "class", "fab fa-github");
-      (0, _internal.add_location)(i, file, 42, 8, 982);
-      (0, _internal.set_style)(button, "background-color", "red");
-      (0, _internal.add_location)(button, file, 40, 6, 919);
-      (0, _internal.attr_dev)(form, "class", "form-inline");
-      (0, _internal.attr_dev)(form, "action", "/auth/logout");
-      (0, _internal.add_location)(form, file, 39, 4, 864);
-      (0, _internal.attr_dev)(label, "for", "dropdown");
-      (0, _internal.add_location)(label, file, 46, 3, 1044);
-      option.__value = "graph1";
-      option.value = option.__value;
-      (0, _internal.add_location)(option, file, 48, 4, 1169);
-      (0, _internal.attr_dev)(select, "name", "previous_graphs");
-      (0, _internal.attr_dev)(select, "id", "dropdown");
-      (0, _internal.attr_dev)(select, "onchange", "loadStuff(this.value)");
-      (0, _internal.add_location)(select, file, 47, 2, 1086);
+      (0, _internal.add_location)(i, file, 55, 8, 1555);
+      (0, _internal.attr_dev)(a1, "href", "/auth/logout");
+      (0, _internal.attr_dev)(a1, "class", "btn btn-danger");
+      (0, _internal.add_location)(a1, file, 53, 4, 1486);
+      (0, _internal.attr_dev)(nav, "class", "navbar navbar-dark bg-dark");
+      (0, _internal.add_location)(nav, file, 51, 2, 1388);
     },
     m: function mount(target, anchor) {
-      (0, _internal.insert_dev)(target, h3, anchor);
-      (0, _internal.insert_dev)(target, t1, anchor);
-      (0, _internal.insert_dev)(target, h1, anchor);
-      (0, _internal.append_dev)(h1, t2);
-      (0, _internal.insert_dev)(target, t3, anchor);
-      (0, _internal.insert_dev)(target, form, anchor);
-      (0, _internal.append_dev)(form, button);
-      (0, _internal.append_dev)(button, t4);
-      (0, _internal.append_dev)(button, i);
-      (0, _internal.insert_dev)(target, t5, anchor);
-      (0, _internal.insert_dev)(target, label, anchor);
-      (0, _internal.insert_dev)(target, t7, anchor);
-      (0, _internal.insert_dev)(target, select, anchor);
-      (0, _internal.append_dev)(select, option);
-      (0, _internal.insert_dev)(target, t9, anchor);
+      (0, _internal.insert_dev)(target, nav, anchor);
+      (0, _internal.append_dev)(nav, a0);
+      (0, _internal.append_dev)(a0, t0);
+      (0, _internal.append_dev)(a0, t1);
+      (0, _internal.append_dev)(nav, t2);
+      (0, _internal.append_dev)(nav, a1);
+      (0, _internal.append_dev)(a1, t3);
+      (0, _internal.append_dev)(a1, i);
+      (0, _internal.insert_dev)(target, t4, anchor);
       (0, _internal.mount_component)(litegraph, target, anchor);
       current = true;
     },
     p: function update(ctx, dirty) {
       if ((!current || dirty &
       /*user*/
-      1) && t2_value !== (t2_value =
+      1) && t1_value !== (t1_value =
       /*user*/
-      ctx[0].username + "")) (0, _internal.set_data_dev)(t2, t2_value);
+      ctx[0].username + "")) (0, _internal.set_data_dev)(t1, t1_value);
+      const litegraph_changes = {};
+      if (dirty &
+      /*user*/
+      1) litegraph_changes.user =
+      /*user*/
+      ctx[0];
+      litegraph.$set(litegraph_changes);
     },
     i: function intro(local) {
       if (current) return;
@@ -3220,16 +3502,8 @@ function create_if_block(ctx) {
       current = false;
     },
     d: function destroy(detaching) {
-      if (detaching) (0, _internal.detach_dev)(h3);
-      if (detaching) (0, _internal.detach_dev)(t1);
-      if (detaching) (0, _internal.detach_dev)(h1);
-      if (detaching) (0, _internal.detach_dev)(t3);
-      if (detaching) (0, _internal.detach_dev)(form);
-      if (detaching) (0, _internal.detach_dev)(t5);
-      if (detaching) (0, _internal.detach_dev)(label);
-      if (detaching) (0, _internal.detach_dev)(t7);
-      if (detaching) (0, _internal.detach_dev)(select);
-      if (detaching) (0, _internal.detach_dev)(t9);
+      if (detaching) (0, _internal.detach_dev)(nav);
+      if (detaching) (0, _internal.detach_dev)(t4);
       (0, _internal.destroy_component)(litegraph, detaching);
     }
   };
@@ -3237,7 +3511,7 @@ function create_if_block(ctx) {
     block,
     id: create_if_block.name,
     type: "if",
-    source: "(37:2) {#if user.loggedIn}",
+    source: "(51:2) {#if user.loggedIn}",
     ctx
   });
   return block;
@@ -3259,7 +3533,7 @@ function create_fragment(ctx) {
       if (if_block0) if_block0.c();
       t = (0, _internal.space)();
       if (if_block1) if_block1.c();
-      (0, _internal.add_location)(main, file, 24, 0, 493);
+      (0, _internal.add_location)(main, file, 30, 0, 562);
     },
     l: function claim(nodes) {
       throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3386,6 +3660,7 @@ function instance($$self, $$props, $$invalidate) {
 class App extends _internal.SvelteComponentDev {
   constructor(options) {
     super(options);
+    if (!document.getElementById("svelte-pmjj87-style")) add_css();
     (0, _internal.init)(this, options, instance, create_fragment, _internal.safe_not_equal, {});
     (0, _internal.dispatch_dev)("SvelteRegisterComponent", {
       component: this,
@@ -3399,7 +3674,7 @@ class App extends _internal.SvelteComponentDev {
 
 var _default = App;
 exports.default = _default;
-},{"svelte/internal":"../node_modules/svelte/internal/index.mjs","svelte":"../node_modules/svelte/index.mjs","./LiteGraph.svelte":"components/LiteGraph.svelte"}],"main.js":[function(require,module,exports) {
+},{"svelte/internal":"../node_modules/svelte/internal/index.mjs","svelte":"../node_modules/svelte/index.mjs","./LiteGraph.svelte":"components/LiteGraph.svelte","_css_loader":"../../rbd/pnpm-volume/a97c73be-be8a-4582-8574-3e06e9c3326f/node_modules/.registry.npmjs.org/parcel-bundler/1.12.4/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"main.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3450,7 +3725,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45294" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44710" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

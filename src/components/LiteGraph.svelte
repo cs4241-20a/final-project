@@ -5,6 +5,8 @@
   
   import * as Gibb from "../js/gibb.js";
   
+  export let user;
+  
   // $(document).ready(function(){
   //     $("#dropdown").on("click", function()
   //       $(this).append("<option>1</option><option>2</option>");
@@ -12,7 +14,7 @@
   //   });
   
   onMount(async () => {
-    Editor.init();
+    Editor.init(user);
     Gibb.init();
    });
   
