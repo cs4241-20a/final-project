@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { ChatFeed, Message } from 'react-chat-ui'
 import * as d3 from 'd3'
+import spinner from './spinner.gif'
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -62,6 +64,7 @@ export default class Home extends React.Component {
     getSongs() {
         // FOR WHEN SERVER IS SET UP
         let bodyJson = {user1: this.state.user1, user2: this.state.user2};
+        trackPromise(
         fetch('/getSongs', {
             method: 'POST',
             body: JSON.stringify(bodyJson),
@@ -87,7 +90,8 @@ export default class Home extends React.Component {
                 artistImages: json.artistImages
             })
             this.parseSongs()
-        });
+        })
+        )
 
     }
 
@@ -230,7 +234,7 @@ export default class Home extends React.Component {
         const renderArtists = () => {
             let group1Map = d3.rollup(this.state.user1Artists, v => v.length, d => d.name)
             let group2Map = d3.rollup(this.state.user2Artists, v => v.length, d => d.name)
-            
+
             let artists1MapAll = d3.group(this.state.artistImages, d => d.name)
 
             let group1Keys = []
@@ -258,6 +262,7 @@ export default class Home extends React.Component {
             groupValues = groupValues.slice(0, 3)
             
             for (let i = 0 ; i < groupValues.length ; i++) {
+                if (groupValues[i] === undefined) { return }
                 let artist = artists1MapAll.get(groupValues[i].title)
                 groupValues[i].image = artist[0].images[1]
             }
@@ -313,6 +318,7 @@ export default class Home extends React.Component {
             groupValues = groupValues.slice(0, 3)
 
             for (let i = 0 ; i < groupValues.length ; i++) {
+                if (groupValues[i] === undefined) { return }
                 let fullObj = group1MapAll.get(groupValues[i].title)
                 groupValues[i].artist = fullObj[0].artists.name
                 groupValues[i].image = fullObj[0].images[1]
@@ -376,8 +382,15 @@ export default class Home extends React.Component {
                 )
             }
         }
- 
 
+        const Loader = props => {
+            const { promiseInProgress } = usePromiseTracker()
+            return (
+                promiseInProgress &&
+                <img src={spinner} alt="loading" style={{width: "5rem", height: "5rem"}}/>
+            )
+        }
+ 
         return (
             <div id="wrapperDiv">
 
@@ -403,6 +416,8 @@ export default class Home extends React.Component {
                             </FormGroup>
                         </Form>
                     </div>
+
+                    <Loader />
 
                     { renderTable() }
 

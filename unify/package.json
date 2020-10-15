@@ -20,6 +20,7 @@
     "react-bootstrap-table2-paginator": "^2.1.2",
     "react-chat-ui": "^0.4.0",
     "react-dom": "^16.13.1",
+    "react-promise-tracker": "^2.1.0",
     "react-scripts": "3.4.3",
     "react-sticky": "^6.0.3",
     "reactstrap": "^8.6.0"
