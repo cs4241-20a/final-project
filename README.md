@@ -26,7 +26,7 @@ The CSS was the biggest challenge of the website. It was very hard to have all e
 
 ## Group Member Responsibilities
 
--**Jordan Gold**: Implemented drawable Paper.js canvas used to send images. Implemented all drawing tools related to creating your image on the Paper.js canvas. Extended the chatroom to incorporate image sending and receiving.
+- **Jordan Gold**: Implemented drawable Paper.js canvas used to send images. Implemented all drawing tools related to creating your image on the Paper.js canvas. Extended the chatroom to incorporate image sending and receiving.
 - **Chris Lee**: Helped create the CSS for the website and set up basic buttons.
 - **Jacob Tutlis**: Setup server and socket.io for the client and server. Created the chatroom functionality.
 - **William Yang**: Setup Github Oath and login authentication. Helped create the CSS for the website.
