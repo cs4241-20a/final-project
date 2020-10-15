@@ -5,6 +5,7 @@ import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 import { WebsocketProvider } from 'y-websocket'
 import { IndexeddbPersistence } from 'y-indexeddb'
+import { match } from 'assert';
 
 class Name extends Component{
   render(){
@@ -48,50 +49,67 @@ class App extends React.Component {
   constructor( props ) {
     super( props )
     // initialize our state
-    const yjsArray = ydoc.getArray('selections')
-    const yjsNum   = ydoc.getText('selectionNumber')
+    
+    let yjsArray;
+    let yjsNum;
+
     //0, 2, 4, 6, 8 blue bans, 
     let selectionsArray = [];
     for (let i = 0; i<20;i++)
         selectionsArray.push("")
-    let selectionsImagesArray = [];
-     // ensures yjs array is empty
-    for (let i = 0; i<20;i++)
-        selectionsImagesArray.push("")
-    this.state = {observable:yjsArray,
-                  selections: selectionsArray,
-                  selectionsImages: selectionsImagesArray,
+    
+    if (true) { // will be false if match code is undefined
+        let matchCode = '1234'
+        yjsArray = ydoc.getArray(matchCode + 'selections');
+        yjsNum   = ydoc.getMap  (matchCode + 'selectionNumber');
+
+        // /this.setState({obsSelections:yjsArray, obsSelectNum:yjsNum});
+        console.log("State set to yjsArray")
+        indexeddbProvider.whenSynced.then(() => {
+            console.log('Got data for match ' + matchCode)
+            yjsNum.set("selectNum", -1) // TODO Move to match init
+            yjsArray.delete(0, yjsArray.length) // TODO Move to match init
+            yjsNum.observe(event => {
+                
+
+                // print updates when the data changes
+                this.setState({obsSelections:yjsArray});
+                this.setState({obsSelectNum:yjsNum})
+                
+                let tempSelections = this.state.selections;
+                let tempSelectionNumber = yjsNum.get("selectNum");
+                console.log("YJS num " + tempSelectionNumber)   
+                console.log(yjsArray.toArray())
+                if (tempSelectionNumber >= 20 ){
+                    // draft over 
+                    console.log("Draft")
+                    return 0
+                }
+                else {  
+                    let name = yjsArray.toArray()[tempSelectionNumber];
+                    
+                    if ((name !== "" && name) || tempSelectionNumber>=0){
+                        tempSelections[tempSelectionNumber] = name;
+                    }
+
+                    console.log(tempSelections)
+                    this.setState({selections:tempSelections});
+                    this.setState({selectionNumber : tempSelectionNumber});
+                }
+            })
+        })
+    }  
+
+
+    this.state = {obsSelections: yjsArray,
+                  obsSelectNum : yjsNum,
+                  selections   : selectionsArray,
                   selectionNumber: 0,
                   searchTerm: "",
                   champNames: ['Aatrox','Ahri','Akali','Alistar','Amumu','Anivia','Annie','Aphelios','Ashe','AurelionSol','Azir','Bard','Blitzcrank','Brand','Braum','Caitlyn','Camille','Cassiopeia','Chogath','Corki','Darius','Diana','Draven','DrMundo','Ekko','Elise','Evelynn','Ezreal','FiddleSticks','Fiora','Fizz','Galio','Gangplank','Garen','Gnar','Gragas','Graves','Hecarim','Heimerdinger','Illaoi','Irelia','Ivern','Janna','JarvanIV','Jax','Jayce','Jhin','Jinx','Kaisa','Kalista','Karma','Karthus','Kassadin','Katarina','Kayle','Kennen','Khazix','Kindred','Kled','KogMaw','Leblanc','LeeSin','Leona','Lilia','Lissandra','Lucian','Lulu','Lux','Malphite','Malzahar','Maokai','MasterYi','MissFortune','MonkeyKing','Mordekaiser','Morgana','Nami','Nasus','Nautilus','Neeko','Nidalee','Nocturne','Nunu','Olaf','Orianna','Ornn','Pantheon','Poppy','Pyke','Qiyana','Quinn','Rakan','Rammus','RekSai','Renekton','Rengar','Riven','Rumble','Ryze','Samira','Sejuani','Senna','Sett','Shaco','Shen','Shyvana','Singed','Sion','Sivir','Skarner','Sona','Soraka','Swain','Sylas','Syndra','TahmKench','Taliyah','Talon','Taric','Teemo','Thresh','Tristana','Trundle','Tryndamere','TwistedFate','Twitch','Udyr','Urgot','Varus','Vayne','Veigar','Velkoz','Vi','Viktor','Vladimir','Volibear','Warwick','Xayah','Xerath','XinZhao','Yasuo','Yone','Yorick','Yummi','Zac','Zed','Ziggs','Zilean','Zoe','Zyra']
-                }
-    console.log(yjsArray)
-    //yjsArray.delete(0, yjsArray.length)
-    indexeddbProvider.whenSynced.then(() => {
-        console.log('loaded data from indexed db')
-        
-        yjsArray.delete(0, yjsArray.length)
-        yjsArray.observe(event => {
-            // print updates when the data changes
-            this.setState({observable:yjsArray})
-           
-            let tempSelections = this.state.selections
-            let tempSelectionsImages = this.state.selectionsImages;
-            let tempSelectionNumber = this.state.selectionNumber;
-            let name = yjsArray.toArray()[tempSelectionNumber]
-            console.log("observe " + yjsArray.toArray()[tempSelectionNumber])
-            tempSelections[tempSelectionNumber] = name;
-            tempSelectionsImages[tempSelectionNumber] = "/champion/loading/"+name+"_0.jpg";
-            this.setState({selections:tempSelections});
-            this.setState({selectionsImages : tempSelectionsImages});
-            this.setState({selectionNumber : ++tempSelectionNumber});
-            //console.log(yarray)
-          })
-    })
-    // array of numbers which produce a sum
+    }
     
-    // this.setState({strings:yarray})
-    // observe changes of the sum
+
     
   }
 
@@ -104,17 +122,15 @@ class App extends React.Component {
   }
 
   selectChampion(name){
-    console.log("Picked "+name)
     let tempSelections = this.state.selections;
-    let tempSelectionsImages = this.state.selectionsImages;
-    let tempSelectionNumber = this.state.selectionNumber;
+    let tempSelectionNumber = this.state.obsSelectNum.get("selectNum")+1;
+
     tempSelections[tempSelectionNumber] = name;
-    this.state.observable.push([name])
-    tempSelectionsImages[tempSelectionNumber] = "/champion/loading/"+name+"_0.jpg";
-    this.setState({selections:tempSelections});
-    this.setState({selectionsImages : tempSelectionsImages});
-    this.setState({selectionNumber : ++tempSelectionNumber});
-    console.log(this.state.selectionNumber)
+    this.state.obsSelections.push([name])
+    this.state.obsSelectNum.set("selectNum", tempSelectionNumber)
+
+    this.setState({selections : tempSelections});
+    this.setState({selectionNumber : tempSelectionNumber});
   }
   changeSearchTerm(e){
     this.setState({searchTerm: e.target.value});
@@ -138,37 +154,37 @@ class App extends React.Component {
                 
                 <div class = "picks">
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[6]} name={this.state.selections[6]}/>
+                        <PickBan name={this.state.selections[6]}/>
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[9]} name={this.state.selections[9]}/>
+                        <PickBan name={this.state.selections[9]}/>
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[10]} name={this.state.selections[10]}/> 
+                        <PickBan name={this.state.selections[10]}/> 
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[17]} name={this.state.selections[17]}/>
+                        <PickBan name={this.state.selections[17]}/>
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[18]} name={this.state.selections[18]}/>
+                        <PickBan name={this.state.selections[18]}/>
                     </div>
                 </div>
                 <h3>Bans</h3>
                 <div class = "bans">
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[0]} name={this.state.selections[0]}/>
+                        <PickBan name={this.state.selections[0]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[2]} name={this.state.selections[2]}/>
+                        <PickBan name={this.state.selections[2]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[4]} name={this.state.selections[4]}/>
+                        <PickBan name={this.state.selections[4]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[13]} name={this.state.selections[13]}/>
+                        <PickBan name={this.state.selections[13]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[15]} name={this.state.selections[15]}/>
+                        <PickBan name={this.state.selections[15]}/>
                     </div>
                 </div>
             </div>
@@ -179,38 +195,38 @@ class App extends React.Component {
                 </div>
                 <div class = "picks">
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[7]} name={this.state.selections[7]}/>
+                        <PickBan name={this.state.selections[7]}/>
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[8]} name={this.state.selections[8]}/>
+                        <PickBan name={this.state.selections[8]}/>
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[11]} name={this.state.selections[11]}/>
+                        <PickBan name={this.state.selections[11]}/>
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[16]} name={this.state.selections[16]}/>
+                        <PickBan name={this.state.selections[16]}/>
                     </div>
                     <div class = "pick">
-                        <PickBan image={this.state.selectionsImages[19]} name={this.state.selections[19]}/>
+                        <PickBan name={this.state.selections[19]}/>
                     </div>
                 </div>
                 <h3>Bans</h3>
                 <div class = "bans">
                     
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[1]} name={this.state.selections[1]}/>
+                        <PickBan name={this.state.selections[1]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[3]} name={this.state.selections[3]}/>
+                        <PickBan name={this.state.selections[3]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[5]} name={this.state.selections[5]}/>
+                        <PickBan name={this.state.selections[5]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[12]} name={this.state.selections[12]}/>
+                        <PickBan name={this.state.selections[12]}/>
                     </div>
                     <div class = "ban">
-                        <PickBan image={this.state.selectionsImages[14]} name={this.state.selections[14]}/>
+                        <PickBan name={this.state.selections[14]}/>
                     </div>
                 </div>
             </div>
