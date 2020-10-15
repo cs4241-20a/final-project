@@ -1,6 +1,7 @@
 // Get the modal
 var modal = document.getElementById("myModal");
 var editmodal = document.getElementById("editModal");
+var delmodal = document.getElementById("deleteModal");
 var card1=document.getElementById("card1")
 var btnContainer=document.getElementById("btn_container")
 
@@ -15,11 +16,22 @@ var cancelTask = function(){
   modal.style.display = "none";
 }
 
+var closeTask = function(){
+  editmodal.style.display = "none";
+}
+
+var keepCol = function(){
+  delmodal.style.display = "none";
+}
+
 window.onclick = function(event) {
   if (modal === event.target) {
     modal.style.display = "none";
   }
 }
+
+// Are we editing?
+var editing = true
 
 var openTask = function(task, edit) {
   if(edit == true) {
@@ -168,7 +180,7 @@ function appendNewInfo(task) {
   var deleteBtn = document.createElement("a")
   var del = document.createElement("i")
   // Are we editing?
-  var editing = true
+  //var editing = true
   // Set attributes
   div.setAttribute('class', 'task_card card-panel col s1')
   name.setAttribute('class', 'task_item')
@@ -213,6 +225,8 @@ var addCol = function() {
   // Create all the necessary elements
   var newCol = document.createElement("div");
   newCol.setAttribute('class', 'task_lists card-panel materialize-red lighten-2')
+  var colID = "col-" + cols
+  newCol.setAttribute('id', colID)
   var newList = document.createElement("div")
   newList.setAttribute('class', 'tasks')
   newList.setAttribute('id', cols)
@@ -221,8 +235,8 @@ var addCol = function() {
   var addBtn = document.createElement("a")
   addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
   addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
-  var colID = "btn-" + cols
-  addBtn.setAttribute('id', colID)
+  var btnID = "btn-" + cols
+  addBtn.setAttribute('id', btnID)
   var plus = document.createElement("i")
   plus.setAttribute('class', 'material-icons right')
   // Add everything
@@ -242,10 +256,31 @@ var addCol = function() {
 
 var delCol = function() {
   const contain = document.getElementsByClassName("inner-container")
-  contain[0].removeChild(contain[0].lastChild)
-  cols--
-  // Later on we'll add in functionality so that when the column is deleted all its tasks are deleted
-  // This means it should prompt the user to ask if they really want to delete everything
+  var columns = contain[0].children
+  // Add this in when we can delete specific columns
+  // for(var i = 0; i < columns.length; i++) {
+  //
+  // }
+  var tasks = columns[cols].children[1].children
+  console.log(tasks)
+  if(tasks.length != 0) {
+    deleteModal.style.display = "block";
+    const deleteCol = document.getElementById("col_del")
+    deleteCol.onclick = function() {
+      console.log(tasks[0].children[3])
+      //tasks[0].children[3].click()
+      for(var i = 0; i < tasks.length; i++) {
+        //Simulate deleting a task
+        editing = false
+        tasks[i].children[3].click()
+        delTask(ids[ids.length-1])
+      }
+    }
+  }
+  else {
+    contain[0].removeChild(contain[0].lastChild)
+    cols--
+  }
 }
 
 window.onload = function() {
@@ -261,6 +296,12 @@ window.onload = function() {
 
     const cButton = document.getElementById("cancel")
     cButton.onclick = cancelTask
+
+    const clButton = document.getElementById("close")
+    clButton.onclick = closeTask
+
+    const kcButton = document.getElementById("keep")
+    kcButton.onclick = keepCol
 
     const ncButton = document.getElementById("add_list")
     ncButton.onclick = addCol

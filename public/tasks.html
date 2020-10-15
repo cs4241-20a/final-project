@@ -23,7 +23,7 @@
 <div id="main_container">
   <div id="task_container">
     <div class="inner-container">
-      <div class="task_lists card-panel materialize-red lighten-2" onclick="listClicked()">
+      <div class="task_lists card-panel materialize-red lighten-2" onclick="listClicked()" id="col-1">
         <h4 class="white-text center-align row">List Name</h4>
         <!-- Added in a div to make sure tasks appear before the button-->
         <div class="tasks" id="1">
@@ -86,10 +86,18 @@
       <label for="tags">Tags: </label><input type="text" id="t_tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="t_desc" placeholder="Task Description"><br>
       <input type="submit" id="task_edit" value="Confirm">
-      <button onclick="closeBtn()">Cancel</button>
+      <button id="close">Cancel</button>
     </form>
   </div>
 
+</div>
+
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <p>This will delete all tasks on this list, are you sure you want to delete?</p>
+    <input type="submit" id="col_del" value="Confirm">
+    <button id="keep">Cancel</button>
+  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
