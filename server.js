@@ -18,11 +18,13 @@ const apiRouter = require("./routes/api/api-router");
 const githubAuth = require("./routes/auth/github-auth");
 
 const app = express();
+
 const server = http.createServer(app);
 const io = socketio(server);
 //? Why did I do this?
 //TODO: Look into why this is accessed from a module export instead of required separately
 const {passport, ensureAuthenticated} = githubAuth;
+
 
 dotenv.config();
 
@@ -87,6 +89,7 @@ app.get("/logout", (req, res) => {
 app.get("*", (req, res) => {
 	res.status(404).send("Error 404. Not found.");
 });
+
 
 // Web socket handling
 io.on("connection", socket => {
