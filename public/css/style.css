@@ -180,6 +180,10 @@ form {
     background-color: antiquewhite;
 }
 
+#no {
+    background-color: transparent;
+}
+
 #usernamelabel {
     padding-left: 10px;
     font-size: 20px;
