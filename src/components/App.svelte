@@ -23,7 +23,6 @@
 </script>
 
 <main>
-  
   {#if !user.loggedIn}
     <p>
       Hello, please login!
@@ -36,15 +35,20 @@
     </form>
   {/if}
   {#if user.loggedIn}
-    <p>
-      Hello, {user.username}!
-    </p>
+  <h3>Hello,</h3>
+  <h1 id="username">{user.username}</h1>
     <form class="form-inline" action="/auth/logout">
       <button style="background-color: red">
         Log Out
         <i class="fab fa-github" />
       </button>
     </form>
+  
+   <label for="dropdown">Dropdown:</label>
+  <select name="previous_graphs" id="dropdown" onchange="loadStuff(this.value)">
+    <option value="graph1">Graph1</option>
+
+    </select> 
     <LiteGraph />
   {/if} 
 </main>

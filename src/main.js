@@ -1,4 +1,6 @@
-import './style.css';
+import './css/style.css';
+import './css/litegraph.css';
+import './css/litegraph-editor.css';
 
 import App from "./components/App.svelte";
 
