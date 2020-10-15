@@ -102,9 +102,8 @@ form button {
 .color {
     justify-content: center;
     display: inline-block;
-    height: 40px;
+    text-align: center;
     color: black;
-
 }
 
 .brush {
@@ -114,6 +113,11 @@ form button {
     color: black;
 
     background-color: lightgray;
+}
+
+.selected {
+    background-color: antiquewhite;
+    height: 40px;
 }
 
 .brush:hover {
@@ -146,12 +150,6 @@ form button {
 
 #white{
     background-color: papayawhip;
-}
-
-.selected {
-    background-color: antiquewhite;
-    width: 70px;
-    height: 45px;
 }
 
 #title {
