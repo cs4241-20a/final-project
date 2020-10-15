@@ -124,6 +124,8 @@ var addCol = function() {
 var delCol = function() {
   const contain = document.getElementsByClassName("inner-container")
   contain[0].removeChild(contain[0].lastChild)
+  // Later on we'll add in functionality so that when the column is deleted all its tasks are deleted
+  // This means it should prompt the user to ask if they really want to delete everything
 }
 
 window.onload = function() {
