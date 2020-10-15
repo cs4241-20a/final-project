@@ -17,7 +17,7 @@ const {ensureAuthenticated} = githubAuth;
  * Auth: Required
  * Desc: Gets all messages in the given group. User must belong to the group. Verified by session.
  */
-router.get("/:groupId", ensureAuthenticated, (req, res) => {
+router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId} = req.params;
 	const {username} = req.user;
@@ -44,7 +44,7 @@ router.get("/:groupId", ensureAuthenticated, (req, res) => {
  * Auth: Required
  * Desc: Gets all messages in the given group. User must belong to the group. Verified by session.
  */
-router.get("/:groupId", ensureAuthenticated, (req, res) => {
+router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, messageId} = req.params;
 	const {username} = req.user;

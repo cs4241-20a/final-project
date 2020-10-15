@@ -18,7 +18,7 @@ const {ensureAuthenticated} = githubAuth;
  * Auth: Required
  * Desc: Gets all tasks in the given group. User must belong to the group. Verified by session.
  */
-router.get("/:groupId", ensureAuthenticated, (req, res) => {
+router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId} = req.params;
 	const {username} = req.user;
@@ -45,7 +45,7 @@ router.get("/:groupId", ensureAuthenticated, (req, res) => {
  * Auth: Required
  * Desc: Gets the tasks with the given id in the given group. User must belong to the group. Verified by session.
  */
-router.get("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
+router.get("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
 	const {username} = req.user;
@@ -72,7 +72,7 @@ router.get("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
  * Auth: Required
  * Desc: Adds a new task to the given group with the given information. User must belong to the group. Verified by session.
  */
-router.post("/:groupId", ensureAuthenticated, (req, res) => {
+router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId} = req.params;
 	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
@@ -84,7 +84,9 @@ router.post("/:groupId", ensureAuthenticated, (req, res) => {
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: userId});
 		// Create a new task with the given name, description, column name, assignees, tags, and due date
-		const newTask = await new Task({name, desc, columnName, assignees, tags, formatDate(dateDue)}).save();
+		let newTask = new Task({name, desc, columnName, assignees, tags, dateDue: formatDate(dateDue)});
+		// Save the new task to the database
+		newTask = await newTask.save();
 
 		// Send result
 		res.status(201).json({success: true, data: newTask});
@@ -100,7 +102,7 @@ router.post("/:groupId", ensureAuthenticated, (req, res) => {
  * Auth: Required
  * Desc: Deletes the task with the given id. User must belong to the group. Verified by session.
  */
-router.delete("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
+router.delete("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
 	const {username} = req.user;
@@ -128,7 +130,7 @@ router.delete("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
  * Desc: Updates the information of the task with the given id. User must belong to group and be the sender of the message.
  * Verified by session.
  */
-router.patch("/:groupId/:taskId", ensureAuthenticated, (req, res) => {
+router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
 	const {name, desc, columnName, assignees, tags, dateDue} = req.body;

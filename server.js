@@ -12,7 +12,7 @@ const morgan = require("morgan");
 const compression = require("compression");
 const methodOverride = require("method-override");
 const helmet = require("helmet");
-const session = require("session");
+const session = require("express-session");
 
 const apiRouter = require("./routes/api/api-router");
 const githubAuth = require("./routes/auth/github-auth");
@@ -20,7 +20,8 @@ const githubAuth = require("./routes/auth/github-auth");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-//? Why did I do this? Look into why this is accessed from a module export instead of required separately.
+//? Why did I do this?
+//TODO: Look into why this is accessed from a module export instead of required separately
 const passport = githubAuth.passport;
 
 dotenv.config();

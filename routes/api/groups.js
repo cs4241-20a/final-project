@@ -8,7 +8,7 @@ const User = require("../../models/User");
 const githubAuth = require("../auth/github-auth");
 
 const router = express.Router();
-const ensureAuthenticated = {githubAuth};
+const {ensureAuthenticated} = githubAuth;
 
 /*
  * Route: /api/groups/
