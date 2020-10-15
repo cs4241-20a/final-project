@@ -165,8 +165,11 @@ form {
 }
 
 .footer {
+    border: red;
+    border-width: 2px;
+    border-style: solid;
     text-align: left;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 0;
     left: 0;
@@ -187,15 +190,6 @@ form {
     padding-left: 10px;
     font-size: 20px;
     color:grey;
-}
-
-#logoutButton {
-
-}
-
-#backButton {
-    float: right;
-    margin-right: 10px;
 }
 
 #centralCanvas {

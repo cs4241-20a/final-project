@@ -93,4 +93,4 @@ document.getElementById("clear").onclick = () => {
     sound2.play();
 }
 
-document.getElementById("music").volume = 0.3;
+document.getElementById("music").volume = 0.1;
