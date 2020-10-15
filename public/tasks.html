@@ -23,8 +23,9 @@
 <div id="main_container">
   <div id="task_container">
     <div class="inner-container">
-      <div class="task_lists card-panel materialize-red lighten-2" onclick="listClicked()">
+      <div class="task_lists card-panel materialize-red lighten-2" onclick="listClicked()" id="col-1">
         <h4 class="white-text center-align row">List Name</h4>
+        <div class="tasks" id="1">
         <div class="task_card card-panel col s1" id="card1" onclick="editTask()">
           <p class="task_name task_item">Task Name</p>
           <p class="task_date task_item">Due Date</p>
@@ -33,6 +34,7 @@
             <a class="centerwaves-effect waves-light btn-small btn" id="delete_task" onclick="deleteBtn()"><i class="material-icons right">delete_forever</i></a>
           </div>
         </div>
+      </div>
         <a class="centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task" onclick="addTask()"><i class="material-icons right">add</i>  New Task</a>
       </div>
       <div class="btn_container" id="btn_container">
@@ -83,58 +85,22 @@
       <label for="tags">Tags: </label><input type="text" id="t_tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="t_desc" placeholder="Task Description"><br>
       <input type="submit" id="task_edit" value="Confirm">
-      <button onclick="closeBtn()">Cancel</button>
+      <button id="close">Cancel</button>
     </form>
   </div>
 
 </div>
 
-<script>
-  // Get the modal
-  var modal = document.getElementById("myModal");
-  var editmodal = document.getElementById("editModal");
-  var card1=document.getElementById("card1")
-  var btnContainer=document.getElementById("btn_container")
-
-  var clicked=false
-
-  function addTask() {
-    modal.style.display = "block";
-  }
-
-  function editTask() {
-    editmodal.style.display = "block";
-  }
-
-  function closeBtn(){
-    modal.style.display = "none";
-  }
-
-  function deleteBtn(){
-    card1.style.display = "none";
-  }
-
-  function listClicked(){
-    if(clicked){
-      btnContainer.style.display="none"
-      clicked=false
-    }else{
-      btnContainer.style.display="block"
-      clicked=true
-    }
-
-  }
-
-  window.onclick = function(event) {
-    if (modal === event.target) {
-      modal.style.display = "none";
-    }
-  }
-</script>
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <p>This will delete all tasks on this list, are you sure you want to delete?</p>
+    <input type="submit" id="col_del" value="Confirm">
+    <button id="keep">Cancel</button>
+  </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/tasks.js"></script>
 </body>
 </html>
-
