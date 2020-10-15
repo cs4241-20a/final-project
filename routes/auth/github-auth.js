@@ -38,8 +38,13 @@ router.get("/callback", passport.authenticate("github", {
 	failureRedirect: "/login" 
 }), (req, res) => res.redirect("../../"));
 
-router.get("/account", ensureAuthenticated, (req, res) => {
-	res.send(`Hello, ${req.user.displayName}!`);
+router.get("/account", (req, res) => {
+	if (req.isAuthenticated()) {
+		res.send(`Hello, ${req.user.displayName}!`);
+	} else {
+		res.send("You are not logged in.");
+	}
+	
 });
 
 module.exports = {router, passport, ensureAuthenticated, setupPassport};
