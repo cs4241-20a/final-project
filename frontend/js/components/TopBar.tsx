@@ -45,7 +45,7 @@ export const TopBar: FunctionComponent<TopBarProps> = ({
     async function logout() {
         const response = await fetch('/logout', { method: "POST" });
         if (response.ok) {
-            location.reload();
+            location.assign('/login');
         }
     }
 

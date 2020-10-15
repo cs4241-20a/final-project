@@ -32,7 +32,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 
 passport.use('local-signup', new LocalStrategy(async (username, password, done) => {
     const users = await getCollection('users');
-    const user = await users.findOne({username, password});
+    const user = await users.findOne({username});
     if (user) {
         done(null, false);
     }
@@ -166,11 +166,11 @@ app.use('/api/*', (req, res) => {
     res.sendStatus(404);
 });
 
-app.post('/register', passport.authenticate('local-signup', {failureRedirect: '/login'}), (req, res) => {
+app.post('/register', passport.authenticate('local-signup', {failureRedirect: '/login?reason=register_fail'}), (req, res) => {
     res.redirect('/');
 });
 
-app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req, res) => {
+app.post('/login', passport.authenticate('local', {failureRedirect: '/login?reason=login_fail'}), (req, res) => {
     res.redirect('/');
 });
 

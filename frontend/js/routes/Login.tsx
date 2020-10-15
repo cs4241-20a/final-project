@@ -1,7 +1,9 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Button, TextField, Box, Link as MaterialLink, Typography } from "@material-ui/core";
+import { Button, TextField, Box, Link as MaterialLink, Typography, Snackbar } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory, useLocation } from 'react-router-dom';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,13 +24,26 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-  
+const reasonTable = {
+    login_fail: "Incorrect username or password",
+    register_fail: "A user with that username already exists"
+};
 
 export const Login: FunctionComponent = () => {
-  
-    const [isSignup, setIsSignup] = useState(false);
-
     const classes = useStyles();
+    const location = useLocation();
+    const history = useHistory();
+
+    const [reason, setReason] = useState<string | undefined>(new URLSearchParams(location.search).get('reason') ?? undefined);
+    const [showError, setShowError] = useState(reason !== undefined);
+
+    const [isSignup, setIsSignup] = useState(reason === 'register_fail');
+
+    function handleCloseSnackbar() {
+        setShowError(false);
+        history.replace("/login");
+    }
+
     return (
         <div className={classes.root}>
             <form className={classes.form} action={isSignup ? "/register" : "/login"} method="post" noValidate>
@@ -69,6 +84,9 @@ export const Login: FunctionComponent = () => {
                     </Grid>
                 </Grid>
             </form>
+            <Snackbar open={showError} onClose={handleCloseSnackbar} anchorOrigin={{vertical: "bottom", horizontal: "center"}}>
+                <Alert variant="filled" severity="error">{reasonTable[reason ?? ""]}</Alert>
+            </Snackbar>
         </div>
     );
 };
