@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Milligram CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/wingcss" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=The+Girl+Next+Door&display=swap"
+      rel="stylesheet"
+    />
+    
+
+  </head>
+  <body>
+    <h1 class="index-text">Welcome to the WPI Chatbot!</h1>
+    <h4 class="index-text">Ask the chatbot about any admission questions you may have about:</h4>
+    <ul class="question-list">
+      <li>Enrollment</li>
+      <li>Different majors</li>
+      <li>Gender ratio on campus</li>
+      <li>Living Arrangements on Campus</li>
+      <li>Activities on Campus</li>
+      <!--<li>Covid testing</li>-->
+    </ul>
+    <h4 class="index-text">To ask your question, press the red recording button and speak!</h4>
+    <form action="/home" method="post">
+      <button type="home" class="home" id="home">Home</button>
+    </form>
+    <section class="main">
+      <div class="user-area">
+        <img
+          src="https://cdn.glitch.com/3c21e3d2-97fe-4782-a0df-6e8c3e3d0cbf%2FScreen%20Shot%202020-10-14%20at%202.07.45%20PM.png?v=1602698883508"
+        />
+      </div>
+      <div class="chatarea-main">
+        <div class="chatarea-outer">
+          <!-- <div class="chatarea-inner user">Hello hi, how area you, i am good. What about you!</div>
+                    <div class="chatarea-inner chatbot">Hello hi, how area you, i am good. What about you!</div>
+                    <div class="chatarea-inner user">Hello hi, how area you, i am good. What about you!</div> -->
+        </div>
+      </div>
+      <div class="chatbot-area">
+        <img
+          src="https://cdn.glitch.com/3c21e3d2-97fe-4782-a0df-6e8c3e3d0cbf%2FScreen%20Shot%202020-10-14%20at%202.06.15%20PM.png?v=1602698791669"
+        />
+      </div>
+      <button id="mic"><i class="flaticon-microphone"></i></button>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>

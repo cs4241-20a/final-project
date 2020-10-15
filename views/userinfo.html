@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Milligram CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/wingcss" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=The+Girl+Next+Door&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1 class="index-text">Welcome to the WPI Chatbot!</h1>
+    <h4 class="index-text">
+      Please enter some information about yourself before using the chatbot
+    </h4>
+    <form class="user-info">
+      <label>
+        <b>First Name</b>
+        <input
+          name="firstname"
+          id="firstname"
+          type="text"
+          required
+          placeholder="First Name"
+        />
+      </label>
+      <label>
+        <b>Last Name</b>
+        <input
+          name="lastname"
+          id="lastname"
+          type="text"
+          required
+          placeholder="Last Name"
+        />
+      </label>
+      <label>
+        <b>Email Address</b>
+        <input
+          name="email"
+          id="email"
+          type="text"
+          required
+          placeholder="Email Address"
+        />
+      </label>
+      <label>
+        <b>DOB</b>
+        <input
+          name="dob"
+          id="dob"
+          type="text"
+          required
+          placeholder="MM/DD/YYYY"
+        />
+      </label>
+      <button type="enter" id="enter">Enter</button>
+    </form>
+    <form class="continue" action="/enter" method="post">
+      <button type="chatbot" id="chatbot">Continue...</button>
+    </form>
+    <script src="script2.js"></script>
+  </body>
+</html>

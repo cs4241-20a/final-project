@@ -1,0 +1,207 @@
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("../fonts/Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before,
+[class*=" flaticon-"]:before,
+[class^="flaticon-"]:after,
+[class*=" flaticon-"]:after {
+  font-family: Flaticon;
+  font-size: 30px;
+  font-style: normal;
+  font-family: 'The Girl Next Door', cursive;
+}
+
+
+
+* {
+  font-family: 'The Girl Next Door';
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "The Girl Next Door", cursive;
+  background: #C8C8CE;
+}
+header {
+  font-family: "The Girl Next Door", cursive;
+  height: 60px;
+  background: #fff;
+  color: #03283B;
+  text-align: center;
+  line-height: 60px;
+  font-size: 30px;
+  box-shadow: 10px 0 5px #b9b7b7;
+  width: 100%;
+  position: fixed;
+  z-index: 2;
+}
+.main {
+  font-family: "The Girl Next Door", cursive;
+  width: 100%;
+  float: left;
+  margin-top: 60px;
+  padding: 30px 0;
+}
+.main button {
+  font-family: "The Girl Next Door", cursive;
+  background: #ff3b3b;
+  padding: 15px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #666;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+.main button:focus {
+  outline: none;
+}
+.container {
+  font-family: "The Girl Next Door", cursive;
+  width: 85%;
+  margin: 0 auto;
+}
+.user-area,
+.chatbot-area {
+  font-family: "The Girl Next Door", cursive;
+  width: 20%;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  left: 80px;
+  z-index: 99999;
+}
+.chatbot-area {
+  font-family: "The Girl Next Door", cursive;
+  float: right;
+  right: 80px;
+  left: auto;
+}
+.user-area img,
+.chatbot-area img {
+  width: 100%;
+}
+.user-area img {
+  left: 0;
+}
+.chatarea-main {
+  font-family: "The Girl Next Door", cursive;
+  width: 42%;
+  margin: 0 auto;
+}
+.chatarea-outer {
+  font-family: "The Girl Next Door", cursive;
+  width: 100%;
+  float: left;
+}
+.chatbot-area .chatarea-main {
+  float: left;
+}
+.chatarea.user {
+  font-family: "The Girl Next Door", cursive;
+  float: right;
+  width: 40%;
+  padding: 20px 0;
+}
+
+.chatarea-inner {
+  font-family: "The Girl Next Door", cursive;
+  float: left;
+  width: 60%;
+  padding: 10px;
+  color: #fff;
+  position: relative;
+  margin: 5px 0;
+}
+.chatarea-inner.user {
+  font-family: "The Girl Next Door", cursive;
+  background: maroon;
+}
+.chatarea-inner.chatbot {
+  font-family: "The Girl Next Door", cursive;
+  background: maroon;
+  float: right;
+}
+.chatarea-inner.user:before {
+  font-family: "The Girl Next Door", cursive;
+  content: "";
+  position: absolute;
+  border-right: 20px solid maroon;
+  border-top: 20px solid transparent;
+  border-bottom: 0px solid transparent;
+  bottom: 0;
+  left: -20px;
+}
+.chatarea-inner.chatbot:before {
+  font-family: "The Girl Next Door", cursive;
+  content: "";
+  position: absolute;
+  border-left: 20px solid maroon;
+  border-top: 20px solid transparent;
+  border-bottom: 0px solid transparent;
+  bottom: 0;
+  right: -20px;
+}
+
+.chatbot-area .chatarea-inner {
+  float: left;
+}
+
+form button {
+  font-family: "The Girl Next Door", cursive;
+  margin-top: 10px;
+  background-color: maroon;
+  border: 2px solid currentColor;
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: 1.4em;
+  padding: 0.25em 1em;
+  max-width: 20ch;
+}
+
+form button:hover {
+  font-family: "The Girl Next Door", cursive;
+  background-color: grey;
+}
+
+.user-info {
+  font-family: "The Girl Next Door", cursive;
+  width: 400px;
+  height: 600px;
+  float: left;
+  margin-left: 50px;
+  margin-top: 20px;
+}
+
+.continue {
+  font-family: "The Girl Next Door", cursive;
+  margin-top: 383px;
+}
+
+.question-list {
+  font-family: "The Girl Next Door", cursive;
+  margin-left: 50px;
+}
+
+.index-text {
+  font-family: "The Girl Next Door", cursive;
+  margin-left: 30px;
+}
+
+.home {
+  font-family: "The Girl Next Door", cursive;
+  margin-left: 30px;
+}
+
+body::-webkit-scrollbar {
+}
+
