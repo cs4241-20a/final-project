@@ -17,16 +17,11 @@
 
 body {
     font: 16px Helvetica, Arial;
-    
-    background: url(/img/main.jpg) no-repeat center center fixed;
+    background: url(/img/ds.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-}
-
-p{
-    color: antiquewhite;
 }
 /*
 #left {
@@ -185,7 +180,7 @@ form {
 #username {
     border: none;
     border-radius: 3px;
-    background-color: antiquewhite;
+    background-color: lightcoral;
     position: absolute;
     left: 6%;
     bottom: 2.2%;
@@ -201,7 +196,7 @@ form {
     padding: 12px 20px;
     justify-content: center;
     font-size: 12px;
-
+    line-height: 3px;
 }
 
     #logoutButton:hover {
@@ -213,7 +208,7 @@ label {
     position: absolute;
     left: 1%;
     bottom: 1.5%;
-    color:antiquewhite;
+    color:darkturquoise;
     font-size: 20px;
 }
 
@@ -265,6 +260,7 @@ p {
     justify-content: center;
     display: flex;
     font-size: 16px;
+    color: darkturquoise;
 }
 
 canvas {
@@ -285,6 +281,7 @@ canvas {
     padding: 12px 20px;
     justify-content: center;
     font-size: 12px;
+    line-height: 3px;
 }
 
 #backButton:hover{
