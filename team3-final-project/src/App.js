@@ -5,6 +5,8 @@ import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 import { WebsocketProvider } from 'y-websocket'
 import { IndexeddbPersistence } from 'y-indexeddb'
+import { DEFAULT_MIN_VERSION } from 'tls';
+import { match } from 'assert';
 
 
 class Name extends Component{
@@ -65,46 +67,7 @@ class App extends React.Component {
     if(matchCode){
       hasCode = true;
     }
-    if (hasCode) { // will be false if match code is undefined
-        yjsArray = ydoc.getArray(matchCode + 'selections');
-        yjsNum   = ydoc.getMap  (matchCode + 'selectionNumber');
-
-        // /this.setState({obsSelections:yjsArray, obsSelectNum:yjsNum});
-        console.log("State set to yjsArray")
-        indexeddbProvider.whenSynced.then(() => {
-            console.log('Got data for match ' + matchCode)
-            yjsNum.set("selectNum", -1) // TODO Move to match init
-            yjsArray.delete(0, yjsArray.length) // TODO Move to match init
-            yjsNum.observe(event => {
-                
-
-                // print updates when the data changes
-                this.setState({obsSelections:yjsArray});
-                this.setState({obsSelectNum:yjsNum})
-                
-                let tempSelections = this.state.selections;
-                let tempSelectionNumber = yjsNum.get("selectNum");
-                console.log("YJS num " + tempSelectionNumber)   
-                console.log(yjsArray.toArray())
-                if (tempSelectionNumber >= 20 ){
-                    // draft over 
-                    console.log("Draft")
-                    return 0
-                }
-                else {  
-                    let name = yjsArray.toArray()[tempSelectionNumber];
-                    
-                    if ((name !== "" && name) || tempSelectionNumber>=0){
-                        tempSelections[tempSelectionNumber] = name;
-                    }
-
-                    console.log(tempSelections)
-                    this.setState({selections:tempSelections});
-                    this.setState({selectionNumber : tempSelectionNumber});
-                }
-            })
-        })
-    }  
+    
 
 
     this.state = {obsSelections: yjsArray,
@@ -113,13 +76,66 @@ class App extends React.Component {
                   selectionNumber: 0,
                   searchTerm: "",
                   hasRoom: hasCode,
-                  roomCode: "",
+                  roomCode: matchCode,
+                  draftRole: -1, // -1 spectator, 0 blue side, 1 red side
+                  hasRole: false, 
                   champNames: ['Aatrox','Ahri','Akali','Alistar','Amumu','Anivia','Annie','Aphelios','Ashe','AurelionSol','Azir','Bard','Blitzcrank','Brand','Braum','Caitlyn','Camille','Cassiopeia','Chogath','Corki','Darius','Diana','Draven','DrMundo','Ekko','Elise','Evelynn','Ezreal','FiddleSticks','Fiora','Fizz','Galio','Gangplank','Garen','Gnar','Gragas','Graves','Hecarim','Heimerdinger','Illaoi','Irelia','Ivern','Janna','JarvanIV','Jax','Jayce','Jhin','Jinx','Kaisa','Kalista','Karma','Karthus','Kassadin','Katarina','Kayle','Kennen','Khazix','Kindred','Kled','KogMaw','Leblanc','LeeSin','Leona','Lilia','Lissandra','Lucian','Lulu','Lux','Malphite','Malzahar','Maokai','MasterYi','MissFortune','MonkeyKing','Mordekaiser','Morgana','Nami','Nasus','Nautilus','Neeko','Nidalee','Nocturne','Nunu','Olaf','Orianna','Ornn','Pantheon','Poppy','Pyke','Qiyana','Quinn','Rakan','Rammus','RekSai','Renekton','Rengar','Riven','Rumble','Ryze','Samira','Sejuani','Senna','Sett','Shaco','Shen','Shyvana','Singed','Sion','Sivir','Skarner','Sona','Soraka','Swain','Sylas','Syndra','TahmKench','Taliyah','Talon','Taric','Teemo','Thresh','Tristana','Trundle','Tryndamere','TwistedFate','Twitch','Udyr','Urgot','Varus','Vayne','Veigar','Velkoz','Vi','Viktor','Vladimir','Volibear','Warwick','Xayah','Xerath','XinZhao','Yasuo','Yone','Yorick','Yummi','Zac','Zed','Ziggs','Zilean','Zoe','Zyra']
     }
     
-
-    
   }
+
+  componentDidMount(){
+    if (this.state.hasRoom) { // will be false if match code is undefined
+        let matchCode = this.state.roomCode
+        let yjsArray = ydoc.getArray(matchCode + 'selections');
+        let yjsNum   = ydoc.getMap  (matchCode + 'selectionNumber');
+
+        // /this.setState({obsSelections:yjsArray, obsSelectNum:yjsNum});
+        console.log("State set to yjsArray")
+        
+        indexeddbProvider.whenSynced.then(() => {
+            console.log('Got data for match ' + matchCode)
+
+            let role = yjsNum.get("draftRole")
+            if (!this.state.hasRole){
+                if (role === 0){ // if there is noone in draft, role is 0
+                    yjsNum.set("draftRole", 1); // set role to be 1 for the next person
+                }
+                else if (role === 1){ // if there is one person already in draft
+                    yjsNum.set("draftRole", -1); // then every following person is a spectator
+                }
+
+                this.setState({draftRole:role, hasRole:true});
+            }
+            console.log("My role is " + role);
+            this.syncFromDB(yjsNum, yjsArray)
+
+            yjsNum.observe(event => {
+                this.syncFromDB(yjsNum, yjsArray);
+            })
+        })
+    }  
+  }
+
+  syncFromDB(yjsNum, yjsArray){
+    this.setState({obsSelections:yjsArray});
+    this.setState({obsSelectNum:yjsNum})
+    
+    let tempSelections = this.state.selections;
+    let tempSelectionNumber = yjsNum.get("selectNum");
+    console.log("YJS num " + tempSelectionNumber)   
+    console.log(yjsArray.toArray())
+    
+    for (let i=0; i<tempSelectionNumber+1; i++){
+        tempSelections[i] = yjsArray.toArray()[i];
+    }
+
+    console.log(tempSelections)
+        
+    this.setState({selections:tempSelections});
+    this.setState({selectionNumber : tempSelectionNumber});
+  }
+
 
   clearYjsArray(){
     this.state.observable.delete(0, 20)
@@ -156,6 +172,16 @@ class App extends React.Component {
       let num = Math.floor((Math.random() * 9)).toString();
       code = code + num;
     }
+
+    // TODO Validate match num
+
+    let tempArray = ydoc.getArray(code + 'selections');
+    let tempNum   = ydoc.getMap  (code  + 'selectionNumber');
+
+    tempNum.set("selectNum", -1) // initialize the the selection number
+    tempNum.set("draftRole", 0) // init draft number to start at blue side
+    tempArray.delete(0, tempArray.length) // ensure the array is empty
+
     console.log("code is "+ code);
     this.setState({roomCode: code});
   }
