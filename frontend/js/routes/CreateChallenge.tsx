@@ -168,7 +168,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionTitle} variant="h6">Sample Solution</Typography>
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Provide a working solution to your challenge. The user will not see this</Typography>
                         <Editor
-                            language="javascript"
+                            language="typescript"
                             theme={siteSettings.theme}
                             options={editorOptions}
                             value={solution}
@@ -180,7 +180,7 @@ console.assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionTitle} variant="h6">Test Code</Typography>
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Provide some code to verify that the user's solution is correct</Typography>
                         <Editor
-                            language="javascript"
+                            language="typescript"
                             theme={siteSettings.theme}
                             options={editorOptions}
                             value={tests}
