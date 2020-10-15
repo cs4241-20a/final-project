@@ -3,10 +3,11 @@ var path;
 
 var text = new PointText(new Point(4, 20));
 text.fontSize = "20px";
-text.fillColor = "black";
+text.fillColor = "rgb(190, 181, 191)";
 
 var content = document.querySelector("#username").value;
 text.content = content;
+text.fillColor = "rgb(190, 181, 191)";
 //THIS IS A HACK
 setTimeout(function() {
     content = document.querySelector("#username").value;
@@ -17,7 +18,7 @@ function clearCanvas(e) {
     project.clear();
     text = new PointText(new Point(4, 20));
     text.fontSize = "20px";
-    text.fillColor = "black";
+    text.fillColor = "rgb(190, 181, 191)";
     //content = document.getElementById("username").value;
     text.content = content;
 }

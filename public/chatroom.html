@@ -1,35 +1,37 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Final Project</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
-        <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
-        <link rel="stylesheet" href="css/style.css" />
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
-        <script src="js/logout.js"></script>
-        <script src="js/paper-full.js"></script>
-        <script defer src="js/script.js"></script>
+<head>
+    <title>Final Project</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <script src="js/logout.js"></script>
+    <script src="js/paper-full.js"></script>
+    <script defer src="js/script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-        <script
-            type="text/paperscript"
+    <script type="text/paperscript"
             canvas="centralCanvas"
-            src="js/draw.js"
-        ></script>
-    </head>
+            src="js/draw.js"></script>
+</head>
 
     <body>
+        <audio id="sound1" src="/music/send.mp3"></audio>
+        <audio id="sound2" src="/music/clear.mp3"></audio>
+        <audio id="music" src="/music/pictochat.mp3" controls autoplay loop></audio>
         <div id="background"></div>
         <div class="wrapper">
             <div class="left">
                 <div class="avatar center-block"> </div>
                 <h1>Pictochat 2</h1>
                 <h3>Type or draw something!</h3>
-                <button id="send">Send</button>
-                <button id="clear">Clear</button>
+                <button id="send" class="mui-btn mui-btn--raised mui-btn-primary">Send</button>
+                <button id="clear" class="mui-btn mui-btn--raised mui-btn-danger">Clear</button>
                 <p>Brush Size Selection</p>
-                <div class="buttonbar">
+                <div class="buttonbar1">
                     <button id="5" class="brush selected">5px</button>
                     <button id="10" class="brush">10px</button>
                     <button id="15" class="brush">15px</button>
@@ -38,7 +40,7 @@
                     <button id="40" class="brush">40px</button>
                 </div>
                 <p>Brush Color Selection</p>
-                <div class="buttonbar">
+                <div class="buttonbar2">
                     <button id="red" class="color selected">Red</button>
                     <button id="blue" class="color">Blue</button>
                     <button id="yellow" class="color">Yellow</button>
@@ -51,10 +53,15 @@
                         width="650"
                         height="300"
                         style="border: 2px solid #000000"></canvas>
-                <label for="username">Username:</label>
+                <label for="username"><strong>Username:</strong></label>
                 <input id="username" type="text" value="" readonly>
                 <button id="logoutButton" class="mui-btn mui-btn--danger">Log Out</button>
-                <a href="/">Back</a>>
+                <button id="backButton" class="mui-btn mui-btn--danger" onclick="goBack()">Back</button>
+                <script>
+                    function goBack() {
+                        window.history.back();
+                    }
+                </script>
             </div>
             <div class="right">
                 <ul id="messages"></ul>
