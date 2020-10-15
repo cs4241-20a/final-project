@@ -107,6 +107,29 @@ var addTask = function (e) {
 var editTask = function (e) {
   e.preventDefault()
   //Edit the task
+  const input = document.querySelector( '#t_name' )
+  const input2 = document.querySelector( '#due__date' )
+  const input3 = document.querySelector( '#t_assignee')
+  const input4 = document.querySelector( '#t_tags')
+  const input5 = document.querySelector( '#t_desc')
+
+  tEdit = ids[ids.length-1]
+  tEdit.task = input.value
+  tEdit.duedate = input2.value
+  tEdit.assignee = input3.value
+  tEdit.tags = input4.value
+  tEdit.description = input5.value
+
+  fetch( '/edit', {
+         method:'POST',
+         body: JSON.stringify(tEdit),
+         headers: {
+          "Content-type": "application/json"
+        }
+    })
+    .then( function( response ) {
+      location.reload()
+    })
 }
 
 var delTask = function (e) {

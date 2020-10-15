@@ -41,6 +41,23 @@ app.post("/add", bodyParser.json(), (req, res) => {
   })
 })
 
+app.post('/edit', bodyParser.json(), (request, response) => {
+	console.log(request.body)
+	collection
+    .updateOne({ _id:mongodb.ObjectID( request.body._id ) },
+      { $set:{ task:request.body.task,
+              duedate:request.body.duedate,
+              assignee:request.body.assignee,
+						 	tags:request.body.tags,
+							description:request.body.description}
+      }
+    )
+    .then( result => {
+      //console.log(result)
+      response.json( result )
+  })
+})
+
 app.get('/tasks', bodyParser.json(), (request, response) => {
 	//console.log("Here's our group: " + request.group)
 	//Leaving out accessing a specific group for right now
