@@ -345,20 +345,6 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
 
         inRange = false
     })
-
-    // if (currentPlayerDead) {
-    //     if (players[id].isAlive) {
-    //         console.log("Killing Current")
-    //         console.log(id)
-    //         deadPlayers.push(players[id])
-    //         players[id].isAlive = false;
-    //     }
-    //
-    //     savePlayerScore(id)
-    //     //players[id].score =100; for testing purposes
-    //     //console.log("Deleted " + players[id].id);
-    //     //delete players[id];
-    // }
 }
 
 function savePlayerScore(id) {
