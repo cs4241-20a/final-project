@@ -7,9 +7,10 @@ class PickBan extends React.Component {
         let image = <div></div>
         let name  = "" // {this.props.selectionNumber}
         
-        if (this.props.name !== ""){
+        if (this.props.name !== "" && this.props.name){
             name  = this.props.name
-            image = <img src={process.env.PUBLIC_URL+this.props.image} alt={name}/>
+            let imagePath = "/champion/loading/"+name+"_0.jpg"
+            image = <img src={process.env.PUBLIC_URL+imagePath} alt={name}/>
         }
 
 
