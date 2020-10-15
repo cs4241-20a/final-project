@@ -1,7 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>CS4241 Team 19 Final Project</title>
-	</head>
-	<body></body>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>CS4241 Team 19 Final Project - Home</title>
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+		<style>
+			header, main {
+				padding-left: 300px;
+			}
+
+			@media only screen and (max-width: 992px) {
+				header, main {
+					padding-left: 0;
+				}
+			}
+
+			.logout-btn {
+				padding-top: 5px;
+			}
+		</style>
+		<script>
+			$(document).ready(function(){
+				$('.sidenav').sidenav();
+				$('#sidenav-left').sidenav({ edge: 'left' });
+			});
+		</script>
+  	</head>
+
+	<body>
+		<!-- Navbar -->
+		<header>
+			<nav>
+				<div class="nav-wrapper">
+					<div class="row">
+						<div class="col s12">
+							<a href="#" data-target="sidenav-left" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+							<a href="#" class="brand-logo">Hello, ${NAME}</a>
+							<div class="container logout-btn">
+								<a class="right waves-effect waves-light btn-large"><i class="material-icons right">exit_to_app</i>Log out</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+
+		<!-- Sidebar -->
+		<div id="sidenav-left" class="sidenav sidenav-fixed">
+			<h5 style="padding-left: 1em">Received Invites</h5>
+			<div class="collection">
+				<!--
+
+					BACKEND PEOPLE: Invite listings go here and use this format.
+					<a href="#" class="collection-item avatar">
+						<i class="large material-icons circle BUTTON_COLOR">account_circle</i>
+						<span class="title">NAME</span>
+						<p class="grey-text text-darken-1">Received on DATE_RECEIVED</p>
+					</a>
+
+				-->
+				<a href="#" class="collection-item avatar">
+					<i class="large material-icons circle red">account_circle</i>
+					<span class="title">Alan Smithee</span>
+					<p class="grey-text text-darken-1">Received 1 day ago</p>
+				</a>
+				<a href="#" class="collection-item avatar">
+					<i class="large material-icons circle green">account_circle</i>
+					<span class="title">Jamie Thompson</span>
+					<p class="grey-text text-darken-1">Received 3 days ago</p>
+				</a>
+				<a href="#" class="collection-item avatar">
+					<i class="large material-icons circle blue">account_circle</i>
+					<span class="title">Another person</span>
+					<p class="grey-text text-darken-1">Received on 8/31/2020</p>
+				</a>
+			</div>
+		</div>
+
+		<main>
+			<div class="container">
+				<h1 class="center">Tasks</h1>
+				<div class="collection">
+					<!--
+
+					BACKEND PEOPLE: Tasks go here and use this format.
+					<a href="TASK_LINK" class="collection-item">TASK_NAME</a>
+
+					-->
+					<a href="#!" class="collection-item">Task A</a>
+					<a href="#!" class="collection-item">Task B</a>
+					<a href="#!" class="collection-item">Task C</a>
+					<a href="#!" class="collection-item">Task D</a>
+				</div>
+				<br>
+				<h1 class="center">Recent Activity</h1>
+				<!--
+
+				BACKEND PEOPLE: Recent activity goes here.
+				This format allows three cards per row, for infinite rows.
+				Each individual card uses this format:
+				<div class="col s12 m4">
+					<div class="card">
+						<div class="card-content">
+							<span class="card-title"><a href="#">TITLE</a></span>
+							<p>DESCRIPTION</p>
+							<a class="btn-floating btn-large waves-effect waves-light COLOR right" href="#"><i class="material-icons">add</i></a>
+						</div>
+					</div>
+				</div>
+
+				-->
+				<div class="row">
+					<div class="col s12 m4">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title"><a href="#">Card Title</a></span>
+								<p>Sample Text</p>
+								<a class="btn-floating btn-large waves-effect waves-light red right" href="#"><i class="material-icons">add</i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m4">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title"><a href="#">Card Title</a></span>
+								<p>Sample Text</p>
+								<a class="btn-floating btn-large waves-effect waves-light red right" href="#"><i class="material-icons">add</i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m4">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title"><a href="#">Card Title</a></span>
+								<p>Sample Text</p>
+								<a class="btn-floating btn-large waves-effect waves-light red right" href="#"><i class="material-icons">add</i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+  	</body>
 </html>
