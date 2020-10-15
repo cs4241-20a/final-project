@@ -21,6 +21,7 @@ div{
   border-radius: 5px;
   padding: 2px;
   color: white;
+  height:350px
 }
 .pick{
   width: 19%;
@@ -34,6 +35,7 @@ div{
   border-radius: 5px;
   padding: 2px;
   color: white;
+  height:350px;
 }
 .ban{
   width: 19%;
@@ -45,6 +47,22 @@ div{
 .pickImage img{
   width: 100%;
   position: relative;
+}
+.tileImage img{
+  width: 98%;
+  padding: 2px;
+  height: 98%;
+  position: relative;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+}
+.champGroup{
+  display: inline-block;
+  width: 10%;
+  background-color: black;
+  position: relative;
+  padding: 7px;
 }
 body{
   background-color: #151726;
@@ -68,5 +86,15 @@ body{
   position: relative;
 }
 .input{
-  margin: 0 auto;
+  width: 800px;
+  margin: auto;
+}
+#boxes{
+  display: inline-block;
+  left:37.5%;
+  position: relative;
+}
+.name{
+  font-size: 80%;
+  text-align: center;
 }
