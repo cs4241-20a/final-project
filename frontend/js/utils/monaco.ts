@@ -1,5 +1,5 @@
 
-import editorTypes from '!!raw-loader!../../assets/challengelib.d.ts';
+import testTypes from '!!raw-loader!../../assets/challengetests.d.ts';
 import { monaco } from '@monaco-editor/react';
 
 let monacoInitialized = false;
@@ -17,7 +17,14 @@ export function initMonaco() {
                 ...monaco.languages.typescript.javascriptDefaults.getCompilerOptions(),
                 lib: ["es2019"]
             });
-            monaco.languages.typescript.javascriptDefaults.addExtraLib(editorTypes, "challengelib.d.ts");
+            
+            // Use typescript for tests
+            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+                // Deliberately uses javascriptDefaults
+                ...monaco.languages.typescript.javascriptDefaults.getCompilerOptions(),
+                lib: ["es2019"]
+            })
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(testTypes, "challengetests.d.ts");
         });
         monacoInitialized = true;
     }

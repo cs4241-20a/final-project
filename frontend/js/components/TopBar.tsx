@@ -29,6 +29,12 @@ export const TopBar: FunctionComponent<{siteSettings: SiteSettings, setSiteSetti
     const openDrawer = () => setDrawerOpen(true);
     const closeDrawer = () => setDrawerOpen(false);
 
+    function toggleDarkMode() {
+        const newTheme = siteSettings.theme === 'light' ? 'dark' : 'light';
+        localStorage.setItem('prefers-color-scheme', newTheme);
+        setSiteSettings({...siteSettings, theme: newTheme});
+    }
+
     return <>
         <AppBar position="static">
             <Toolbar>
@@ -36,7 +42,7 @@ export const TopBar: FunctionComponent<{siteSettings: SiteSettings, setSiteSetti
                     <MenuIcon/>
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>Website Name</Typography>
-                <IconButton color="inherit" aria-label="toggle dark theme" onClick={() => setSiteSettings({...siteSettings, theme: siteSettings.theme === 'light' ? 'dark' : 'light'})}>
+                <IconButton color="inherit" aria-label="toggle dark theme" onClick={toggleDarkMode}>
                     {siteSettings.theme === 'light' ? <Brightness4/> : <Brightness7/>}
                 </IconButton>
             </Toolbar>
