@@ -11,7 +11,9 @@ img {
 
 html, body {
     font-family: 'Montserrat', Arial;
-    background-color: lightyellow;
+    background-image: url('/img/bg.jpg');
+    background-size:cover;
+    z-index: -1;
 }
 
 p{
@@ -33,7 +35,6 @@ form input {
     width: 80%;
     margin-right: 0.5%;
     box-sizing: border-box;
-
     float: right;
 }
 
@@ -45,7 +46,8 @@ form button {
 }
 
 #no {
-    background-color: transparent;
+    background-color: gray;
+    border: 2px solid black;
 }
 
 #messages {
@@ -55,18 +57,21 @@ form button {
     height: auto;
     max-height: 95.5vh;
     overflow-y: auto;
+    background: #fff;
+    border: 2px solid black;
 }
 
     #messages li {
         padding: 5px 10px;
+        border: 2px solid black;
     }
 
         #messages li:nth-child(odd) {
             background: #fff;
+            border: 2px solid black;
         }
 
 #background {
-
 }
     
 
@@ -172,10 +177,12 @@ form button {
 }
 
 .footer {
+    border: none;
     text-align: left;
     position: fixed;
     bottom: 0;
     right: 0;
+    left: 0;
     left: 0;
 }
 
@@ -185,6 +192,11 @@ form button {
     border-radius: 3px;
     background-color: antiquewhite;
 }
+/*
+#no {
+    background-color: transparent;
+}*/
+
 
 #usernamelabel {
     padding-left: 10px;
