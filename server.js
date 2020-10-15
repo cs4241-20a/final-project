@@ -221,41 +221,56 @@ function moveEveryPlayer() {
 
     Object.values(players).forEach(function (player) {
 
-        if (player !== null) {
 
-            let tryDirection = player.direction;
-            let previousX = player.x;
-            let previousY = player.y;
+        let tryDirection = player.direction;
+        let previousX = player.x;
+        let previousY = player.y;
 
-            let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
+        let movementDirection = (tryDirection === 1 || tryDirection === 3) ? 0 : 1;
 
-            if (player.isAlive === false) {
-                //console.log("FOUND DEAD PLAYER: " + player.id);
-            }
-
-            // can move in the current direction
-            if (player.isAlive !== false && canMove(tryDirection, player)) {
-                // console.log( "We can move in this direction: " + tryDirection )
-                if (tryDirection === 1) { // direction is North
-                    player.y -= PLAYER_MOVEMENT_INCREMENT
-                    checkIfDead(player.id, player.y, previousY, previousX, movementDirection)
-
-                } else if (tryDirection === 2) { // direction is West
-                    player.x += PLAYER_MOVEMENT_INCREMENT
-                    checkIfDead(player.id, previousX, player.x, previousY, movementDirection)
-
-                } else if (tryDirection === 3) { // direction is South
-                    player.y += PLAYER_MOVEMENT_INCREMENT
-                    checkIfDead(player.id, previousY, player.y, previousX, movementDirection)
-
-                } else if (tryDirection === 4) { // direction is East
-                    player.x -= PLAYER_MOVEMENT_INCREMENT
-                    checkIfDead(player.id, player.x, previousX, previousY, movementDirection)
-                }
-            }
-
-            //console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
+        if (player.isAlive === false) {
+            //console.log("FOUND DEAD PLAYER: " + player.id);
         }
+
+        // can move in the current direction
+        if (player.isAlive && canMove(tryDirection, player)) {
+            // console.log( "We can move in this direction: " + tryDirection )
+            if (tryDirection === 1) { // direction is North
+                player.y -= PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, player.y, previousY, previousX, movementDirection)
+
+            } else if (tryDirection === 2) { // direction is West
+                player.x += PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, previousX, player.x, previousY, movementDirection)
+
+            } else if (tryDirection === 3) { // direction is South
+                player.y += PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, previousY, player.y, previousX, movementDirection)
+
+            } else if (tryDirection === 4) { // direction is East
+                player.x -= PLAYER_MOVEMENT_INCREMENT
+                checkIfDead(player.id, player.x, previousX, previousY, movementDirection)
+            }
+        }
+
+        if (player.isAlive) {
+            // check if any monster killed it
+
+            let playerPosGrid = {x: Math.floor(player.x / 25), y: (Math.floor(player.y / 25))}
+            Object.values(monsters).forEach((monster) => {
+                let monsterPosGrid = {x: Math.floor(monster.x / 25), y: (Math.floor(monster.y / 25))}
+
+                if (monsterPosGrid.x === playerPosGrid.x && monsterPosGrid.y === playerPosGrid.y) {
+                    // player died
+                    player.isAlive = false;
+                    deadPlayers.push(player);
+                    savePlayerScore(player.id);
+                }
+            });
+        }
+
+        //console.log( "My player " + player.id + " updated position: x = " + player.x + ", y = " + player.y )
+
         //console.log("My player's updated position: x = " + player.x + ", y = " + player.y)
 
         player.score += collectCoin(Math.floor(player.x / 25), (Math.floor(player.y / 25)))
@@ -298,9 +313,10 @@ function checkRange(positionVal, minimalRange, maxRange, constant) {
 
 function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
     let inRange = false;
-    let currentPlayerDead = false;
 
     Object.values(players).forEach(function (player) {
+
+        // checking players
         if (player.id !== id && player.isAlive) {
             // direction was vertical (SAME AXIS WOULD BE Y-AXIS)
             if (direction === 0) {
@@ -319,63 +335,30 @@ function checkIfDead(id, minRange, maxRange, otherAxisVal, direction) {
             }
 
             if (inRange) {
-                currentPlayerDead = true;
+                players[id].isAlive = false;
                 player.isAlive = false;
                 deadPlayers.push(player);
                 deadPlayers.push(players[id]);
+                savePlayerScore(id);
             }
         }
 
         inRange = false
     })
-
-    Object.values(monsters).forEach(function (monster) {
-        if (direction === 0) {
-
-            if (checkRange(monster.y, minRange, maxRange, SAME_AXIS_RANGE) &&
-                checkRange(monster.x, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
-                inRange = true;
-            }
-
-        } else { // direction was horizontal (SAME AXIS WOULD BE X-AXIS)
-
-            if (checkRange(monster.x, minRange, maxRange, SAME_AXIS_RANGE) &&
-                checkRange(monster.y, otherAxisVal, otherAxisVal, OTHER_AXIS_RANGE)) {
-                inRange = true;
-            }
-        }
-
-        if (inRange) {
-            currentPlayerDead = true;
-        }
-
-        inRange = false
-    })
-
-    if (currentPlayerDead) {
-        if (players[id].isAlive) {
-            console.log("Killing Current")
-            console.log(id)
-            players[id].isAlive = false;
-            deadPlayers.push(players[id])
-
-        }
-
-        savePlayerScore(id)
-        //players[id].score =100; for testing purposes
-        //console.log("Deleted " + players[id].id);
-        //delete players[id];
-    }
 }
 
 function savePlayerScore(id) {
-    collection
-        .updateOne(
-            {username: players[id].id},
-            {
-                $set: {"score": players[id].score}
-            }
-        )
+    collection.findOne({username: id}).then((user) => {
+        if (user.score < players[id].score) {
+            collection
+                .updateOne(
+                    {username: players[id].id},
+                    {
+                        $set: {"score": players[id].score}
+                    }
+                )
+        }
+    })
 }
 
 
@@ -551,6 +534,22 @@ function moveAllMonsters() {
                 monster.x -= PLAYER_MOVEMENT_INCREMENT
             }
             // console.log("Monster's new position: " + monster.x + ", " + monster.y)
+
+            let monsterPosGrid = {x: Math.floor(monster.x / 25), y: (Math.floor(monster.y / 25))}
+
+            // check if monster kills any player at this position
+            Object.values(players).forEach(function (player) {
+                if (player.isAlive) {
+                    // check if any monster killed it
+                    let playerPosGrid = {x: Math.floor(player.x / 25), y: (Math.floor(player.y / 25))}
+                    if (monsterPosGrid.x === playerPosGrid.x && monsterPosGrid.y === playerPosGrid.y) {
+                        // player died
+                        player.isAlive = false;
+                        deadPlayers.push(player);
+                        savePlayerScore(player.id);
+                    }
+                }
+            })
         }
     )
 }
@@ -712,7 +711,11 @@ const handlePlayerLeft = function (player) {
 
     deadPlayersLeft = deadPlayers;
 
-    deadPlayers = deadPlayers.filter((deadPlayer) => deadPlayer.id !== player.id);
+    console.log("before: ", deadPlayers.length);
+
+    deadPlayers = deadPlayers.filter((deadPlayer) => deadPlayer.id === player.id);
+
+    console.log("after: ", deadPlayers.length);
 
     delete players[leavingPlayer];
     if (totalPlayers <= 0) {
