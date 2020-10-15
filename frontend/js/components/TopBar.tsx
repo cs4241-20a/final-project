@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { AppBar, IconButton, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Brightness4, Brightness7, Brush as BrushIcon, Home as HomeIcon, Menu as MenuIcon } from "@material-ui/icons"
@@ -18,7 +18,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const TopBar: FunctionComponent<{siteSettings: SiteSettings, setSiteSettings: (siteSettings: SiteSettings) => void}> = ({
+interface TopBarProps {
+    user: {username: string} | null;
+    siteSettings: SiteSettings;
+    setSiteSettings: (siteSettings: SiteSettings) => void;
+}
+
+export const TopBar: FunctionComponent<TopBarProps> = ({
+    user,
     siteSettings,
     setSiteSettings
 }) => {
@@ -55,10 +62,10 @@ export const TopBar: FunctionComponent<{siteSettings: SiteSettings, setSiteSetti
         >
             <List className={classes.drawerList}>
             {([
-                ["/login", "Login", <React.Fragment/>],
+                user == null ? ["/login", "Login", <React.Fragment/>] : undefined,
                 ["/", "Home", <HomeIcon/>],
                 ["/create", "Create", <BrushIcon/>],
-            ] as const).map(option =>
+            ].filter(x => x) as ([string, string, ReactElement])[]).map(option =>
                 <ListItem button component={Link} to={option[0]} onClick={closeDrawer}>
                     <ListItemIcon>{option[2]}</ListItemIcon>
                     <ListItemText primary={option[1]}/>

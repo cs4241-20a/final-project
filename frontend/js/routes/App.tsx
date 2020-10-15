@@ -1,6 +1,6 @@
-import { CssBaseline, Typography, useMediaQuery } from "@material-ui/core";
-import { createMuiTheme, makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import React, { FunctionComponent, useState } from "react";
+import { CssBaseline, useMediaQuery } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, match, Route, Switch } from 'react-router-dom'; 
 import { TopBar } from "../components/TopBar";
@@ -18,7 +18,7 @@ export interface SiteSettings {
 }
 
 const App: FunctionComponent = props => {
-    let prefersDarkTheme;
+    let prefersDarkTheme: boolean;
     const storedThemePreference = localStorage.getItem('prefers-color-scheme');
     const browserThemePreference = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
     if (storedThemePreference) {
@@ -57,12 +57,22 @@ const App: FunctionComponent = props => {
         [siteSettings],
     );
 
+    const [currentUser, setCurrentUser] = useState<{username: string} | null>(null);
+    useEffect(() => {
+        (async () => {
+            const response = await fetch('/api/me');
+            if (response.ok) {
+                setCurrentUser(await response.json());
+            }
+        })();
+    }, []);
+
     return (
         <ThemeProvider theme={theme}>
         <DialogProvider>
             <CssBaseline/>
             <Router>
-                <TopBar siteSettings={siteSettings} setSiteSettings={setSiteSettings}/>
+                <TopBar user={currentUser} siteSettings={siteSettings} setSiteSettings={setSiteSettings}/>
                 <Switch>
                     <Route exact path="/">
                         <Home/>

@@ -69,12 +69,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const authenticate = (req, /** @type {import('express').Response} */ res, /** @type {import('express').NextFunction} */ next) => {
-
     if (req.user) {
         return next();
     }
     res.status(401).send("You must be logged in to perform that action.");
 };
+
+app.get('/api/me', authenticate, async (req, res) => {
+    res.json(req.user);
+});
 
 function fixChallenge(challenge) {
     const newChallenge = {...challenge};
