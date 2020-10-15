@@ -6,8 +6,9 @@ var btnContainer=document.getElementById("btn_container")
 
 var clicked=false
 
-var makeTask = function() {
+var makeTask = function(column) {
   modal.style.display = "block";
+  currentCol = column
 }
 
 var cancelTask = function(){
@@ -64,10 +65,17 @@ function getTasks() {
     {
       var task = json[i]
       console.log("append")
+      if(task.column > cols) {
+        console.log("We need to add a new column")
+        addCol()
+      }
       appendNewInfo(task)
     }
   })
 }
+
+//What column are we adding to?
+var currentCol = 1;
 
 var addTask = function (e) {
 
@@ -83,7 +91,7 @@ var addTask = function (e) {
   var h = document.getElementById('group_name')
   // Add in code for getting the group's name later
   var name = h.innerHTML
-  const json = { group: name, task: input.value, duedate: input2.value, assignee: input3.value, tags: input4.value, description: input5.value }
+  const json = { group: name, task: input.value, duedate: input2.value, assignee: input3.value, tags: input4.value, description: input5.value, column: currentCol }
   const body = JSON.stringify( json )
   console.log(body)
 
@@ -102,7 +110,6 @@ var addTask = function (e) {
       var task = json
       appendNewInfo(task)
   })
-  console.log(modal)
   modal.style.display = "none";
 }
 
@@ -192,39 +199,51 @@ function appendNewInfo(task) {
     console.log(ids[ids.length-1])
     editing = true
   }
-  col[0].appendChild(div)
+  col[task.column-1].appendChild(div)
 }
+
+//The total number of columns
+var cols = 1;
 
 var addCol = function() {
   const contain = document.getElementsByClassName("inner-container")
-  console.log(contain)
+  //console.log(contain)
+  cols++ //update number of columns
+  console.log(cols)
   // Create all the necessary elements
   var newCol = document.createElement("div");
   newCol.setAttribute('class', 'task_lists card-panel materialize-red lighten-2')
   var newList = document.createElement("div")
   newList.setAttribute('class', 'tasks')
+  newList.setAttribute('id', cols)
   var newlistName = document.createElement("h4")
   newlistName.setAttribute('class', 'white-text center-align row')
   var addBtn = document.createElement("a")
   addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
   addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
+  var colID = "btn-" + cols
+  addBtn.setAttribute('id', colID)
   var plus = document.createElement("i")
   plus.setAttribute('class', 'material-icons right')
   // Add everything
   plus.appendChild(document.createTextNode("add"))
   addBtn.appendChild(plus)
   addBtn.appendChild(document.createTextNode(" New Task"))
-  addBtn.onclick = makeTask
+  addBtn.onclick = function() {
+    makeTask(cols)
+  }
   newlistName.appendChild(document.createTextNode("New List"))
   newCol.appendChild(newlistName)
   newCol.appendChild(newList)
   newCol.appendChild(addBtn)
+  newCol.onclick = listClicked
   contain[0].appendChild(newCol)
 }
 
 var delCol = function() {
   const contain = document.getElementsByClassName("inner-container")
   contain[0].removeChild(contain[0].lastChild)
+  cols--
   // Later on we'll add in functionality so that when the column is deleted all its tasks are deleted
   // This means it should prompt the user to ask if they really want to delete everything
 }
@@ -235,8 +254,10 @@ window.onload = function() {
     const tsButton = document.querySelector( '#task_submit' )
     tsButton.onclick = addTask
 
-    const ntButton = document.getElementById("add_task")
-    ntButton.onclick = makeTask
+    const ntButton = document.getElementById("btn-1")
+    ntButton.onclick = function() {
+      makeTask(1)
+    }
 
     const cButton = document.getElementById("cancel")
     cButton.onclick = cancelTask
