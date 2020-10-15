@@ -14,8 +14,12 @@ const useStyles = makeStyles((theme) => ({
         width: `min(400px, calc(100% - ${theme.spacing(2) * 2}px))`
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(3, 0, 2)
     },
+    toggleRegisterBtn: {
+        color: theme.palette.text.secondary,
+        cursor: "pointer"
+    }
 }));
 
   
@@ -27,7 +31,7 @@ export const Login: FunctionComponent = () => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <form className={classes.form} action={isSignup ? "/login" : "/register"} method="post" noValidate>
+            <form className={classes.form} action={isSignup ? "/register" : "/login"} method="post" noValidate>
                 <TextField
                     fullWidth
                     variant="filled"
@@ -53,13 +57,13 @@ export const Login: FunctionComponent = () => {
                     color="primary"
                     className={classes.submit}
                 >
-                    {isSignup ? "Register" : "Sign in"}
+                    {isSignup ? "Register" : "Login"}
                 </Button>
                 <Grid container>
                     <Grid item xs>
                     </Grid>
                     <Grid item>
-                    <MaterialLink variant="body2" onClick={() => setIsSignup(!isSignup)}>
+                    <MaterialLink variant="body2" className={classes.toggleRegisterBtn} onClick={() => setIsSignup(!isSignup)}>
                         {isSignup ? "Already registered?" : "Don't have an account?"}
                     </MaterialLink>
                     </Grid>

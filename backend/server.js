@@ -166,12 +166,17 @@ app.use('/api/*', (req, res) => {
     res.sendStatus(404);
 });
 
-app.post('/register', passport.authenticate('local-signup', {failureRedirect: '/register'}), (req, res) => {
+app.post('/register', passport.authenticate('local-signup', {failureRedirect: '/login'}), (req, res) => {
     res.redirect('/');
 });
 
 app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req, res) => {
     res.redirect('/');
+});
+
+app.post('/logout', authenticate, (req, res) => {
+    req.logout();
+    res.sendStatus(200);
 });
 
 // Serve files normally if we have them

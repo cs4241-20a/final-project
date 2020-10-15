@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 import { AppBar, IconButton, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Brightness4, Brightness7, Brush as BrushIcon, Home as HomeIcon, Menu as MenuIcon } from "@material-ui/icons"
+import { Brightness4, Brightness7, Brush as BrushIcon, ExitToApp as ExitToAppIcon, Home as HomeIcon, Menu as MenuIcon } from "@material-ui/icons"
 import { FunctionComponent } from "react";
 import { Link } from 'react-router-dom';
 import { SiteSettings } from '../routes/App';
@@ -42,6 +42,13 @@ export const TopBar: FunctionComponent<TopBarProps> = ({
         setSiteSettings({...siteSettings, theme: newTheme});
     }
 
+    async function logout() {
+        const response = await fetch('/logout', { method: "POST" });
+        if (response.ok) {
+            location.reload();
+        }
+    }
+
     return <>
         <AppBar position="static">
             <Toolbar>
@@ -61,15 +68,22 @@ export const TopBar: FunctionComponent<TopBarProps> = ({
             onClose={closeDrawer}
         >
             <List className={classes.drawerList}>
-            {([
-                user == null ? ["/login", "Login", <React.Fragment/>] : undefined,
-                ["/", "Home", <HomeIcon/>],
-                ["/create", "Create", <BrushIcon/>],
-            ].filter(x => x) as ([string, string, ReactElement])[]).map(option =>
-                <ListItem button component={Link} to={option[0]} onClick={closeDrawer}>
-                    <ListItemIcon>{option[2]}</ListItemIcon>
-                    <ListItemText primary={option[1]}/>
-                </ListItem>)}
+                {user !== null ?
+                    <ListItem button onClick={logout}>
+                        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
+                        <ListItemText primary="Log out"/>
+                    </ListItem>
+                : undefined}
+                {([
+                    user == null ? ["/login", "Login/Register", <React.Fragment/>] : undefined,
+                    ["/", "Home", <HomeIcon/>],
+                    user !== null ? ["/create", "Create", <BrushIcon/>] : undefined,
+                ].filter(x => x) as ([string, string, ReactElement])[]).map(option =>
+                    <ListItem button component={Link} to={option[0]} onClick={closeDrawer}>
+                        <ListItemIcon>{option[2]}</ListItemIcon>
+                        <ListItemText primary={option[1]}/>
+                    </ListItem>
+                )}
             </List>
         </SwipeableDrawer>
     </>;
