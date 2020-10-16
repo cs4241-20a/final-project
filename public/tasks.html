@@ -23,23 +23,14 @@
 <div id="main_container">
   <div id="task_container">
     <div class="inner-container">
-      <div class="task_lists card-panel teal lighten-2" onclick="listClicked()" id="col-1">
+      <div class="task_lists card-panel teal lighten-2" id="col-1">
         <a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
         <h5 class="white-text center-align row list-names" style="font-weight: 300;" contenteditable="true">List Name</h5>
         <!-- Added in a div to make sure tasks appear before the button-->
-        <div class="tasks white" id="1">
-        <!-- <div class="task_card card-panel col s1" id="card1" onclick="editTask()">
-          <p class="task_name task_item">Task Name</p>
-          <p class="task_date task_item">Due Date</p>
-          <p class="assignees task_item">Assigned To</p>
-          <div style="display:flex; flex-direction: row; justify-items: center">
-            <a class="centerwaves-effect waves-light btn-small btn" id="delete_task" onclick="deleteBtn()"><i class="material-icons right">delete_forever</i></a>
-          </div>
-        </div> -->
+        <div class="tasks white" id="1"></div>
+          <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
+        </div>
       </div>
-        <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
-      </div>
-    </div>
     <div class="btn_container" id="btn_container">
       <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" id="add_list"><i class="material-icons right">add</i>Add A New List</a>
     </div>

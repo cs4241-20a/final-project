@@ -226,17 +226,17 @@ var addCol = function() {
   console.log(cols)
   // Create all the necessary elements
   var newCol = document.createElement("div");
-  newCol.setAttribute('class', 'task_lists card-panel materialize-red lighten-2')
+  newCol.setAttribute('class', 'task_lists card-panel teal lighten-2')
   var colID = "col-" + cols
   newCol.setAttribute('id', colID)
   var newList = document.createElement("div")
   newList.setAttribute('class', 'tasks')
   newList.setAttribute('id', cols)
-  var newlistName = document.createElement("h4")
+  var newlistName = document.createElement("h5")
   newlistName.setAttribute('class', 'white-text center-align row list-names')
   var addBtn = document.createElement("a")
-  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
-  addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
+  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
+  addBtn.setAttribute('type', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
   var btnID = "btn-" + cols
   addBtn.setAttribute('id', btnID)
   var plus = document.createElement("i")
@@ -248,14 +248,13 @@ var addCol = function() {
   addBtn.onclick = function() {
     makeTask(cols)
   }
-  newlistName.appendChild(document.createTextNode("New List"))
+  newlistName.appendChild(document.createTextNode("List Name"))
   newCol.appendChild(newlistName)
   newlistName.addEventListener('click',function () {
     newlistName.contentEditable=true
   })
   newCol.appendChild(newList)
   newCol.appendChild(addBtn)
-  newCol.onclick = listClicked
   contain[0].appendChild(newCol)
 }
 
