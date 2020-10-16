@@ -185,7 +185,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
             <div className={classes.challengeControlsHeader}>
                 <Typography className={classes.challengeTitle} variant="h4">{challenge?.title}</Typography>
                 {siteSettings.currentLobbyId && siteSettings.isLobbyOwner ?
-                    <Button variant="outlined" color="secondary" size="large" endIcon={<GroupIcon/>} onClick={beginRace}>Race</Button>
+                    <Button variant="outlined" color="secondary" size="large" endIcon={<GroupIcon/>} onClick={beginRace}>Summon &amp; Race</Button>
                 : undefined}
                 <Button variant="contained" color="secondary" size="large" endIcon={<SendIcon/>} onClick={submit}>Submit</Button>
             </div>

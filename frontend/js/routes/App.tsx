@@ -103,16 +103,13 @@ const App: FunctionComponent = props => {
             <TopBar siteSettings={siteSettings} setSiteSettings={setSiteSettings}/>
             <Switch>
                 <Route exact path="/">
-                    <Home/>
+                    <ListChallenges siteSettings={siteSettings}/>
                 </Route>
                 <Route path="/login">
                     <Login/>
                 </Route>
                 <Route path="/create">
                     <CreateChallenge siteSettings={siteSettings}/>
-                </Route>
-                <Route path="/list">
-                    <ListChallenges/>
                 </Route>
                 <Route path="/play/:id" render={({match}) => (
                     <PlayChallenge challengeId={(match as match<{id: string}>).params.id} siteSettings={siteSettings}/>

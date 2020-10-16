@@ -94,11 +94,10 @@ app.get('/api/challenge/all', async (req, res) => {
     const challenges = await getCollection('challenges');
     /** @type {import('../frontend/js/types/challenge.js').ChallengeShort[]} */
     const shortChallenges = await challenges.find({}, {projection: {
-        _id: 0,
         author: 1,
         title: 1
     }}).toArray();
-    res.json(shortChallenges);
+    res.json(shortChallenges.map(fixChallenge));
 });
 
 app.post('/api/challenge', authenticate, async (req, res) => {
