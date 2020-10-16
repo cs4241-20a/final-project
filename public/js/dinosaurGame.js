@@ -37,24 +37,20 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		// if someone disconnects
 		this.socket.on('disconnect', playerId => {
 			let children = self.otherPlayers;
-			if (children) {
-				children.getChildren().forEach(child => {
-					if (playerId === child.playerId)
-						child.destroy();
-				});
-			}
+			children.getChildren().forEach(child => {
+				if (playerId === child.playerId)
+					child.destroy();
+			});
 		});
 
 		// called whenever the server says someone moved
 		this.socket.on('playerMoved', playerInfo => {
 			let children = self.otherPlayers;
-			if (children) {
-				children.getChildren().forEach(player => {
-					if (playerInfo.playerId === player.playerId){
-						player.setPosition(playerInfo.x, playerInfo.y);
-					}
-				});
-			}
+			children.getChildren().forEach(player => {
+				if (playerInfo.playerId === player.playerId){
+					player.setPosition(playerInfo.x, playerInfo.y);
+				}
+			});	
 		});
 
 		// add the space background	
@@ -77,7 +73,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	    this.stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)));
 
 		this.obstacles = this.physics.add.group();
-		this.obstacles.create(Phaser.Math.Between(40, 750), 0, 'fireball').setScale(2).refreshBody();
+		this.obstacles.create(Phaser.Math.Between(40, 550), 0, 'fireball').setScale(2).refreshBody();
 		this.obstacles.children.iterate(child => {
 			child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 			child.setVelocityX(Phaser.Math.Between(-20, -40));

@@ -3,15 +3,16 @@ class Lobby extends Phaser.Scene {// global vars for the player
 
 	constructor(){
 		super('Lobby');
-		this.platforms, this.stars, this.scoreText, this.keyboard, this.score = 0;
+		this.platforms, this.stars, this.scoreText, this.keyboard, this.ready, this.score = 0;
 	}
 
 	// loads in all the assets
 	preload () {
-		this.load.image('sky', '../assets/sky.png');
+		this.load.image('sky', 'assets/sky.png');
 	    this.load.image('ground', 'assets/platform.png');
 	    this.load.image('star', 'assets/star.png');
 	    this.load.image('main', 'assets/main.png');
+	    // this.load.image('ready', 'assets/readyBut.png');
 	}
 
 	// called to add all the assets to the actual game
@@ -57,7 +58,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 
 		// add the sky background
 		this.add.image(0, 0, 'sky').setOrigin(0, 0);
-		this.scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#FFFFFF'}) // adds the score Text (top left)
+		this.scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#fff'}) // adds the score Text (top left)
 
 		this.platforms = this.physics.add.staticGroup(); // adds the platforms as a non moving (static) group
 
@@ -71,6 +72,17 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    this.platforms.create(600, 400, 'ground');
 	    this.platforms.create(50, 250, 'ground');
 	    this.platforms.create(750, 220, 'ground');
+
+	    // ready button
+	    // this.ready = this.add.sprite(40, 50, 'ready').setInteractive();
+	    // this.ready.on('pointerdown', () => {console.log('we ready');});
+	    this.ready = this.add.text(700, 560, 'Not Ready', {fontFamily: 'Roboto', color: '#fff', backgroundColor: '#C42953'}).setInteractive();
+	    this.ready.on('pointerdown', () => {
+	    	this.ready.setText('Ready')
+			    	  .setBackgroundColor('#28CA4A')
+			    	  .setColor('#000');
+			this.socket.emit('Ready');
+	    });
 
 	    // add random bounce amounts to each star
 	    this.stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)));
@@ -154,7 +166,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		this.socket.off('currentPlayers');
 		this.socket.off('newPlayer');
 		this.socket.off('disconnect');
-		this.socket.off('playerMoved');
+		this.socket.off('playermO');
 		// this.socket.leave();
 		this.scene.start('DinoGame');
 	}
