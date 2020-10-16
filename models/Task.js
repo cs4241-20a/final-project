@@ -23,7 +23,7 @@ const TaskSchema = new Schema({
 		required: true
 	},
 	assignees: {
-		type: [Schema.Types.ObjectId],
+		type: String, //[Schema.Types.ObjectId],
 		required: false
 	},
 	tags: {
@@ -32,7 +32,7 @@ const TaskSchema = new Schema({
 	},
 	dateDue: {
 		//Changed this to string, @Luke change it back to date
-		type: String,//Date,
+		type: Date,
 		required: false
 	},
 	dateCreated: {

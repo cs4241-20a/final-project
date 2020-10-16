@@ -103,7 +103,15 @@ const getTasks = async () => {
   const res = await fetch("/api/tasks/" + groupId, {method: "GET"})
   const data = await res.json()
   console.log(JSON.stringify(data))
-  console.log(data)
+  console.log(data.data[0])
+  for (var i = 0; i < data.data.length; i++) {
+    var task = data.data[i]
+    if(task.column > cols) {
+      console.log("We need to add a new column")
+      addCol()
+    }
+    appendNewInfo(task)
+  }
   // fetch(groupId, {
   //   method: 'GET',
   //   headers: {
@@ -145,7 +153,7 @@ var addTask = async (e) => {
   const body = JSON.stringify( json )
   console.log(body)
   console.log(groupId)
-  const res = await fetch("/api/tasks/" + groupId, {method: "POST", body})
+  const res = await fetch("/api/tasks/" + groupId, {method: "POST", body: body, headers: {"Content-type": "application/json"}})
   const data = await res.json()
   console.log(JSON.stringify(data))
   console.log(data)
@@ -248,9 +256,9 @@ function appendNewInfo(task) {
     editing = false
   }
   btnDiv.appendChild(deleteBtn)
-  name.appendChild(document.createTextNode(task.task))
-  due.appendChild(document.createTextNode(task.duedate))
-  assigned.appendChild(document.createTextNode(task.assignee))
+  name.appendChild(document.createTextNode(task.name))
+  due.appendChild(document.createTextNode(task.dateDue))
+  assigned.appendChild(document.createTextNode(task.assignees))
   div.appendChild(name)
   div.appendChild(due)
   div.appendChild(assigned)
@@ -262,7 +270,8 @@ function appendNewInfo(task) {
     console.log(ids[ids.length-1])
     editing = true
   }
-  col[task.column-1].appendChild(div)
+  console.log(task.columnName)
+  col[task.columnName-1].appendChild(div)
 }
 
 //The total number of columns

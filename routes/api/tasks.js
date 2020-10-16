@@ -3,6 +3,7 @@
 
 const express = require("express");
 const moment = require("moment");
+const bodyParser = require('body-parser');
 
 const Task = require("../../models/Task");
 const Group = require("../../models/Group");
@@ -72,11 +73,16 @@ router.get("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
  * Auth: Required
  * Desc: Adds a new task to the given group with the given information. User must belong to the group. Verified by session.
  */
-router.post("/:groupId", ensureAuthenticated, async (req, res) => {
+router.post("/:groupId", bodyParser.json(), ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
-	const {groupId} = req.params;
+	console.log(req)
+	const groupId = req.params.groupId;
+	console.log(groupId)
+	console.log("My group id: " + req.params.groupId)
+	console.log(req.body)
 	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
 	const {username} = req.user;
+	console.log("User " + username)
 
 	try {
 		// Find the id of the user with the given username
@@ -84,8 +90,9 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: userId});
 		// Create a new task with the given name, description, column name, assignees, tags, and due date
-		console.log("Updated again")
-		let newTask = new Task({name, desc, columnName, assignees, tags, dateDue}); //formatDate(dateDue)
+		console.log("Updated again, trying now with assignees as a string")
+		let newTask = new Task({name, desc, groupId, columnName, assignees, tags, dateDue: formatDate(dateDue)}); //formatDate(dateDue)
+		console.log(newTask)
 		// Save the new task to the database
 		newTask = await newTask.save();
 
