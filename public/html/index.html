@@ -18,9 +18,15 @@
       href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lobster"
+    />
   </head>
 
+  <!-- font-family="Sansita Swashed" -->
   <body>
+    <div id="background"></div>
     <div class="navbarbody">
       <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="#">Filifili</a>
@@ -43,84 +49,95 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Page1</a>
+              <a class="nav-link" href="/video?video=music">Music Channel</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Page2</a>
+              <a class="nav-link" href="/video?video=cooking"
+                >Cooking Channel</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Page3</a>
+              <a class="nav-link" href="/video?video=talkShow"
+                >Talkshow Channel</a
+              >
             </li>
           </ul>
         </div>
+        <form action="/users/logout">
+          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+            Log out
+          </button>
+        </form>
       </nav>
     </div>
-    <div id="background"></div>
+    <div class="infocontainer">
+      <div id="intro">
+        <h1 id="logo">Filifili</h1>
+      </div>
 
-    <form action="/users/logout">
-        <button type="submit">
-          Log out
-        </button>
-    </form>
-    
-    <div
-      class="banner"
-      style="background-image: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2));"
-    >
-      <div class="container">
-        <h1>Watching and Sharing!</h1>
-        <p>Join a channel and share your thoughts with other people.</p>
-        <!-- <a class="btn btn-flat" href="#">Go</a> -->
+      <div
+        class="banner"
+        style="
+          background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+          );
+        "
+      >
+        <div class="bannerinfo">
+          <h1>Watching and Sharing!</h1>
+          <p>Join a channel and share your thoughts with other people.</p>
+          <!-- <a class="btn btn-flat" href="#">Go</a> -->
+        </div>
+      </div>
+
+      <div class="cards">
+        <div
+          class="card-category"
+          id="music"
+          onclick="toVideoPage(this.id)"
+          style="
+            background-image: linear-gradient(
+                rgba(0, 0, 0, 0.3),
+                rgba(0, 0, 0, 0.3)
+              ),
+              url(./resources/card1.jpg);
+          "
+        >
+          Relaxing Guitar Music
+        </div>
+
+        <div
+          class="card-category"
+          id="cooking"
+          onclick="toVideoPage(this.id)"
+          style="
+            background-image: linear-gradient(
+                rgba(0, 0, 0, 0.3),
+                rgba(0, 0, 0, 0.3)
+              ),
+              url(./resources/card2.jpg);
+          "
+        >
+          Cooking Tutorial
+        </div>
+
+        <div
+          class="card-category"
+          id="talkShow"
+          onclick="toVideoPage(this.id)"
+          style="
+            background-image: linear-gradient(
+                rgba(0, 0, 0, 0.3),
+                rgba(0, 0, 0, 0.3)
+              ),
+              url(./resources/card3.jpg);
+          "
+        >
+          Talk Show
+        </div>
       </div>
     </div>
-      
-    
-    
-    
-
-    <div class="cards">
-      <div
-        class="card-category"
-        id="music"
-        onclick="toVideoPage(this.id)"
-        style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(./resources/card1.jpg)"
-      >
-        Relaxing Guitar Music
-      </div>
-
-      <div
-        class="card-category"
-        id="cooking"
-        onclick="toVideoPage(this.id)"
-        style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(./resources/card2.jpg)"
-      >
-        Cooking Tutorial
-      </div>
-
-      <div
-        class="card-category"
-        id="talkShow"
-        onclick="toVideoPage(this.id)"
-        style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(./resources/card3.jpg)"
-      >
-        Talk Show
-      </div>
-    </div>
-
-    <!--   <div class="info-container">
-    <div id="information" style = "width: 1000px">
-      <div id="welcome">
-        <h1>Please Sign up or sign in to view the content</h1>
-        <button onclick="location.href='/register'" type="button">
-          Sign Up
-        </button>
-        <button onclick="location.href='/login'" type="button">
-          Sign In
-        </button>
-      </div>
-    </div> -->
-
-    <!--   </div> -->
 
     <!-- <script src="js/scripts.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -140,17 +157,17 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      function toVideoPage(video){
+      function toVideoPage(video) {
         console.log("Go To Video Page");
         window.location.href = "/video?video=" + video;
       }
 
-//       $("body").on("click", "div.card-category", function(e) {
-//         var video = $(e.target).id();
-//         console.log("Go To Video Page");
+      //       $("body").on("click", "div.card-category", function(e) {
+      //         var video = $(e.target).id();
+      //         console.log("Go To Video Page");
 
-//         window.location.href = "/video?video=" + video;
-//       });
+      //         window.location.href = "/video?video=" + video;
+      //       });
     </script>
   </body>
 </html>

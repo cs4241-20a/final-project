@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+2<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="css/style.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/videostyle.css" />
     <!-- Bootstrap CDN -->
     <link
       rel="stylesheet"
@@ -16,83 +17,85 @@
       href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap"
       rel="stylesheet"
     />
-    <title>Filifili</title>
   </head>
   <body>
-    <div class="navbarbody">
-      <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="/">Filifili</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav2"
-          aria-controls="navbarNav2"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav2">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="#"
-                >Home <span class="sr-only">(current)</span></a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/video?video=music">Relaxing Guitar Music</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/video?video=cooking">Cooking tutorial</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/video?video=talkShow">Talk Show</a>
-            </li>
-          </ul>
+    <div id="background"></div>
+      <div class="navbarbody">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          <a class="navbar-brand" href="/">Filifili</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav2"
+            aria-controls="navbarNav2"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav2">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/"
+                  >Home <span class="sr-only">(current)</span></a
+                >
+              </li>
+              <li class="nav-item" id="music">
+                <a class="nav-link" href="/video?video=music">Music Channel</a>
+              </li>
+              <li class="nav-item" id="cooking">
+                <a class="nav-link" href="/video?video=cooking"
+                  >Cooking Channel</a
+                >
+              </li>
+              <li class="nav-item" id="talkshow">
+                <a class="nav-link" href="/video?video=talkShow"
+                  >Talkshow Channel</a
+                >
+              </li>
+            </ul>
+          </div>
+          <form action="/users/logout">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+              Log out
+            </button>
+          </form>
+        </nav>
+      </div>
+      <div
+        class="main"
+        style="position: relative;height: 300px"
+      >
+        <div class="movie-container">
+          <div class="movie text-center">
+            <iframe
+              id="video"
+              frameborder="0"
+              allowfullscreen
+              style="position: relative; height: 480px; width: 854px"
+            ></iframe>
+          </div>
         </div>
-      </nav>
-    </div>
-      <h1 id="filifili_title" class="col-md-1">
-        Filifili
-      </h1>
-    <p id="type">Video Type</p>
-    <div class="main" style="position:relative; width:1024px;height:1024px">
-      <div class="container" style="position:absolute">
-        <div class="movie text-center">
-          <iframe
-            id="video"
-            frameborder="0"
-            allowfullscreen
-            style="position: relative;
-    height: auto;"
-          ></iframe>
-        </div>
+      <form id="form">
         <div class="danmu text-center">
           <input
             type="text"
             class="input"
             placeholder="Please enter flying comments"
           />
-          <div id="btn">Comment</div>  <!-- 发送弹幕 -->
+          <div id="btn">Comment</div>
+          <!-- <button id="btn" type="submit">Comment</button> -->
         </div>
-        <div class="al">
-          You should input something and then send!
-        </div>
+        <div class="al">You should input something and then send!</div>
       </div>
     </div>
-
-    <!--     <div>
-      <input type="text" id="comment" />
-      <button>
-        Submit
-      </button>
-    </div> -->
-
+  </form>
+  <script src="socket.io/socket.io.js"></script>
     <script>
-      var videoType;
-      // let ws, msgs = [];
-      window.onload = function() {
+      var socket = window.ws = io(`${window.location.host}`);
+      var videoType, video_link;
+      window.onload = function () {
         videoType = getUrlVars()["video"];
         console.log("video type: " + videoType);
 
@@ -100,46 +103,45 @@
         var video = document.getElementById("video");
 
         if (videoType === "music") {
-          type.innerHTML = "Relaxing Guitar Music";
           video.src = "https://www.youtube.com/embed/oFEKYxjYDIc";
         } else if (videoType === "cooking") {
-          type.innerHTML = "Cooking Tutorial";
           video.src = "https://www.youtube.com/embed/mhDJNfV7hjk";
         } else if (videoType === "talkShow") {
-          type.innerHTML = "Talk Show";
-          video.src = "https://www.youtube.com/embed/v=odtAJ2kPdqc";
+          video.src = "https://www.youtube.com/embed/odtAJ2kPdqc";
         }
 
-        //         type.innerHTML = videoType;
+        //high light the current tag
+        var pathname = window.location.pathname;
+        video_link = pathname + window.location.search;
+        var parentclass = $('.navbar-nav > li > a[href="' + video_link + '"]')
+          .parent()
+          .addClass("active");
+
         function getUrlVars() {
           var vars = {};
           var parts = window.location.href.replace(
             /[?&]+([^=&]+)=([^&]*)/gi,
-            function(m, key, value) {
+            function (m, key, value) {
               vars[key] = value;
             }
           );
           return vars;
         }
+        socket.on('connect', function () {
+                console.log('connected');
+        });
 
-        // ws = new WebSocket("ws://127.0.0.1:3000");
-        // // when connection is established...
-        // ws.onopen = () => {
-        //   ws.send("a new client has connected.");
-        //   ws.onmessage = msg => {
-        //     // add message to end of msgs array,
-        //     // re-assign to trigger UI update
-        //     msgs = msgs.concat([msg.data]);
-        //   };
-        // };
+        socket.on('message', function (message) {
+                console.log('message', message);
+                var comment = message.content.split(" ");
+                var type = comment.shift();
+                if(type == videoType){
+                  createSpan(comment);
+                }
+                
+            });
       };
 
-      // const send = function() {
-      //   const txt = document.querySelector("input").value;
-      //   ws.send(txt);
-      //   // re-assigning to msgs variable triggers UI update
-      //   msgs = msgs.concat([txt]);
-      // };
       var oMovie = document.getElementsByClassName("movie")[0],
         oInput = document.getElementsByClassName("input")[0],
         oBtn = document.getElementById("btn"),
@@ -147,38 +149,58 @@
       oMovieWidth = oMovie.offsetWidth;
       var timer2;
 
+
       oBtn.onclick = send;
-      oInput.onkeydown = function(e) {
+      oInput.onkeydown = function (e) {
         if (e.keyCode == 13) {
+          e.preventDefault();
           send();
         }
       };
+
+      function getPosition(element) {
+        var xPosition = 0;
+
+        while(element) {
+          xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+          element = element.offsetParent;
+        }
+
+        return xPosition;
+      }
+
       // var iframeVideo = document.getElementById("video")
-      // setTimeout(function(){ console.log(iframeVideo.getCurrentTime()) }, 1000); 
+      // setTimeout(function(){ console.log(iframeVideo.getCurrentTime()) }, 1000);
       function send() {
+        console.log("width ",oMovieWidth)
+        var oForm = document.getElementById('form');
         if (oInput.value.length <= 0 || /^\s+$/.test(oInput.value)) {
           oAl.style.display = "block";
-          timer2 = setTimeout(function() {
+          timer2 = setTimeout(function () {
             oAl.style.display = "none";
           }, 1500);
           return;
         }
+        // var content = oInput.value;
+        var content = videoType + " ";
+        content += oInput.value;
+        // content += videoType;
+        socket.emit('message', { content });
         createSpan(oInput.value);
         console.log("send clicked");
-        
-        
+
         oInput.value = "";
       }
-
       function createSpan(text) {
         var oSpan = document.createElement("span");
         oSpan.innerText = text;
-        oSpan.style.left = oMovieWidth + "px";
+        oSpan.style.left = oMovieWidth+getPosition(oMovie)-oSpan.offsetWidth + "px";
         oMovie.appendChild(oSpan);
         styleSpan(oSpan);
       }
       function styleSpan(dom) {
         dom.style.top = random(0, 180) + "px";
+        dom.style.fontWeight = "bold"
         dom.style.color =
           "rgb(" +
           random(0, 255) +
@@ -187,10 +209,10 @@
           "," +
           random(0, 255) +
           ")";
-        dom.style.fontSize = random(8, 24) + "px";
+        dom.style.fontSize = random(24, 30) + "px";
         var domW = dom.offsetWidth;
         var speed = [0, 1, 2][random(0, 2)];
-        dom.timer = setInterval(function() {
+        dom.timer = setInterval(function () {
           switch (speed) {
             case 0:
               dom.style.left = dom.offsetLeft - 2 + "px";
@@ -201,7 +223,7 @@
             case 2:
               dom.style.left = dom.offsetLeft - 4 + "px";
           }
-          if (dom.offsetLeft <= -domW) {
+          if (dom.offsetLeft <= getPosition(oMovie)) {
             clearInterval(dom.timer);
             oMovie.removeChild(dom);
           }
@@ -211,7 +233,7 @@
         return Math.floor(Math.random() * (end + 1 - start) + start);
       }
     </script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!--   Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>

@@ -7,8 +7,9 @@ const express = require('express'),
       passport = require('passport'),
       session = require('express-session'),
       app = express(),
-      ws = require('ws'),
-      http = require('http')
+      http = require('http').Server(app),
+      socketServer = require('socket.io')(http)
+      
 
 // const client_id = process.env.GITHUB_CLIENT_ID
 // const client_secret = process.env.GITHUB_CLIENT_SECRET
@@ -24,16 +25,22 @@ var path = require('path')
 
 // const clients = []
 
-// socketServer.on( 'connection', client => {
-//   // when the server receives a message from this client...
-//   client.on( 'message', msg => {
-// 	  // send msg to every client EXCEPT
-//     // the one who originally sent it
-//     clients.forEach( c => {
-//       if( c !== client )
-//         c.send( msg )
-//     })
-//   })
+socketServer.on( 'connection', function(client){
+  // when the server receives a message from this client...
+  console.log("There is a user");
+  client.on( 'message', msg => {
+	  // send msg to every client EXCEPT
+    // the one who originally sent it
+
+    client.broadcast.emit('message', msg);
+
+
+    // clients.forEach( c => {
+    //   if( c !== client )
+    //     c.send( msg )
+    // })
+  })
+})
 
 //   // add clien to client list
 //   clients.push( client )
@@ -53,7 +60,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 app.use(express.static('public'))
 
-// Mongodb Config
+//Mongodb Config
 const uri = process.env.MONGO_URI
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }
 )
@@ -62,6 +69,7 @@ connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
 })
 
+require('dotenv'). config()
 // Passport config
 require('./config/passport.js')(passport)
 
@@ -93,11 +101,13 @@ app.get("/video", (request, response) => {
 // const listener = server.listen( process.env.PORT || 3000, function() {
 //   console.log( 'Your app is listening on port ' + listener.address().port )
 // })
-
-
-const listener = app.listen( process.env.PORT || 3000, function() {
+const listener = http.listen( process.env.PORT || 3000, function() {
   console.log( 'Your app is listening on port ' + listener.address().port )
-})
+});
+
+// const listener = app.listen( process.env.PORT || 3000, function() {
+//   console.log( 'Your app is listening on port ' + listener.address().port )
+// })
 
 
 
@@ -168,8 +178,4 @@ const listener = app.listen( process.env.PORT || 3000, function() {
 //   }
 // })
 
-//User login
-// app.get('/login/github',(request,response) => {
-//   const url = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri = http://localhost:3000/login/github/callback`
-//   response.redirect(url)
-// })
+
