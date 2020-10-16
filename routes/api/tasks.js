@@ -115,10 +115,10 @@ router.delete("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 
 	try {
 		// Find the the user with the given username
-		const userId = await User.findOne({username});
+		const userId = (await User.findOne({username}))._id;
 		console.log("user's id: " + userId)
 		// Verify that a group exists with the given id that the current user is a member of
-		const group = await Group.findOne({_id: groupId, members: userId._id});
+		const group = await Group.findOne({_id: groupId, members: userId});
 		// Find and delete the task with the given id from the group with the given id
 		await Task.findOneAndDelete({_id: taskId, groupId: group._id});
 
@@ -140,16 +140,22 @@ router.delete("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
+	console.log("Group id: " + groupId)
+	console.log("Task id: " + taskId)
 	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
+	console.log("Task desc: " + desc)
 	const {username} = req.user;
 
 	try {
 		// Find the id of the user with the given username
-		const userId = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
+		console.log("User: " + userId)
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: userId});
 		// Find the task with the given id in the group with the given id
-		const task = await Task.findOne({_id: taskId, groupId}, {content, edited: true});
+		console.log("I'm here! Are we updating?")
+		let task = await Task.findOne({_id: taskId, groupId});
+		console.log("Task: " + task)
 
 		// Update fields provided in request body
 		task.name = name ? name : task.name;
@@ -165,6 +171,7 @@ router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 		// Send result
 		res.status(200).json({success: true, data: task});
 	} catch (err) {
+		console.log(err)
 		// Report errors
 		res.status(500).json({success: false, error: err});
 	}
