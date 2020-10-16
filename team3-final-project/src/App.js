@@ -50,7 +50,7 @@ const webrtcProvider = new WebrtcProvider('string-demo', ydoc)
 //Sync clients with the y-websocket provider
 
 const websocketProvider = new WebsocketProvider(
-  'ws://localhost:1234', 'string-demo', ydoc
+  `ws://${window.location.host}:1234`, 'string-demo', ydoc
 )
   
 // main component
@@ -97,6 +97,9 @@ class App extends React.Component {
         let yjsArray = ydoc.getArray(matchCode + 'selections');
         let yjsNum   = ydoc.getMap  (matchCode + 'selectionNumber');
 
+        let codesArray = ydoc.getArray("inUseCodes")
+        codesArray.push([matchCode])
+
         // /this.setState({obsSelections:yjsArray, obsSelectNum:yjsNum});
         console.log("State set to yjsArray")
         
@@ -118,7 +121,18 @@ class App extends React.Component {
             this.syncFromDB(yjsNum, yjsArray)
 
             yjsNum.observe(event => {
+                
                 this.syncFromDB(yjsNum, yjsArray);
+                if (yjsNum.get("selectNum") >= 20){
+                    console.log("unobserving")
+                    for (let i=0;i<codesArray.length; i++){
+                        if (codesArray.get(i) === matchCode){
+                            codesArray.delete(i);
+                            break;
+                        }
+                    }
+                    yjsNum.unobserve();
+                }
             })
         })
     }  
@@ -193,13 +207,22 @@ class App extends React.Component {
   }
   createCode(){
     let code = "";
-    for (let i = 0; i < 5; i++){
-      let num = Math.floor((Math.random() * 9)).toString();
-      code = code + num;
-    }
-
-    // TODO Validate match num
-
+    let codeInUse = false;
+    let codeArray = ydoc.getArray("inUseCodes")
+    do {
+        code = "";
+        codeInUse = false;
+        for (let i = 0; i < 5; i++){
+            let num = Math.floor((Math.random() * 9)).toString();
+            code = code + num;
+        }
+        for (let x=0; x<codeArray.length;x++){
+            if (code === codeArray.get(x)){
+                codeInUse = true
+            }
+        }
+        // TODO Validate match num
+    } while (codeInUse)
     let tempArray = ydoc.getArray(code + 'selections');
     let tempNum   = ydoc.getMap  (code  + 'selectionNumber');
 
