@@ -1,44 +1,9 @@
-
 class Lobby extends Phaser.Scene {// global vars for the player
 	// let platforms, stars, scoreText, keyboard, score = 0;
 
 	constructor(){
 		super('Lobby');
 		this.platforms, this.stars, this.scoreText, this.keyboard, this.score = 0;
-	}
-
-
-		// adding other players into our game
-	addOtherPlayers(self, playerInfo) {
-		// assigning them as an image and placing them in the correct spot
-		let playerTwo = self.add.image(playerInfo.x, playerInfo.y, 'main')
-							  .setOrigin(0.5, 0.5)
-							  .setDisplaySize(50, 80);
-		
-		playerTwo.setTint(playerInfo.team); // setting their color
-		self.physics.add.collider(playerTwo, this.platforms); // making sure their image can stand on platforms
-		
-		playerTwo.playerId = playerInfo.playerId; 
-		self.otherPlayers.add(playerTwo); // adding this new player to our catalog
-	}
-
-	// adding ourself to the world
-	addPlayers(self, playerInfo) {
-		// adding ourself as an image instead of a sprite
-		self.char = self.physics.add.image(playerInfo.x, playerInfo.y, 'main')
-						.setOrigin(0.5, 0.5)
-						.setDisplaySize(50, 80);
-		
-		self.char.setTint(playerInfo.team);
-		self.char.setBounce(0.2); // making sure we bounce correctly
-	    self.char.setCollideWorldBounds(true); // not allowed to leave the stage
-		self.physics.add.collider(self.char, this.platforms);
-
-		// collision with a star, also changes scores and removes the star
-		self.physics.add.overlap(self.char, this.stars, (player, star) => {
-			star.disableBody(true, true);
-			this.scoreText.setText('Score: ' + ++this.score);
-		}, null, self);
 	}
 
 	// loads in all the assets
@@ -117,7 +82,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		this.keyboard = this.input.keyboard.createCursorKeys();
 	}
 
-
+	// called like every game tick
 	update () {
 		let char = this.char;
 
@@ -147,5 +112,41 @@ class Lobby extends Phaser.Scene {// global vars for the player
 				y: char.y
 			};
 		}
+	}
+
+	// adding other players into our game
+	addOtherPlayers(self, playerInfo) {
+		// assigning them as an image and placing them in the correct spot
+		let playerTwo = self.add.image(playerInfo.x, playerInfo.y, 'main')
+							  .setOrigin(0.5, 0.5)
+							  .setDisplaySize(50, 80);
+		
+		playerTwo.setTint(playerInfo.team); // setting their color
+		self.physics.add.collider(playerTwo, this.platforms); // making sure their image can stand on platforms
+		
+		playerTwo.playerId = playerInfo.playerId; 
+		self.otherPlayers.add(playerTwo); // adding this new player to our catalog
+	}
+
+	// adding ourself to the world
+	addPlayers(self, playerInfo) {
+		// adding ourself as an image instead of a sprite
+		self.char = self.physics.add.image(playerInfo.x, playerInfo.y, 'main')
+						.setOrigin(0.5, 0.5)
+						.setDisplaySize(50, 80);
+		
+		self.char.setTint(playerInfo.team);
+		self.char.setBounce(0.2); // making sure we bounce correctly
+	    self.char.setCollideWorldBounds(true); // not allowed to leave the stage
+		self.physics.add.collider(self.char, this.platforms);
+
+		// collision with a star, also changes scores and removes the star
+		self.physics.add.overlap(self.char, this.stars, (player, star) => {
+			star.disableBody(true, true);
+			this.scoreText.setText('Score: ' + ++this.score);
+			// if (this.stars.countActive(true) === 0)
+				this.scene.start('DinoGame');
+			
+		}, null, self);
 	}
 }

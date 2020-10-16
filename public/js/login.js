@@ -14,7 +14,7 @@ function loginProc (json) {
 	    game = new Phaser.Game(config);
     }
     
-}({'_id': 'mom', 'username': 'mom'});
+}
 
 const submit = function (e) {
 

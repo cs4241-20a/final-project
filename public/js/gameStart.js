@@ -10,7 +10,7 @@ let config = {
             debug: true // puts boxes around everything for collisions
         }
     },
-    scene: new Lobby()
+    scene: [Lobby, DinoGame]
 };
 
 let game = new Phaser.Game(config);
