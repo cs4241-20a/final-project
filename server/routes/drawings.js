@@ -67,7 +67,7 @@ router.param('id', function(req, res, next, id){
 
 router.get('/feed/user', auth, validate_query(['page', 'limit']), paginate(true))
 
-router.get('/feed', auth, validate_query(['page', 'limit']), paginate())
+router.get('/feed', validate_query(['page', 'limit']), paginate())
 
 router.post('/', auth, validate_body(['artist', 'title', 'canvas_data']), function(req, res){
 	const fields = (({artist, title, canvas_data, published}) => ({artist, title, canvas_data, published}))(req.body)
