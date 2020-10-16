@@ -11,7 +11,7 @@
 /coverage
 
 # production
-.env
+.env1
 
 # misc
 .DS_Store
