@@ -5,7 +5,10 @@ import Lobby from './Pages/Lobby';
 import Login from './Pages/Login';
 import Register from './Pages/Register' 
 import io from "socket.io-client"
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Switch, Link, Route } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+
 function App() {
   let count = 0
   const socket = io("ws://localhost:3000")
@@ -43,7 +46,7 @@ function App() {
               <Link to="/lobby">Lobby</Link>
             </li>
           </ul>
-          <button onClick={joinLobby}>Button</button>
+          <Button variant="primary" onClick={joinLobby}>Button</Button>
           <button onClick={sendClick}>Send Click</button>
         </nav>
       <Switch>

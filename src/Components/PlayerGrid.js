@@ -9,10 +9,10 @@ import React, { Component } from 'react';
         for(j = 1; j <=10; j++)
         {
           var id = 'P1[' + i + ',' + j + ']';
-          grid.push(<button class="item" id = {id}></button>);
+          grid.push(<button className="item" id={id}></button>);
         }
       }
-      return (<div class="container">{grid}</div>)
+      return (<div className="container">{grid}</div>)
     }
     
 }
