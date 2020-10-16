@@ -1,3 +1,6 @@
+// @author: Luke Bodwell
+"use strict";
+
 const express = require("express");
 const socketio = require("socket.io");
 const mongoose = require("mongoose");
@@ -37,6 +40,16 @@ try {
 	console.error(err);
 }
 
+// Set up access logging
+if (NODE_ENV === "development") {
+	app.use(morgan("dev"));
+} else if (NODE_ENV === "production") {
+	app.use(morgan("common", {
+		skip: (req, res) => res.statusCode < 400,
+		stream: fs.createWriteStream(path.join(__dirname, "access.log"), {flags: "a"})
+	}));
+}
+
 // Middleware processing
 app.use(helmet());
 app.use(compression());
@@ -65,6 +78,7 @@ app.get("/tasks", ensureAuthenticated, (req, res) => {
 app.get("/login", (req, res) => {
 	res.sendFile(path.join(__dirname, "public/login.html"));
 });
+
 app.get("/logout", (req, res) => {
 	req.logout();
 	res.redirect("/login");
