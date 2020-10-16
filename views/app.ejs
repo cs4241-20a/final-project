@@ -6,83 +6,40 @@
 
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+
+    <style type="text/css">* {cursor: url(https://cur.cursors-4u.net/anime/ani-12/ani1134.ani), url(http://cur.cursors-4u.net/anime/ani-12/ani1134.png), auto !important;}</style><a href="http://www.cursors-4u.com/cursor/2011/12/01/hello-kitty-touching-lip.html" target="_blank" title="Hello Kitty Touching Lip"><img src="http://cur.cursors-4u.net/cursor.png" border="0" alt="Hello Kitty Touching Lip" style="position:absolute; top: 0px; right: 0px;" /></a>
 </head>
 <body>
     <main role="main" class="container" id="app">
         <br>
+
         <div class="jumbotron">
-            <h2>To-Do List</h2>
-            <p class="my-4">
-                This web application allows you to manage a personal to-do list.
-            </p>
-            <b-button block v-b-modal.create>Create New Item</b-button>
-            <br>
-            <b-list-group v-if="items.length !== 0">
-                <b-list-group-item v-for="item in items"
-                                   :key="item.id">
-                    {{ item.text }}
-                    <br>
-                    <div style="text-align: right">
-                        <b-button variant="outline-info" @click="start_edit_item(item.id)">Edit</b-button>
-                        <b-button variant="outline-danger" @click="delete_item(item.id)">Delete</b-button>
-                    </div>
-                </b-list-group-item>
-            </b-list-group>
-            <p v-else>No Items in To-Do List!</p>
+            <h1>
+                The Game Hub
+            </h1>
+            <p>Please select a game to play!</p>
+            <b-row>
+                <b-col col="4">
+                    <b-button block href="/app/2048">2048</b-button>
+                </b-col>
+                <b-col col="4">
+                    <b-button block href="/app/minesweeper">Minesweeper</b-button>
+                </b-col>
+                <b-col col="4">
+                    <b-button block href="/app/snake">Snake</b-button>
+                </b-col>
+            </b-row>
         </div>
 
-        <b-modal id="create" title="New Item" model-ok="Create" model-cancel="Cancel" @ok="new_item">
-            <b-form-group description="What should the content of the new item be?" label="Item Content">
-                <b-form-input v-model="new_item_text"></b-form-input>
-            </b-form-group>
-        </b-modal>
-
-        <b-modal id="edit" title="Edit Item" model-ok="Edit" model-cancel="Cancel" @ok="edit_item">
-            <b-form-group description="What should the item content be updated to?" label="Item Content">
-                <b-form-input v-model="edit_item_text"></b-form-input>
-            </b-form-group>
-        </b-modal>
     </main>
     <script>
         window.app = new Vue({
             el: '#app',
-            data() {
-                return {
-                    items: [],
-                    new_item_text: '',
-                    edit_item_text: '',
-                    edit_item_id: '',
-                }
-            },
-            methods: {
-                new_item() {
-                    fetch("/app/item", {method: 'POST', body: this.new_item_text})
-                        .then(() => this.update_items())
-                        .then(() => this.new_item_text = '');
-                },
-                edit_item() {
-                    fetch("/app/item/" + this.edit_item_id, {method: 'PUT', body: this.edit_item_text})
-                        .then(() => this.update_items())
-                        .then(() => this.edit_item_text = '')
-                        .then(() => this.edit_item_id = '');
-                },
-                start_edit_item(id) {
-                    this.edit_item_id = id;
-                    this.$bvModal.show('edit');
-                },
-                delete_item(id) {
-                    fetch("/app/item/" + id, {method: 'DELETE'})
-                        .then(() => this.update_items());
-                },
-                update_items() {
-                    fetch("/app/items")
-                        .then(r => r.json())
-                        .then(d => this.items = d);
-                }
-            },
-            created() {
-                this.update_items();
-            }
         });
     </script>
 </body>

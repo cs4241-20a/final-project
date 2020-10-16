@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Final</title>
+
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+</head>
+<body>
+    <main role="main" class="container" id="app">
+        <div class="snake">
+            <h1>{{ msg }}</h1>
+            <canvas id="canvas" width="800" height="800">
+            </canvas>
+        </div>
+    </main>
+    <script>
+        window.app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    msg: 'Snake game'
+                }
+            },
+            created() {
+                const plugin = document.createElement('script')
+                plugin.setAttribute(
+                    'src',
+                    '/project.js'
+                )
+                plugin.async = true
+                document.head.appendChild(plugin)
+            }
+        });
+    </script>
+</body>
+</html>

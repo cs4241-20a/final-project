@@ -28,25 +28,25 @@ passport.deserializeUser((user, done) => done(null, user));
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'https://todo.zhdev.app/auth/github/callback'
+    callbackURL: 'http://localhost:3000/auth/github/callback'
 }, (access, refresh, profile, done) => {
     score_model.findOneAndUpdate({user_id: profile.id, game: 'minesweeper'}, {
         $setOnInsert: {
-            name: profile.username,
+            name: profile.login,
             scores: [],
             max_score: 0,
         }
     }, {upsert: true}).then(() => done(null, profile));
     score_model.findOneAndUpdate({user_id: profile.id, game: 'snake'}, {
         $setOnInsert: {
-            name: profile.username,
+            name: profile.login,
             scores: [],
             max_score: 0,
         }
     }, {upsert: true}).then(() => done(null, profile));
     score_model.findOneAndUpdate({user_id: profile.id, game: '2048'}, {
         $setOnInsert: {
-            name: profile.username,
+            name: profile.login,
             scores: [],
             max_score: 0,
         }
@@ -98,20 +98,31 @@ app.get('/app', ensureAuthenticated, (req, res) => {
     res.render('app', {user: req.user});
 });
 
+app.get('/app/2048', ensureAuthenticated, (req, res) => {
+    res.render('2048', {user: req.user});
+});
+
+app.get('/app/minesweeper', ensureAuthenticated, (req, res) => {
+    res.render('minesweeper', {user: req.user});
+});
+
+app.get('/app/snake', ensureAuthenticated, (req, res) => {
+    res.render('snake', {user: req.user});
+});
+
 app.get('/api/:game/all_scores', (req, res) => {
-    let out = [];
-    score_model.find({game: req.params.game}).sort('max_score', -1).limit(10).execFind(
+    score_model.find({game: req.params.game}).sort('max_score').limit(10).exec(
         (error, entries) => {
+            let out = [];
             for (let entry in entries) {
                 out.push({
                     player_name: entry.name,
                     value: entry.max_score,
                 });
             }
+            res.send(JSON.stringify(out));
         }
     );
-
-    res.send(JSON.stringify(out));
 });
 
 app.get('/api/:game/score', (req, res) => {
@@ -132,7 +143,7 @@ app.get('/api/:game/play_count', (req, res) => {
     });
 });
 
-app.post('/api/:game/score', body_parser.text, (req, res) => {
+app.post('/api/:game/score', body_parser.text(), (req, res) => {
     let body = parseInt(req.body);
 
     score_model.findOne({
@@ -146,7 +157,7 @@ app.post('/api/:game/score', body_parser.text, (req, res) => {
         doc.save();
     });
 
-    res.end();
+    res.send('');
 });
 
 const listener = app.listen(process.env.PORT, () => {

@@ -1,0 +1,10 @@
+[package]
+name = "project"
+version = "0.1.0"
+authors = ["Matthew Kaminski <kaminskimateusz7@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+stdweb = "*"
+serde = "*"
+serde_derive = "*"
