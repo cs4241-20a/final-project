@@ -1,7 +1,9 @@
 CS4241 Team 9 Final Project - Connect Four
 ===
 
-Link to the project video: 
+Alex Hunt, Nina Taurich, Nicole Cotto, Joe Swetz
+
+Link to the project video: https://youtu.be/u2kCJRHgupg
 Link to the webesite hosted on Glitch: https://team9-final-project.glitch.me/
 
 # Project Description
