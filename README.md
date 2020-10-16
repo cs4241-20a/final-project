@@ -5,6 +5,7 @@
 ## cs4241-FinalProject: el gemO WebApp
 
 **Glitch Live App Link:** https://el-gemo-team8.glitch.me
+**Project Demo Video Link:** https://youtu.be/t9ctbupMCVU
 
 **Summary:** Team 8's el gemO application is intended to be used as a video streaming/chatroom service.
 With our current learning environment strongly impacted by COVID, we recognize the importance of online communication services and forums.
