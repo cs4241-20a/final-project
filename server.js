@@ -306,7 +306,9 @@ async function getUserTracks(userPlaylists){
         // go through each song in that playlist
         for(let j = 0; j < individualPlaylistTracks.length; j++){
             // add that song's data to the tracks list
-            tracks.push(individualPlaylistTracks[j]);
+            if (individualPlaylistTracks[j] !== null) {
+                tracks.push(individualPlaylistTracks[j]);
+            }
         }
     }
 

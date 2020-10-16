@@ -268,7 +268,11 @@ export default class Home extends React.Component {
             for (let i = 0 ; i < groupValues.length ; i++) {
                 if (groupValues[i] === undefined) { return }
                 let artist = artists1MapAll.get(groupValues[i].title)
-                groupValues[i].image = artist[0].images[1]
+                if (artist !== undefined) {
+                    groupValues[i].image = artist[0].images[1]
+                } else {
+                    return <p></p>
+                }
             }
 
             if (this.state.showTable && groupValues.length > 0) {
