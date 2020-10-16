@@ -1,13 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
-
-* {
-    box-sizing: border-box;
-    font-family: 'Lato';
-}
 
 html, body {
     background-color: white;
-    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;

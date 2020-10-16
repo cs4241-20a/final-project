@@ -1,13 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
-
-* {
-    box-sizing: border-box;
-    font-family: 'Lato';
-}
-
-html, body {
-    margin: 0;
-}
 
 .full-screen-container {
     background-image: url("../imgs/battleship.jpg");

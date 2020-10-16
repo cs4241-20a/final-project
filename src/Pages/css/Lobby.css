@@ -1,3 +1,7 @@
+body {
+    color: rgba(0, 0, 0, 0.8);
+}
+
 h1 {
     font-style: italic;
     text-align: center;
@@ -8,6 +12,7 @@ h1 {
 
 p{
   text-align: center;
+  font-weight: bold;
 }
 
 .room {
@@ -21,21 +26,14 @@ p{
   max-width: 40ch;
 }
 
-#hostbtn, #joinrandbtn, #joincodebtn{
+#vs{
+  font-style: italic;
+  color: #FF0000
+}
+
+#startbtn{
   background-color: #bbbbf2;
   cursor: pointer;
   padding: 8px;
   font-weight: bold;
-}
-
-.center {
-    justify-content: center;
-    display:flex;
-}
-
-input:valid {
-  color: green;
-}
-input:invalid {
-  color: red;
 }

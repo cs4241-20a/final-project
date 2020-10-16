@@ -15,7 +15,6 @@ export class Home extends Component {
         </p>
         <div class="room">
           <h2>Play BattleShip</h2>
-          <Button variant="primary">Primary</Button>{""}
           <button id="hostbtn">Create a Lobby</button>
           <button id="joinrandbtn">Join Random Lobby</button>
           <button id="joincodebtn">Join Lobby with Code</button>
