@@ -10,8 +10,3 @@ goTask.onclick = function(e) {
   })
   .then(response => response.json())
 }
-
-$(document).ready(function(){
-  $('.sidenav').sidenav();
-  $('#sidenav-1').sidenav({ edge: 'left' });
-});
