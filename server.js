@@ -487,6 +487,23 @@ app.post("/logout", (req, res) => {
     res.end(JSON.stringify({ Success: "Logout" }));
   });
 
+app.get("/authStatus", (req, res) => {
+  if(req.user){
+    console.log(`Auth passed: ${req.user}`)
+    res.writeHead(200)
+    res.end(JSON.stringify({
+      loggedIn: true,
+      user: req.user
+    }))
+  }
+  else {
+    res.writeHead(200)
+    res.end(JSON.stringify({
+      loggedIn: false,
+      user: null
+    }))
+  }
+})
 //Serving the React App
 app.use(
   serveStatic(path.join(__dirname, "build"), {
