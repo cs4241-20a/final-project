@@ -3,65 +3,33 @@
 
 const express = require("express");
 const passport = require("passport");
-const GitHubStrategy = require("passport-github2").Strategy;
 
 const User = require("../../models/User");
+const passportConfig = require("../../config/passport-config");
 
 const router = express.Router();
+const {getUsername} = passportConfig;
 
-//? Consider moving to different file (not necessarily specific to GitHub auth)
-const ensureAuthenticated = (req, res, next) => {
-	if (req.isAuthenticated()) {
-		return next();
-	}
-	res.status(401).redirect("/login");
-}
-
-//? Consider moving to different file (not necessarily specific to GitHub auth)
-const setupPassport = () => {
-	const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-	const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-
-	passport.serializeUser((user, done) => done(null, user));
-	passport.deserializeUser((obj, done) => done(null, obj));
-	
-	passport.use(new GitHubStrategy({
-		clientID: GITHUB_CLIENT_ID,
-		clientSecret: GITHUB_CLIENT_SECRET,
-		callbackURL: "http://localhost:3000/auth/github/callback"
-	}, (accessToken, refreshToken, profile, done) => process.nextTick(() => done(null, profile))));
-}
-
-router.get('/login', passport.authenticate("github", {
+router.get("/login", passport.authenticate("github", {
 	scope: ["user:email"]
 }));
 
 router.get("/callback", passport.authenticate("github", {
 	failureRedirect: "/login" 
 }), async (req, res) => {
-	// TODO: Abstract re-used code from routes into functions
-	const {username, displayName} = (req.user);
+	const username = getUsername(req);
+	const {displayName} = req.user;
 
 	try {
 		const user = await User.findOne({username});
 		if (!user) {
-			const newUser = new User({username, displayName});
+			const newUser = new User({username, displayName: displayName || username});
 			await newUser.save();
 		}
-		// TODO: Look into how to send a JSON response (ie: user creation successful) with a redirect
 		res.redirect("../../");
 	} catch (err) {
 		res.status(500).json({success: false, error: err});
 	}
 });
 
-router.get("/account", (req, res) => {
-	if (req.isAuthenticated()) {
-		res.send(`Hello, ${req.user.displayName}!`);
-	} else {
-		res.send("You are not logged in.");
-	}
-	
-});
-
-module.exports = {router, passport, ensureAuthenticated, setupPassport};
+module.exports = {router};

@@ -5,10 +5,10 @@ const express = require("express");
 
 const Group = require("../../models/Group");
 const User = require("../../models/User");
-const githubAuth = require("../auth/github-auth");
+const passportConfig = require("../../config/passport-config");
 
 const router = express.Router();
-const {ensureAuthenticated} = githubAuth;
+const {ensureAuthenticated, getUsername} = passportConfig;
 
 /*
  * Route: /api/groups/
@@ -16,15 +16,15 @@ const {ensureAuthenticated} = githubAuth;
  * Auth: Required
  * Desc: Gets all groups the current user belongs to. Verified by session.
  */
-router.get("/:id", ensureAuthenticated, async (req, res) => {
+router.get("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
-		// Find the user with the given username
-		const currentUser = await User.findOne({username});
+		// Find the id of the user with the given username
+		const userId = (await User.findOne({username}))._id;
 		// Find the groups the user with the given id belongs to
-		const groups = await Group.find({members: currentUser._id});
+		const groups = await Group.find({members: userId});
 
 		// Send result
 		res.status(200).json({success: true, data: groups});
@@ -43,7 +43,7 @@ router.get("/:id", ensureAuthenticated, async (req, res) => {
 router.get("/:id", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const groupId = req.params.id;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the user with the given username
@@ -69,13 +69,15 @@ router.get("/:id", ensureAuthenticated, async (req, res) => {
 router.post("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {name} = req.body;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the id of user with the given username
 		const adminId = await User.findOne({username})._id;
 		// Create a new group with the given name and admin id
-		const newGroup = await new Group({name, adminId, members: [adminId]}).save();
+		let newGroup = new Group({name, adminId, members: [adminId], invitees: []});
+		// Save the new message to the database
+		newGroup = await newGroup.save();
 
 		// Send result
 		res.status(201).json({success: true, data: newGroup});
@@ -94,7 +96,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 router.delete("/:id", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const groupId = req.params.id;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the user with the given username
@@ -120,14 +122,22 @@ router.delete("/:id", ensureAuthenticated, async (req, res) => {
 router.patch("/:id", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const groupId = req.params.id;
-	const {members} = req.body;
-	const {username} = req.user;
+	const {invitees, members} = req.body;
+	const username = getUsername(req);
 
 	try {
-		// Find the user with the given username
-		const currentUser = await User.findOne({username});
-		// Find and update member list of the group with the given id, ensuring the current user is a member of the group
-		const group = await Group.findOneAndUpdate({_id: groupId, members: currentUser._id}, {members});
+		// Find the id of the user with the given username
+		const userId = (await User.findOne({username}))._id;
+		// Find the group with the given id, ensuring the current user is a member of the group
+		let group = await Group.findOne({_id: groupId, members: userId});
+
+		// Update fields based on request body
+		group.invitees = invitees ? invitees : group.invitees;
+		group.members = members ? members : group.members;
+
+		// Save updated group to database
+		group = await group.save();
+
 		// Send result
 		res.status(200).json({success: true, data: group});
 	} catch (err) {

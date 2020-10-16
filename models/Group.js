@@ -12,12 +12,18 @@ const GroupSchema = new Schema({
 	},
 	adminId: {
 		type: Schema.Types.ObjectId,
+		ref: "User",
 		required: true
 	},
 	members: {
 		type: [Schema.Types.ObjectId],
 		ref: "User",
 		required: true	
+	},
+	invitees: {
+		type: [Schema.Types.ObjectId],
+		ref: "User",
+		required: true
 	}
 });
 

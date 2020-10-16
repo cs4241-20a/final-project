@@ -16,6 +16,7 @@ const TaskSchema = new Schema({
 	},
 	groupId: {
 		type: Schema.Types.ObjectId,
+		ref: "Group",
 		required: true
 	},
 	columnName: {
@@ -24,6 +25,7 @@ const TaskSchema = new Schema({
 	},
 	assignees: {
 		type: [Schema.Types.ObjectId],
+		ref: "User",
 		required: false
 	},
 	tags: {

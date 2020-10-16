@@ -7,10 +7,10 @@ const moment = require("moment");
 const Task = require("../../models/Task");
 const Group = require("../../models/Group");
 const User = require("../../models/User");
-const githubAuth = require("../auth/github-auth");
+const passportConfig = require("../../config/passport-config");
 
 const router = express.Router();
-const {ensureAuthenticated} = githubAuth;
+const {ensureAuthenticated, getUsername} = passportConfig;
 
 /*
  * Route: /api/tasks/:groupId
@@ -21,11 +21,11 @@ const {ensureAuthenticated} = githubAuth;
 router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId} = req.params;
-	const {username} = req.user;
+	const username = getUsername(req);
 	
 	try {
 		// Find the id of the user with the given username
-		const userId = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.find({_id: groupId, members: userId});
 		// Find all tasks with the given group id sorted by date sent (descending)
@@ -48,11 +48,11 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 router.get("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
-	const {username} = req.user;
+	const username = getUsername(req);
 	
 	try {
 		// Find the id of the user with the given username
-		const userId = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.find({_id: groupId, members: userId});
 		// Find the task with the given id in the group with the given id
@@ -76,11 +76,11 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId} = req.params;
 	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the id of the user with the given username
-		const userId = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: userId});
 		// Create a new task with the given name, description, column name, assignees, tags, and due date
@@ -105,13 +105,13 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 router.delete("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
-		// Find the the user with the given username
-		const currentUser = await User.findOne({username})._id;
+		// Find the id of the user with the given username
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
-		const group = await Group.findOne({_id: groupId, members: currentUser._id});
+		const group = await Group.findOne({_id: groupId, members: userId});
 		// Find and delete the task with the given id from the group with the given id
 		await Task.findOneAndDelete({_id: taskId, groupId: group._id});
 
@@ -134,17 +134,17 @@ router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
 	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the id of the user with the given username
-		const userId = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: userId});
 		// Find the task with the given id in the group with the given id
-		const task = await Task.findOne({_id: taskId, groupId}, {content, edited: true});
+		let task = await Task.findOne({_id: taskId, groupId});
 
-		// Update fields provided in request body
+		// Update fields based on request body
 		task.name = name ? name : task.name;
 		task.desc = desc ? desc : task.desc;
 		task.columnName = columnName ? columnName : task.columnName
@@ -165,7 +165,7 @@ router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 
 const formatDate = dateStr => {
 	//* This is expecting a date formatted as a string exactly as outputed from a datepicker.
-	return moment(new Date(dateStr)).add(1, "days").format("MM/DD/YYYY");
+	return moment(new Date(dateStr)).add(1, "days").format("MM/DD/YYYY"); 
 }
 
 module.exports = {router, formatDate};
