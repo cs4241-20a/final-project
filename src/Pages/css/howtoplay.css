@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Lato';
+}
+
+html, body {
+    background-color: white;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.rules {
+    padding: 25px 50px;
+    min-width: 100px;
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.home-btn{
+    padding: 10px 30px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: hsla(193, 27%, 37%, 0.705);
+    border: 1px solid hsla(0, 0%, 75%, 0.329);
+    outline: none;
+    font-size: 1.5em;
+    color: white;
+    font-weight: lighter;
+    margin-top: 20px;
+    cursor: pointer;
+}
