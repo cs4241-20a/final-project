@@ -1,5 +1,3 @@
-
-
 1. A brief description of what you created, and a link to the project itself.
 2. Any additional instructions that might be needed to fully use your project (login information etc.)
 3. An outline of the technologies you used and how you used them.
@@ -9,41 +7,27 @@
 
 Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
 
-## FAQs
+1. Our project is a multiplayer pong game with a score chart of each point scored tied to the username entered by a user. This username saves scores associated with it and will show them the next time that same username logs into the game.
 
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+**2. Instructions to play the game**
 
-1. Our project is a pong multiplayer game with high score charts
+1. Connect to https://ljcook-rmcirella-vebuyck-final-project.glitch.me/ and enter a name, then press the start button.
 
-
-**Instructions to play the game**
-
-1. Connect to https://ljcook-rmcirella-vebuyck-final-project.glitch.me/ and select a name, then press the start button
-
-2. Also do the exact same thing on another computer
+2. Do the same thing on another computer or tab.
 
 3. ***VERY IMPORTANT STEP*** if you want to run the game again, you have to restart the server. The only way I know how to do this on glitch is by making a small change in the server.js (like an indent) so it restarts.
 
+3. We used mongodb to keep track of highscores, we used websocket to have multiplayer functionality and we used body parser for json parsing.
 
+4. We faced a major challenge in actually getting the multiplayer to work and make sense. Also there were some issues with 
+getting the datbase stuff to work the way we wanted it to to hold scores specific to individual users.
 
+5.
 
+Lewis: Responsible for the game itself and the websocket multiplayer
 
+Ryan: Responsible for the database communication and server functions that did so.
 
+Victoria: Responsible for the entirety of the front end and layout.
 
-3: we used mongodb to keep track of highscores
-
-We used websocket to have multiplayer functionality
-
-we used body parser for json parsing
-
-
-4: We faced a major challenge in actually getting the multiplayer to work and make sense, also there were some issue with 
-getting the datbase stuff to work the way we wanted it to
-
-5: Lewis: Responsible for the game itself, the websocket multiplayer and finishing touches
-
-Ryan: Responsible for the database communication
-
-Victoria: Responsible for the entirety of the front end
-
-6: https://www.youtube.com/watch?v=-xlS8NLhO1g&feature=youtu.be&ab_channel=Lewiscook
+6. Video Link: https://www.youtube.com/watch?v=-xlS8NLhO1g&feature=youtu.be&ab_channel=Lewiscook
