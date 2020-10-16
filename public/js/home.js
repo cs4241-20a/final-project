@@ -27,13 +27,6 @@ logout.onclick = function(e) {
   window.location.href = "/logout"
 }
 
-const getGroups = async ()  => {
-  const res = await fetch("/api/groups", {method: "GET"})
-  const data = await res.json()
-  console.log(JSON.stringify(data))
-  console.log(data)
-}
-
 const welcome = async () => {
   const res = await fetch("/api/users/", {method: "GET"})
   const data = await res.json()
