@@ -17,12 +17,12 @@ Think of 1,3, and 4 in particular in a similar vein to the design / tech achieve
 
 3. ***VERY IMPORTANT STEP*** if you want to run the game again, you have to restart the server. The only way I know how to do this on glitch is by making a small change in the server.js (like an indent) so it restarts.
 
-3. We used mongodb to keep track of highscores, we used websocket to have multiplayer functionality and we used body parser for json parsing.
+3: We used mongodb to keep track of highscores, we used websocket to have multiplayer functionality and we used body parser for json parsing.
 
-4. We faced a major challenge in actually getting the multiplayer to work and make sense. Also there were some issues with 
+4: We faced a major challenge in actually getting the multiplayer to work and make sense. Also there were some issues with 
 getting the datbase stuff to work the way we wanted it to to hold scores specific to individual users.
 
-5.
+5:
 
 Lewis: Responsible for the game itself and the websocket multiplayer
 
