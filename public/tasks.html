@@ -1,12 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <title>CS4241 Team 19 Final Project</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="./js/tasks.js"></script>
 
 </head>
 <body>
@@ -27,18 +25,17 @@
     <div class="inner-container">
       <div class="task_lists card-panel materialize-red lighten-2" onclick="listClicked()" id="col-1">
         <h4 class="white-text center-align row">List Name</h4>
-        <!-- Added in a div to make sure tasks appear before the button-->
         <div class="tasks" id="1">
-        <!-- <div class="task_card card-panel col s1" id="card1" onclick="editTask()">
+        <div class="task_card card-panel col s1" id="card1" onclick="editTask()">
           <p class="task_name task_item">Task Name</p>
           <p class="task_date task_item">Due Date</p>
           <p class="assignees task_item">Assigned To</p>
           <div style="display:flex; flex-direction: row; justify-items: center">
             <a class="centerwaves-effect waves-light btn-small btn" id="delete_task" onclick="deleteBtn()"><i class="material-icons right">delete_forever</i></a>
           </div>
-        </div> -->
+        </div>
       </div>
-        <a class="add_task centerwaves-effect waves-light btn-large" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
+        <a class="centerwaves-effect waves-light btn-large" style="text-align: center" id="add_task" onclick="addTask()"><i class="material-icons right">add</i>  New Task</a>
       </div>
       <div class="btn_container" id="btn_container">
         <a class="centerwaves-effect waves-light btn-small" id="add_list"><i class="material-icons right">add</i></a>
@@ -70,7 +67,7 @@
       <label for="tags">Tags: </label><input type="text" id="tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="tdesc" placeholder="Task Description"><br>
       <input type="submit" id="task_submit" value="Confirm">
-      <button id="cancel">Cancel</button>
+      <button onclick="closeBtn()">Cancel</button>
     </form>
   </div>
 
@@ -103,8 +100,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<!-- There's no materialize.js file as far as I can tell... -->
-<!-- <script src="js/materialize.js"></script> -->
-<script src="js/tasks.js" type="text/javascript"></script>
+<script src="js/materialize.js"></script>
+<script src="js/tasks.js"></script>
 </body>
 </html>
