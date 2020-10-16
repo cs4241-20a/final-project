@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "- Isaac Abouaf\r - Aditya Malik\r - Dev Patel\r - Abhijay Thammana",
   "main": "app.js",
+  "start": "npm start",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "compression": "^1.7.4",
