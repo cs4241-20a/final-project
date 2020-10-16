@@ -176,14 +176,13 @@ app.post('/getSongs', async (req, res) => {
         let user1Playlists = await getUserPlaylists(user1);
         let user2Playlists = await getUserPlaylists(user2);
 
-
         // get all of the tracks in all of the public playlists
         let user1Tracks = await getUserTracks(user1Playlists);
         let user2Tracks = await getUserTracks(user2Playlists);
 
         // get all artists of all user's tracks
-        let user1Artists = getUserArtists(user1Tracks);
-        let user2Artists = getUserArtists(user2Tracks);
+        // let user1Artists = getUserArtists(user1Tracks);
+        // let user2Artists = getUserArtists(user2Tracks);
 
         // get all albums of all user's tracks
         let user1Albums = getUserAlbums(user1Tracks);
@@ -194,11 +193,11 @@ app.post('/getSongs', async (req, res) => {
         let user2Map = mapTracks(user2Tracks);
 
         let intersection = getIntersection(user1Map, user2Map);
-        let intersectionArtistsId = getArtistIntersection(intersection);
-        let intersectionArtistsImages = await getFullArtists(intersectionArtistsId);
+        // let intersectionArtistsId = getArtistIntersection(intersection);
+        // let intersectionArtistsImages = await getFullArtists(intersectionArtistsId);
 
         console.log("RETURNING INTERSECTION BETWEEN " + user1 + " AND " + user2);
-        res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks, artistImages: intersectionArtistsImages } ));
+        res.send(JSON.stringify( { /*user1Artists: user1Artists, user2Artists: user2Artists,*/ user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks /*, artistImages: intersectionArtistsImages*/ } ));
 
     }catch (e) {
         console.log(e);
@@ -306,7 +305,9 @@ async function getUserTracks(userPlaylists){
         // go through each song in that playlist
         for(let j = 0; j < individualPlaylistTracks.length; j++){
             // add that song's data to the tracks list
-            tracks.push(individualPlaylistTracks[j]);
+            if (individualPlaylistTracks[j] !== null) {
+                tracks.push(individualPlaylistTracks[j]);
+            }
         }
     }
 
