@@ -18,7 +18,7 @@ Think of 1,3, and 4 in particular in a similar vein to the design / tech achieve
 
 **Instructions to play the game**
 
-1. Connect to https://lewj20-final-project-3.glitch.me/ and select a name, then press the start button
+1. Connect to https://ljcook-rmcirella-vebuyck-final-project.glitch.me/ and select a name, then press the start button
 
 2. Also do the exact same thing on another computer
 
