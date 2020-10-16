@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'" /> -->
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>CS4241 Team 19 Final Project - Home</title>
@@ -45,11 +46,11 @@
 			<nav class="teal lighten-1">
 				<div class="nav-wrapper">
 					<div class="row">
-						<div class="col s12">
-							<a href="#" data-target="sidenav-1" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
-							<a href="#" class="brand-logo" style="font-weight: 300;">Hello, ${NAME}</a>
+						<div class="col s12" id="top-div">
+							<a href="#" data-target="sidenav-left" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+							<!--<a href="#" class="brand-logo" style="font-weight: 300;">Hello, ${NAME}</a>-->
 							<div class="container logout-btn">
-								<a href="/logout"class="right waves-effect waves-light btn-large teal lighten-3"><i class="material-icons right">exit_to_app</i>Log out</a>
+								<a class="right waves-effect waves-light btn-large teal lighten-3" id="logout-button"><i class="material-icons right">exit_to_app</i>Log out</a>
 							</div>
 						</div>
 					</div>
@@ -90,19 +91,20 @@
 		</div>
 
 		<main>
-			<div class="container">
+			<div class="container" id="group-container">
 				<h1 class="center teal-text text-darken-3">Tasks</h1>
-				<div class="collection z-depth-1">
+				<div class="collection z-depth-1" id="task-list">
 					<!--
 
 					BACKEND PEOPLE: Tasks go here and use this format.
 					<a href="TASK_LINK" class="collection-item">TASK_NAME</a>
 
 					-->
-					<a href="#!" class="collection-item">Task A</a>
+					<!--<a href="#!" class="collection-item">Task A</a>
 					<a href="#!" class="collection-item">Task B</a>
 					<a href="#!" class="collection-item">Task C</a>
 					<a href="#!" class="collection-item">Task D</a>
+					-->
 				</div>
 				<br>
 				<h1 class="center teal-text text-darken-3">Groups</h1>
@@ -122,16 +124,7 @@
 				</div>
 
 				-->
-				<div class="row">
-					<div class="col s12 m4">
-						<div class="card" id="TaskDirect">
-							<div class="card-content">
-								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
-								<p>Sample Text</p>
-								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
-							</div>
-						</div>
-					</div>
+				<!--<div class="row">
 					<div class="col s12 m4">
 						<div class="card">
 							<div class="card-content">
@@ -150,7 +143,16 @@
 							</div>
 						</div>
 					</div>
-				</div>
+					<div class="col s12 m4">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
+								<p>Sample Text</p>
+								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
+							</div>
+						</div>
+					</div>
+				</div>-->
 			</div>
 		</main>
 	</body>
