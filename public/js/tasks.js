@@ -1,3 +1,11 @@
+"use strict";
+
+const socket = io();
+
+socket.on("message", message => {
+	console.log(message);
+});
+
 // Get the modal
 var modal = document.getElementById("myModal");
 var editmodal = document.getElementById("editModal");
