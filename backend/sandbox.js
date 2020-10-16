@@ -1,12 +1,8 @@
 import { debug } from 'webpack';
 
-const debugMode = false
+const debugMode = false;
 
 const {VM, VMScript} = require('vm2');
-const vm = new VM({
-    timeout: 1000,
-    sandbox: {}
-});
 
 const assertMethod = `
     function assert(booleanExpression, errorMessage){
@@ -28,6 +24,11 @@ const assertMethod = `
  *      [2]: Error message
  */
 export async function testCodeCompletesWithoutError(argArray) {
+    const vm = new VM({
+        timeout: 1000,
+        sandbox: {}
+    });
+
     const solution = argArray[0]
     const challengeTests = argArray[1]
     let answer = [false, "", ""]
