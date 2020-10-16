@@ -94,7 +94,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
                 history.replace('/404');
             }
         })();
-    }, []);
+    }, [challengeId]);
 
     const [isVerifyingSolution, setIsVerifyingSolution] = useState(false);
 
