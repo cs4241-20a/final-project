@@ -58,7 +58,6 @@ function create () {
 	});
 
 	this.socket.on('playerMoved', playerInfo => {
-		console.log(playerInfo);
 		self.otherPlayers.getChildren().forEach(player => {
 			if (playerInfo.playerId === player.playerId){
 				player.setPosition(playerInfo.x, playerInfo.y);
