@@ -7,13 +7,14 @@ import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 import { ControlledEditor as Editor, EditorDidMount } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
-import { Send as SendIcon } from '@material-ui/icons';
+import { Group as GroupIcon, Send as SendIcon } from '@material-ui/icons';
 import { SiteSettings } from './App';
 import { useHistory } from 'react-router-dom';
 import { useDialog } from '../components/DialogProvider';
 import { Challenge } from '../types/challenge';
 import { initMonaco } from '../utils/monaco';
 import { Markdown } from '../components/Markdown';
+import { useWebsocket } from '../components/WebSocketProvider';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -74,6 +75,7 @@ interface PlayChallengeProps {
 export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettings, challengeId}) => {
     const classes = useStyles();
     const history = useHistory();
+    const ws = useWebsocket();
     const [openDialog, closeDialog] = useDialog();
 
     const [challenge, setChallenge] = useState<Omit<Challenge, 'solution' | 'tests'> | undefined>();
@@ -96,6 +98,26 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
 
     const [isVerifyingSolution, setIsVerifyingSolution] = useState(false);
 
+    useEffect(() => {
+        function listener(e) {
+            const data = JSON.parse(e.data);
+
+            if (data.type === "completeChallenge") {
+                openDialog({
+                    children: <>
+                        <DialogTitle>You Lose...</DialogTitle>
+                        <DialogContent>You lost the race! That's okay though, you can still continue trying to complete this challenge.</DialogContent>
+                        <DialogActions>
+                            <Button color="secondary" onClick={closeDialog}>Close</Button>
+                        </DialogActions>
+                    </>
+                });
+            }
+        }
+        ws.addEventListener("message", listener);
+        return () => ws.removeEventListener("message", listener);
+    }, []);
+
     async function submit() {
         setIsVerifyingSolution(true);
         const response = await (await fetch(`/api/challenge/${challengeId}/solve`, {
@@ -104,15 +126,24 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
             body: JSON.stringify({
                 solution
             })
-        })).json() as { message: string } | { message: 'OK', code: string };
+        })).json() as { message: "OK", code: string } | {
+            message: "AssertionError" | "SyntaxError" | "Timeout"
+        };
         setIsVerifyingSolution(false);
+
+        if (response.message === "OK" && siteSettings.currentLobbyId) {
+            ws.send(JSON.stringify({
+                type: "completeChallenge",
+                code: response.code
+            }));
+        }
 
         const [responseTitle, responseMessage] = {
             "OK": ["Solved!", "You solved this challenge. Good job!"],
             "AssertionError": ["Not quite there...", "Your solution didn't manage to pass the provided tests. Keep trying!"],
             "SyntaxError": ["Syntax Error", "Your solution has a syntax error! Fix it and try to re-submit."],
             "Timeout": ["Timeout", "The server timed out while trying to run your code. This could be because of an infinite loop, or your solution may need to be made more performant."],
-        }[response.message] ?? ["Error", "An unexpected error occurred: " + response.message];
+        }[response.message] ?? ["Error", "Your code threw an error: " + response.message];
         
         openDialog({
             children: <>
@@ -123,6 +154,14 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
                 </DialogActions>
             </>
         });
+    }
+
+    function beginRace() {
+        setSolution(challenge?.starterCode ?? "");
+        ws.send(JSON.stringify({
+            type: "startChallenge",
+            challenge: challenge?.id
+        }));
     }
 
     const editorOptions: editor.IEditorConstructionOptions = {
@@ -145,6 +184,9 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         <div className={classes.root}>
             <div className={classes.challengeControlsHeader}>
                 <Typography className={classes.challengeTitle} variant="h4">{challenge?.title}</Typography>
+                {siteSettings.currentLobbyId && siteSettings.isLobbyOwner ?
+                    <Button variant="outlined" color="secondary" size="large" endIcon={<GroupIcon/>} onClick={beginRace}>Race</Button>
+                : undefined}
                 <Button variant="contained" color="secondary" size="large" endIcon={<SendIcon/>} onClick={submit}>Submit</Button>
             </div>
             <SplitPane className={classes.editors} split="vertical" onChange={() => editor.current?.layout()}>

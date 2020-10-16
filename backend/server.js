@@ -9,8 +9,8 @@ import { ObjectId } from 'mongodb';
 import session from 'express-session';
 import { loadEnv } from './util.js';
 import { testCodeCompletesWithoutError } from './sandbox.js';
-import { wsServer } from './ws.js';
-import nanoid from 'nanoid';
+import { confirmChallengeCompletion, wsServer } from './ws.js';
+import { nanoid } from 'nanoid';
 
 loadEnv();
 
@@ -137,7 +137,7 @@ app.get('/api/challenge/:id', async (req, res) => {
     res.json(fixChallenge(challenge));
 });
 
-app.post('/api/challenge/:id/solve', authenticate, async (req, res) => {
+app.post('/api/challenge/:id/solve', async (req, res) => {
     const challenges = await getCollection('challenges');
 
     const solution = req.body.solution;
@@ -166,7 +166,7 @@ app.post('/api/challenge/:id/solve', authenticate, async (req, res) => {
                 responseData.message = testResult[2].code || testResult[2].name;
         }
     }
-    req.json(responseData);
+    res.json(responseData);
 });
 
 // Unknown API endpoint

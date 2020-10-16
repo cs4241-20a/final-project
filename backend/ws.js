@@ -49,7 +49,7 @@ wsServer.on("connection", (ws, request) => {
                 currentLobby.owner.send(JSON.stringify({
                     type: "joinLobby",
                     owner: true,
-                    lobbyId
+                    lobbyId: currentLobby.id
                 }));
             }
             currentLobby = null;
@@ -62,7 +62,8 @@ wsServer.on("connection", (ws, request) => {
         switch (message.type) {
             case "createLobby":
                 leaveLobby();
-                const lobbyId = createRandomLobbyId();
+                let lobbyId = createRandomLobbyId();
+                while (lobbyId in lobbies) lobbyId = createRandomLobbyId();
                 lobbies[lobbyId] = {
                     id: lobbyId,
                     owner: ws,
@@ -79,16 +80,17 @@ wsServer.on("connection", (ws, request) => {
             case "joinLobby":
                 leaveLobby();
                 if (message.lobbyId in lobbies) {
-                    lobbies[message.lobbyId].members.push(ws);
+                    currentLobby = lobbies[message.lobbyId];
+                    currentLobby.members.push(ws);
                     ws.send(JSON.stringify({
                         type: "joinLobby",
                         owner: false,
-                        lobbyId: message.lobbyId
+                        lobbyId: currentLobby.id
                     }));
                 }
                 break;
             case "startChallenge":
-                if (currentLobby.owner === ws) {
+                if (currentLobby !== null && currentLobby.owner === ws) {
                     for (const member of currentLobby.members) {
                         member.send(JSON.stringify({
                             type: "startChallenge",
@@ -101,9 +103,11 @@ wsServer.on("connection", (ws, request) => {
                     delete confirmationCodes[message.code];
                     if (currentLobby !== null) {
                         for (const member of currentLobby.members) {
-                            member.send(JSON.stringify({
-                                type: "completeChallenge"
-                            }));
+                            if (member !== ws) {
+                                member.send(JSON.stringify({
+                                    type: "completeChallenge"
+                                }));
+                            }
                         }
                     }
                 }
