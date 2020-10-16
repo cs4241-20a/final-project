@@ -235,65 +235,65 @@ export default class Home extends React.Component {
             }
         }
 
-        const renderArtists = () => {
-            let group1Map = d3.rollup(this.state.user1Artists, v => v.length, d => d.name)
-            let group2Map = d3.rollup(this.state.user2Artists, v => v.length, d => d.name)
+        // const renderArtists = () => {
+        //     let group1Map = d3.rollup(this.state.user1Artists, v => v.length, d => d.name)
+        //     let group2Map = d3.rollup(this.state.user2Artists, v => v.length, d => d.name)
 
-            let artists1MapAll = d3.group(this.state.artistImages, d => d.name)
+        //     let artists1MapAll = d3.group(this.state.artistImages, d => d.name)
 
-            let group1Keys = []
-            for (let [key, value] of Array.from(group1Map)) {
-                group1Keys.push(key)
-            }
+        //     let group1Keys = []
+        //     for (let [key, value] of Array.from(group1Map)) {
+        //         group1Keys.push(key)
+        //     }
 
-            let group2Keys = []
-            for (let [key, value] of Array.from(group2Map)) {
-                group2Keys.push(key)
-            }
+        //     let group2Keys = []
+        //     for (let [key, value] of Array.from(group2Map)) {
+        //         group2Keys.push(key)
+        //     }
 
-            let combinedKeys = (d3.intersection(group1Keys, group2Keys))
+        //     let combinedKeys = (d3.intersection(group1Keys, group2Keys))
 
-            let groupValues = []
-            for (let item of combinedKeys.values()) {
-                let sum = group1Map.get(item) + group2Map.get(item)
-                groupValues.push({ title: item, sum: sum })
-            }
+        //     let groupValues = []
+        //     for (let item of combinedKeys.values()) {
+        //         let sum = group1Map.get(item) + group2Map.get(item)
+        //         groupValues.push({ title: item, sum: sum })
+        //     }
 
-            groupValues.sort(function(x, y){
-                return d3.descending(x.sum, y.sum);
-            })
+        //     groupValues.sort(function(x, y){
+        //         return d3.descending(x.sum, y.sum);
+        //     })
 
-            groupValues = groupValues.slice(0, 3)
+        //     groupValues = groupValues.slice(0, 3)
             
-            for (let i = 0 ; i < groupValues.length ; i++) {
-                if (groupValues[i] === undefined) { return }
-                let artist = artists1MapAll.get(groupValues[i].title)
-                if (artist !== undefined) {
-                    groupValues[i].image = artist[0].images[1]
-                } else {
-                    return <p></p>
-                }
-            }
+        //     for (let i = 0 ; i < groupValues.length ; i++) {
+        //         if (groupValues[i] === undefined) { return }
+        //         let artist = artists1MapAll.get(groupValues[i].title)
+        //         if (artist !== undefined) {
+        //             groupValues[i].image = artist[0].images[1]
+        //         } else {
+        //             return <p></p>
+        //         }
+        //     }
 
-            if (this.state.showTable && groupValues.length > 0) {
-                return (
-                    <Container className="mt-5 mb-10 statsWrapper">
-                        <h4 className="subtitle">Top Artists in Common</h4>
+        //     if (this.state.showTable && groupValues.length > 0) {
+        //         return (
+        //             <Container className="mt-5 mb-10 statsWrapper">
+        //                 <h4 className="subtitle">Top Artists in Common</h4>
 
-                        <div className="statsDiv">
-                            {groupValues.map(value => (
-                                <div className="artistName">
-                                    <div>
-                                        <img style={{width: "100%", height: "100%"}} alt="artist image" src={value.image.url}/>
-                                    </div>
-                                    <p className="statsTitle">{value.title}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </Container>
-                )
-            }
-        }
+        //                 <div className="statsDiv">
+        //                     {groupValues.map(value => (
+        //                         <div className="artistName">
+        //                             <div>
+        //                                 <img style={{width: "100%", height: "100%"}} alt="artist image" src={value.image.url}/>
+        //                             </div>
+        //                             <p className="statsTitle">{value.title}</p>
+        //                         </div>
+        //                     ))}
+        //                 </div>
+        //             </Container>
+        //         )
+        //     }
+        // }
 
         const renderAlbums = () => {
             let group1Map = d3.rollup(this.state.user1Albums, v => v.length, d => d.name)
@@ -429,7 +429,7 @@ export default class Home extends React.Component {
 
                     { renderTable() }
 
-                    { renderArtists() }
+                    {/* { renderArtists() } */}
 
                     { renderAlbums() }
 

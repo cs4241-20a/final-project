@@ -182,8 +182,8 @@ app.post('/getSongs', async (req, res) => {
         let user2Tracks = await getUserTracks(user2Playlists);
 
         // get all artists of all user's tracks
-        let user1Artists = getUserArtists(user1Tracks);
-        let user2Artists = getUserArtists(user2Tracks);
+        // let user1Artists = getUserArtists(user1Tracks);
+        // let user2Artists = getUserArtists(user2Tracks);
 
         // get all albums of all user's tracks
         let user1Albums = getUserAlbums(user1Tracks);
@@ -194,11 +194,11 @@ app.post('/getSongs', async (req, res) => {
         let user2Map = mapTracks(user2Tracks);
 
         let intersection = getIntersection(user1Map, user2Map);
-        let intersectionArtistsId = getArtistIntersection(intersection);
-        let intersectionArtistsImages = await getFullArtists(intersectionArtistsId);
+        // let intersectionArtistsId = getArtistIntersection(intersection);
+        // let intersectionArtistsImages = await getFullArtists(intersectionArtistsId);
 
         console.log("RETURNING INTERSECTION BETWEEN " + user1 + " AND " + user2);
-        res.send(JSON.stringify( { user1Artists: user1Artists, user2Artists: user2Artists, user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks, artistImages: intersectionArtistsImages } ));
+        res.send(JSON.stringify( { /*user1Artists: user1Artists, user2Artists: user2Artists,*/ user1Albums: user1Albums, user2Albums: user2Albums, intersection: intersection, user1Songs: user1Tracks, user2Songs: user2Tracks /*, artistImages: intersectionArtistsImages*/ } ));
 
     }catch (e) {
         console.log(e);
