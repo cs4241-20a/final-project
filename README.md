@@ -54,3 +54,28 @@ Think of 1,3, and 4 in particular in a similar vein to the design / tech achieve
 ## FAQs
 
 - **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+
+## Update by ZheCheng Song
+  Edited:
+  1. App.js : Just to test those pages, cause I didn't figure out how to use routers
+  2. server.js : To test mongoDB, cause I don't have your DB accounts, so I changed to mine for testing
+  (Just use your original server.js)
+  3. Login.js: Transfer html to react
+  4. Register.js: Transfer html to react
+  5. Home.js: Implemented Main page
+  6. Lobby,js: Implemented Lobby page
+  
+  Added:
+  1. css/ folder under Pages
+    - Login.css: copied from your login.css, css for Login.js and Register.js
+    - Home.css: css for Home.js
+    - Lobby.css : css for Lobby.js
+    - BattleShip.css : css for BattleShip.js
+  2. BattleShip.js: The Game Page
+  3. added few components used under src/Components
+    - EnermyGrid.js: Used to create a grid to represent enermy's map in BattleShip.js
+    - PlayerGrid.js: Used to create a grid to represent player's map in BattleShip.js
+    Note: Each node in the grid has id of P1[Row,Col] or P2[Row,Col], 
+          P1 represent Player, P2 represent Enermy
+          For example: node of 2nd row, 3rd col of enermy grid is name P2[2,3]
+          Hope it would help?
