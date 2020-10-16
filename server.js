@@ -25,6 +25,8 @@ client.connect().catch(err => console.log(err));
 app.set("trust proxy", 1);
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 let lobbies = {}
 
 const uidGenerator = () => {
@@ -54,11 +56,67 @@ const addUserToRandomLobby = () => {
 }
 
 
+
+const initBattleShipBoard = (
+  destroyer,
+  // submarine,
+  // cruiser,
+  // battleship,
+  // carrier
+) => {
+  const getLetterIndex = (letter) => letters.indexOf(letter)
+
+  const getPositionArray = (start, end, length) => {
+    let posArray = []
+    if(start.charAt(0) === end.charAt(0)){
+      //rowwise
+      if(((start.charAt(1) - 1 ) <= 10 )  && start.charAt(1) >= 1){
+        for(let i=0; i<length;i++){
+          posArray.push({
+            position: `${start.charAt(0)}${+start.charAt(1) + i}`,
+            hit: false
+          })
+        }
+      }
+      else {
+        console.log("Out of bounds row")
+      }
+    }
+    else if(start.charAt(1) === end.charAt(1)){
+      //Colwise
+      let baseLetterIndex = getLetterIndex(start.charAt(0))
+      //otherwise too big
+      if((baseLetterIndex + length) <= 10){
+        for(let i=0; i < length; i++){
+          posArray.push({
+            position: `${letters[baseLetterIndex + i]}${start.charAt(1)}`,
+            hit: false
+          })
+        }
+      }
+      else {
+        console.log("Out of bounds col")
+      }
+    }
+    else {
+      //Bad Placement
+    }
+    return posArray
+  }
+
+  console.log(getPositionArray(destroyer.start, destroyer.end, 5))
+}
+
+
 io.on("connect", socket => {
   //Take advantage of closure?
   let lobbyId = null;
 
   socket.send(`Hello joe #${socket.id}`)
+  // initBattleShipBoard({
+  //   start: "F3",
+  //   end: "J3"
+  // })
 
   socket.on("joinNextLobby", () => {
     let newLobbyId = addUserToRandomLobby()
