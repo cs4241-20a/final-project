@@ -403,9 +403,13 @@ class App extends React.Component {
                                 <PickBan name={this.state.selections[19]}/>
                             </div>
                         </div>
-                        <div>
-                        <h2 class="waitWarning">Please wait, blue side is picking.</h2>
-                        <h3>Bans</h3>
+                        <div class = "inBetween">
+                            
+                            <div class ="right"><h3>Bans</h3></div>
+                            <div class = "left">
+                                <h3 class="waitWarning">Please wait, blue side is picking.</h3>
+                            </div>
+                            
                         </div>
                         <div class = "bans">
                             
@@ -467,10 +471,13 @@ class App extends React.Component {
                                 <PickBan name={this.state.selections[18]}/>
                             </div>
                         </div>
-            <div>
-                        <h2 class="waitWarning2">Please wait, red side is picking.</h2>
-                        <h3>Bans</h3>
-            </div>
+                        <div class = "inBetween">
+                            <div class = "right">
+                                <h3 class="waitWarning">Please wait, red side is picking.</h3>
+                            </div>
+                            <div class ="left"><h3>Bans</h3></div>
+                            
+                        </div>
                         <div class = "bans">
                             <div class = "ban">
                                 <PickBan name={this.state.selections[0]}/>

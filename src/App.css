@@ -72,10 +72,10 @@ body{
   font-style: normal;
 }
 .teamheader1{
-  background-image: linear-gradient(to left, black, #000001, #000002, #000003, #00014a);
+  background-image: linear-gradient(to left, black, #000001, #0d00bf);
 }
 .teamheader2{
-  background-image: linear-gradient(to right, black, #000001, #000002, #000003, #4a0000);
+  background-image: linear-gradient(to right, black, #000001, #bf0a00);
 }
 .results{
   height: auto;
@@ -84,6 +84,7 @@ body{
 .selectionBox{
   height: auto;
   position: relative;
+  margin-top: 10px;
 }
 .input{
   width: 800px;
@@ -98,9 +99,17 @@ body{
   font-size: 80%;
   text-align: center;
 }
-.waitWarning{
-  float:right;
+
+.inBetween{
+  width: 100%;
 }
-.waitWarning2{
-  float:left;
+.inBetween div{
+  width: 50%;
+  display: inline-block;
+}
+.left{
+  justify-content: left;
+}
+.right{
+  justify-content: right;
 }
