@@ -31,7 +31,7 @@ After logging into the main page, users can then choose from the three topics an
 - Yaru Gong: Live comment
 - Mingxi Liu: CSS, main page
 - Xiaoyue Lyu: User Registration
-- Jialin Song: CSS, Youtube API (not used) 
+- Jialin Song: CSS, Youtube API
 
 ## Project Video
 Link to the project video: https://youtu.be/S5v72ewAans
