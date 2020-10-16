@@ -1,30 +1,49 @@
-# hello-express
-
-A server that serves a webpage, its resources, and some data
 
 
-## Your Project
+1. A brief description of what you created, and a link to the project itself.
+2. Any additional instructions that might be needed to fully use your project (login information etc.)
+3. An outline of the technologies you used and how you used them.
+4. What challenges you faced in completing the project.
+5. What each group member was responsible for designing / developing.
+6. A link to your project video.
 
-On the front-end,
+Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
 
-- Edit `views/index.html` to change the content of the webpage
-- `public/client.js` is the javacript that runs when you load the webpage
-- `public/style.css` is the styles for `views/index.html`
-- Drag in `assets`, like images or music, to add them to your project
+## FAQs
 
-On the back-end,
+- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
 
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
-
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy.
+1. Our project is a pong multiplayer game with high score charts
 
 
-## Made by [Glitch](https://glitch.com/)
+**Instructions to play the game**
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+1. Connect to https://lewj20-final-project-3.glitch.me/ and select a name, then press the start button
 
-Find out more [about Glitch](https://glitch.com/about).
+2. Also do the exact same thing on another computer
 
-( ᵔ ᴥ ᵔ )
+3. ***VERY IMPORTANT STEP*** if you want to run the game again, you have to restart the server. The only way I know how to do this on glitch is by making a small change in the server.js (like an indent) so it restarts.
+
+
+
+
+
+
+
+3: we used mongodb to keep track of highscores
+
+We used websocket to have multiplayer functionality
+
+we used body parser for json parsing
+
+
+4: We faced a major challenge in actually getting the multiplayer to work and make sense, also there were some issue with 
+getting the datbase stuff to work the way we wanted it to
+
+5: Lewis: Responsible for the game itself, the websocket multiplayer and finishing touches
+
+Ryan: Responsible for the database communication
+
+Victoria: Responsible for the entirety of the front end
+
+6: https://www.youtube.com/watch?v=-xlS8NLhO1g&feature=youtu.be&ab_channel=Lewiscook

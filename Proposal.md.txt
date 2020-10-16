@@ -1,0 +1,11 @@
+Ryan Cirella
+Lewis Cook
+Victoria Buyck
+
+Webware Final Project Proposal
+	We decided to create a website that has a “pong” game. The game will either be local multiplayer or 
+networked multiplayer. If we cannot get networked multiplayer to work we will use local multiplayer and create 
+a global chat window for real-time communication. We will use node.js database to store and display high scores.
+ When opening the website, the user(s) will be asked to enter a username and then the game will only display high
+ scores for that username. 
+. 
