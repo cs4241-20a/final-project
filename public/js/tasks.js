@@ -1,10 +1,10 @@
 "use strict";
 
-const socket = io();
-
-socket.on("message", message => {
-	console.log(message);
-});
+// const socket = io();
+//
+// socket.on("message", message => {
+// 	console.log(message);
+// });
 
 // Get the modal
 var modal = document.getElementById("myModal");
@@ -12,6 +12,8 @@ var editmodal = document.getElementById("editModal");
 var delmodal = document.getElementById("deleteModal");
 var card1=document.getElementById("card1")
 var btnContainer=document.getElementById("btn_container")
+console.log("Button container " + btnContainer)
+console.log("Modal " + modal)
 
 var clicked=false
 
@@ -59,41 +61,47 @@ var openTask = function(task, edit) {
 
 var listClicked = function(){
   if(clicked){
+    console.log(btnContainer)
     btnContainer.style.display="none"
     clicked=false
   }else{
+    console.log(btnContainer)
     btnContainer.style.display="block"
     clicked=true
   }
 }
 
-function getTasks() {
+const getTasks = async () => {
   var h = document.getElementById('group_name')
   var name = h.innerHTML
 	// Can't call /tasks anymore need to send the groupId through
   var groupId = "/" + name
-  fetch(groupId, {
-    method: 'GET',
-    headers: {
-      "Content-type": "application/json"
-    }
-  })
-  .then(function(response) {
-      return response.json();
-  })
-  .then(function(json) {
-    console.log("Array: " + JSON.stringify(json))
-    for(var i = 0; i < json.length; i++)
-    {
-      var task = json[i]
-      console.log("append")
-      if(task.column > cols) {
-        console.log("We need to add a new column")
-        addCol()
-      }
-      appendNewInfo(task)
-    }
-  })
+  const res = await fetch("/api/tasks" + groupId, {method: "GET"})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+  // fetch(groupId, {
+  //   method: 'GET',
+  //   headers: {
+  //     "Content-type": "application/json"
+  //   }
+  // })
+  // .then(function(response) {
+  //     return response.json();
+  // })
+  // .then(function(json) {
+  //   console.log("Array: " + JSON.stringify(json))
+  //   for(var i = 0; i < json.length; i++)
+  //   {
+  //     var task = json[i]
+  //     console.log("append")
+  //     if(task.column > cols) {
+  //       console.log("We need to add a new column")
+  //       addCol()
+  //     }
+  //     appendNewInfo(task)
+  //   }
+  //})
 }
 
 //What column are we adding to?
@@ -303,6 +311,9 @@ window.onload = function() {
     ntButton.onclick = function() {
       makeTask(1)
     }
+
+    const dcButton = document.getElementById("col-1")
+    dcButton.onclick = listClicked
 
     const cButton = document.getElementById("cancel")
     cButton.onclick = cancelTask
