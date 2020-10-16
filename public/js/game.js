@@ -6,7 +6,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
+            gravity: {y: 300},
             debug: true
         }
     },
@@ -55,13 +55,22 @@ function create () {
 			if (playerId === child.playerId)
 				child.destroy();
 		})
-	})
+	});
+
+	this.socket.on('playerMoved', playerInfo => {
+		console.log(playerInfo);
+		self.otherPlayers.getChildren().forEach(player => {
+			if (playerInfo.playerId === player.playerId){
+				player.setPosition(playerInfo.x, playerInfo.y);
+			}
+		});
+	});
 
 	this.add.image(0, 0, 'sky').setOrigin(0, 0);
 	scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#FFF'})
 
 	platforms = this.physics.add.staticGroup();
-    // player = this.physics.add.sprite(100, 450, 'char');
+
     stars = this.physics.add.group({
     	key: 'star', repeat: 11, setXY: {x: 12, y: 0, stepX: 70}
     });
@@ -71,82 +80,65 @@ function create () {
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
 
-    // player.setBounce(0.2);
-    // player.setCollideWorldBounds(true);
-
     stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)));
 
- //    this.anims.create({
-	//     key: 'left',
-	//     frames: this.anims.generateFrameNumbers('char', { start: 0, end: 3 }),
-	//     frameRate: 10,
-	//     repeat: -1
-	// });
-
-	// this.anims.create({
-	//     key: 'turn',
-	//     frames: [ { key: 'char', frame: 4 } ],
-	//     frameRate: 20
-	// });
-
-	// this.anims.create({
-	//     key: 'right',
-	//     frames: this.anims.generateFrameNumbers('char', { start: 5, end: 8 }),
-	//     frameRate: 10,
-	//     repeat: -1
-	// });
-
 	this.physics.add.collider(stars, platforms);
-	// this.physics.add.collider(player, platforms);
-	// this.physics.add.overlap(player, stars, (player, star) => {
-	// 	star.disableBody(true, true);
-	// 	scoreText.setText('Score: ' + ++score);
-	// }, null, this);
 }
 
 
 function update () {
 	let cursors = this.input.keyboard.createCursorKeys();
-	if (this.char){
+
+	let char = this.char;
+
+	if (char){
 		if (cursors.left.isDown) {
-		    this.char.setVelocityX(-160);
+		    char.setVelocityX(-160);
 		} else if (cursors.right.isDown) {
-		    this.char.setVelocityX(160);
+		    char.setVelocityX(160);
 		} else {
-		    this.char.setVelocityX(0);
+		    char.setVelocityX(0);
 		}
 
-		if (cursors.up.isDown && this.char.body.touching.down){
-		    this.char.setVelocityY(-330);
+		if (cursors.up.isDown && char.body.touching.down){
+		    char.setVelocityY(-330);
 		}
+
+		if (char.oldPosition && (char.x !== char.oldPosition.x || char.y !== char.oldPosition.y)){
+			this.socket.emit('playerMovement', {x: char.x, y: char.y});
+		}
+
+		char.oldPosition = {
+			x: char.x,
+			y: char.y
+		};
 	}
 }
 
 function addOtherPlayers(self, playerInfo) {
-	//let playerTwo = self.add.sprite(playerInfo.x, 450, 'main')
-	//					  .setOrigin(0.5, 0.5)
-	//					  .setDisplaySize(50, 80);
+	let playerTwo = self.add.image(playerInfo.x, playerInfo.y, 'main')
+						  .setOrigin(0.5, 0.5)
+						  .setDisplaySize(50, 80);
 	
-	// if (playerInfo.team === 'blue') {
-	// 	otherPlayer.setTint(0x0000ff);
-	// } else {
-	// 	otherPlayer.setTint(0xff0000);
-	// }
-	//self.physics.add.collider(playerTwo, platforms);
+	playerTwo.setTint(playerInfo.team);
+	self.physics.add.collider(playerTwo, platforms);
 	
-	//playerTwo.playerId = playerInfo.playerId;
-	//self.otherPlayers.add(playerTwo);
+	playerTwo.playerId = playerInfo.playerId;
+	self.otherPlayers.add(playerTwo);
 }
 
 function addPlayers(self, playerInfo) {
-	self.char = self.physics.add.image(playerInfo.x, 450, 'main')
+	self.char = self.physics.add.image(playerInfo.x, playerInfo.y, 'main')
 					.setOrigin(0.5, 0.5)
 					.setDisplaySize(50, 80);
-	// if (playerInfo.team === 'black')
-		// self.char.setTint(0x585858);
-
-	// self.char.setBounce(0.2);
-    // self.char.setCollideWorldBounds(true);
+	
+	self.char.setTint(playerInfo.team);
+	self.char.setBounce(0.2);
+    self.char.setCollideWorldBounds(true);
 	self.physics.add.collider(self.char, platforms);
-    console.log('selfie', self.char);
+
+	self.physics.add.overlap(self.char, stars, (player, star) => {
+		star.disableBody(true, true);
+		scoreText.setText('Score: ' + ++score);
+	}, null, self);
 }

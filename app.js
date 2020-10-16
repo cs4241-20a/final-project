@@ -46,11 +46,20 @@ io.on('connection', (socket) =>  {
 	players[socket.id] = {
 		playerId: socket.id,
 		x: Math.floor(Math.random() * 150 + 50),
-		team: 'black'
+		y: 450,
+		team: [0x454545, 0x8E5DFB, 0xFFFFFF][Math.floor(Math.random() * 3)]
 	}
 
 	socket.emit('currentPlayers', players);
 	socket.broadcast.emit('newPlayer', players[socket.id]);
+
+
+	socket.on('playerMovement', (movementData) => {
+		players[socket.id].x = movementData.x;
+		players[socket.id].y = movementData.y;
+
+		socket.broadcast.emit('playerMoved', players[socket.id]);
+	})
 
 	socket.on('disconnect', () => {
 		delete players[socket.id];

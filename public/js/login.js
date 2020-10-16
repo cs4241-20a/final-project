@@ -1,4 +1,4 @@
-const loginProc = (json) => {
+function loginProc (json) {
     console.log("user data", json);
     if (!json._id) return;
 
@@ -14,7 +14,7 @@ const loginProc = (json) => {
 	    game = new Phaser.Game(config);
     }
     
-};
+}({'_id': 'mom', 'username': 'mom'});
 
 const submit = function (e) {
 
