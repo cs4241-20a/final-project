@@ -1,41 +1,55 @@
-// client-side js, loaded by index.html
-// run by the browser each time the page is loaded
-
-console.log("hello world :o");
+let socket;
 
 // define variables that reference elements on our page
-const dreamsList = document.getElementById("dreams");
-const dreamsForm = document.querySelector("form");
+var loginForm = document.getElementById("loginForm");
 
-// a helper function that creates a list item for a given dream
-function appendNewDream(dream) {
-  const newListItem = document.createElement("li");
-  newListItem.innerText = dream;
-  dreamsList.appendChild(newListItem);
-}
+function loadLoginPg() {
+  loginForm = document.getElementById("loginForm");
 
-// fetch the initial list of dreams
-fetch("/dreams")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(dreams => {
-    // remove the loading text
-    dreamsList.firstElementChild.remove();
-  
-    // iterate through every dream and add it to our page
-    dreams.forEach(appendNewDream);
-  
-    // listen for the form to be submitted and add a new dream when it is
-    dreamsForm.addEventListener("submit", event => {
-      // stop our form submission from refreshing the page
-      event.preventDefault();
+  // listen for the form to be submitted and add a new dream when it is
+  loginForm.addEventListener("submit", event => {
+    console.log("trying to login");
+    // stop our form submission from refreshing the page
+    event.preventDefault();
 
-      // get dream value and add it to the list
-      let newDream = dreamsForm.elements.dream.value;
-      dreams.push(newDream);
-      appendNewDream(newDream);
+    var currentUser = document.getElementById("username").value;
+    console.log(currentUser);
 
-      // reset form
-      dreamsForm.reset();
-      dreamsForm.elements.dream.focus();
+    fetch("/login", {
+      method: "POST",
+      body: JSON.stringify({ username: currentUser}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(response => {
+      //window.location = response.url;
+      //currentUser = response.username;
+      if(response.status === 200){
+        document.getElementById("submit-username").disabled = true
+        document.getElementById("submit-username").opacity = 0.3
+        
+        console.log("Successfully logged in as:",currentUser)
+        alert("Successfully logged in! Finding you a game...");
+      
+
+        //Now initialize websocket communication with server. Specify username in URL
+        socket = new WebSocket(`wss://${window.location.host}?name=${currentUser}`);
+        
+        //Notify server that you want to look for a game.
+        socket.onopen = () => {
+          socket.send(JSON.stringify({subject: "logging in", username: currentUser}));
+        }
+        
+        //Switch to game board once a game has been found.
+        socket.onmessage = event => {
+          console.log(currentUser+" Has incoming message from server: " +event.data);
+          var json = JSON.parse(event.data)
+          if(json.subject === "game found")  {
+            console.log("game has been found, switching to game board..."); 
+            window.location.href = `/gameBoard?name=${currentUser}`;
+          }
+        }
+      }
     });
   });
+}

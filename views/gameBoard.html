@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Connect 4</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
+    <script src="/gameBoardScript.js"></script>
+  </head>
+  <body onload="loadGameBoardPg()" class="has-text-centered">
+    <div class="hero is-fullheight is-primary">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="column is-8 is-offset-2">
+            <h3 class="title has-text-white">Connect 4</h3>
+            <hr class="login-hr" />
+            <button
+              class="button is-block is-danger is-small is-right"
+              style="align-right"
+              type="back"
+              id="back"
+            >
+              Leave Game
+            </button>
+            <p class="subtitle has-text-white" id ="title">
+              Enjoy the game!
+            </p>
+
+            <div class="box">
+              <div class="title has-text-grey is-5" id="playerTurn">
+                Make your move: Red
+              </div>
+              <p class="title has-text-grey is-5" id="playerLabel">
+                Your color:
+              </p>
+              <div class="table-container columns is-centered" >
+                <table class="table is-bordered is-hoverable center" id="gameBoard">
+                  <tbody>
+                    <script>
+                      buildBoard();
+                    </script>
+                  </tbody>
+                  <tfoot id="footer">
+                    <tr>
+                      <td style="border: 0px;">
+                        <button id="1" style="height: 17px; background-color: #7d7777;"></button>
+                      </td>
+                      <td style="border: 0px;">
+                        <button id="2" style="height: 17px; background-color: #7d7777;"></button>
+                      </td>
+                      <td style="border: 0px;">
+                        <button id="3" style="height: 17px; background-color: #7d7777;"></button>
+                      </td>
+                      <td style="border: 0px;">
+                        <button id="4" style="height: 17px; background-color: #7d7777;"></button>
+                      </td>
+                      <td style="border: 0px;">
+                        <button id="5" style="height: 17px; background-color: #7d7777;"></button>
+                      </td>
+                      <td style="border: 0px;">
+                        <button id="6" style="height: 17px; background-color: #7d7777;"></button>
+                      </td>
+                      <td style="border: 0px;">
+                        <button id="7" style="height: 17px; background-color: #7d7777;"></button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <!--Chat window-->
+            <div>
+              <!-- Scroll box with log of chat messages-->
+              <!--Stack overflow article on keeping the scroll box at the bottom: 
+                  https://stackoverflow.com/questions/18614301/keep-overflow-div-scrolled-to-bottom-unless-user-scrolls-up
+              -->
+
+              <form id="sendMessage">
+                <div class="field container">
+                  
+                  <div class="control has-text-left">
+                    <div class ="box">
+                      <div class="has-background-white box" 
+                           id="chatBox"
+                           style= "overflow: auto; height: 100px; display: flex; flex-direction: column-reverse;">
+                      </div> 
+                      <input
+                        id="message"
+                        class="input"
+                        type="submitMessage"
+                        placeholder="Send a message"
+                        required
+                      />
+                    </div>
+                    
+                    
+                  </div>
+                  <button
+                    class="button is-block is-danger is-large"
+                    type="submitMessage"
+                    id="send-message"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

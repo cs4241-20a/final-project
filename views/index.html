@@ -1,52 +1,56 @@
-<!-- This is a static file -->
-<!-- served from your routes in server.js -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A cool thing made with Glitch">
-
-    <title>Welcome to Glitch!</title>
-
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
-    <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-
-    <!-- import the webpage's client-side javascript file -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Connect 4</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
     <script src="/script.js" defer></script>
+    <script src="/socket.io/socket.io.js"></script>
   </head>
-  <body>
-    <header>
-      <h1>A Dream of the Future</h1>
-    </header>
+  <body onload="loadLoginPg()" class="has-text-centered">
+    <div class="hero is-fullheight is-primary">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="column is-8 is-offset-2">
+            <h3 class="title has-text-white">Connect 4</h3>
+            <hr class="login-hr" />
+            <p class="subtitle has-text-white">
+              Welcome to Connect 4! Enter a username and we'll match you with a random player.
+            </p>
+            <div class="box">
+              <div class="title has-text-grey is-5">
+                Please enter a username.
+              </div>
+              <form id="loginForm" onsubmit="submit-username.disabled = true">
+                <div class="field">
+                  <div class="control has-text-left">
+                    <input
+                      id="username"
+                      class="input is-large"
+                      type="username"
+                      placeholder="username"
+                      required
+                      autofocus=""
+                    />
+                  </div>
+                </div>
+                <button
+                  class="button is-block is-danger is-large is-fullwidth"
+                  type="submit"
+                  id="submit-username"
+                >
+                  Find a Game
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <main>
-      <h2>Oh hi,</h2>
-
-      <p>Tell me your hopes and dreams:</p>
-
-      <form>
-        <label>
-          New Dream
-          <input name="dream" type="text" maxlength="100" required placeholder="Dreams!">
-        </label>
-        <button type="submit" id="submit-dream">Add Dream</button>
-      </form>
-
-      <section class="dreams">
-        <ul id="dreams">
-          <em>loading dreams&hellip;</em>
-        </ul>
-      </section>
-    </main>
-
-    <footer>Made with <a href="https://glitch.com">Glitch</a>!</footer>
-
-    <!-- include the Glitch button to show what the webpage is about and
-          to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:2em;right:20px;"></div>
-    <script src="https://button.glitch.me/button.js" defer></script>
   </body>
 </html>
