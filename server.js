@@ -16,14 +16,151 @@ const MongoClient = require("mongodb").MongoClient;
 const bcrypt = require("bcrypt");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const mongoUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@a3.xvhzl.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const mongoUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@battleship.xvhzl.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const client = new MongoClient(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-client.connect();
+client.connect().catch(err => console.log(err));
 app.set("trust proxy", 1);
 app.use(bodyParser.urlencoded({ extended: true }));
+
+let lobbies = {}
+
+const uidGenerator = () => {
+  let S4 = () => {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  }
+  return ("_" + S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4())
+}
+const addUserToRandomLobby = () => {
+  let lobbyKeys = Object.keys(lobbies)
+  let lobbyId = null
+  lobbyKeys.forEach((key) => {
+    if(lobbies[key]){
+      console.log(lobbies[key])
+      if(lobbies[key].client1 == null || lobbies[key].client2 == null){
+        //Only once please
+        if(!lobbyId){
+          lobbyId = key
+        }
+      }
+      else {
+        //Do nothing lobby full
+      }
+    }
+  })
+  return lobbyId
+}
+
+
+io.on("connect", socket => {
+  //Take advantage of closure?
+  let lobbyId = null;
+
+  socket.send(`Hello joe #${socket.id}`)
+
+  socket.on("joinNextLobby", () => {
+    let newLobbyId = addUserToRandomLobby()
+    if(newLobbyId){
+      if(lobbies[newLobbyId].client1 === null){
+        lobbies[newLobbyId].client1 = {
+          id: socket.id,
+          name: "Beter",
+          board: {}
+        }
+        lobbyId = newLobbyId
+      }
+      else if(lobbies[newLobbyId].client2 === null){
+        lobbies[newLobbyId].client2 = {
+          id: socket.id,
+          name: "Joe",
+          board: {}
+        }
+        lobbyId = newLobbyId
+        socket.join(newLobbyId)
+      }
+      else {
+        //How?
+      }
+    }
+    else {
+      //Lets make a new lobby
+      let generatedLobbyid = uidGenerator()
+      socket.join(generatedLobbyid)
+      lobbies[generatedLobbyid] = {
+        client1: {
+          id: socket.id,
+          name: `Jeff${socket.id}`,
+          board: {}
+        },
+        client2: null,
+        messages: []
+      }
+      lobbyId = generatedLobbyid
+    }
+  })
+
+  // socket.on("joinSpecificLobby", (lobbyCode) => {
+  //   socket.join(lobbyCode)
+  //   let desiredLobby = lobbies[lobbyCode]
+  //   if(lobbies[lobbyCode]){
+
+  //   }
+  // })
+
+  socket.on("leaveLobby", () => {
+    socket.leave(lobbyId)
+    if(lobbies[lobbyId].client1 && lobbies[lobbyId].client1.id === socket.id){
+      lobbies[lobbyId].client1 = null
+    }
+    else if(lobbies[lobbyId].client2 && lobbies[lobbyId].client2.id === socket.id){
+      lobbies[lobbyId].client2 = null
+    }
+    else {
+      //Well guess we weren't in one anyway
+    }
+    //Delete an empty lobby
+    if(lobbies[lobbyId].client1 === null && lobbies[lobbyId].client2 === null ){
+      delete lobbies[lobbyId]
+    }
+    lobbyId = null
+  })
+
+  socket.on("disconnecting", () => {
+    console.log(socket.rooms)
+    socket.leave(lobbyId)
+    if(lobbies[lobbyId]){
+      if(lobbies[lobbyId].client1 && lobbies[lobbyId].client1.id === socket.id){
+        lobbies[lobbyId].client1 = null
+      }
+      else if(lobbies[lobbyId].client2 && lobbies[lobbyId].client2.id === socket.id){
+        lobbies[lobbyId].client2 = null
+      }
+      else {
+        //Well guess we weren't in one anyway
+      }
+      //Delete an empty lobby
+      if(lobbies[lobbyId].client1 === null && lobbies[lobbyId].client2 === null ){
+        delete lobbies[lobbyId]
+        console.log(socket.rooms)
+        delete socket.rooms[lobbyId]
+        console.log(socket.rooms)
+      }
+      lobbyId = null
+    }
+    else {
+      delete socket.rooms[socket.id]
+      console.log(socket.rooms)
+    }
+  })
+
+  socket.on("chat", (message) => {
+    console.log("CHatting", message)
+    console.log(lobbies)
+    socket.to(lobbyId).send(message)
+  })
+})
 
 const userRegistration = (username, password) => {
   return new Promise((resolve, reject) => {
