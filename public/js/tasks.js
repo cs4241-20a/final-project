@@ -1,3 +1,13 @@
+"use strict";
+
+//import moment from "./moment.min.js"
+
+// const socket = io();
+//
+// socket.on("message", message => {
+// 	console.log(message);
+// });
+
 // Get the modal
 var modal = document.getElementById("myModal");
 var editmodal = document.getElementById("editModal");
@@ -14,11 +24,13 @@ var makeTask = function(column) {
   currentCol = column
 }
 
-var cancelTask = function(){
+var cancelTask = function(e){
+  e.preventDefault()
   modal.style.display = "none";
 }
 
-var closeTask = function(){
+var closeTask = function(e){
+  e.preventDefault()
   editmodal.style.display = "none";
 }
 
@@ -43,11 +55,11 @@ var openTask = function(task, edit) {
     const input3 = document.querySelector( '#t_assignee')
     const input4 = document.querySelector( '#t_tags')
     const input5 = document.querySelector( '#t_desc')
-    input.value = task.task
-    input2.value = task.duedate
-    input3.value = task.assignee
+    input.value = task.name
+    input2.value = task.dateDue
+    input3.value = task.assignees
     input4.value = task.tags
-    input5.value = task.description
+    input5.value = task.desc
   }
 }
 
@@ -102,6 +114,11 @@ const getTasks = async () => {
       console.log("We need to add a new column")
       addCol()
     }
+    const dateStr = task.dateDue;
+    console.log(dateStr)
+    const date = dateStr.substring(0, 10)
+    console.log(date)
+    task.dateDue = date
     appendNewInfo(task)
   }
 }
@@ -128,6 +145,9 @@ var addTask = async (e) => {
   console.log(JSON.stringify(data))
   console.log(data.data)
   var task = data.data
+  const dateStr = task.dateDue;
+  const date = dateStr.substring(0, 10)
+  task.dateDue = date
   appendNewInfo(task)
   modal.style.display = "none";
 }
@@ -141,18 +161,27 @@ var editTask = async (e) => {
   const input4 = document.querySelector( '#t_tags')
   const input5 = document.querySelector( '#t_desc')
 
-  tEdit = ids[ids.length-1]
-  tEdit.task = input.value
-  tEdit.duedate = input2.value
-  tEdit.assignee = input3.value
+  const tEdit = ids[ids.length-1]
+  tEdit.name = input.value
+  tEdit.dateDue = input2.value
+  tEdit.assignees = input3.value
   tEdit.tags = input4.value
-  tEdit.description = input5.value
+  tEdit.desc = input5.value
 
-  const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "PATCH", body: JSON.stringify(tEdit)})
+  console.log(JSON.stringify(tEdit))
+
+  const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "PATCH", body: JSON.stringify(tEdit), headers: {"Content-type": "application/json"}})
   const data = await res.json()
   console.log(JSON.stringify(data))
   console.log(data)
-
+  const edTask = data.data
+  const dateStr = edTask.dateDue;
+  console.log(dateStr)
+  const date = dateStr.substring(0, 10)
+  console.log(date)
+  edTask.dateDue = date
+  appendNewInfo(edTask, true)
+  editmodal.style.display = "none";
   // fetch( '/edit', {
   //        method:'POST',
   //        body: JSON.stringify(tEdit),
@@ -179,7 +208,7 @@ var delTask = async (task) => {
 // Tells us which task was just clicked on
 const ids = []
 
-function appendNewInfo(task) {
+function appendNewInfo(task, taskEdit=false) {
   // Create elements
   var div = document.createElement("div");
   var name = document.createElement("p");
@@ -221,7 +250,13 @@ function appendNewInfo(task) {
     editing = true
   }
   console.log(task.columnName)
-  col[task.columnName-1].appendChild(div)
+  if(taskEdit == true) {
+    const oldNode = document.getElementById(task._id)
+    col[task.columnName-1].replaceChild(div, oldNode)
+  }
+  else {
+    col[task.columnName-1].appendChild(div)
+  }
 }
 
 //The total number of columns
