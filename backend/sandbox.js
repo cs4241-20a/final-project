@@ -26,6 +26,7 @@ const assertMethod = `
 export async function testCodeCompletesWithoutError(argArray) {
     const vm = new VM({
         timeout: 1000,
+        fixAsync: true,
         sandbox: {}
     });
 
