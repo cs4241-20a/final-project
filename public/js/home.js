@@ -8,15 +8,15 @@ goTask.onclick = function(e) {
   console.log("Clicked")
   e.preventDefault()
   window.location = "/tasks"
-  fetch('/tasks', {
-    method: 'GET',
-    headers: {
-      "Content-type": "application/json"
-    }
-  })
-  .then(function(response) {
-      response.json()
-      console.log(response.json())
-      console.log("Moving to task page!")
-  })
+  // fetch('/tasks', {
+  //   method: 'GET',
+  //   headers: {
+  //     "Content-type": "application/json"
+  //   }
+  // })
+  // .then(function(response) {
+  //     response.json()
+  //     console.log(response.json())
+  //     console.log("Moving to task page!")
+  // })
 }

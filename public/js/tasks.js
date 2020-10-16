@@ -167,7 +167,7 @@ var addTask = async (e) => {
   modal.style.display = "none";
 }
 
-var editTask = function (e) {
+var editTask = async (e) => {
   e.preventDefault()
   //Edit the task
   const input = document.querySelector( '#t_name' )
@@ -200,7 +200,7 @@ var editTask = function (e) {
   //   })
 }
 
-function delTask(task) {
+var delTask = async (task) => {
   const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "DELETE"})
   const data = await res.json()
   console.log(JSON.stringify(data))
@@ -334,6 +334,10 @@ var delCol = function() {
   }
 }
 
+const returnHome = async () => {
+  window.location = "/"
+}
+
 window.onload = function() {
     getMyGroup()
 
@@ -347,6 +351,9 @@ window.onload = function() {
 
     const dcButton = document.getElementById("col-1")
     dcButton.onclick = listClicked
+
+    const backButton = document.getElementById("back_btn")
+    backButton.onclick = returnHome
 
     const cButton = document.getElementById("cancel")
     cButton.onclick = cancelTask
