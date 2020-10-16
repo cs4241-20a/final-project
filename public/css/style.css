@@ -44,6 +44,15 @@ body{
     /*clear: right;*/
 }
 
+.list-names{
+    cursor: pointer;
+    width: fit-content;
+}
+
+.list-names:hover{
+    box-shadow: 2px 2px 5px grey;
+}
+
 .task_lists{
     width: 250px;
     height: 75vh;

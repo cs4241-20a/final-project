@@ -233,7 +233,7 @@ var addCol = function() {
   newList.setAttribute('class', 'tasks')
   newList.setAttribute('id', cols)
   var newlistName = document.createElement("h4")
-  newlistName.setAttribute('class', 'white-text center-align row')
+  newlistName.setAttribute('class', 'white-text center-align row list-names')
   var addBtn = document.createElement("a")
   addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
   addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
@@ -250,11 +250,15 @@ var addCol = function() {
   }
   newlistName.appendChild(document.createTextNode("New List"))
   newCol.appendChild(newlistName)
+  newlistName.addEventListener('click',function () {
+    newlistName.contentEditable=true
+  })
   newCol.appendChild(newList)
   newCol.appendChild(addBtn)
   newCol.onclick = listClicked
   contain[0].appendChild(newCol)
 }
+
 
 var delCol = function() {
   const contain = document.getElementsByClassName("inner-container")
