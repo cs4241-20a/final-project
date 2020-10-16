@@ -1,105 +1,79 @@
-// @author: Luke Bodwell
-"use strict";
-
-const fs = require("fs");
-const path = require("path");
-const http = require("http");
 const express = require("express");
-const socketio = require("socket.io");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-const compression = require("compression");
-const methodOverride = require("method-override");
-const helmet = require("helmet");
-const session = require("express-session");
-
-const apiRouter = require("./routes/api/api-router");
-const githubAuth = require("./routes/auth/github-auth");
-
 const app = express();
-
-const server = http.createServer(app);
-const io = socketio(server);
-//? Why did I do this?
-//TODO: Look into why this is accessed from a module export instead of required separately
-const {passport, ensureAuthenticated} = githubAuth;
-
+const bodyParser = require('body-parser');
+const path = require('path');
+const dotenv = require("dotenv");
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
-const NODE_ENV = process.env.NODE_ENV;
-const MONGO_URI = process.env.MONGO_URI;
 
-githubAuth.setupPassport();
+const mongodb = require('mongodb')
+const MongoClient = mongodb.MongoClient;
 
-// Connect to database
-try {
-	mongoose.connect(MONGO_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true
-	}).then(() => console.log("Connected to db"));
-} catch (err) {
-	console.error(err);
-}
+//console.log(process.env.DBPASSWORD)
+const uri = `mongodb+srv://nchintada:${process.env.DBPASSWORD}@cluster0.impei.mongodb.net/<dbname>?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true });
 
-// Enable logging middleware based on environment
-if (NODE_ENV === "development") {
-	app.use(morgan("dev"));
-} else if (NODE_ENV === "production") {
-	app.use(morgan("common", {
-		skip: (req, res) => res.statusCode < 400,
-		stream: fs.createWriteStream(path.join(__dirname, "access.log"), {flags: "a"})
-	}));
-}
+let collection = null
 
-// Middleware processing
-app.use(helmet());
-app.use(compression());
-app.use(express.json());
-app.use(methodOverride());
-app.use(session({
-	secret: "itsasecret",
-	resave: false,
-	saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static(path.join(__dirname, "public")));
-
-// Routing
-app.use("/api", apiRouter.router);
-app.use("/auth/github", githubAuth.router);
-
-app.get("/", ensureAuthenticated, (req, res) => {
-	res.sendFile(path.join(__dirname, "public/home.html"));
-});
-app.get("/tasks", ensureAuthenticated, (req, res) => {
-	res.sendFile(path.join(__dirname, "public/tasks.html"));
-});
-app.get("/login", (req, res) => {
-	res.sendFile(path.join(__dirname, "public/login.html"));
-});
-app.get("/logout", (req, res) => {
-	req.logout();
-	res.redirect("/login");
+client.connect(err => {
+  collection = client.db("taskDB").collection("tasks");
+  console.log("Connected")
+  // perform actions on the collection object
+  //client.close();
 });
 
-app.get("*", (req, res) => {
-	res.status(404).send("Error 404. Not found.");
-});
+app.use(express.static('public'))
 
+app.get("/", (req, res) => {
+	//res.send("Hello World");
+	//Just for testing purposes, we need to change this later
+	res.sendFile(path.join(__dirname + '/public/tasks.html'))
+})
 
-// Web socket handling
-io.on("connection", socket => {
-	console.log("A user has connected");
-	socket.broadcast.emit("message", "A user has connected");
-	socket.emit("message", "Hello user!");
-	socket.on("disconnect", () => {
-		console.log("A user has disconnected");
-		io.emit("message", "A user has disconnected");
-	});
-});
+app.post("/add", bodyParser.json(), (req, res) => {
+	//code for adding a new task
+	collection.insertOne(req.body)
+  .then(dbresponse => {
+    //console.log(dbresponse)
+    res.json(dbresponse.ops[0])
+  })
+})
 
-server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.post('/edit', bodyParser.json(), (request, response) => {
+	console.log(request.body)
+	collection
+    .updateOne({ _id:mongodb.ObjectID( request.body._id ) },
+      { $set:{ task:request.body.task,
+              duedate:request.body.duedate,
+              assignee:request.body.assignee,
+						 	tags:request.body.tags,
+							description:request.body.description}
+      }
+    )
+    .then( result => {
+      //console.log(result)
+      response.json( result )
+  })
+})
+
+app.post('/delete', bodyParser.json(), (request, response) => {
+  console.log("Delete: ", request.body)
+  collection
+    .deleteOne({ _id:mongodb.ObjectID( request.body.id ) })
+    .then( result => {
+      response.json( result )
+  })
+})
+
+app.get('/tasks', bodyParser.json(), (request, response) => {
+	//console.log("Here's our group: " + request.group)
+	//Leaving out accessing a specific group for right now
+  collection.find().toArray()
+    .then(docs => {
+    response.json(docs)
+  })
+})
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

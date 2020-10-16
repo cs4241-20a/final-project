@@ -110,3 +110,8 @@ window.onload = function() {
   addAllGroups()
   welcome()
 }
+
+$(document).ready(function(){
+  $('.sidenav').sidenav();
+  $('#sidenav-1').sidenav({ edge: 'left' });
+});
