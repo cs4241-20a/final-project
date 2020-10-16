@@ -92,10 +92,10 @@ window.onload = function () {
         .then(json => loginProc(json));
 
     document.addEventListener("click", function (e) {
-        if (e.target && e.target.getAttribute("id") == "loginButton") {
+        if (e.target && e.target.getAttribute("id") === "loginButton") {
             login();
         }
-        if (e.target && e.target.getAttribute("id") == "logoutButton") {
+        if (e.target && e.target.getAttribute("id") === "logoutButton") {
             logout();
         }
     });

@@ -15,7 +15,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto"></ul>
             <div class="form-inline my-2 my-lg-0" id="userInfo">
-                <input class="form-control mr-sm-2" id="username" placeholder="Username" />
+                <input class="form-control mr-sm-2" id="username" placeholder="Username" autofocus />
                 <input class="form-control mr-sm-2" id="password" placeholder="Password" type="password" />
                 <button class="btn btn-primary my-2 my-sm-0 mr-sm-2" id="loginButton">
                     Register / Login
@@ -39,17 +39,17 @@
             </div>
         </div>
 
-        <div class="container p-3" id="gamePage" style="display: none">
+        <div class="container p-3" id="gamePage"><!--  style="display: none"> -->
             <div id="my-game" class="d-flex justify-content-center"></div>
         </div>
     </div>
 
     <script src="js/imports/phaser.min.js"></script>
     <script src="js/imports/socket.io.slim.js"></script>
-    <script src="js/login.js"></script>
     <script src="js/dinosaurGame.js"></script>
     <script src="js/lobby.js"></script>
     <script src="js/gameStart.js"></script>
+    <script src="js/login.js"></script>
 </body>
 
 </html>

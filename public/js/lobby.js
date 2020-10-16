@@ -57,7 +57,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 
 		// add the sky background
 		this.add.image(0, 0, 'sky').setOrigin(0, 0);
-		this.scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#FFF'}) // adds the score Text (top left)
+		this.scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#FFFFFF'}) // adds the score Text (top left)
 
 		this.platforms = this.physics.add.staticGroup(); // adds the platforms as a non moving (static) group
 
@@ -139,14 +139,23 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		self.char.setBounce(0.2); // making sure we bounce correctly
 	    self.char.setCollideWorldBounds(true); // not allowed to leave the stage
 		self.physics.add.collider(self.char, this.platforms);
-
+		console.log(self.char.body)
 		// collision with a star, also changes scores and removes the star
 		self.physics.add.overlap(self.char, this.stars, (player, star) => {
 			star.disableBody(true, true);
 			this.scoreText.setText('Score: ' + ++this.score);
 			// if (this.stars.countActive(true) === 0)
-				this.scene.start('DinoGame');
+			self.switchScenes();
 			
 		}, null, self);
+	}
+
+	switchScenes() {
+		this.socket.off('currentPlayers');
+		this.socket.off('newPlayer');
+		this.socket.off('disconnect');
+		this.socket.off('playerMoved');
+		// this.socket.leave();
+		this.scene.start('DinoGame');
 	}
 }
