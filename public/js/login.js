@@ -13,20 +13,40 @@ function loginProc (json) {
     if ( document.getElementById('my-game').innerHTML === "") {
 	    game = new Phaser.Game(config);
     }
+
+    fetch("/api/getHighScores")
+        .then((response) => response.json())
+        .then((json) => displayLeaderboard(json));
     
 }({'_id': 'mom', 'username': 'mom'});
+
+
+const displayLeaderboard = (json) => {
+    const highScores = document.getElementById("highScores");
+        highScores.innerHTML = "";
+
+        json.forEach((highScore) => {
+        
+            highScores.innerHTML += `
+            <tr>
+              <td><h3 id="user-${highScore._id}">${highScore.user || "Unknown User"}</textarea>
+              <td><h3 id="highScore-${highScore._id}" value=${highScore.score}></td>
+            </tr>
+            `;
+        });
+};
 
 const submit = function (e) {
 
     e.preventDefault();
   
-    const task = document.querySelector("#task"),
-      priority = document.querySelector("#priority"),
-      json = { name: name.value, task: task.value, priority: priority.value },
+    const user = document.querySelector("#user"),
+      score = document.querySelector("#priority"),
+      json = { name: name.value, user: user.value, priority: priority.value },
       body = JSON.stringify(json);
   
     elementDisable();
-    fetch("/submit", {
+    fetch("/editLeaderboard", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +56,7 @@ const submit = function (e) {
       .then((response) => response.json())
       .then((json) => {
         
-        task.value = "";
+        user.value = "";
         elementEnable();
       });
   

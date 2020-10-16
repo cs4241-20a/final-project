@@ -122,7 +122,7 @@ app.get("/logout", function (req, res) {
 	return res.send();
 });
 
-app.post("/submit", async (req, res) => {
+app.post("/editLeaderboard", async (req, res) => {
 	if (!req.user) {
 		return res.json({ success: false, needsAuth: true });
 	}
@@ -156,10 +156,7 @@ app.post("/submit", async (req, res) => {
 	return res.json(docs);
 });
 
-app.get("/api/getData", async (req, res) => {
-	if (!req.user) {
-		return res.send("LOGIN REQUIRED");
-	}
+app.get("/api/getHighScores", async (req, res) => {
 
 	const client = new MongoClient(uri, mongoSetup);
 
