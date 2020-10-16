@@ -1,0 +1,257 @@
+2<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" type="text/css" href="css/style.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/videostyle.css" />
+    <!-- Bootstrap CDN -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <!--   Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="background"></div>
+      <div class="navbarbody">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          <a class="navbar-brand" href="/">Filifili</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav2"
+            aria-controls="navbarNav2"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav2">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/"
+                  >Home <span class="sr-only">(current)</span></a
+                >
+              </li>
+              <li class="nav-item" id="music">
+                <a class="nav-link" href="/video?video=music">Music Channel</a>
+              </li>
+              <li class="nav-item" id="cooking">
+                <a class="nav-link" href="/video?video=cooking"
+                  >Cooking Channel</a
+                >
+              </li>
+              <li class="nav-item" id="talkshow">
+                <a class="nav-link" href="/video?video=talkShow"
+                  >Talkshow Channel</a
+                >
+              </li>
+            </ul>
+          </div>
+          <form action="/users/logout">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+              Log out
+            </button>
+          </form>
+        </nav>
+      </div>
+      <div
+        class="main"
+        style="position: relative;height: 300px"
+      >
+        <div class="movie-container">
+          <div class="movie text-center">
+            <iframe
+              id="video"
+              frameborder="0"
+              allowfullscreen
+              style="position: relative; height: 480px; width: 854px"
+            ></iframe>
+          </div>
+        </div>
+      <form id="form">
+        <div class="danmu text-center">
+          <input
+            type="text"
+            class="input"
+            placeholder="Please enter flying comments"
+          />
+          <div id="btn">Comment</div>
+          <!-- <button id="btn" type="submit">Comment</button> -->
+        </div>
+        <div class="al">You should input something and then send!</div>
+      </div>
+    </div>
+  </form>
+  <script src="socket.io/socket.io.js"></script>
+    <script>
+
+      var socket = window.ws = io(`${window.location.host}`);
+      var videoType, video_link;
+      window.onload = function () {
+        videoType = getUrlVars()["video"];
+        console.log("video type: " + videoType);
+
+        var type = document.getElementById("type");
+        var video = document.getElementById("video");
+
+        if (videoType === "music") {
+          video.src = "https://www.youtube.com/embed/oFEKYxjYDIc";
+        } else if (videoType === "cooking") {
+          video.src = "https://www.youtube.com/embed/mhDJNfV7hjk";
+        } else if (videoType === "talkShow") {
+          video.src = "https://www.youtube.com/embed/odtAJ2kPdqc";
+        }
+
+        //high light the current tag
+        var pathname = window.location.pathname;
+        video_link = pathname + window.location.search;
+        var parentclass = $('.navbar-nav > li > a[href="' + video_link + '"]')
+          .parent()
+          .addClass("active");
+
+        function getUrlVars() {
+          var vars = {};
+          var parts = window.location.href.replace(
+            /[?&]+([^=&]+)=([^&]*)/gi,
+            function (m, key, value) {
+              vars[key] = value;
+            }
+          );
+          return vars;
+        }
+        socket.on('connect', function () {
+                console.log('connected');
+        });
+
+        socket.on('message', function (message) {
+                console.log('message', message);
+
+                var comment = message.content.split(" ");
+                var type = comment.shift();
+                if(type == videoType){
+                  createSpan(comment);
+                }
+
+            });
+      };
+
+      var oMovie = document.getElementsByClassName("movie")[0],
+        oInput = document.getElementsByClassName("input")[0],
+        oBtn = document.getElementById("btn"),
+        oAl = document.getElementsByClassName("al")[0];
+      oMovieWidth = oMovie.offsetWidth;
+      var timer2;
+
+
+      oBtn.onclick = send;
+      oInput.onkeydown = function (e) {
+        if (e.keyCode == 13) {
+          e.preventDefault();
+          send();
+        }
+      };
+
+      function getPosition(element) {
+        var xPosition = 0;
+
+        while(element) {
+          xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+          element = element.offsetParent;
+        }
+
+        return xPosition;
+      }
+
+      // var iframeVideo = document.getElementById("video")
+      // setTimeout(function(){ console.log(iframeVideo.getCurrentTime()) }, 1000);
+      function send() {
+        console.log("width ",oMovieWidth)
+        var oForm = document.getElementById('form');
+        if (oInput.value.length <= 0 || /^\s+$/.test(oInput.value)) {
+          oAl.style.display = "block";
+          timer2 = setTimeout(function () {
+            oAl.style.display = "none";
+          }, 1500);
+          return;
+        }
+
+        // var content = oInput.value;
+        var content = videoType + " ";
+        content += oInput.value;
+        // content += videoType;
+
+        socket.emit('message', { content });
+        createSpan(oInput.value);
+        console.log("send clicked");
+
+        oInput.value = "";
+      }
+      function createSpan(text) {
+        var oSpan = document.createElement("span");
+        oSpan.innerText = text;
+        oSpan.style.left = oMovieWidth+getPosition(oMovie)-oSpan.offsetWidth + "px";
+        oMovie.appendChild(oSpan);
+        styleSpan(oSpan);
+      }
+      function styleSpan(dom) {
+        dom.style.top = random(0, 180) + "px";
+        dom.style.fontWeight = "bold"
+        dom.style.color =
+          "rgb(" +
+          random(0, 255) +
+          "," +
+          random(0, 255) +
+          "," +
+          random(0, 255) +
+          ")";
+        dom.style.fontSize = random(24, 30) + "px";
+        var domW = dom.offsetWidth;
+        var speed = [0, 1, 2][random(0, 2)];
+        dom.timer = setInterval(function () {
+          switch (speed) {
+            case 0:
+              dom.style.left = dom.offsetLeft - 2 + "px";
+              break;
+            case 1:
+              dom.style.left = dom.offsetLeft - 4 + "px";
+              break;
+            case 2:
+              dom.style.left = dom.offsetLeft - 4 + "px";
+          }
+          if (dom.offsetLeft <= getPosition(oMovie)) {
+            clearInterval(dom.timer);
+            oMovie.removeChild(dom);
+          }
+        }, 20);
+      }
+      function random(start, end) {
+        return Math.floor(Math.random() * (end + 1 - start) + start);
+      }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!--   Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
