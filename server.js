@@ -176,7 +176,6 @@ app.post('/getSongs', async (req, res) => {
         let user1Playlists = await getUserPlaylists(user1);
         let user2Playlists = await getUserPlaylists(user2);
 
-
         // get all of the tracks in all of the public playlists
         let user1Tracks = await getUserTracks(user1Playlists);
         let user2Tracks = await getUserTracks(user2Playlists);
