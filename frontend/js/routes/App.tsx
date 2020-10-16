@@ -13,6 +13,7 @@ import { Login } from "./Login";
 import DialogProvider from "../components/DialogProvider";
 import { PlayChallenge } from "./PlayChallenge";
 import { useWebsocket } from "../components/WebSocketProvider";
+import { ListChallenges } from "./ListChallenges";
 
 export interface SiteSettings {
     theme: 'light' | 'dark';
@@ -109,6 +110,9 @@ const App: FunctionComponent = props => {
                 </Route>
                 <Route path="/create">
                     <CreateChallenge siteSettings={siteSettings}/>
+                </Route>
+                <Route path="/list">
+                    <ListChallenges/>
                 </Route>
                 <Route path="/play/:id" render={({match}) => (
                     <PlayChallenge challengeId={(match as match<{id: string}>).params.id} siteSettings={siteSettings}/>
