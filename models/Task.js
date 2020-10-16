@@ -33,6 +33,7 @@ const TaskSchema = new Schema({
 		required: false
 	},
 	dateDue: {
+		//Changed this to string, @Luke change it back to date
 		type: Date,
 		required: false
 	},

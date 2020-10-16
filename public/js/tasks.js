@@ -16,6 +16,8 @@ var editmodal = document.getElementById("editModal");
 var delmodal = document.getElementById("deleteModal");
 var card1=document.getElementById("card1")
 var btnContainer=document.getElementById("btn_container")
+console.log("Button container " + btnContainer)
+console.log("Modal " + modal)
 
 var clicked=false
 
@@ -24,11 +26,13 @@ var makeTask = function(column) {
   currentCol = column
 }
 
-var cancelTask = function(){
+var cancelTask = function(e){
+  e.preventDefault()
   modal.style.display = "none";
 }
 
-var closeTask = function(){
+var closeTask = function(e){
+  e.preventDefault()
   editmodal.style.display = "none";
 }
 
@@ -53,57 +57,78 @@ var openTask = function(task, edit) {
     const input3 = document.querySelector( '#t_assignee')
     const input4 = document.querySelector( '#t_tags')
     const input5 = document.querySelector( '#t_desc')
-    input.value = task.task
-    input2.value = task.duedate
-    input3.value = task.assignee
+    input.value = task.name
+    input2.value = task.dateDue
+    input3.value = task.assignees
     input4.value = task.tags
-    input5.value = task.description
+    input5.value = task.desc
   }
 }
 
 var listClicked = function(){
   if(clicked){
+    console.log(btnContainer)
     btnContainer.style.display="none"
     clicked=false
   }else{
+    console.log(btnContainer)
     btnContainer.style.display="block"
     clicked=true
   }
 }
 
-function getTasks() {
+const addMe = async () => {
   var h = document.getElementById('group_name')
   var name = h.innerHTML
-	// Can't call /tasks anymore need to send the groupId through
-  var groupId = "/" + name
-  fetch(groupId, {
-    method: 'GET',
-    headers: {
-      "Content-type": "application/json"
+  const res = await fetch("/api/", {method: "POST", body: name})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+}
+
+var groupName = "test"; //Change this to be set later
+var groupId;
+
+const getMyGroup = async () => {
+  const res = await fetch("/api/groups", {method: "GET"});
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  for(var i = 0; i < data.data.length; i++)
+  {
+    console.log(data.data[i].name)
+    if(groupName == data.data[i].name) {
+      console.log(data.data[0]._id)
+      groupId = data.data[i]._id
     }
-  })
-  .then(function(response) {
-      return response.json();
-  })
-  .then(function(json) {
-    console.log("Array: " + JSON.stringify(json))
-    for(var i = 0; i < json.length; i++)
-    {
-      var task = json[i]
-      console.log("append")
-      if(task.column > cols) {
-        console.log("We need to add a new column")
-        addCol()
-      }
-      appendNewInfo(task)
+  }
+  console.log("Our group: " + groupId)
+  getTasks()
+}
+
+const getTasks = async () => {
+  const res = await fetch("/api/tasks/" + groupId, {method: "GET"})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data.data[0])
+  for (var i = 0; i < data.data.length; i++) {
+    var task = data.data[i]
+    if(task.columnName > cols) {
+      console.log("We need to add a new column")
+      addCol()
     }
-  })
+    const dateStr = task.dateDue;
+    console.log(dateStr)
+    const date = dateStr.substring(0, 10)
+    console.log(date)
+    task.dateDue = date
+    appendNewInfo(task)
+  }
 }
 
 //What column are we adding to?
 var currentCol = 1;
 
-var addTask = function (e) {
+var addTask = async (e) => {
 
   e.preventDefault()
 
@@ -113,33 +138,23 @@ var addTask = function (e) {
   const input4 = document.querySelector( '#tags')
   const input5 = document.querySelector( '#tdesc')
 
-  console.log(document.getElementById('group_name'))
-  var h = document.getElementById('group_name')
-  // Add in code for getting the group's name later
-  var name = h.innerHTML
-  const json = { group: name, task: input.value, duedate: input2.value, assignee: input3.value, tags: input4.value, description: input5.value, column: currentCol }
+  const json = { name: input.value, desc: input5.value, columnName: currentCol, assignees: input3.value, tags: input4.value, dateDue: input2.value }
   const body = JSON.stringify( json )
   console.log(body)
-
-  fetch( '/add', {
-         method:'POST',
-         body,
-         headers: {
-          "Content-type": "application/json"
-        }
-    })
-    .then( function( response ) {
-      return response.json()
-    })
-    .then( function( json ) {
-      console.log( json )
-      var task = json
-      appendNewInfo(task)
-  })
+  console.log(groupId)
+  const res = await fetch("/api/tasks/" + groupId, {method: "POST", body: body, headers: {"Content-type": "application/json"}})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data.data)
+  var task = data.data
+  const dateStr = task.dateDue;
+  const date = dateStr.substring(0, 10)
+  task.dateDue = date
+  appendNewInfo(task)
   modal.style.display = "none";
 }
 
-var editTask = function (e) {
+var editTask = async (e) => {
   e.preventDefault()
   //Edit the task
   const input = document.querySelector( '#t_name' )
@@ -148,42 +163,54 @@ var editTask = function (e) {
   const input4 = document.querySelector( '#t_tags')
   const input5 = document.querySelector( '#t_desc')
 
-  tEdit = ids[ids.length-1]
-  tEdit.task = input.value
-  tEdit.duedate = input2.value
-  tEdit.assignee = input3.value
+  const tEdit = ids[ids.length-1]
+  tEdit.name = input.value
+  tEdit.dateDue = input2.value
+  tEdit.assignees = input3.value
   tEdit.tags = input4.value
-  tEdit.description = input5.value
+  tEdit.desc = input5.value
 
-  fetch( '/edit', {
-         method:'POST',
-         body: JSON.stringify(tEdit),
-         headers: {
-          "Content-type": "application/json"
-        }
-    })
-    .then( function( response ) {
-      location.reload()
-    })
+  console.log(JSON.stringify(tEdit))
+
+  const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "PATCH", body: JSON.stringify(tEdit), headers: {"Content-type": "application/json"}})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+  const edTask = data.data
+  const dateStr = edTask.dateDue;
+  console.log(dateStr)
+  const date = dateStr.substring(0, 10)
+  console.log(date)
+  edTask.dateDue = date
+  appendNewInfo(edTask, true)
+  editmodal.style.display = "none";
+  // fetch( '/edit', {
+  //        method:'POST',
+  //        body: JSON.stringify(tEdit),
+  //        headers: {
+  //         "Content-type": "application/json"
+  //       }
+  //   })
+  //   .then( function( response ) {
+  //     location.reload()
+  //   })
 }
 
-function delTask(task) {
-  fetch('/delete', {
-    method: 'POST',
-    body: JSON.stringify({id: task._id}),
-    headers: {
-      "Content-type": "application/json"
-    }
-  })
-  .then( function( response ) {
-    location.reload()
-  })
+var delTask = async (task) => {
+  const res = await fetch("/api/tasks/" + groupId + "/" + task._id, {method: "DELETE"})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+  const col = document.getElementsByClassName('tasks')
+  var removeTask = document.getElementById(task._id)
+  var column = col[task.columnName-1]
+  column.removeChild(removeTask)
 }
 
 // Tells us which task was just clicked on
 const ids = []
 
-function appendNewInfo(task) {
+function appendNewInfo(task, taskEdit=false) {
   // Create elements
   var div = document.createElement("div");
   var name = document.createElement("p");
@@ -193,10 +220,9 @@ function appendNewInfo(task) {
   var btnDiv = document.createElement("div");
   var deleteBtn = document.createElement("a")
   var del = document.createElement("i")
-  // Are we editing?
-  //var editing = true
   // Set attributes
   div.setAttribute('class', 'task_card card-panel col s1')
+  div.setAttribute('id', task._id)
   name.setAttribute('class', 'task_item')
   due.setAttribute('class', 'task_item')
   assigned.setAttribute('class', 'task_item')
@@ -211,9 +237,9 @@ function appendNewInfo(task) {
     editing = false
   }
   btnDiv.appendChild(deleteBtn)
-  name.appendChild(document.createTextNode(task.task))
-  due.appendChild(document.createTextNode(task.duedate))
-  assigned.appendChild(document.createTextNode(task.assignee))
+  name.appendChild(document.createTextNode(task.name))
+  due.appendChild(document.createTextNode(task.dateDue))
+  assigned.appendChild(document.createTextNode(task.assignees))
   div.appendChild(name)
   div.appendChild(due)
   div.appendChild(assigned)
@@ -225,7 +251,14 @@ function appendNewInfo(task) {
     console.log(ids[ids.length-1])
     editing = true
   }
-  col[task.column-1].appendChild(div)
+  console.log(task.columnName)
+  if(taskEdit == true) {
+    const oldNode = document.getElementById(task._id)
+    col[task.columnName-1].replaceChild(div, oldNode)
+  }
+  else {
+    col[task.columnName-1].appendChild(div)
+  }
 }
 
 //The total number of columns
@@ -297,8 +330,12 @@ var delCol = function() {
   }
 }
 
+const returnHome = async () => {
+  window.location = "/"
+}
+
 window.onload = function() {
-    getTasks()
+    getMyGroup()
 
     const tsButton = document.querySelector( '#task_submit' )
     tsButton.onclick = addTask
@@ -307,6 +344,12 @@ window.onload = function() {
     ntButton.onclick = function() {
       makeTask(1)
     }
+
+    const dcButton = document.getElementById("col-1")
+    dcButton.onclick = listClicked
+
+    const backButton = document.getElementById("back_btn")
+    backButton.onclick = returnHome
 
     const cButton = document.getElementById("cancel")
     cButton.onclick = cancelTask
