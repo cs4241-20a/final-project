@@ -1,23 +1,31 @@
-require('dotenv').config();
 const express = require('express');
-
-const app = express();
-const passport = require("passport");
-const bcrypt = require("bcrypt");
-const session = require("express-session");
-const compression = require("compression");
 const morgan = require("morgan");
+const bcrypt = require("bcrypt");
+const passport = require("passport");
+const dotenve = require('dotenv').config();
+const compression = require("compression");
+const session = require("express-session");
 const MongoClient = require("mongodb").MongoClient;
 const LocalStrategy = require("passport-local").Strategy;
-const port = 5000;
+const favicon = require('serve-favicon');
 
+const port = 5000;
 const uri = process.env.FP_URI;
 const mongoSetup = {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 };
 
+const app = express();
+app.use(express.static("public"));
+
+app.use(compression());
+app.use(express.json());
 app.set("trust proxy", 1); // trust first proxy
+app.use(morgan("combined"));
+app.use(passport.session());
+app.use(passport.initialize());
+app.use(favicon(__dirname + '/public/assets/favicon.ico'))
 app.use(
   session({
     secret: process.env.FP_SECRET,
@@ -26,12 +34,6 @@ app.use(
     cookie: { secure: false },
   })
 ); 
-app.use(express.json());
-app.use(express.static("public"));
-app.use(compression());
-app.use(morgan("combined"));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use((req, res, next) => {
 	next();
