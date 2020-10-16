@@ -123,19 +123,19 @@ function update () {
 }
 
 function addOtherPlayers(self, playerInfo) {
-	let playerTwo = self.add.sprite(playerInfo.x, 450, 'main')
-						  .setOrigin(0.5, 0.5)
-						  .setDisplaySize(50, 80);
+	//let playerTwo = self.add.sprite(playerInfo.x, 450, 'main')
+	//					  .setOrigin(0.5, 0.5)
+	//					  .setDisplaySize(50, 80);
 	
 	// if (playerInfo.team === 'blue') {
 	// 	otherPlayer.setTint(0x0000ff);
 	// } else {
 	// 	otherPlayer.setTint(0xff0000);
 	// }
-	self.physics.add.collider(playerTwo, platforms);
+	//self.physics.add.collider(playerTwo, platforms);
 	
-	playerTwo.playerId = playerInfo.playerId;
-	self.otherPlayers.add(playerTwo);
+	//playerTwo.playerId = playerInfo.playerId;
+	//self.otherPlayers.add(playerTwo);
 }
 
 function addPlayers(self, playerInfo) {

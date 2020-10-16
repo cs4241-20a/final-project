@@ -14,10 +14,6 @@ const loginProc = (json) => {
 	    game = new Phaser.Game(config);
     }
     
-
-    fetch("/api/getData")
-        .then((response) => response.json())
-        //.then((json) => dataParse(json));
 };
 
 const submit = function (e) {
@@ -40,7 +36,6 @@ const submit = function (e) {
       .then((response) => response.json())
       .then((json) => {
         
-        dataParse(json);
         task.value = "";
         elementEnable();
       });
