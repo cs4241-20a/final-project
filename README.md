@@ -9,9 +9,9 @@ Unify is a Spotify comparison app, which takes in two Spotify user IDs and retur
 
 To use this application, first login to spotify using the Login button on the first page. You will be prompted in a new tab to sign in with Spotify, after which you can close the window. If you do not have a personal spotify account, we have created one to test with: 
 
-Username: 
-Password: 
-User ID: 
+Username: spotifytest464@gmail.com
+Password: SpotifyTest1!
+User ID: va7asgfbmjkl2etzjoa93gd61
 
 You may also use our personal Spotify IDs to test with: 
 - 8fmej01kfv0584zx6zasc6fwb
