@@ -1,9 +1,3 @@
-// @author: Luke Bodwell
-"use strict";
-
-const fs = require("fs");
-const path = require("path");
-const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const mongoose = require("mongoose");
@@ -41,16 +35,6 @@ try {
 	}).then(() => console.log("Connected to db"));
 } catch (err) {
 	console.error(err);
-}
-
-// Enable logging middleware based on environment
-if (NODE_ENV === "development") {
-	app.use(morgan("dev"));
-} else if (NODE_ENV === "production") {
-	app.use(morgan("common", {
-		skip: (req, res) => res.statusCode < 400,
-		stream: fs.createWriteStream(path.join(__dirname, "access.log"), {flags: "a"})
-	}));
 }
 
 // Middleware processing
@@ -97,16 +81,4 @@ app.get("*", (req, res) => {
 	res.status(404).send("Error 404. Not found.");
 });
 
-
-// Web socket handling
-io.on("connection", socket => {
-	console.log("A user has connected");
-	socket.broadcast.emit("message", "A user has connected");
-	socket.emit("message", "Hello user!");
-	socket.on("disconnect", () => {
-		console.log("A user has disconnected");
-		io.emit("message", "A user has disconnected");
-	});
-});
-
-server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

@@ -6,9 +6,22 @@
 		<title>CS4241 Team 19 Final Project - Home</title>
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 		<script src="'/js/home.js" defer></script>
 		<style>
+			.collection {
+				font-weight: bolder;
+			}
+
+			* {
+				font-family: 'Roboto', sans-serif;
+			}
+
+			h1 {
+				font-weight: 300;
+			}
+
 			header, main {
 				padding-left: 300px;
 			}
@@ -23,25 +36,19 @@
 				padding-top: 5px;
 			}
 		</style>
-		<script>
-			$(document).ready(function(){
-				$('.sidenav').sidenav();
-				$('#sidenav-left').sidenav({ edge: 'left' });
-			});
-		</script>
   	</head>
 
-	<body>
+	<body class="teal lighten-5">
 		<!-- Navbar -->
 		<header>
-			<nav>
+			<nav class="teal lighten-1">
 				<div class="nav-wrapper">
 					<div class="row">
 						<div class="col s12">
-							<a href="#" data-target="sidenav-left" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
-							<a href="#" class="brand-logo">Hello, ${NAME}</a>
+							<a href="#" data-target="sidenav-1" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+							<a href="#" class="brand-logo" style="font-weight: 300;">Hello, ${NAME}</a>
 							<div class="container logout-btn">
-								<a class="right waves-effect waves-light btn-large"><i class="material-icons right">exit_to_app</i>Log out</a>
+								<a class="right waves-effect waves-light btn-large teal lighten-3"><i class="material-icons right">exit_to_app</i>Log out</a>
 							</div>
 						</div>
 					</div>
@@ -50,7 +57,7 @@
 		</header>
 
 		<!-- Sidebar -->
-		<div id="sidenav-left" class="sidenav sidenav-fixed">
+		<div id="sidenav-1" class="sidenav sidenav-fixed">
 			<h5 style="padding-left: 1em">Received Invites</h5>
 			<div class="collection">
 				<!--
@@ -83,8 +90,8 @@
 
 		<main>
 			<div class="container">
-				<h1 class="center">Tasks</h1>
-				<div class="collection">
+				<h1 class="center teal-text text-darken-3">Tasks</h1>
+				<div class="collection z-depth-1">
 					<!--
 
 					BACKEND PEOPLE: Tasks go here and use this format.
@@ -97,7 +104,7 @@
 					<a href="#!" class="collection-item">Task D</a>
 				</div>
 				<br>
-				<h1 class="center">Recent Activity</h1>
+				<h1 class="center teal-text text-darken-3">Groups</h1>
 				<!--
 
 				BACKEND PEOPLE: Recent activity goes here.
@@ -116,34 +123,36 @@
 				-->
 				<div class="row">
 					<div class="col s12 m4">
-						<div class="card">
+						<div class="card" id="TaskDirect">
 							<div class="card-content">
-								<span class="card-title"><a href="#">Card Title</a></span>
+								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
 								<p>Sample Text</p>
-								<a class="btn-floating btn-large waves-effect waves-light red right" href="#"><i class="material-icons">add</i></a>
+								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
 							</div>
 						</div>
 					</div>
 					<div class="col s12 m4">
 						<div class="card">
 							<div class="card-content">
-								<span class="card-title"><a href="#">Card Title</a></span>
+								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
 								<p>Sample Text</p>
-								<a class="btn-floating btn-large waves-effect waves-light red right" href="#"><i class="material-icons">add</i></a>
+								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
 							</div>
 						</div>
 					</div>
 					<div class="col s12 m4">
 						<div class="card">
 							<div class="card-content">
-								<span class="card-title"><a href="#">Card Title</a></span>
+								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
 								<p>Sample Text</p>
-								<a class="btn-floating btn-large waves-effect waves-light red right" href="#"><i class="material-icons">add</i></a>
+								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</main>
-  	</body>
+		<script type="text/javascript" src="js/home.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+	</body>
 </html>
