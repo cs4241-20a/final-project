@@ -34,4 +34,4 @@ After logging into the main page, users can then choose from the three topics an
 - Jialin Song: CSS, Youtube API (not used) 
 
 ## Project Video
-Link to the project video: 
+Link to the project video: https://youtu.be/S5v72ewAans
