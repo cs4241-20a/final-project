@@ -1,0 +1,6 @@
+venv/
+my_app/__pycache__
+app.db
+*.pyc
+.env
+node_modules
