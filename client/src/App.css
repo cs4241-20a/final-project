@@ -160,3 +160,41 @@ svg.delete-btn{
   margin-right: auto;
   display: inline-block !important;
 }
+
+div.text {
+  position: absolute;
+  left: 0px;
+  top: 75px;
+}
+
+div.form-group {
+  position: absolute;
+  left: -70px;
+  top: 140px;
+}
+
+div.name {
+  position: absolute;
+  left: 73px;
+  top: -100px;
+}
+
+div.title {
+  position: absolute;
+  left: 73px;
+  top: -10px;
+}
+
+div.custom-control {
+  position: absolute;
+  left: 130px;
+  top: 220px;
+}
+
+.form-control {
+  width: 280% !important;
+}
+
+.form-label{
+  width: 200% !important;
+}
