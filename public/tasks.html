@@ -7,15 +7,15 @@
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
 </head>
-<body>
+<body class="teal lighten-5">
 <nav>
-  <div class="nav-wrapper">
+  <div class="nav-wrapper teal lighten-1">
     <div class="row">
       <div class="col s12">
         <a href="#" class="brand-logo" id="group_name">Group's Tasks</a>
         <div class="container task-btns">
-          <a class="right waves-effect waves-light btn-large" id="back_btn"><i class="material-icons right">arrow_back</i>Back</a>
-          <a class="right waves-effect waves-light btn-large" id="invite_btn"><i class="material-icons right">group_add</i>Invite People</a>
+          <a class="right waves-effect waves-light btn-large teal lighten-3" id="back_btn"><i class="material-icons right">arrow_back</i>Back</a>
+          <a class="right waves-effect waves-light btn-large teal lighten-3" id="invite_btn"><i class="material-icons right">group_add</i>Invite People</a>
         </div>
       </div></div>
   </div>
@@ -23,10 +23,11 @@
 <div id="main_container">
   <div id="task_container">
     <div class="inner-container">
-      <div class="task_lists card-panel materialize-red lighten-2" onclick="listClicked()" id="col-1">
-        <h4 class="white-text center-align row">List Name</h4>
+      <div class="task_lists card-panel teal lighten-2" onclick="listClicked()" id="col-1">
+        <a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
+        <h5 class="white-text center-align row" style="font-weight: 300;">List Name</h5>
         <!-- Added in a div to make sure tasks appear before the button-->
-        <div class="tasks" id="1">
+        <div class="tasks white" id="1">
         <!-- <div class="task_card card-panel col s1" id="card1" onclick="editTask()">
           <p class="task_name task_item">Task Name</p>
           <p class="task_date task_item">Due Date</p>
@@ -36,21 +37,22 @@
           </div>
         </div> -->
       </div>
-        <a class="add_task centerwaves-effect waves-light btn-large" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
-      </div>
-      <div class="btn_container" id="btn_container">
-        <a class="centerwaves-effect waves-light btn-small" id="add_list"><i class="material-icons right">add</i></a>
-        <a class="centerwaves-effect waves-light btn-small" id="delete_list"><i class="material-icons right">delete</i></a>
+        <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
       </div>
     </div>
+    <div class="btn_container" id="btn_container">
+      <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" id="add_list"><i class="material-icons right">add</i>Add A New List</a>
+    </div>
   </div>
-  <div id="chat_box" class="right container card-panel materialize-red lighten-2">
-    <div id="chat_head" style="height: 7%;background-color: teal;color: white;text-align: center;margin-bottom: 5px">Chat</div>
-    <div id="chat_feed" class="container white" style="height: 75%;width: 92%;margin: 0 auto;border: solid 1px"></div>
-    <div class="container white" style="bottom: 2px">
+  <div id="chat_box" class="right container card-panel teal lighten-2">
+      <h5 id="chat_head" style="height: 5%;color: white;text-align: center;margin-bottom: 5px">Chat</h5>
+    <div id="chat_feed" class="container white" style="height: 74%;width: 93%;margin: 0 auto;border: 1px solid grey; box-shadow: 1px 1px 5px grey"></div>
+    <div class="container white" style="bottom: 2px;width: 92%">
       <form name="message" action="" class="right" >
-        <label for="chat_input"></label><input type="text" id="chat_input" name="chat_msg" style="width: 100%">
-        <input name="submitmsg" type="submit" id="submit_chat" value=">" class="teal">
+        <label for="chat_input"></label><input type="text" id="chat_input" name="chat_msg" style="width: 100%; background-color: white; border-radius: 5px; margin-top: 10px; padding-left: 10px; padding-right: 5px; border: 1px solid grey; box-shadow: 1px 1px 5px grey">
+        <button class="btn waves-effect waves-light" type="submit" id="submit_chat" name="action">Submit
+          <i class="material-icons right">send</i>
+        </button>
       </form>
     </div>
   </div>
@@ -67,8 +69,8 @@
       <label for="tassignee">Assigned To: </label><input type="text" id="tassignee" placeholder="Assignees"><br>
       <label for="tags">Tags: </label><input type="text" id="tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="tdesc" placeholder="Task Description"><br>
-      <input type="submit" id="task_submit" value="Confirm">
-      <button id="cancel">Cancel</button>
+      <input type="submit" id="task_submit" value="Confirm" class="btn-small waves-effect waves-light">
+      <button id="cancel" class="btn-small waves-effect waves-light">Cancel</button>
     </form>
   </div>
 

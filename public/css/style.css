@@ -1,10 +1,13 @@
 body{
     position: relative;
+    font-family: 'Roboto', sans-serif;
+    overflow-y: hidden;
 }
 
 .task-btns {
     padding-top: 5px;
 }
+
 
 /*button{*/
 /*    background-color: black;*/
@@ -34,7 +37,7 @@ body{
 #chat_box{
     margin: 10px;
     background-color: white;
-    height: 85vh;
+    height: 87vh;
     width: 250px;
     position: fixed;
     right: 0;
@@ -52,15 +55,6 @@ body{
     cursor: pointer;
 }
 
-.task_lists:hover + .btn_container{
-    display: block;
-}
-
-.btn_container{
-    display: none;
-}
-
-
 /*.task_contents{*/
 /*    width: 95%;*/
 /*    padding: 5px;*/
@@ -72,13 +66,19 @@ body{
 /*}*/
 
 .btn_container{
-    width: 75px;
+    width: 300px;
     float: right;
+    height: 75vh;
+    position: relative;
 }
 
 .btn_container button{
     display: block;
-    width: 50%;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    margin: 0;
 }
 
 .task_card{
@@ -93,7 +93,6 @@ body{
 }
 
 .btn{
-    width: 50px;
     margin: 5px;
 }
 
