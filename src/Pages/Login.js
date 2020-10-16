@@ -13,12 +13,12 @@ export class Login extends Component {
             <form action="/login" method="POST">
               <div class="input-group">
                 <label>Username</label>
-                <input type="text" />
+                <input type="text" id="username" name="username" placeholder="username here" required/>
               </div>
 
               <div class="input-group">
                 <label>Password</label>
-                <input type="password" />
+                <input type="password" id="password" name="password" placeholder="password here" required/>
               </div>
 
               <button type="submit" class="login-button">Log In</button>

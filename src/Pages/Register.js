@@ -12,17 +12,17 @@ export class Register extends Component {
             <form action="/register" method="POST">
               <div class="input-group">
                 <label>Username</label>
-                <input type="text" />
+                <input type="text" id="username" name="username" placeholder="username here" required/>
               </div>
 
               <div class="input-group">
                 <label>Password</label>
-                <input type="password" />
+                <input type="password" id="password" name="password" placeholder="password here" required/>
               </div>
 
               <div class="input-group">
                 <label>Confirm Password</label>
-                <input type="password" />
+                <input type="password" id="confirmPass" name="confirmPass" placeholder="confirm password here" required/>
               </div>
 
               <button type="submit" class="login-button">Register</button>
