@@ -23,8 +23,6 @@ A few things to note when using this application:
 
 - Unfortunately, due to time constraints, this application does not communcicate server-sider errors to the front-end. Failure to load the content on form submission may be due to an incorrect User ID, a timeout connection to Spotify API, or a non-existing Spotify token (you would have to login again). All errors are, however, logged in the console.
 
-- Probably other things I can't think of rn
-
 ### Technologies
 Unify uses React and Bootstrap on the frontend, with a Node backend. Various libraries were leveraged to assist us. In addition, we used Websocket to implement our realtime chat data, and the Spotify API to retrieve our data. 
 
