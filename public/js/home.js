@@ -1,5 +1,6 @@
 var goTask = document.getElementById('TaskDirect')
 goTask.onclick = function(e) {
+  console.log("Clicked")
   e.preventDefault()
   fetch('/tasks', {
     method: 'GET',
@@ -7,7 +8,5 @@ goTask.onclick = function(e) {
       "Content-type": "application/json"
     }
   })
-  .then(function(response) {
-      return response.json();
-  })
+  .then(response => response.json())
 }
