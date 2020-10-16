@@ -48,7 +48,7 @@ const indexeddbProvider = new IndexeddbPersistence('string-demo', ydoc)
 const webrtcProvider = new WebrtcProvider('string-demo', ydoc)
 
 //Sync clients with the y-websocket provider
-const webSocketProtocol = 'https:' ? 'wss' : 'ws'
+const webSocketProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
 const websocketProvider = new WebsocketProvider(
   `${webSocketProtocol}://${window.location.host}`, 'string-demo', ydoc
 )
