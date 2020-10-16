@@ -174,20 +174,14 @@ var editTask = async (e) => {
 }
 
 var delTask = async (task) => {
-  const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "DELETE"})
+  const res = await fetch("/api/tasks/" + groupId + "/" + task._id, {method: "DELETE"})
   const data = await res.json()
   console.log(JSON.stringify(data))
   console.log(data)
-  // fetch('/delete', {
-  //   method: 'POST',
-  //   body: JSON.stringify({id: task._id}),
-  //   headers: {
-  //     "Content-type": "application/json"
-  //   }
-  // })
-  // .then( function( response ) {
-  //   location.reload()
-  // })
+  const col = document.getElementsByClassName('tasks')
+  var removeTask = document.getElementById(task._id)
+  var column = col[task.columnName-1]
+  column.removeChild(removeTask)
 }
 
 // Tells us which task was just clicked on
@@ -203,10 +197,9 @@ function appendNewInfo(task) {
   var btnDiv = document.createElement("div");
   var deleteBtn = document.createElement("a")
   var del = document.createElement("i")
-  // Are we editing?
-  //var editing = true
   // Set attributes
   div.setAttribute('class', 'task_card card-panel col s1')
+  div.setAttribute('id', task._id)
   name.setAttribute('class', 'task_item')
   due.setAttribute('class', 'task_item')
   assigned.setAttribute('class', 'task_item')

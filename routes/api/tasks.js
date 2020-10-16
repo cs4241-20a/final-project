@@ -75,14 +75,9 @@ router.get("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
  */
 router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
-	console.log(req)
 	const groupId = req.params.groupId;
-	console.log(groupId)
-	console.log("My group id: " + req.params.groupId)
-	console.log(req.body)
 	const {name, desc, columnName, assignees, tags, dateDue} = req.body;
 	const {username} = req.user;
-	console.log("User " + username)
 
 	try {
 		// Find the id of the user with the given username
@@ -113,18 +108,22 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 router.delete("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
+	console.log("What group are we in? " + groupId)
+	console.log("What task should I delete? " + taskId)
 	const {username} = req.user;
+	console.log("Who wants to delete something? " + username)
 
 	try {
 		// Find the the user with the given username
-		const currentUser = await User.findOne({username})._id;
+		const userId = await User.findOne({username});
+		console.log("user's id: " + userId)
 		// Verify that a group exists with the given id that the current user is a member of
-		const group = await Group.findOne({_id: groupId, members: currentUser._id});
+		const group = await Group.findOne({_id: groupId, members: userId._id});
 		// Find and delete the task with the given id from the group with the given id
 		await Task.findOneAndDelete({_id: taskId, groupId: group._id});
 
 		// Send result
-		res.status(204).json({success: true});
+		res.status(200).json({success: true});
 	} catch (err) {
 		// Report errors
 		res.status(500).json({success: false, error: err});
