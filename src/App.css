@@ -72,10 +72,10 @@ body{
   font-style: normal;
 }
 .teamheader1{
-  background-image: linear-gradient(to left, black, #000001, #000002, #000003, #000004, #00014a);
+  background-image: linear-gradient(to left, black, #000001, #000002, #000003, #00014a);
 }
 .teamheader2{
-  background-image: linear-gradient(to right, black, #000001, #000002, #000003, #000004, #4a0000);
+  background-image: linear-gradient(to right, black, #000001, #000002, #000003, #4a0000);
 }
 .results{
   height: auto;
