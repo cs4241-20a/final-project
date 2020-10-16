@@ -1,5 +1,5 @@
 # Unify
-Danya Barron, Connor Burri, Molly Wirtz
+Danya Baron, Connor Burri, Molly Wirtz
 
 Unify is a Spotify comparison app, which takes in two Spotify user IDs and returns the songs in common between the users. Also provided are some additional data analysis, such as top albums in common and the average song popularity of each user's songs, and a real-time global chat functionality. 
 
