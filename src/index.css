@@ -13,6 +13,7 @@ body {
   background-color: #191414;
   height: 100%;
   overscroll-behavior-y: none;
+  text-align: center;
 }
 
 #root {

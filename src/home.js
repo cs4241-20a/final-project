@@ -123,17 +123,6 @@ export default class Home extends React.Component {
         })
     }
 
-    login() {
-        fetch('/login', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then((response) => response.json()).then((link) => {
-            window.open(link['link'], '_blank');
-        });
-    }
-
     setChatState() {
         this.setState({
             showChat: true
@@ -449,7 +438,7 @@ export default class Home extends React.Component {
                                 <Input type="text" placeholder="Enter another Spotify username" className="form-control"  value={this.state.user2} onChange={this.handleUser2Change}  required></Input>
                             </FormGroup>
                             <FormGroup>
-                                <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.login}>Login</Button>
+                                {/* <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.login}>Login</Button> */}
                             </FormGroup>
                             <FormGroup>
                                 <Button className="btn btn-lg btn-block" style={{backgroundColor: "#1DB954", border: "none", outline: "none"}} onClick={this.getSongs}>Analyze data</Button>
