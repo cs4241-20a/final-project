@@ -2,6 +2,7 @@ let config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
+    parent: 'my-game',
     physics: {
         default: 'arcade',
         arcade: {
@@ -16,7 +17,7 @@ let config = {
     }
 };
 
-let game = new Phaser.Game(config);
+let game = null;
 
 let player, platforms, stars, scoreText, score = 0;
 
@@ -104,11 +105,16 @@ const loginProc = (json) => {
     document.getElementById("loggedUsername").innerHTML = json.username;
 
     document.getElementById("loginPage").setAttribute("style", "display:none");
-    document.getElementById("otherPages").setAttribute("style", "");
+    document.getElementById("gamePage").setAttribute("style", "");
+    
+    if ( document.getElementById('my-game').innerHTML === "") {
+	    game = new Phaser.Game(config);
+    }
+    
 
     fetch("/api/getData")
         .then((response) => response.json())
-        .then((json) => dataParse(json));
+        //.then((json) => dataParse(json));
 };
 
 const submit = function (e) {
@@ -147,10 +153,10 @@ const logout = () => {
         document.getElementById("loggedUsername").innerHTML = "";
 
         document.getElementById("loginPage").setAttribute("style", "");
-        document.getElementById("otherPages").setAttribute("style", "display:none");
+        document.getElementById("gamePage").setAttribute("style", "display:none");
 
-        const items = document.getElementById("items");
-        items.innerHTML = "";
+        game.destroy(true, false);
+
     });
 };
 
