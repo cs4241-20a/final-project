@@ -7,7 +7,6 @@ import {GoogleLogin} from 'react-google-login'
 import {withRouter} from 'react-router-dom'
 
 import API from '../API'
-import FileUpload from '../components/file_upload'
 
 const responseGoogle = (response) => {
 	console.error(response)
@@ -94,10 +93,8 @@ class Home extends React.Component {
 		let title_txt = <h1 id="title-string"></h1>
 		let login_button = null
 		let redirect = null
-		let upload_form = <FadeIn><FileUpload on_file_upload={this.on_file_upload}/></FadeIn>
 		if(!this.state.authenticated){
 			login_button = this.login_button
-			upload_form = null
 		}
 
 		if(this.state.redirect === true){
@@ -128,9 +125,6 @@ class Home extends React.Component {
 				<Container fluid>
 					<Row className="justify-content-md-center">
 						<Col id="login-button" className="text-center">{login_button}</Col>
-					</Row>
-					<Row className="justify-content-md-center">
-						<Col id="upload-form">{upload_form}</Col>
 					</Row>
 					{redirect}
 				</Container>
