@@ -134,22 +134,9 @@ var addTask = async (e) => {
   const res = await fetch("/api/tasks/" + groupId, {method: "POST", body: body, headers: {"Content-type": "application/json"}})
   const data = await res.json()
   console.log(JSON.stringify(data))
-  console.log(data)
-  // fetch( '/add', {
-  //        method:'POST',
-  //        body,
-  //        headers: {
-  //         "Content-type": "application/json"
-  //       }
-  //   })
-  //   .then( function( response ) {
-  //     return response.json()
-  //   })
-  //   .then( function( json ) {
-  //     console.log( json )
-  //     var task = json
-  //     appendNewInfo(task)
-  // })
+  console.log(data.data)
+  var task = data.data
+  appendNewInfo(task)
   modal.style.display = "none";
 }
 
