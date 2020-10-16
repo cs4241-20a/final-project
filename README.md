@@ -3,7 +3,8 @@ Team member: Xiaowei Chen,  Yaru Gong, Mingxi Liu, Xiaoyue Lyu, Jialin Song
 
 ## Project Description
 The team created a web-based real-time video commenting project where users are able to watch the embedded videos inside the web page and share “flying” comments as they watch. There are three videos of choice: music, cooking and talk show. By allowing sharing the real-time comments while users watch the video, the team aims to create a sense of shared watching experience.
-Link to the project: 
+
+Link to the project: https://team11-livevideocomment.herokuapp.com/login
 
 ## Additional instructions
 When the users first enter the website, a login page will show up. Users can sign in if they have accounts. Otherwise, they could click the “register” link to sign up for a new account.
