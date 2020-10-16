@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import "./css/login.css"
 
 export class Login extends Component {
-
   render() {
     return (
       <body>
