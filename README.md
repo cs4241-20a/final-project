@@ -1,56 +1,49 @@
-# cs4241-FinalProject
+# Modifiable Tic-Tac-Toe : CS4241 Final Project Team 27
+## by Tyler Sprowl, Garrett Smith and Phoebe Yeung
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+http://finalproj-cs4241.glitch.me/
 
-## General description
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+1. DESCRIPTION
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+    This project sets up a lobby system allowing two players to play tictactoe with each other in a lobby. Lobby creation requires a K x K board size, where K is set by the lobby creator. The win condition for this game is to match K tiles in a row. 
 
-## Project ideation
+2. INSTRUCTIONS
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+    Host must specify a name and a (3-9) value for board size. The guest must connect to the host's lobby by using the match ID shown to the host in the second option, and a username in the first option.
+        
+3. TECHNOLOGIES
 
-## Logistics
+    WebSockets (socket.io) were used to create custom board sizes and send other data. JQuery was used to modify properties of the application.
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+4. CHALLENGES
 
-### Deliverables
+    Getting websocket to communicate the same information to all users of a lobby, creating custom board sizes, checking games for a winner. Issues arose with websockets when importing to Glitch which Charlie cleared up for another team. What should be delegated to the server and what to the clients was also an issue, our model assumes that clients wont attempt to cheat.
+        
+5. CONTRIBUTIONS
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+    Phoebe Yeung was responsible for the user interface including javascript functionality.
+    Tyler Sprowl was responsible for the server, code refactorization and some websocket functionality.
+    Garrett Smith was responsible for board size modification, some server functions and some js backend.
+        
+6. PROJECT VIDEO
+    
+https://youtu.be/iMezVN9ATgo
+        
+# REFERENCES USED
+https://support.glitch.com/t/secure-websocket-server-in-glitch-project/3093
 
-There are no other scheduled checkpoints for your project. 
+https://stackoverflow.com/questions/10050799/socket-io-websocket-send-message-not-working-with-firefox-and-chrome
 
-#### Turning in Your Outline / Project
+https://socket.io/docs/namespaces/
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+and all of https://socket.io/
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
+https://medium.com/@antoniomignano/node-js-socket-io-express-tic-tac-toe-10cff9108f7
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
+https://dev.to/bornasepic/pure-and-simple-tic-tac-toe-with-javascript-4pgn
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+https://ayushgp.github.io/Tic-Tac-Toe-Socket-IO/
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
+https://medium.com/@dineshmaxi/understanding-the-use-of-websockets-with-one-example-coding-part-35912679a19b
 
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.

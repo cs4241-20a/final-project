@@ -1,0 +1,65 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+
+.container {
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+  display: flex;
+  background: #fff;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 700px;
+  min-height: 500px;
+  border-radius: 5%;
+  margin: auto;
+}
+h1 {
+  color: white;
+  text-align: center;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+
+table {
+  border-collapse: collapse;
+  margin: auto;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+
+td {
+  background-color: #666;
+  border: 5px solid white;
+  font-size: 80px;
+  color: #fff;
+  border-radius: 10%;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+#player {
+  padding: 1rem;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+
+
+body {
+  display: flex;
+  background: url('https://cdn.glitch.com/f1c540e0-d06f-4c84-81fe-bd01e4f31410%2Fcool-background.png?v=1602724826230');
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}

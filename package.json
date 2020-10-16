@@ -1,0 +1,15 @@
+{
+  "name": "CS4241 Final Project",
+  "version": "2.1.0",
+  "description": "Tic-tac-toe game with custom board size",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Garrett Smith, Pheobe Yeung, Tyler Sprowl",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "socket.io": "^1.7.4"
+  }
+}
