@@ -1,0 +1,38 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="login.js"></script>
+  <link href="/style.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="loginform">
+    <label id="username">
+     <input type="text" id="user" placeholder="Username" />
+   </label>
+   <button id="submit" type="submit">LOGIN</button>
+
+ </div>
+
+
+ <script>
+
+
+  document.getElementById("submit").addEventListener("click", function() {
+    var username = document.getElementById("user").value;
+console.log(username)
+    fetch("/login", {
+      method: "POST",
+      body: JSON.stringify({ username: username }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(response => response.json())
+    .then(window.location.href = "/index.html")
+  });
+
+</script>
+</body>
+</html>
