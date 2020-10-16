@@ -326,13 +326,22 @@ export default class Home extends React.Component {
             groupValues = groupValues.slice(0, 3)
 
             for (let i = 0 ; i < groupValues.length ; i++) {
-                if (groupValues[i] === undefined) { return }
+                if (groupValues[i] === undefined) { 
+                    return 
+                }
+
                 let fullObj = group1MapAll.get(groupValues[i].title)
+
+                if (fullObj[0].artists/*.name*/ === undefined) { 
+                    return 
+                }
+
                 groupValues[i].artist = fullObj[0].artists.name
                 groupValues[i].image = fullObj[0].images[1]
+                 
             }
 
-            if (this.state.showTable && groupValues.length > 0) {
+            if (this.state.showTable && groupValues.length > 2 && this.state.songsJSON.length > 2) {
                 return (
                     <Container className="mt-5 mb-10">
                         <h4 className="subtitle">Top Albums in Common</h4>
@@ -342,7 +351,7 @@ export default class Home extends React.Component {
                                 // add images too 
                                 <div className="artistName">
                                     <div>
-                                        <img style={{width: "100%", height: "100%"}} alt="album art" src={value.image.url}/>
+                                        <img style={{width: "240px", height: "240px"}} alt="album art" src={value.image.url}/>
                                     </div>
                                     <p className="statsTitle">{value.title}</p>
                                     <p>{value.artist}</p>
