@@ -38,7 +38,7 @@ class API {
 				console.error(res.data)
 				return
 			}
-			this.auth_callback(res.data)
+			this.auth_callback(res.data.user)
 		})
 	}
 
