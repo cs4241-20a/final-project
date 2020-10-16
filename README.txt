@@ -1,3 +1,7 @@
+Team 3 - Truman Larson and Ryan Birchfield 
+https://team3-final-project-tl-rb.herokuapp.com/ 
+
+
 We have created a draft simulator for league of legends. Users will create a randomized room code and join through there.
 The first two clients will be assigned a side to pick from while any additional users will be assigned spectators.
 Users will then draft in tournament draft order.
