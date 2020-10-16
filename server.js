@@ -1,14 +1,17 @@
 const WebSocket = require('ws')
 const http = require('http')
-const wss = new WebSocket.Server({ noServer: true })
+const express  = require( 'express' ),
+      app      = express(),
+//const wss = new WebSocket.Server({ noServer: true })
 const setupWSConnection = require('./node_modules/y-websocket/bin/utils.js').setupWSConnection
 
-const port = process.env.YJS_PORT || 1234
+const port = process.env.PORT || 1234
 
-const server = http.createServer((request, response) => {
-  response.writeHead(200, { 'Content-Type': 'text/plain' })
-  response.end('okay')
-})
+const server = http.createServer(app)
+
+app.use( express.static( 'build' ) )
+
+const wss = new WebSocket.Server({ server })
 
 wss.on('connection', setupWSConnection)
 
