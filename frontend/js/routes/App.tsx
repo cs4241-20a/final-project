@@ -92,7 +92,7 @@ const App: FunctionComponent = props => {
                     });
                     break;
                 case "startChallenge":
-                    history.push(`/play/${data.challenge}`);
+                    history.push(`/play/${data.challenge}?reason=race`);
                     break;
             }
         });

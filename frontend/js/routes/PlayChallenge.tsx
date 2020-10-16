@@ -97,8 +97,15 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
     }, [challengeId]);
 
     const [isVerifyingSolution, setIsVerifyingSolution] = useState(false);
+    const [isRaceStarting, setIsRaceStarting] = useState(false);
 
     useEffect(() => {
+        if (new URLSearchParams(history.location.search).get('reason') === 'race') {
+            setIsRaceStarting(true);
+            history.replace(`/play/${challengeId}`);
+            setSolution(challenge?.starterCode ?? "");
+        }
+
         function listener(e) {
             const data = JSON.parse(e.data);
 
@@ -116,7 +123,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         }
         ws.addEventListener("message", listener);
         return () => ws.removeEventListener("message", listener);
-    }, []);
+    }, [challenge, history.location.search]);
 
     async function submit() {
         setIsVerifyingSolution(true);
@@ -210,7 +217,18 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
                     </Paper>
                 </Pane>
             </SplitPane>
-            <Snackbar open={isVerifyingSolution} anchorOrigin={{vertical: "bottom", horizontal: "left"}} message="Verifying solution..."/>
+            <Snackbar
+                open={isVerifyingSolution}
+                anchorOrigin={{vertical: "bottom", horizontal: "left"}}
+                message="Verifying solution..."
+            />
+            <Snackbar
+                open={isRaceStarting}
+                onClose={() => setIsRaceStarting(false)}
+                autoHideDuration={4000}
+                anchorOrigin={{vertical: "bottom", horizontal: "left"}}
+                message="The race has begun. Start coding!"
+            />
         </div>
     );
 };
