@@ -113,7 +113,7 @@ export const TopBar: FunctionComponent<TopBarProps> = ({
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={openDrawer}>
                     <MenuIcon/>
                 </IconButton>
-                <Typography variant="h6" className={classes.title}>Website Name</Typography>
+                <Typography variant="h6" className={classes.title}>Adversary</Typography>
                 {siteSettings.currentLobbyId
                     ? <Button variant="outlined" className={classes.inheritColor} disabled>{siteSettings.currentLobbyId}</Button>
                     : <>

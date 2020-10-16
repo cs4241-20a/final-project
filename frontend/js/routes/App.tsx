@@ -46,13 +46,15 @@ const App: FunctionComponent = props => {
     const theme = React.useMemo(() =>
         createMuiTheme({
             palette: {
-                primary: { main: blue[700] },
-                secondary: { main: pink[400] },
                 ...(siteSettings.theme === 'dark' ? {
-                    type: 'dark'
+                    type: 'dark',
+                    primary: { main: blue[700] },
+                    secondary: { main: pink[200] },
                 } : 
                 {
-                    type: 'light'
+                    type: 'light',
+                    primary: { main: blue[700] },
+                    secondary: { main: pink[400] },
                 })
             },
             overrides: {
