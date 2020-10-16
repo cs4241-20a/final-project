@@ -8,8 +8,8 @@ October 16, 2020
 
  
 
-**Link to Project Application:**   
-**Link to Project Video:**
+**Link to Project Application:** https://team14-finalproject.herokuapp.com/  
+**Link to Project Video:** https://youtu.be/u96wRCCX5-k  
 
  
 
