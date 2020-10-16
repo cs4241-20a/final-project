@@ -10,7 +10,7 @@ html, body {
 }
 
 .full-screen-container {
-    background-image: url("../imgs/battleship.jpg");
+    background-image: url("../imgs/battleready.jpg");
     height: 100vh;
     width: 100vw;
     background-size: cover;

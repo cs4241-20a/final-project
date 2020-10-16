@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+body {
+    font-family: "Lato";
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.8);
+    padding: 1px;
+}
+p {
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+h1 {
+    text-align: center;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+#WelcomeText {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 5%;
+}
+
+
+table, th, td {
+    border: 1px solid black;
+    margin-top: 20px;
+    padding: 2px;
+    align-items: center;
+}
+
+
+.center {
+    justify-content: center;
+    display:flex;
+}
+
+#loginbtn {
+    justify-content: center;
+}
