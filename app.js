@@ -2,12 +2,16 @@ const express = require('express');
 const morgan = require("morgan");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const favicon = require('serve-favicon');
 const dotenve = require('dotenv').config();
 const compression = require("compression");
 const session = require("express-session");
 const MongoClient = require("mongodb").MongoClient;
 const LocalStrategy = require("passport-local").Strategy;
-const favicon = require('serve-favicon');
+
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io').listen(server);
 
 const port = 5000;
 const uri = process.env.FP_URI;
@@ -16,15 +20,15 @@ const mongoSetup = {
 	useUnifiedTopology: true,
 };
 
-const app = express();
 app.use(express.static("public"));
 
 app.use(compression());
 app.use(express.json());
 app.set("trust proxy", 1); // trust first proxy
 app.use(morgan("combined"));
-app.use(passport.session());
 app.use(passport.initialize());
+app.use(passport.session());
+app.use((req, res, next) => next());
 app.use(favicon(__dirname + '/public/assets/favicon.ico'))
 app.use(
   session({
@@ -35,8 +39,23 @@ app.use(
   })
 ); 
 
-app.use((req, res, next) => {
-	next();
+let players = {};
+
+io.on('connection', (socket) =>  {
+	console.log('new user connected');
+	players[socket.id] = {
+		playerId: socket.id,
+		x: Math.floor(Math.random() * 150 + 50),
+		team: 'black'
+	}
+
+	socket.emit('currentPlayers', players);
+	socket.broadcast.emit('newPlayer', players[socket.id]);
+
+	socket.on('disconnect', () => {
+		delete players[socket.id];
+		io.emit('disconnect', socket.id);
+	});
 });
 
 passport.serializeUser(function (user, done) {
@@ -155,6 +174,8 @@ app.get("/", (_, response) => {
 	response.sendFile(__dirname + "/public/index.html");
 });
 
-const listener = app.listen(process.env.PORT || port, () => {
+const listener = server.listen(process.env.PORT || port, () => {
 	console.log("Your app is listening on port " + listener.address().port);
 });
+
+
