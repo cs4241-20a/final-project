@@ -1,6 +1,9 @@
 // @author: Luke Bodwell
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
+const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const mongoose = require("mongoose");
@@ -95,4 +98,15 @@ app.get("*", (req, res) => {
 	res.status(404).send("Error 404. Not found.");
 });
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+// Web socket handling
+io.on("connection", socket => {
+	console.log("A user has connected");
+	socket.broadcast.emit("message", "A user has connected");
+	socket.emit("message", "Hello user!");
+	socket.on("disconnect", () => {
+		console.log("A user has disconnected");
+		io.emit("message", "A user has disconnected");
+	});
+});
+
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
