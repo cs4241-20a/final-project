@@ -1,4 +1,4 @@
-# CS4241 Group 12 Final Project
+# CS4241 Group 14 Final Project
 
 Matthew Gulbin, Alan Curiel, Madeline Perry, Saniya Syeda  
 CS4241  

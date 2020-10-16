@@ -17,7 +17,7 @@
           <i class="fa fa-cog fa-lg allText"></i>
         </button>
             <div class="dropdown-content accentElement">
-                <a href="/auth">Log In</a>
+                <a href="/auth" id="logBtn">Log In</a>
                 <!--Once user logs in and is authenticated, add function to change Log In to Log Out-->
                 <a onclick="showColorPicker(0)">
             Background Color
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <p class="greeting allText" id = "userGreeting">
+        <p class="greeting allText" id="userGreeting">
             Please log in.
         </p>
         <div>
@@ -41,9 +41,9 @@
           <i class="fa fa-caret-down"></i>
         </button>
                 <div class="dropdown-content accentElement" id="rightContent">
-                    <a onclick="genNewTextCard('test', 'this is a test')">Text</a>
-                    <a onclick="genNewToDoBox('todo', [{'name' : 'fix all this', 'checked' : 'false'}])">Todo</a>
-                    <a onclick="genNewBookmarksBox('bookmarks', ['www.google.com', 'www.wpi.edu'],0,0,true)">Bookmarks</a>
+                    <a onclick="genNewTextCard('test', 'this is a test', 0, 0, true)">Text</a>
+                    <a onclick="genNewToDoBox('todo', [{'name' : 'fix all this', 'checked' : 'false'}],0,0,true)">Todo</a>
+                    <a onclick="genNewBookmarksBox('bookmarks', ['www.example.com', 'www.wpi.edu'],0,0,true)">Bookmarks</a>
                 </div>
             </div>
         </div>
@@ -71,29 +71,10 @@
         </div>
     </div>
 
-    <div class="card primaryElement" id="testCard">
-        <div id="testCardheader" class="accentElement" style="padding: 0px;
-        cursor: move;
-        color: black;
-        z-index: 10;
-        background-color: #d3d3d3;">&nbsp;</div>
-        <div class="container">
-            <h4 contenteditable="true" class="allText"><b>Sample Title</b></h4>
-            <p contenteditable="true" class="allText">Sample Card Text</p>
-        </div>
-            <button class="button allText cardSaveBtn" onclick="updateCard('testCard', 'Card Title', 'text', 'Card Test')">
-              <i class="fa fa-save fa-lg"></i>
-            </button>
-            <button class="button allText cardCloseBtn" onclick="deleteCard('testCard')">
-              <i class="fa fa-times-circle fa-lg"></i>
-            </button>
+    <!-- DONT DELETE THIS!!!!! -->
+    <div class="card" id="testCard" hidden>
+
     </div>
-    </div>
-    <!--Drag and drop API: https://api.jqueryui.com/draggable/-->
-
-
-
-
 
 </body>
 
@@ -209,9 +190,15 @@
             textElem[i].style.color = settings.fontColor;
         }
 
-        //change the greeting to say Hello, [USER]
-        var elem = document.getElementById("userGreeting");
-        elem.innerHTML = `Hello, ${settings.username}!`;
+        if (settings.username !== undefined) {
+            //change the greeting to say Hello, [USER]
+            var elem = document.getElementById("userGreeting");
+            elem.innerHTML = `Hello, ${settings.username}!`;
+
+            //change log in button to log out
+            var logBtn = document.getElementById("logBtn");
+            logBtn.innerHTML = "Log Out";
+        }
     }
 
     // Function should be implemented to log error in html
@@ -326,7 +313,7 @@
     }
 
     function updateCard(_id, title, type, items) {
-
+        console.log(items);
         //get the posX and posY
         var card = document.getElementById(_id);
         var cardOffset = offset(card);
@@ -435,10 +422,10 @@
     async function loadBoxesToPage() {
         const tempBoxes = await getBoxes();
         tempBoxes.forEach(box => {
-            if (box.type === 'text') {
-                // genOldTextBox(box.title, box.items, box._id);
-            } else if (box.type === 'todo') {
-                // genOldToDoBox(box.title, box.items, box._id);
+            if (box.type === 'Text') {
+                genNewTextCard(box.title, box.items, box.posY, box.posX, false, box._id);
+            } else if (box.type === 'ToDo') {
+                genNewToDoBox(box.title, box.items, box.posY, box.posX, false, box._id);
             } else if (box.type === 'Bookmarks') {
                 genNewBookmarksBox(box.title, box.items, box.posY, box.posX, false, box._id);
             } else {
@@ -471,11 +458,13 @@
     }
 
     //generates a new Text card that's not in the database
-    function genNewTextCard(title, description) {
-        var _id = genIDValue();
+    function genNewTextCard(title, description, y, x, saveToDatabase, id) {
+        var _id = id ? id : genIDValue();
         const newDiv = document.createElement("div");
         document.body.appendChild(newDiv);
         newDiv.id = _id;
+        newDiv.style.top = y + 'px'
+        newDiv.style.left = x + 'px'
         newDiv.className = "card primaryElement";
 
         //var cards = document.getElementById("cards");
@@ -489,7 +478,7 @@
             <h4 contenteditable="true" class = "allText"><b>${title}</b></h4>
             <p contenteditable="true" class = "allText">${description}</p>
           </div>
-          <button class="button allText cardSaveBtn" onclick="updateBox('${_id}', '${title}', 0, 0, 'text', '${description}')">
+          <button class="button allText cardSaveBtn" onclick="updateBox('${_id}', '${title}', 0, 0, 'Text', '${description}')">
               <i class="fa fa-save fa-lg"></i>
             </button>
             <button class="button allText cardCloseBtn" onclick="deleteCard('${_id}')">
@@ -497,12 +486,17 @@
             </button>
         `;
 
-
+        updateColors();
         dragElement(newDiv);
 
+        if (saveToDatabase) {
+            let newY = newDiv.style.top ? newDiv.style.top.replace('px', '') : 0
+            let newX = newDiv.style.left ? newDiv.style.left.replace('px', '') : 0
 
-        //dummy values for posX and posY for now
-        addBox(_id, title, 0, 0, "Text", description);
+            addBox(_id, title, newY, newX, "Text", description);
+        }
+
+
 
     }
 
@@ -541,6 +535,7 @@
 
     function genNewToDoBox(title, items, y, x, saveToDatabase, id) {
         var _id = id ? id : genIDValue();
+        var tempToDo = items;
         const newToDo = document.createElement("div");
         document.body.appendChild(newToDo);
         newToDo.id = _id;
@@ -548,10 +543,10 @@
         var idName = String(_id + "header");
         console.log(idName);
         console.log(items);
-        console.log(y)
+
         newToDo.style.top = y + 'px'
         newToDo.style.left = x + 'px'
-        console.log(newToDo.style.top)
+
         //var cards = document.getElementById("cards");
         newToDo.innerHTML += `
           <div id="${idName}" class = "accentElement" style="padding: 0px;
@@ -565,7 +560,7 @@
                 
                 </ul>
           </div>
-          <button class="button allText cardSaveBtn" onclick="updateCard('${_id}', '${title}', 'ToDo', '${items}')">
+          <button class="button allText cardSaveBtn" onclick="updateCard('${_id}', '${title}', 'ToDo', '${tempToDo}')">
               <i class="fa fa-save fa-lg"></i>
             </button>
             <button class="button allText cardCloseBtn" onclick="deleteCard('${_id}')">
@@ -573,30 +568,137 @@
             </button>
         `;
 
-
+        updateColors();
         dragElement(newToDo);
         var newUL = document.getElementById(`${_id}ToDos`);
         items.forEach(item => {
             var newli = document.createElement('li');
+            newli.style.setProperty('display', 'flex')
+            newli.style.setProperty('flex-direction', 'row')
+            newli.style.setProperty('align-items', 'center')
             var newcb = document.createElement('input');
             newcb.setAttribute('id', `${item.name}li`);
             newcb.setAttribute('type', "checkbox");
-            if (item.checked === 'false'){
+            if (item.checked === 'false') {
                 newcb.checked = false;
             } else {
                 newcb.checked = true;
             }
+            newcb.onclick = (e) => {
+                console.log(item.checked);
+                if (newcb.checked === false) {
+                    item.checked = 'false';
+                    tempToDo.splice(0, tempToDo.length)
+                    let cb = newUL.getElementsByTagName("INPUT")
+                    let lb = newUL.getElementsByTagName("LABEL")
+                    for (let i = 0; i < cb.length; i++) {
+                        var newstr = {
+                            name: lb[i].innerText,
+                            checked: cb[i].checked
+                        }
+
+                        tempToDo.push(newstr);
+                    }
+                    console.log(tempToDo);
+                    console.log(item.checked);
+                } else {
+                    item.checked = 'true';
+                    tempToDo.splice(0, tempToDo.length)
+                    let cb = newUL.getElementsByTagName("INPUT")
+                    let lb = newUL.getElementsByTagName("LABEL")
+                    for (let i = 0; i < cb.length; i++) {
+                        var newstr = {
+                            name: lb[i].innerText,
+                            checked: cb[i].checked
+                        }
+
+                        tempToDo.push(newstr);
+                    }
+                    console.log(tempToDo);
+                    console.log(item.checked);
+                }
+            }
             newcb.setAttribute('value', item.name);
             var newlabel = document.createElement('label');
+            newlabel.setAttribute('contenteditable', 'true');
             newlabel.innerText = item.name;
 
             newli.appendChild(newcb);
             newli.appendChild(newlabel);
             newUL.appendChild(newli);
+
+
         });
 
+        var addToDodiv = document.createElement('div');
+        addToDodiv.setAttribute("align", "right");
+        var addToDobtn = document.createElement('button');
+        addToDobtn.class = "button";
+        addToDobtn.id = "addToDobtn";
+        addToDobtn.style.margin = "8px 17px 0px 0px";
+        addToDobtn.innerHTML = '<i class="fa fa-plus"></i>';
+        addToDobtn.onclick = (e) => {
+            var newUL = document.getElementById(`${_id}ToDos`);
+            var newli = document.createElement('li');
+            newli.style.setProperty('display', 'flex')
+            newli.style.setProperty('flex-direction', 'row')
+            newli.style.setProperty('align-items', 'center')
+            var newcb = document.createElement('input');
+            newcb.setAttribute('id', `genToDoli`);
+            newcb.setAttribute('type', "checkbox");
+            newcb.checked = false;
+            newcb.onclick = (e) => {
+                if (newcb.checked === false) {
+                    //item.checked = 'false';
+                    tempToDo.splice(0, tempToDo.length)
+                    let cb = newUL.getElementsByTagName("INPUT")
+                    let lb = newUL.getElementsByTagName("LABEL")
+                    for (let i = 0; i < cb.length; i++) {
+                        var newstr = {
+                            name: lb[i].innerText,
+                            checked: cb[i].checked
+                        }
+
+                        tempToDo.push(newstr);
+                    }
+                    console.log(tempToDo);
+
+                } else {
+                    //item.checked = 'true';
+                    tempToDo.splice(0, tempToDo.length)
+                    let cb = newUL.getElementsByTagName("INPUT")
+                    let lb = newUL.getElementsByTagName("LABEL")
+                    for (let i = 0; i < cb.length; i++) {
+                        var newstr = {
+                            name: lb[i].innerText,
+                            checked: cb[i].checked
+                        }
+
+                        tempToDo.push(newstr);
+                    }
+                    console.log(tempToDo);
+
+                }
+            }
+            var newlabel = document.createElement('label');
+            newlabel.setAttribute('contenteditable', 'true');
+            newlabel.innerText = 'new ToDo';
+
+            newli.appendChild(newcb);
+            newli.appendChild(newlabel);
+            newUL.appendChild(newli);
+        }
+        addToDodiv.appendChild(addToDobtn);
+        newToDo.appendChild(addToDodiv);
+
         //dummy values for posX and posY for now
-        addBox(_id, title, 0, 0, "ToDo", items);
+
+        if (saveToDatabase) {
+            let newY = newToDo.style.top ? newToDo.style.top.replace('px', '') : 0
+            let newX = newToDo.style.left ? newToDo.style.left.replace('px', '') : 0
+
+            addBox(_id, title, newY, newX, "ToDo", items);
+        }
     }
 
     function genOldToDoBox(title, items, _id) {
@@ -618,13 +720,19 @@
         dragElement(newToDo);
         document.body.appendChild(newToDo);
 
-        //dummy values for posX and posY for now
-        //addBox(title, 0, 0, "ToDo", items);
+        if (saveToDatabase) {
+            let newY = newDiv.style.top ? newDiv.style.top.replace('px', '') : 0
+            let newX = newDiv.style.left ? newDiv.style.left.replace('px', '') : 0
+
+            //addBox(title, newY, newX, "todo", items)
+        }
+
     }
 
 
-    function genNewBookmarksBox(title, links, y, x, saveToDatabase, id) {
+    function genNewBookmarksBox(title, links, y, x, w, h, saveToDatabase, id) {
         var _id = id ? id : genIDValue();
+        var tempLinks = links;
         const newDiv = document.createElement("div");
         document.body.appendChild(newDiv);
         newDiv.id = _id;
@@ -635,8 +743,19 @@
         console.log(y)
         newDiv.style.top = y + 'px'
         newDiv.style.left = x + 'px'
+        newDiv.style.width = w;
+        newDiv.style.height = h;
         console.log(newDiv.style.top)
-            //var cards = document.getElementById("cards");
+
+        var deslinks = "["
+        tempLinks.map((item, i) => {
+            if (i !== deslinks.length) {
+                deslinks = `${deslinks}'${item}',`
+            } else {
+                deslinks = `${deslinks}'${item}']`
+            }
+        })
+
         newDiv.innerHTML += `
           <div id="${idName}" class ="accentElement" style="padding: 0px;
                                   cursor: move;
@@ -649,13 +768,14 @@
               
               </ul>
           </div>
-          <button class="button allText cardSaveBtn" onclick="updateCard('${_id}', '${title}', 'Bookmarks', 'Card Test')">
+          <button class="button allText cardSaveBtn" onclick="updateCard('${_id}', '${title}', 'Bookmarks', ${deslinks})">
               <i class="fa fa-save fa-lg"></i>
             </button>
             <button class="button allText cardCloseBtn" onclick="deleteCard('${_id}')">
               <i class="fa fa-times-circle fa-lg"></i>
             </button>
         `;
+        updateColors();
 
         dragElement(newDiv);
         var newUL = document.getElementById(`${_id}Bookmarks`);
@@ -667,12 +787,18 @@
             newlink.setAttribute('href', `http://${link}`);
             newlink.innerText = `${link}`;
             var newToggleEdit = document.createElement("button");
-            newToggleEdit.id = "button";
+            newToggleEdit.id = "bookmarkEdit";
             newToggleEdit.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i>';
             newToggleEdit.onclick = (e) => {
                 var tempCE = newlink.getAttribute('contenteditable');
                 if (tempCE === "true") {
                     newlink.setAttribute('href', `http://${newlink.innerText}`)
+                    tempLinks.splice(0, tempLinks.length)
+                    let as = newUL.getElementsByTagName("A")
+                    for (let i = 0; i < as.length; i++) {
+                        tempLinks.push(as[i].innerText);
+                        console.log(tempLinks.toString)
+                    }
                     newlink.setAttribute('contenteditable', 'false');
                 } else {
                     newlink.setAttribute('contenteditable', 'true');
@@ -682,29 +808,40 @@
             newli.appendChild(newlink);
             newli.appendChild(newToggleEdit);
 
-            
+
             newUL.appendChild(newli);
 
-           
+
 
         });
         var addBookmarkdiv = document.createElement('div');
         addBookmarkdiv.setAttribute("align", "right")
         var addBookmarkbtn = document.createElement('button');
-        addBookmarkbtn.innerText = 'Add New Bookmark';
+        addBookmarkbtn.id = "addBookmarkbtn";
+        addBookmarkbtn.style.margin = "9px 17px 0px 0px";
+        addBookmarkbtn.innerHTML = '<i class="fa fa-plus"></i>';
         addBookmarkbtn.onclick = (e) => {
             var newUL = document.getElementById(`${_id}Bookmarks`);
+
             var newli = document.createElement('li');
             var newlink = document.createElement('a');
             newlink.setAttribute('contenteditable', 'false');
             newlink.setAttribute('href', `http://www.google.com`);
             newlink.innerText = `www.google.com`;
             var newToggleEdit = document.createElement("button");
-            newToggleEdit.innerText = 'Edit';
+            newToggleEdit.id = "newBookmarkEdit"
+            newToggleEdit.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i>';
             newToggleEdit.onclick = (e) => {
+                var originalValue = newlink.innerText;
                 var tempCE = newlink.getAttribute('contenteditable');
                 if (tempCE === "true") {
                     newlink.setAttribute('href', `http://${newlink.innerText}`)
+                    tempLinks.splice(0, tempLinks.length)
+                    let as = newUL.getElementsByTagName("A")
+                    for (let i = 0; i < as.length; i++) {
+                        tempLinks.push(as[i].innerText)
+                        console.log(tempLinks.toString)
+                    }
                     newlink.setAttribute('contenteditable', 'false');
                 } else {
                     newlink.setAttribute('contenteditable', 'true');
@@ -723,12 +860,11 @@
             let newY = newDiv.style.top ? newDiv.style.top.replace('px', '') : 0
             let newX = newDiv.style.left ? newDiv.style.left.replace('px', '') : 0
 
-
             addBox(_id, title, newX, newY, "Bookmarks", links);
         }
     }
 
-    // takes the list elmnt and list of links and adds the links as 
+    // takes the list elmnt and list of links and generates the list
     function genBookmarksList(listElmnt, links) {
         var ul = document.getElementById(listElmnt);
         links.forEach(link => {
@@ -753,8 +889,6 @@
 
 
     }
-
-
 
     /*  function genOldBookmarksBox(title, link, _id) {
           const newDiv = document.createElement("div");
@@ -822,16 +956,6 @@
     }
 
 
-
-
-
-    // Make the DIV element draggable:
-    var draggableElements = document.getElementsByClassName("card");
-
-    for (var i = 0; i < draggableElements.length; i++) {
-        dragElement(draggableElements[i]);
-    }
-
     function dragElement(elmnt) {
         var pos1 = 0,
             pos2 = 0,
@@ -847,7 +971,7 @@
             //PREVENTS EDITING THE TEXT AND RESIZING THE ELEMENT
             //CURRENTLY THIS IS WHAT IS HAPPENING
             //elmnt.onmousedown = dragMouseDown;
-            console.log("In the else case");
+            //console.log("In the else case");
         }
 
         function dragMouseDown(e) {
