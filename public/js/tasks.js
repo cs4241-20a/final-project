@@ -106,34 +106,12 @@ const getTasks = async () => {
   console.log(data.data[0])
   for (var i = 0; i < data.data.length; i++) {
     var task = data.data[i]
-    if(task.column > cols) {
+    if(task.columnName > cols) {
       console.log("We need to add a new column")
       addCol()
     }
     appendNewInfo(task)
   }
-  // fetch(groupId, {
-  //   method: 'GET',
-  //   headers: {
-  //     "Content-type": "application/json"
-  //   }
-  // })
-  // .then(function(response) {
-  //     return response.json();
-  // })
-  // .then(function(json) {
-  //   console.log("Array: " + JSON.stringify(json))
-  //   for(var i = 0; i < json.length; i++)
-  //   {
-  //     var task = json[i]
-  //     console.log("append")
-  //     if(task.column > cols) {
-  //       console.log("We need to add a new column")
-  //       addCol()
-  //     }
-  //     appendNewInfo(task)
-  //   }
-  //})
 }
 
 //What column are we adding to?

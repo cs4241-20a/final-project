@@ -3,7 +3,7 @@
 
 const express = require("express");
 const moment = require("moment");
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 
 const Task = require("../../models/Task");
 const Group = require("../../models/Group");
@@ -73,7 +73,7 @@ router.get("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
  * Auth: Required
  * Desc: Adds a new task to the given group with the given information. User must belong to the group. Verified by session.
  */
-router.post("/:groupId", bodyParser.json(), ensureAuthenticated, async (req, res) => {
+router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	console.log(req)
 	const groupId = req.params.groupId;
