@@ -1,4 +1,4 @@
-# final-project
+# The Game Hub
 
 Project Group #25
 
