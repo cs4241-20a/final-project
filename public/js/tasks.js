@@ -63,7 +63,8 @@ function getTasks() {
   var h = document.getElementById('group_name')
   var name = h.innerHTML
 	// Can't call /tasks anymore need to send the groupId through
-  fetch('/tasks', {
+  var groupId = "/" + name
+  fetch(groupId, {
     method: 'GET',
     headers: {
       "Content-type": "application/json"
