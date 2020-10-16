@@ -1,0 +1,101 @@
+body{
+  background-color: #EAF4F4;
+  color: #6B9080;
+  font-family: hobo-std, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+#login-container{
+  background-color: #CCE3DE;
+}
+
+#heading {
+  background-color: #6B9080;
+}
+
+#heading p{
+  color: #EAF4F4;
+}
+
+#localVideo {
+  height:240px;
+  width:360px;
+}
+
+.receivedVideo
+{
+  height:240px;
+  width:360px;
+}
+
+#login-btn {
+  background-color: #6B9080;
+  color: #EAF4F4;
+  border:none;
+}
+
+#login-btn:hover {
+  background-color: #A4C3B2;
+}
+
+#login {
+  background-color: #6B9080;
+  color: #EAF4F4;
+  border:none;
+}
+
+#login:hover {
+  background-color: #A4C3B2;
+}
+
+#register {
+  background-color: #6B9080;
+  color: #EAF4F4;
+  border:none;
+}
+
+#register:hover {
+  background-color: #A4C3B2;
+}
+#chatContainer{
+  float: right;
+}
+
+#chatbox{
+  width:250px;
+  height:400px;
+}
+#chatContainer{
+  width:281px;
+}
+#messageLine{
+  resize:none;
+  width:281px;
+}
+#mainApp{
+  display: inline-flex;
+  width:100%;
+  
+}
+#others{
+  float:left;
+}
+textarea{
+  resize:none;
+}
+.wrapper {
+    margin-left:auto;
+    margin-right:auto;
+    width:960px;
+}
+.messageWrap{
+  margin-left:auto;
+    margin-right:auto;
+    width:250px;
+}
+.bodyWrap{
+    margin-left:auto;
+    margin-right:auto;
+    width:100%;
+}
