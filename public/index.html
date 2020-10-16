@@ -9,9 +9,6 @@
 </head>
 
 <body class="bg-dark">
-    <script src="js/imports/phaser.min.js"></script>
-    <script src="js/scripts.js"></script>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
         <a class="navbar-brand" href="#"> RPG chat game</a>
 
@@ -38,15 +35,14 @@
     <div class="container-fluid bg-dark">
         <div id="loginPage">
             <div class="container p-3">
-    			<div id="my-game"></div>
+    			<div id="my-game" class="d-flex justify-content-center"></div>
             </div>
         </div>
-
-        <div class="pages" id="otherPages" style="display: none">
-            <br />
-
-        </div>
     </div>
+
+    <script src="js/imports/phaser.min.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/game.js"></script>
 </body>
 
 </html>
