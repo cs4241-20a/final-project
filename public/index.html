@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>el gemO</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--     <link
+      href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@200&display=swap"
+      rel="stylesheet"
+    /> -->
+    <link rel="stylesheet" href="https://use.typekit.net/wmh4cfq.css" />
+    <link rel="stylesheet" href="index.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+    <script src="./js/script.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default" id="heading">
+      <div class="navbar-header" style="float:left;">
+        <a class="navbar-brand" href="index.html">
+          <img
+            alt="el gemO"
+            src="https://cdn.glitch.com/09d254f3-e4b8-42df-a79d-0dc50196edf3%2Fvideo-camera.png?v=1602623475522"
+          />
+        </a>
+      </div>
+      <p
+        class="navbar-text"
+        style="font-family: hobo-std, sans-serif; font-weight: 400; font-style: normal; color:orange; font-size:27px;"
+      >
+        el gemO
+      </p>
+    </nav>
+
+    <!-- alerts-->
+    <div
+      class="alert alert-success alert-dismissible"
+      style="display:none;"
+      id="success"
+    >
+      <a href="#" class="close" data-dismiss="alert" aria-label="close"
+        >&times;</a
+      >
+      <strong>Success!</strong> Login was successful.
+    </div>
+
+    <div
+      class="alert alert-success alert-dismissible"
+      style="display:none;"
+      id="regSuccess"
+    >
+      <a href="#" class="close" data-dismiss="alert" aria-label="close"
+        >&times;</a
+      >
+      <strong>Success!</strong> New Account was Created.
+    </div>
+
+    <div
+      class="alert alert-danger alert-dismissible"
+      style="display:none;"
+      id="fail420"
+    >
+      <a href="#" class="close" data-dismiss="alert" aria-label="close"
+        >&times;</a
+      >
+      <strong>Error!</strong> Email already linked to an account.
+    </div>
+
+    <div
+      class="alert alert-danger alert-dismissible"
+      style="display:none;"
+      id="regFail"
+    >
+      <a href="#" class="close" data-dismiss="alert" aria-label="close"
+        >&times;</a
+      >
+      <strong>Error!</strong> New Account was not created.
+    </div>
+
+    <div
+      class="alert alert-info alert-dismissible"
+      style="display:none;"
+      id="invalInfo"
+    >
+      <a href="#" class="close" data-dismiss="alert" aria-label="close"
+        >&times;</a
+      >
+      <strong>Invalid Info!</strong> Invalid Email or Password was entered.
+    </div>
+
+    <div
+      class="alert alert-success alert-dismissible"
+      style="display:none;"
+      id="createSuccess"
+    >
+      <a href="#" class="close" data-dismiss="alert" aria-label="close"
+        >&times;</a
+      >
+      Successfully created room.
+    </div>
+
+    <div
+      class="alert alert-success alert-dismissible"
+      style="display:none;"
+      id="joinSuccess"
+    >
+      <a href="#" class="close" data-dismiss="alert" aria-label="close"
+        >&times;</a
+      >
+      Successfully joined room.
+    </div>
+
+    <!-- Login section-->
+
+    <div class="container" id="welcome">
+      <div class="wrapper">
+        <div class="jumbotron" id="login-container">
+          <h1 class="display-4">Welcome</h1>
+          <hr class="my-4" />
+          <p>
+            Login to join a conversation!
+          </p>
+          <button
+            id="login-btn"
+            type="button"
+            class="btn btn-info"
+            data-toggle="collapse"
+            data-target="#demo"
+          >
+            Login
+          </button>
+          <div id="demo" class="collapse">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label"
+                  >Email</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="inputEmail3"
+                    placeholder="Email"
+                    style="width:20%"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label"
+                  >Password</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="inputPassword3"
+                    placeholder="Password"
+                    style="width:20%"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"></div>
+              </div>
+            </form>
+            <button id="login" onclick="login()">
+              Sign In
+            </button>
+            <button id="register" onclick="register()">
+              Register
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- here in this div is where our main things, video, chat, joining and making rooms-->
+    <div class="bodyWrap">
+      <div class="container" id="mainApp" style="display:none;">
+        <div class="container" id="others">
+          <h2 id="currentRoom">
+            Current Room:
+          </h2>
+
+          <!--I removed the class from this div because it was causing the injected video elements to ignore their width and height -Noah -->
+          <!-- it was setting its own dimensions so that makes sense, I had no idea if there were any given so i just used that -Sean -->
+          <div id="videoContainer">
+            <video
+              style="background-color: black"
+              id="localVideo"
+              muted
+            ></video>
+          </div>
+               <div class="container-sm d-sm-flex">
+              <button
+                type="button"
+                class="btn btn-info"
+                id="turnOnVideo"
+                onclick="enableVideo()"
+              >
+                Enable Video
+              </button>
+              <button
+                type="button"
+                class="btn btn-info"
+                id="turnOffVideo"
+                onclick="disableVideo()"
+              >
+                Disable Video
+              </button>
+              <br />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Room Id To Create Or Join"
+                id="roomId"
+                style="width:250px;"
+                disabled="true"
+              />
+              <button
+                type="button"
+                class="btn btn-success"
+                id="createRoom"
+                onclick="createRoom()"
+                disabled="true"
+              >
+                Create Room
+              </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                id="joinRoom"
+                onclick="joinRoom()"
+                disabled="true"
+              >
+                Join Room
+              </button>
+              <p style="color: #A0A0A0">
+                <em>Cannot Create or Join a Room until you Enable Video</em>
+              </p>
+            </div>
+            </div>
+            
+          
+          
+          <div class="container-sm" id="chatContainter">
+            <div id="chat">
+              <h1>
+                 Chat
+              </h1>
+              <textarea
+                disabled
+                multiple
+                class="form-control"
+                wrap="hard"
+                id="chatbox"
+              ></textarea
+              >
+            </div>
+            <div class="row" id="messageLine">
+              <div class="col-lg-6">
+                <div class="messageWrap">
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Send a message"
+                      id="chatMessage"
+                    />
+                    <span class="input-group-btn">
+                      <button
+                        class="btn btn-default"
+                        type="button"
+                        onclick="message()"
+                      >
+                        chat
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <!-- /input-group -->
+              </div>
+              <!-- /.col-lg-6 -->
+            </div>
+            <!-- /.row -->
+          </div>
+        </div>
+      </div>
+  </body>
+</html>
