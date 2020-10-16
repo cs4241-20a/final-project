@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2)
     },
     toggleRegisterBtn: {
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.primary,
         cursor: "pointer"
     }
 }));
