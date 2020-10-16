@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Final</title>
@@ -12,6 +13,7 @@
 
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
 </head>
+
 <body>
     <main role="main" class="container" id="app">
         <div class="snake">
@@ -19,6 +21,13 @@
             <canvas id="canvas" width="800" height="800">
             </canvas>
         </div>
+        <!-- The golbal score board -->
+        <table id="score-board">
+            <tr v-for="player in scoreBoard" :id="'plater' + player.player_name" :key="player.id">
+                <td>{{ player.player_name }}</td>
+                <td>{{ player.value }}</td>
+            </tr>
+        </table>
     </main>
     <script>
         window.app = new Vue({
@@ -27,6 +36,16 @@
                 return {
                     msg: 'Snake game'
                 }
+            },
+            renderScoreBoard: function () {
+                const requestOptions = {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({}),
+                };
+                fetch("/api/minesweeper/all_scores", requestOptions)
+                    .then((response) => response.json())
+                    .then((data) => (this.scoreBoard = data));
             },
             created() {
                 const plugin = document.createElement('script')
@@ -40,4 +59,5 @@
         });
     </script>
 </body>
+
 </html>
