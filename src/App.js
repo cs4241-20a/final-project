@@ -50,7 +50,7 @@ const webrtcProvider = new WebrtcProvider('string-demo', ydoc)
 //Sync clients with the y-websocket provider
 
 const websocketProvider = new WebsocketProvider(
-  `ws://${window.location.host}:${process.env.PORT}`, 'string-demo', ydoc
+  `ws://${window.location.host}`, 'string-demo', ydoc
 )
   
 // main component
@@ -202,7 +202,7 @@ class App extends React.Component {
     return this.state.champNames.filter(champ=>champ.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
   }
   checkCode(code){
-    let newUrl = "/?matchCode="+code;
+    let newUrl = "/index.html?matchCode="+code;
     window.location.replace(newUrl);
   }
   createCode(){
