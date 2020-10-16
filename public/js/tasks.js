@@ -71,12 +71,36 @@ var listClicked = function(){
   }
 }
 
-const getTasks = async () => {
+const addMe = async () => {
   var h = document.getElementById('group_name')
   var name = h.innerHTML
-	// Can't call /tasks anymore need to send the groupId through
-  var groupId = "/" + name
-  const res = await fetch("/api/tasks" + groupId, {method: "GET"})
+  const res = await fetch("/api/", {method: "POST", body: name})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+}
+
+var groupName = "test"; //Change this to be set later
+var groupId;
+
+const getMyGroup = async () => {
+  const res = await fetch("/api/groups", {method: "GET"});
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  for(var i = 0; i < data.data.length; i++)
+  {
+    console.log(data.data[i].name)
+    if(groupName == data.data[i].name) {
+      console.log(data.data[0]._id)
+      groupId = data.data[i]._id
+    }
+  }
+  console.log("Our group: " + groupId)
+  getTasks()
+}
+
+const getTasks = async () => {
+  const res = await fetch("/api/tasks/" + groupId, {method: "GET"})
   const data = await res.json()
   console.log(JSON.stringify(data))
   console.log(data)
@@ -107,7 +131,7 @@ const getTasks = async () => {
 //What column are we adding to?
 var currentCol = 1;
 
-var addTask = function (e) {
+var addTask = async (e) => {
 
   e.preventDefault()
 
@@ -117,29 +141,29 @@ var addTask = function (e) {
   const input4 = document.querySelector( '#tags')
   const input5 = document.querySelector( '#tdesc')
 
-  console.log(document.getElementById('group_name'))
-  var h = document.getElementById('group_name')
-  // Add in code for getting the group's name later
-  var name = h.innerHTML
-  const json = { group: name, task: input.value, duedate: input2.value, assignee: input3.value, tags: input4.value, description: input5.value, column: currentCol }
+  const json = { name: input.value, desc: input5.value, columnName: currentCol, assignees: input3.value, tags: input4.value, dateDue: input2.value }
   const body = JSON.stringify( json )
   console.log(body)
-
-  fetch( '/add', {
-         method:'POST',
-         body,
-         headers: {
-          "Content-type": "application/json"
-        }
-    })
-    .then( function( response ) {
-      return response.json()
-    })
-    .then( function( json ) {
-      console.log( json )
-      var task = json
-      appendNewInfo(task)
-  })
+  console.log(groupId)
+  const res = await fetch("/api/tasks/" + groupId, {method: "POST", body})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+  // fetch( '/add', {
+  //        method:'POST',
+  //        body,
+  //        headers: {
+  //         "Content-type": "application/json"
+  //       }
+  //   })
+  //   .then( function( response ) {
+  //     return response.json()
+  //   })
+  //   .then( function( json ) {
+  //     console.log( json )
+  //     var task = json
+  //     appendNewInfo(task)
+  // })
   modal.style.display = "none";
 }
 
@@ -302,7 +326,7 @@ var delCol = function() {
 }
 
 window.onload = function() {
-    getTasks()
+    getMyGroup()
 
     const tsButton = document.querySelector( '#task_submit' )
     tsButton.onclick = addTask
