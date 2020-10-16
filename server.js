@@ -91,6 +91,7 @@ const userRegistration = (username, password) => {
       });
   });
 };
+
 const userLogin = (username, password) => {
   return new Promise((resolve, reject) => {
     if (!username || !password) {
@@ -130,6 +131,7 @@ const userLogin = (username, password) => {
     }
   });
 };
+
 app.use(
   session({
     secret: "bionicle",
@@ -146,6 +148,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser((user, done) => done(null, user._id));
+
 passport.deserializeUser((userId, done) => {
   client
     .db(process.env.DB_NAME)
@@ -163,6 +166,7 @@ passport.deserializeUser((userId, done) => {
       done(err, false);
     });
 });
+
 passport.use(
   "local-registration",
   new LocalStrategy({ session: true }, function (username, password, done) {
@@ -340,11 +344,12 @@ app.post("/register", (req, res, next) => {
     }
   });
   
-  app.post("/logout", (req, res) => {
+app.post("/logout", (req, res) => {
     req.logout();
     res.writeHead(200);
     res.end(JSON.stringify({ Success: "Logout" }));
   });
+
 //Serving the React App
 app.use(
   serveStatic(path.join(__dirname, "build"), {
