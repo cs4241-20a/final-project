@@ -8,21 +8,36 @@ export function init(user) {
   window.addEventListener("resize", function() {
     editor.graphcanvas.resize();
   });
+
+  // call resize on load
+  editor.graphcanvas.resize();
+
   window.onbeforeunload = function() {
     var data = JSON.stringify(graph.serialize());
     localStorage.setItem("litegraphg demo backup", data);
+    //localStorage.setItem("Demo1", prev_data);
   };
 
   //enable scripting
   LiteGraph.allow_scripts = true;
 
+  let footer = document.createElement("span");
+  footer.className = "selector";
+  footer.innerHTML =
+    "Hello, " +
+    user.username +
+    "! <form action='/auth/logout'><button type='submit' class='btn btn-danger'>Log Out <i class='fab fa-github'/></button></form>";
+  document
+    .querySelector(".footer")
+    .querySelector(".tools-right")
+    .appendChild(footer);
+
   //create scene selector
   var elem = document.createElement("span");
   elem.className = "selector";
   elem.innerHTML =
-    "Demo <select><option>Empty</option></select> <button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='download'>Download</button> | <button class='btn' id='webgl'>WebGL</button>";
-  editor.tools.appendChild(elem);
-  console.log(editor.tools);
+    "Demo <select><option>Empty</option></select> <button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='download'>Download</button>";
+  document.querySelector(".tools-left").appendChild(elem);
   var select = elem.querySelector("select");
   select.addEventListener("change", function(e) {
     var option = this.options[this.selectedIndex];
@@ -36,41 +51,40 @@ export function init(user) {
   elem.querySelector("#save").addEventListener("click", function() {
     console.log("saved");
     // const user = document.getElementById("username").innerHTML;
-    const now = new Date();  
+    const now = new Date();
     const secondsSinceEpoch = Math.round(now.getTime() / 1000);
-    const insertString = JSON.stringify({user: user.username, time: secondsSinceEpoch, graph: graph.serialize()});
-    
-    fetch( '/add', {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    insertString
-  })
-    .then( function( response ) { 
-        console.log(response.json().then((data) => {
-        }));;
-      })
+    const insertString = JSON.stringify({
+      user: user.username,
+      time: secondsSinceEpoch,
+      graph: graph.serialize()
+    });
+
+    fetch("/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: insertString
+    }).then(function(response) {
+      console.log(response.json().then(data => {}));
+    });
   });
 
   elem.querySelector("#load").addEventListener("click", function() {
     // const user = document.getElementById("username").innerHTML;
-    fetch('/load',{
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({user:user.username})
-    })
-    .then( function( response ) { 
-        console.log(response.json().then((data) => {
-          if(data.length != 0) {
-            graph.configure(data[0].graph)
+    fetch("/load", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: user.username })
+    }).then(function(response) {
+      console.log(
+        response.json().then(data => {
+          if (data.length != 0) {
+            graph.configure(data[0].graph);
           }
-        }));;
-      })
+        })
+      );
+    });
   });
 
-  
-  
-  
-  
   elem.querySelector("#download").addEventListener("click", function() {
     var data = JSON.stringify(graph.serialize());
     var file = new Blob([data]);
@@ -87,8 +101,6 @@ export function init(user) {
     }, 1000 * 60); //wait one minute to revoke url
   });
 
-  elem.querySelector("#webgl").addEventListener("click", enableWebGL);
-
   function addDemo(name, url) {
     var option = document.createElement("option");
     if (url.constructor === String) option.dataset["url"] = url;
@@ -96,6 +108,13 @@ export function init(user) {
     option.innerHTML = name;
     select.appendChild(option);
   }
+
+  addDemo("Demo1", "../examples/demo1.json");
+  addDemo("Demo2", "../examples/demo2.json");
+  addDemo("Demo3", "../examples/demo3.json");
+  addDemo("Demo4", "../examples/demo4.json");
+  addDemo("Network (Beta)", "../examples/network.json");
+  addDemo("Showcase", "../examples/showcase.json");
 
   //some examples
   // addDemo("Features", "examples/features.json");
@@ -111,71 +130,4 @@ export function init(user) {
     var graph_data = JSON.parse(data);
     graph.configure(graph_data);
   });
-
-  //allows to use the WebGL nodes like textures
-  function enableWebGL() {
-    if (webgl_canvas) {
-      webgl_canvas.style.display =
-        webgl_canvas.style.display == "none" ? "block" : "none";
-      return;
-    }
-
-    var libs = [
-      "js/libs/gl-matrix-min.js",
-      "js/libs/litegl.js",
-      "/nodes/gltextures.js",
-      "/nodes/glfx.js",
-      "/nodes/glshaders.js",
-      "/nodes/geometry.js"
-    ];
-
-    function fetchJS() {
-      if (libs.length == 0) return on_ready();
-
-      var script = null;
-      script = document.createElement("script");
-      script.onload = fetchJS;
-      script.src = libs.shift();
-      document.head.appendChild(script);
-    }
-
-    fetchJS();
-
-    function on_ready() {
-      console.log(this.src);
-      if (!window.GL) return;
-      webgl_canvas = document.createElement("canvas");
-      webgl_canvas.width = 400;
-      webgl_canvas.height = 300;
-      webgl_canvas.style.position = "absolute";
-      webgl_canvas.style.top = "0px";
-      webgl_canvas.style.right = "0px";
-      webgl_canvas.style.border = "1px solid #AAA";
-
-      webgl_canvas.addEventListener("click", function() {
-        var rect = webgl_canvas.parentNode.getBoundingClientRect();
-        if (webgl_canvas.width != rect.width) {
-          webgl_canvas.width = rect.width;
-          webgl_canvas.height = rect.height;
-        } else {
-          webgl_canvas.width = 400;
-          webgl_canvas.height = 300;
-        }
-      });
-
-      var parent = document.querySelector(".editor-area");
-      parent.appendChild(webgl_canvas);
-      var gl = GL.create({ canvas: webgl_canvas });
-      if (!gl) return;
-
-      editor.graph.onBeforeStep = ondraw;
-
-      console.log("webgl ready");
-      function ondraw() {
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      }
-    }
-  }
 }

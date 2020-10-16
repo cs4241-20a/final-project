@@ -2,12 +2,12 @@ export function init() {
   let list = [
     {
       name: "BitCrusher",
-      function: () => BitCrusher(),
+      function: params => BitCrusher(params),
       props: { bitDepth: 0.5, sampleRate: 0.5 }
     },
     {
       name: "Buffer Shuffler",
-      function: () => Shuffler(),
+      function: params => Shuffler(params),
 
       props: {
         rate: 22050,
@@ -22,7 +22,7 @@ export function init() {
     },
     {
       name: "Chorus",
-      function: () => Chorus(),
+      function: params => Chorus(params),
 
       props: {
         slowFrequency: 0.18,
@@ -34,31 +34,31 @@ export function init() {
     },
     {
       name: "Delay",
-      function: () => Delay(),
+      function: params => Delay(params),
 
       props: { feedback: 0.5, time: 11025, wetdry: 0.5 }
     },
     {
       name: "Distortion",
-      function: () => Distortion(),
+      function: params => Distortion(params),
 
       props: { shape1: 0.1, shape2: 0.1, pregain: 5, postgain: 0.5 }
     },
     {
       name: "Flanger",
-      function: () => Flanger(),
+      function: params => Flanger(params),
 
       props: { feedback: 0.81, offset: 0.125, frequency: 1 }
     },
     {
       name: "Ring Mod",
-      function: () => RingMod(),
+      function: params => RingMod(params),
 
       props: { frequency: 220, gain: 1, mix: 1 }
     },
     {
-      name: "Reverb",
-      function: () => Reverb(),
+      name: "Freeverb",
+      function: params => Freeverb(params),
 
       props: {
         wet1: 1,
@@ -70,29 +70,46 @@ export function init() {
     },
     {
       name: "Vibrato",
-      function: () => Vibrato(),
+      function: params => Vibrato(params),
       props: { feedback: 0.01, amount: 0.5, frequency: 4 }
     }
   ];
 
   list.forEach(object => {
     function Node() {
-      this.addOutput("Instrument", "instrument");
-      this.addInput("Instrument", "instrument");
+      this.addInput("instrument", "instrument");
+      this.addOutput("instrument", "instrument");
       Object.keys(object.props).forEach(key => {
         this.addInput(key, "number");
       });
+
+      this.effect = object.function;
+    }
+
+    function mapNodeInput(node, input, effect) {
+      node.gibberishInput = input;
+      node.gibberishEffect = node.effect({
+        input: node.gibberishInput.sound
+      });
+      if (graph.status === LGraph.STATUS_RUNNING) {
+        node.gibberishEffect.connect();
+      }
     }
 
     //name to show
     Node.title = object.name;
 
     Node.prototype.onStart = function() {
-      this.setOutputData(0, this.source);
+      // need to check if gibberishInput exists
+      if (this.getInputData(0)) {
+        mapNodeInput(this, this.getInputData(0));
+      }
     };
 
     Node.prototype.onAdded = function() {
-      this.gibberishEffect = object.function();
+      if (this.getInputData(0)) {
+        mapNodeInput(this, this.getInputData(0));
+      }
 
       ///
 
@@ -103,14 +120,28 @@ export function init() {
       //this.input = this.getInputData(0);
     };
 
+    Node.prototype.onRemoved = function() {
+      if (this.gibberishEffect) {
+        this.gibberishEffect.disconnect();
+      }
+    };
+
+    Node.prototype.onStopped = function() {
+      if (this.gibberishEffect) {
+        this.gibberishEffect.disconnect();
+      }
+    };
+
     Node.prototype.onExecute = function() {
       //connect this.gibberishEffect and set input on that object to gibberishInput object
-      Object.keys(object.props).forEach((key, i) => {
-        let value = isNaN(this.getInputData(i + 1))
-          ? object.props[key]
-          : this.getInputData(i + 1);
-        this.gibberishEffect[key] = value;
-      });
+      if (this.gibberishEffect) {
+        Object.keys(object.props).forEach((key, i) => {
+          let value = isNaN(this.getInputData(i + 1))
+            ? object.props[key]
+            : this.getInputData(i + 1);
+          this.gibberishEffect[key] = value;
+        });
+      }
     };
 
     Node.prototype.onConnectionsChange = function(
@@ -119,10 +150,24 @@ export function init() {
       connected,
       link_info
     ) {
-      //only process the outputs events
-      if (connection != LiteGraph.OUTPUT) {
-        return;
+      if (connection === LiteGraph.INPUT) {
+        if (connected && link_info && link_info.data) {
+          if (link_info.target_slot === 0) {
+            mapNodeInput(this, link_info.data);
+          }
+        } else if (link_info) {
+          // disconnnected?
+          if (link_info.target_slot === 0) {
+            if (this.gibberishEffect) {
+              this.gibberishEffect.disconnect();
+            }
+          }
+        }
+      } else {
+        this.setOutputData(0, this.gibberishInput);
       }
+
+      // connected
 
       //alex needs to fix what this does lol
     };

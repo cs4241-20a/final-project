@@ -14,13 +14,14 @@
   //   });
   
   onMount(async () => {
-    Editor.init(user);
     Gibb.init();
+    Editor.init(user);
    });
   
 </script>
 
-<style></style>
+<style>
+</style>
 
 <div id="main">
 </div>

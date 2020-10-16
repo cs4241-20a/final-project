@@ -199,7 +199,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../rbd/pnpm-volume/a97c73be-be8a-4582-8574-3e06e9c3326f/node_modules/.registry.npmjs.org/parcel-bundler/1.12.4/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/svelte/internal/index.mjs":[function(require,module,exports) {
+},{"/app/src/imgs/load-progress-empty.png":[["load-progress-empty.6cfc5d1c.png","imgs/load-progress-empty.png"],"imgs/load-progress-empty.png"],"/app/src/imgs/load-progress-full.png":[["load-progress-full.e79bec45.png","imgs/load-progress-full.png"],"imgs/load-progress-full.png"],"_css_loader":"../../rbd/pnpm-volume/a97c73be-be8a-4582-8574-3e06e9c3326f/node_modules/.registry.npmjs.org/parcel-bundler/1.12.4/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/svelte/internal/index.mjs":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -2391,21 +2391,26 @@ function init(user) {
   window.graph = editor.graph;
   window.addEventListener("resize", function () {
     editor.graphcanvas.resize();
-  });
+  }); // call resize on load
+
+  editor.graphcanvas.resize();
 
   window.onbeforeunload = function () {
     var data = JSON.stringify(graph.serialize());
-    localStorage.setItem("litegraphg demo backup", data);
+    localStorage.setItem("litegraphg demo backup", data); //localStorage.setItem("Demo1", prev_data);
   }; //enable scripting
 
 
-  LiteGraph.allow_scripts = true; //create scene selector
+  LiteGraph.allow_scripts = true;
+  let footer = document.createElement("span");
+  footer.className = "selector";
+  footer.innerHTML = "Hello, " + user.username + "! <form action='/auth/logout'><button type='submit' class='btn btn-danger'>Log Out <i class='fab fa-github'/></button></form>";
+  document.querySelector(".footer").querySelector(".tools-right").appendChild(footer); //create scene selector
 
   var elem = document.createElement("span");
   elem.className = "selector";
-  elem.innerHTML = "Demo <select><option>Empty</option></select> <button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='download'>Download</button> | <button class='btn' id='webgl'>WebGL</button>";
-  editor.tools.appendChild(elem);
-  console.log(editor.tools);
+  elem.innerHTML = "Demo <select><option>Empty</option></select> <button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='download'>Download</button>";
+  document.querySelector(".tools-left").appendChild(elem);
   var select = elem.querySelector("select");
   select.addEventListener("change", function (e) {
     var option = this.options[this.selectedIndex];
@@ -2422,23 +2427,22 @@ function init(user) {
       time: secondsSinceEpoch,
       graph: graph.serialize()
     });
-    fetch('/add', {
-      method: 'POST',
+    fetch("/add", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: insertString
     }).then(function (response) {
       console.log(response.json().then(data => {}));
-      ;
     });
   });
   elem.querySelector("#load").addEventListener("click", function () {
     // const user = document.getElementById("username").innerHTML;
-    fetch('/load', {
-      method: 'POST',
+    fetch("/load", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         user: user.username
@@ -2449,7 +2453,6 @@ function init(user) {
           graph.configure(data[0].graph);
         }
       }));
-      ;
     });
   });
   elem.querySelector("#download").addEventListener("click", function () {
@@ -2467,14 +2470,20 @@ function init(user) {
       URL.revokeObjectURL(url);
     }, 1000 * 60); //wait one minute to revoke url
   });
-  elem.querySelector("#webgl").addEventListener("click", enableWebGL);
 
   function addDemo(name, url) {
     var option = document.createElement("option");
     if (url.constructor === String) option.dataset["url"] = url;else option.callback = url;
     option.innerHTML = name;
     select.appendChild(option);
-  } //some examples
+  }
+
+  addDemo("Demo1", "../examples/demo1.json");
+  addDemo("Demo2", "../examples/demo2.json");
+  addDemo("Demo3", "../examples/demo3.json");
+  addDemo("Demo4", "../examples/demo4.json");
+  addDemo("Network (Beta)", "../examples/network.json");
+  addDemo("Showcase", "../examples/showcase.json"); //some examples
   // addDemo("Features", "examples/features.json");
   // addDemo("Benchmark", "examples/benchmark.json");
   // addDemo("Subgraph", "examples/subgraph.json");
@@ -2483,70 +2492,12 @@ function init(user) {
   // addDemo("Audio Reverb", "examples/audio_reverb.json");
   // addDemo("MIDI Generation", "examples/midi_generation.json");
 
-
   addDemo("autobackup", function () {
     var data = localStorage.getItem("litegraphg demo backup");
     if (!data) return;
     var graph_data = JSON.parse(data);
     graph.configure(graph_data);
-  }); //allows to use the WebGL nodes like textures
-
-  function enableWebGL() {
-    if (webgl_canvas) {
-      webgl_canvas.style.display = webgl_canvas.style.display == "none" ? "block" : "none";
-      return;
-    }
-
-    var libs = ["js/libs/gl-matrix-min.js", "js/libs/litegl.js", "/nodes/gltextures.js", "/nodes/glfx.js", "/nodes/glshaders.js", "/nodes/geometry.js"];
-
-    function fetchJS() {
-      if (libs.length == 0) return on_ready();
-      var script = null;
-      script = document.createElement("script");
-      script.onload = fetchJS;
-      script.src = libs.shift();
-      document.head.appendChild(script);
-    }
-
-    fetchJS();
-
-    function on_ready() {
-      console.log(this.src);
-      if (!window.GL) return;
-      webgl_canvas = document.createElement("canvas");
-      webgl_canvas.width = 400;
-      webgl_canvas.height = 300;
-      webgl_canvas.style.position = "absolute";
-      webgl_canvas.style.top = "0px";
-      webgl_canvas.style.right = "0px";
-      webgl_canvas.style.border = "1px solid #AAA";
-      webgl_canvas.addEventListener("click", function () {
-        var rect = webgl_canvas.parentNode.getBoundingClientRect();
-
-        if (webgl_canvas.width != rect.width) {
-          webgl_canvas.width = rect.width;
-          webgl_canvas.height = rect.height;
-        } else {
-          webgl_canvas.width = 400;
-          webgl_canvas.height = 300;
-        }
-      });
-      var parent = document.querySelector(".editor-area");
-      parent.appendChild(webgl_canvas);
-      var gl = GL.create({
-        canvas: webgl_canvas
-      });
-      if (!gl) return;
-      editor.graph.onBeforeStep = ondraw;
-      console.log("webgl ready");
-
-      function ondraw() {
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      }
-    }
-  }
+  });
 }
 },{}],"nodes/instruments.js":[function(require,module,exports) {
 "use strict";
@@ -2610,6 +2561,17 @@ function init() {
       loudness: 1
     }
   }, {
+    name: "Karplus",
+    function: () => Karplus(),
+    key: "note",
+    props: {
+      gain: 0.5,
+      decay: 0.97,
+      loudness: 1,
+      damping: 0.2,
+      glide: 1
+    }
+  }, {
     name: "Kick",
     function: () => Kick(),
     key: "trigger",
@@ -2646,14 +2608,15 @@ function init() {
     key: "trigger",
     props: {
       gain: 1,
-      decay: 0.7,
       frequency: 120,
+      decay: 0.7,
       loudness: 1
     }
-  }];
+  }]; //list.sort((a, b) => (a.name > b.name ? 1 : -1));
+
   list.forEach(instrument => {
     function Node() {
-      this.addOutput("Instrument", "instrument");
+      this.addOutput("instrument", "instrument");
       Object.keys(instrument.props).forEach(key => {
         this.addInput(key, "number");
       });
@@ -2706,9 +2669,9 @@ function init() {
   }); // --- SEQUENCER --- \\
 
   function SequencerNode() {
-    this.addInput("Instrument", "instrument");
-    this.addInput("Values", "array");
-    this.addInput("Timings", "array");
+    this.addInput("instrument", "instrument");
+    this.addInput("values", "array");
+    this.addInput("timings", "array");
   }
 
   function mapSequencerInput(node, instrument) {
@@ -2726,11 +2689,11 @@ function init() {
   SequencerNode.title = "Sequencer";
 
   SequencerNode.prototype.onAdded = function () {
-    this.gibberishInstrument;
-    this.gibberishSequencer = Sequencer.make(defaults["trigger"], [15000], this.gibberishInstrument, "trigger");
-
     if (this.getInputData(0)) {
       mapSequencerInput(this, this.getInputData(0));
+    } else {
+      this.gibberishInstrument;
+      this.gibberishSequencer = Sequencer.make(defaults["trigger"], [15000], this.gibberishInstrument, "trigger");
     }
   };
 
@@ -2782,7 +2745,7 @@ function init() {
       if (link_info.target_slot === 0) {
         mapSequencerInput(this, link_info.data);
       }
-    } else if (link_info) {
+    } else if (!connected && link_info) {
       if (link_info.target_slot === 0) {
         if (this.gibberishInstrument) {
           this.gibberishSequencer.stop();
@@ -2828,9 +2791,9 @@ function init() {
   }];
   list.forEach(oscillator => {
     function Node() {
-      this.addOutput("Oscillator", "oscillator");
-      this.addInput("Frequency", "number");
-      this.addInput("Gain", "number");
+      this.addOutput("oscillator", "oscillator");
+      this.addInput("frequency", "number");
+      this.addInput("gain", "number");
     } //name to show
 
 
@@ -2846,7 +2809,7 @@ function init() {
     };
 
     Node.prototype.onExecute = function () {
-      let freq = isNaN(this.getInputData(0)) ? 300 : this.getInputData(0);
+      let freq = isNaN(this.getInputData(0)) ? 200 : this.getInputData(0);
       let gain = isNaN(this.getInputData(1)) ? 1.0 : this.getInputData(1);
       this.gibberishOscillator.frequency = freq;
       this.gibberishOscillator.gain = gain;
@@ -2870,7 +2833,7 @@ function init() {
   });
 
   function OutputNode() {
-    this.addInput("Oscillator", "oscillator");
+    this.addInput("oscillator", "oscillator");
   }
 
   function mapOutputInput(node, input) {
@@ -2920,7 +2883,7 @@ function init() {
         mapOutputInput(this, link_info.data);
       }
     } else if (link_info) {
-      if (link_info.target_slot === 0) {
+      if (link_info.target_slot === 0 && this.gibberishOscillator) {
         this.gibberishOscillator.disconnect();
         this.gibberishOscillator = false;
       }
@@ -2940,14 +2903,14 @@ exports.init = init;
 function init() {
   let list = [{
     name: "BitCrusher",
-    function: () => BitCrusher(),
+    function: params => BitCrusher(params),
     props: {
       bitDepth: 0.5,
       sampleRate: 0.5
     }
   }, {
     name: "Buffer Shuffler",
-    function: () => Shuffler(),
+    function: params => Shuffler(params),
     props: {
       rate: 22050,
       chance: 0.25,
@@ -2960,7 +2923,7 @@ function init() {
     }
   }, {
     name: "Chorus",
-    function: () => Chorus(),
+    function: params => Chorus(params),
     props: {
       slowFrequency: 0.18,
       slowGain: 3,
@@ -2970,7 +2933,7 @@ function init() {
     }
   }, {
     name: "Delay",
-    function: () => Delay(),
+    function: params => Delay(params),
     props: {
       feedback: 0.5,
       time: 11025,
@@ -2978,7 +2941,7 @@ function init() {
     }
   }, {
     name: "Distortion",
-    function: () => Distortion(),
+    function: params => Distortion(params),
     props: {
       shape1: 0.1,
       shape2: 0.1,
@@ -2987,7 +2950,7 @@ function init() {
     }
   }, {
     name: "Flanger",
-    function: () => Flanger(),
+    function: params => Flanger(params),
     props: {
       feedback: 0.81,
       offset: 0.125,
@@ -2995,15 +2958,15 @@ function init() {
     }
   }, {
     name: "Ring Mod",
-    function: () => RingMod(),
+    function: params => RingMod(params),
     props: {
       frequency: 220,
       gain: 1,
       mix: 1
     }
   }, {
-    name: "Reverb",
-    function: () => Reverb(),
+    name: "Freeverb",
+    function: params => Freeverb(params),
     props: {
       wet1: 1,
       wet2: 0,
@@ -3013,7 +2976,7 @@ function init() {
     }
   }, {
     name: "Vibrato",
-    function: () => Vibrato(),
+    function: params => Vibrato(params),
     props: {
       feedback: 0.01,
       amount: 0.5,
@@ -3022,41 +2985,86 @@ function init() {
   }];
   list.forEach(object => {
     function Node() {
-      this.addOutput("Instrument", "instrument");
-      this.addInput("Instrument", "instrument");
+      this.addInput("instrument", "instrument");
+      this.addOutput("instrument", "instrument");
       Object.keys(object.props).forEach(key => {
         this.addInput(key, "number");
       });
+      this.effect = object.function;
+    }
+
+    function mapNodeInput(node, input, effect) {
+      node.gibberishInput = input;
+      node.gibberishEffect = node.effect({
+        input: node.gibberishInput.sound
+      });
+
+      if (graph.status === LGraph.STATUS_RUNNING) {
+        node.gibberishEffect.connect();
+      }
     } //name to show
 
 
     Node.title = object.name;
 
     Node.prototype.onStart = function () {
-      this.setOutputData(0, this.source);
+      // need to check if gibberishInput exists
+      if (this.getInputData(0)) {
+        mapNodeInput(this, this.getInputData(0));
+      }
     };
 
     Node.prototype.onAdded = function () {
-      this.gibberishEffect = object.function(); ///
+      if (this.getInputData(0)) {
+        mapNodeInput(this, this.getInputData(0));
+      } ///
       // this is a Gibberish Effect
       //this.effect = object.function();
       // this is a Gibberish Instrument
       //this.input = this.getInputData(0);
+
+    };
+
+    Node.prototype.onRemoved = function () {
+      if (this.gibberishEffect) {
+        this.gibberishEffect.disconnect();
+      }
+    };
+
+    Node.prototype.onStopped = function () {
+      if (this.gibberishEffect) {
+        this.gibberishEffect.disconnect();
+      }
     };
 
     Node.prototype.onExecute = function () {
       //connect this.gibberishEffect and set input on that object to gibberishInput object
-      Object.keys(object.props).forEach((key, i) => {
-        let value = isNaN(this.getInputData(i + 1)) ? object.props[key] : this.getInputData(i + 1);
-        this.gibberishEffect[key] = value;
-      });
+      if (this.gibberishEffect) {
+        Object.keys(object.props).forEach((key, i) => {
+          let value = isNaN(this.getInputData(i + 1)) ? object.props[key] : this.getInputData(i + 1);
+          this.gibberishEffect[key] = value;
+        });
+      }
     };
 
     Node.prototype.onConnectionsChange = function (connection, slot, connected, link_info) {
-      //only process the outputs events
-      if (connection != LiteGraph.OUTPUT) {
-        return;
-      } //alex needs to fix what this does lol
+      if (connection === LiteGraph.INPUT) {
+        if (connected && link_info && link_info.data) {
+          if (link_info.target_slot === 0) {
+            mapNodeInput(this, link_info.data);
+          }
+        } else if (link_info) {
+          // disconnnected?
+          if (link_info.target_slot === 0) {
+            if (this.gibberishEffect) {
+              this.gibberishEffect.disconnect();
+            }
+          }
+        }
+      } else {
+        this.setOutputData(0, this.gibberishInput);
+      } // connected
+      //alex needs to fix what this does lol
 
     }; //register in the system
 
@@ -3095,9 +3103,8 @@ function init() {
   ArrayNode.prototype.onStop = function () {
     this.setOutputData(0, false);
     console.log("array stop out");
-  };
+  }; //LiteGraph.registerNodeType("helper/array", ArrayNode);
 
-  LiteGraph.registerNodeType("helper/array", ArrayNode);
 }
 },{}],"js/gibb.js":[function(require,module,exports) {
 "use strict";
@@ -3159,7 +3166,7 @@ function create_fragment(ctx) {
     c: function create() {
       div = (0, _internal.element)("div");
       (0, _internal.attr_dev)(div, "id", "main");
-      (0, _internal.add_location)(div, file, 24, 0, 440);
+      (0, _internal.add_location)(div, file, 25, 0, 441);
     },
     l: function claim(nodes) {
       throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3199,8 +3206,8 @@ function instance($$self, $$props, $$invalidate) {
   //   });
 
   (0, _svelte.onMount)(async () => {
-    Editor.init(user);
     Gibb.init();
+    Editor.init(user);
   });
   const writable_props = ["user"];
   Object.keys($$props).forEach(key => {
@@ -3282,157 +3289,176 @@ var _LiteGraph = _interopRequireDefault(require("./LiteGraph.svelte"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* components/App.svelte generated by Svelte v3.29.0 */
-const file = "components/App.svelte";
-
-function add_css() {
-  var style = (0, _internal.element)("style");
-  style.id = "svelte-pmjj87-style";
-  style.textContent = ".navbar-brand.svelte-pmjj87{color:white !important}\n";
-  (0, _internal.append_dev)(document.head, style);
-} // (32:2) {#if !user.loggedIn}
-
+const file = "components/App.svelte"; // (47:2) {#if !user.loggedIn}
 
 function create_if_block_1(ctx) {
-  let div3;
-  let div2;
+  let nav;
   let div0;
-  let h5;
+  let t0;
+  let br0;
   let t1;
-  let p;
-  let t2;
-  let i0;
-  let t3;
-  let br;
-  let t4;
-  let a0;
-  let t5;
-  let i1;
-  let t6;
   let div1;
-  let a1;
+  let img;
+  let img_src_value;
+  let t2;
+  let div5;
+  let div4;
+  let div2;
+  let h5;
+  let t4;
+  let p;
+  let t5;
+  let i0;
+  let t6;
+  let br1;
+  let t7;
+  let a0;
   let t8;
+  let i1;
+  let t9;
+  let div3;
+  let a1;
+  let t11;
   let a2;
-  let t10;
+  let t13;
   let a3;
-  let t12;
+  let t15;
   let a4;
   const block = {
     c: function create() {
-      div3 = (0, _internal.element)("div");
-      div2 = (0, _internal.element)("div");
+      nav = (0, _internal.element)("nav");
       div0 = (0, _internal.element)("div");
+      t0 = (0, _internal.text)("By using our website, you agree to our 🍪 policy\n             ");
+      br0 = (0, _internal.element)("br");
+      t1 = (0, _internal.space)();
+      div1 = (0, _internal.element)("div");
+      img = (0, _internal.element)("img");
+      t2 = (0, _internal.space)();
+      div5 = (0, _internal.element)("div");
+      div4 = (0, _internal.element)("div");
+      div2 = (0, _internal.element)("div");
       h5 = (0, _internal.element)("h5");
       h5.textContent = "Gibber Graph";
-      t1 = (0, _internal.space)();
-      p = (0, _internal.element)("p");
-      t2 = (0, _internal.text)("Gibberish ");
-      i0 = (0, _internal.element)("i");
-      t3 = (0, _internal.text)(" LiteGraph");
-      br = (0, _internal.element)("br");
       t4 = (0, _internal.space)();
+      p = (0, _internal.element)("p");
+      t5 = (0, _internal.text)("Gibberish ");
+      i0 = (0, _internal.element)("i");
+      t6 = (0, _internal.text)(" LiteGraph");
+      br1 = (0, _internal.element)("br");
+      t7 = (0, _internal.space)();
       a0 = (0, _internal.element)("a");
-      t5 = (0, _internal.text)("Login with Github ");
+      t8 = (0, _internal.text)("Login with Github ");
       i1 = (0, _internal.element)("i");
-      t6 = (0, _internal.space)();
-      div1 = (0, _internal.element)("div");
+      t9 = (0, _internal.space)();
+      div3 = (0, _internal.element)("div");
       a1 = (0, _internal.element)("a");
       a1.textContent = "Robear Mankaryous";
-      t8 = (0, _internal.text)(", \n    ");
+      t11 = (0, _internal.text)(", \n    ");
       a2 = (0, _internal.element)("a");
       a2.textContent = "Alexander Simoneau";
-      t10 = (0, _internal.text)(",\n    ");
+      t13 = (0, _internal.text)(",\n    ");
       a3 = (0, _internal.element)("a");
       a3.textContent = "Kyle Mikolajczyk";
-      t12 = (0, _internal.text)(",\n    ");
+      t15 = (0, _internal.text)(",\n    ");
       a4 = (0, _internal.element)("a");
       a4.textContent = "Alexa Freglette";
+      (0, _internal.add_location)(br0, file, 52, 13, 1275);
+      (0, _internal.attr_dev)(div0, "class", "cookie");
+      (0, _internal.set_style)(div0, "text-align", "center");
+      (0, _internal.add_location)(div0, file, 50, 4, 1162);
+      (0, _internal.add_location)(nav, file, 48, 2, 1147);
+      (0, _internal.attr_dev)(img, "width", "200px");
+      if (img.src !== (img_src_value = "https://www.wpi.edu/sites/default/files/faculty-image/cdroberts.jpg?1602870867914")) (0, _internal.attr_dev)(img, "src", img_src_value);
+      (0, _internal.add_location)(img, file, 56, 0, 1328);
+      (0, _internal.attr_dev)(div1, "class", "prof-center");
+      (0, _internal.add_location)(div1, file, 55, 2, 1302);
       (0, _internal.attr_dev)(h5, "class", "card-title display-4");
-      (0, _internal.add_location)(h5, file, 36, 4, 695);
+      (0, _internal.add_location)(h5, file, 64, 4, 1566);
       (0, _internal.attr_dev)(i0, "class", "fas fa-heart");
       (0, _internal.set_style)(i0, "color", "red");
-      (0, _internal.add_location)(i0, file, 37, 35, 781);
-      (0, _internal.add_location)(br, file, 37, 93, 839);
+      (0, _internal.add_location)(i0, file, 65, 35, 1652);
+      (0, _internal.add_location)(br1, file, 65, 93, 1710);
       (0, _internal.attr_dev)(p, "class", "card-text");
-      (0, _internal.add_location)(p, file, 37, 4, 750);
+      (0, _internal.add_location)(p, file, 65, 4, 1621);
       (0, _internal.attr_dev)(i1, "class", "fab fa-github");
-      (0, _internal.add_location)(i1, file, 38, 69, 917);
+      (0, _internal.add_location)(i1, file, 66, 69, 1788);
       (0, _internal.attr_dev)(a0, "href", "/auth/github");
       (0, _internal.attr_dev)(a0, "class", "btn btn-primary");
-      (0, _internal.add_location)(a0, file, 38, 4, 852);
-      (0, _internal.attr_dev)(div0, "class", "card-body");
-      (0, _internal.add_location)(div0, file, 35, 2, 667);
+      (0, _internal.add_location)(a0, file, 66, 4, 1723);
+      (0, _internal.attr_dev)(div2, "class", "card-body");
+      (0, _internal.add_location)(div2, file, 63, 2, 1538);
       (0, _internal.attr_dev)(a1, "target", "_blank");
       (0, _internal.attr_dev)(a1, "href", "https://github.com/rmanky");
-      (0, _internal.add_location)(a1, file, 41, 4, 1000);
+      (0, _internal.add_location)(a1, file, 71, 4, 1877);
       (0, _internal.attr_dev)(a2, "target", "_blank");
       (0, _internal.attr_dev)(a2, "href", "https://github.com/afsimoneau");
-      (0, _internal.add_location)(a2, file, 42, 4, 1080);
+      (0, _internal.add_location)(a2, file, 72, 4, 1957);
       (0, _internal.attr_dev)(a3, "target", "_blank");
       (0, _internal.attr_dev)(a3, "href", "https://github.com/kylemikableh");
-      (0, _internal.add_location)(a3, file, 43, 4, 1164);
+      (0, _internal.add_location)(a3, file, 73, 4, 2041);
       (0, _internal.attr_dev)(a4, "target", "_blank");
       (0, _internal.attr_dev)(a4, "href", "https://github.com/afreglett");
-      (0, _internal.add_location)(a4, file, 44, 4, 1248);
-      (0, _internal.attr_dev)(div1, "class", "card-footer text-muted");
-      (0, _internal.add_location)(div1, file, 40, 2, 959);
-      (0, _internal.attr_dev)(div2, "class", "card text-center");
-      (0, _internal.add_location)(div2, file, 34, 2, 634);
-      (0, _internal.attr_dev)(div3, "class", "wrapper fadeInDown");
-      (0, _internal.add_location)(div3, file, 33, 4, 599);
+      (0, _internal.add_location)(a4, file, 74, 4, 2125);
+      (0, _internal.attr_dev)(div3, "class", "card-footer text-muted");
+      (0, _internal.add_location)(div3, file, 69, 2, 1835);
+      (0, _internal.attr_dev)(div4, "class", "card text-center");
+      (0, _internal.add_location)(div4, file, 61, 2, 1499);
+      (0, _internal.attr_dev)(div5, "class", "wrapper fadeInDown");
+      (0, _internal.add_location)(div5, file, 60, 4, 1464);
     },
     m: function mount(target, anchor) {
-      (0, _internal.insert_dev)(target, div3, anchor);
-      (0, _internal.append_dev)(div3, div2);
-      (0, _internal.append_dev)(div2, div0);
-      (0, _internal.append_dev)(div0, h5);
-      (0, _internal.append_dev)(div0, t1);
-      (0, _internal.append_dev)(div0, p);
-      (0, _internal.append_dev)(p, t2);
+      (0, _internal.insert_dev)(target, nav, anchor);
+      (0, _internal.append_dev)(nav, div0);
+      (0, _internal.append_dev)(div0, t0);
+      (0, _internal.append_dev)(div0, br0);
+      (0, _internal.insert_dev)(target, t1, anchor);
+      (0, _internal.insert_dev)(target, div1, anchor);
+      (0, _internal.append_dev)(div1, img);
+      (0, _internal.insert_dev)(target, t2, anchor);
+      (0, _internal.insert_dev)(target, div5, anchor);
+      (0, _internal.append_dev)(div5, div4);
+      (0, _internal.append_dev)(div4, div2);
+      (0, _internal.append_dev)(div2, h5);
+      (0, _internal.append_dev)(div2, t4);
+      (0, _internal.append_dev)(div2, p);
+      (0, _internal.append_dev)(p, t5);
       (0, _internal.append_dev)(p, i0);
-      (0, _internal.append_dev)(p, t3);
-      (0, _internal.append_dev)(p, br);
-      (0, _internal.append_dev)(div0, t4);
-      (0, _internal.append_dev)(div0, a0);
-      (0, _internal.append_dev)(a0, t5);
+      (0, _internal.append_dev)(p, t6);
+      (0, _internal.append_dev)(p, br1);
+      (0, _internal.append_dev)(div2, t7);
+      (0, _internal.append_dev)(div2, a0);
+      (0, _internal.append_dev)(a0, t8);
       (0, _internal.append_dev)(a0, i1);
-      (0, _internal.append_dev)(div2, t6);
-      (0, _internal.append_dev)(div2, div1);
-      (0, _internal.append_dev)(div1, a1);
-      (0, _internal.append_dev)(div1, t8);
-      (0, _internal.append_dev)(div1, a2);
-      (0, _internal.append_dev)(div1, t10);
-      (0, _internal.append_dev)(div1, a3);
-      (0, _internal.append_dev)(div1, t12);
-      (0, _internal.append_dev)(div1, a4);
+      (0, _internal.append_dev)(div4, t9);
+      (0, _internal.append_dev)(div4, div3);
+      (0, _internal.append_dev)(div3, a1);
+      (0, _internal.append_dev)(div3, t11);
+      (0, _internal.append_dev)(div3, a2);
+      (0, _internal.append_dev)(div3, t13);
+      (0, _internal.append_dev)(div3, a3);
+      (0, _internal.append_dev)(div3, t15);
+      (0, _internal.append_dev)(div3, a4);
     },
     d: function destroy(detaching) {
-      if (detaching) (0, _internal.detach_dev)(div3);
+      if (detaching) (0, _internal.detach_dev)(nav);
+      if (detaching) (0, _internal.detach_dev)(t1);
+      if (detaching) (0, _internal.detach_dev)(div1);
+      if (detaching) (0, _internal.detach_dev)(t2);
+      if (detaching) (0, _internal.detach_dev)(div5);
     }
   };
   (0, _internal.dispatch_dev)("SvelteRegisterBlock", {
     block,
     id: create_if_block_1.name,
     type: "if",
-    source: "(32:2) {#if !user.loggedIn}",
+    source: "(47:2) {#if !user.loggedIn}",
     ctx
   });
   return block;
-} // (51:2) {#if user.loggedIn}
+} // (83:2) {#if user.loggedIn}
 
 
 function create_if_block(ctx) {
-  let nav;
-  let a0;
-  let t0;
-  let t1_value =
-  /*user*/
-  ctx[0].username + "";
-  let t1;
-  let t2;
-  let a1;
-  let t3;
-  let i;
-  let t4;
   let litegraph;
   let current;
   litegraph = new _LiteGraph.default({
@@ -3445,45 +3471,13 @@ function create_if_block(ctx) {
   });
   const block = {
     c: function create() {
-      nav = (0, _internal.element)("nav");
-      a0 = (0, _internal.element)("a");
-      t0 = (0, _internal.text)("Hello, ");
-      t1 = (0, _internal.text)(t1_value);
-      t2 = (0, _internal.space)();
-      a1 = (0, _internal.element)("a");
-      t3 = (0, _internal.text)("Log Out\n        ");
-      i = (0, _internal.element)("i");
-      t4 = (0, _internal.space)();
       (0, _internal.create_component)(litegraph.$$.fragment);
-      (0, _internal.attr_dev)(a0, "class", "navbar-brand svelte-pmjj87");
-      (0, _internal.add_location)(a0, file, 52, 2, 1431);
-      (0, _internal.attr_dev)(i, "class", "fab fa-github");
-      (0, _internal.add_location)(i, file, 55, 8, 1555);
-      (0, _internal.attr_dev)(a1, "href", "/auth/logout");
-      (0, _internal.attr_dev)(a1, "class", "btn btn-danger");
-      (0, _internal.add_location)(a1, file, 53, 4, 1486);
-      (0, _internal.attr_dev)(nav, "class", "navbar navbar-dark bg-dark");
-      (0, _internal.add_location)(nav, file, 51, 2, 1388);
     },
     m: function mount(target, anchor) {
-      (0, _internal.insert_dev)(target, nav, anchor);
-      (0, _internal.append_dev)(nav, a0);
-      (0, _internal.append_dev)(a0, t0);
-      (0, _internal.append_dev)(a0, t1);
-      (0, _internal.append_dev)(nav, t2);
-      (0, _internal.append_dev)(nav, a1);
-      (0, _internal.append_dev)(a1, t3);
-      (0, _internal.append_dev)(a1, i);
-      (0, _internal.insert_dev)(target, t4, anchor);
       (0, _internal.mount_component)(litegraph, target, anchor);
       current = true;
     },
     p: function update(ctx, dirty) {
-      if ((!current || dirty &
-      /*user*/
-      1) && t1_value !== (t1_value =
-      /*user*/
-      ctx[0].username + "")) (0, _internal.set_data_dev)(t1, t1_value);
       const litegraph_changes = {};
       if (dirty &
       /*user*/
@@ -3502,8 +3496,6 @@ function create_if_block(ctx) {
       current = false;
     },
     d: function destroy(detaching) {
-      if (detaching) (0, _internal.detach_dev)(nav);
-      if (detaching) (0, _internal.detach_dev)(t4);
       (0, _internal.destroy_component)(litegraph, detaching);
     }
   };
@@ -3511,7 +3503,7 @@ function create_if_block(ctx) {
     block,
     id: create_if_block.name,
     type: "if",
-    source: "(51:2) {#if user.loggedIn}",
+    source: "(83:2) {#if user.loggedIn}",
     ctx
   });
   return block;
@@ -3533,7 +3525,7 @@ function create_fragment(ctx) {
       if (if_block0) if_block0.c();
       t = (0, _internal.space)();
       if (if_block1) if_block1.c();
-      (0, _internal.add_location)(main, file, 30, 0, 562);
+      (0, _internal.add_location)(main, file, 45, 0, 1110);
     },
     l: function claim(nodes) {
       throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3634,7 +3626,11 @@ function instance($$self, $$props, $$invalidate) {
       $$invalidate(0, user.loggedIn = false, user);
       $$invalidate(0, user.username = "", user);
     }
-  });
+  }); // i dont even think we are using it, it can be deleted-Alexa 
+  // Robby - Uncommenting for now, throwing an error
+  // window.cookieconsent.initialise({
+  //   container: document.getElementById("cookieconsent"),
+
   const writable_props = [];
   Object.keys($$props).forEach(key => {
     if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<App> was created with unknown prop '".concat(key, "'"));
@@ -3660,7 +3656,6 @@ function instance($$self, $$props, $$invalidate) {
 class App extends _internal.SvelteComponentDev {
   constructor(options) {
     super(options);
-    if (!document.getElementById("svelte-pmjj87-style")) add_css();
     (0, _internal.init)(this, options, instance, create_fragment, _internal.safe_not_equal, {});
     (0, _internal.dispatch_dev)("SvelteRegisterComponent", {
       component: this,
@@ -3674,7 +3669,7 @@ class App extends _internal.SvelteComponentDev {
 
 var _default = App;
 exports.default = _default;
-},{"svelte/internal":"../node_modules/svelte/internal/index.mjs","svelte":"../node_modules/svelte/index.mjs","./LiteGraph.svelte":"components/LiteGraph.svelte","_css_loader":"../../rbd/pnpm-volume/a97c73be-be8a-4582-8574-3e06e9c3326f/node_modules/.registry.npmjs.org/parcel-bundler/1.12.4/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"main.js":[function(require,module,exports) {
+},{"svelte/internal":"../node_modules/svelte/internal/index.mjs","svelte":"../node_modules/svelte/index.mjs","./LiteGraph.svelte":"components/LiteGraph.svelte"}],"main.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3725,7 +3720,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44710" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38020" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

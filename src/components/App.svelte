@@ -8,6 +8,8 @@
     username: "not logged in"
   };
   
+
+  
   
   onMount(async () => {
     const res = await fetch("/auth/user", {credentials: 'include'});
@@ -19,43 +21,66 @@
       user.loggedIn = false;
       user.username = "";
     }
+    // i dont even think we are using it, it can be deleted-Alexa 
+    // Robby - Uncommenting for now, throwing an error
+    
+      // window.cookieconsent.initialise({
+      //   container: document.getElementById("cookieconsent"),
+      //   palette:{
+      //     popup: { background: "#1aa3ff" },
+      //     button: { background: "#e0e0e0" },
+      //   },
+      //   revokable: true,
+      //   onStatusChange: function(status) {
+      //     console.log(this.hasConsented() ?
+      //     'enable cookies' : 'disable cookies');
+      //   },
+      //   "theme": "edgeless"
+      // });
   });
 </script>
 
 <style>
-  .navbar-brand {
-    color: white !important;
-  }
 </style>
 
-<main>
+<main> 
   {#if !user.loggedIn}
-  
+   
+  <nav>
+    
+    <div class="cookie" style= "text-align: center">
+  By using our website, you agree to our 🍪 policy
+             <br>
+    </div>
+  </nav>
+  <div class="prof-center">
+<img width = "200px" src="https://www.wpi.edu/sites/default/files/faculty-image/cdroberts.jpg?1602870867914">
+    
+  </div>
+       
     <div class="wrapper fadeInDown">
   <div class="card text-center">
+     
   <div class="card-body">
     <h5 class="card-title display-4">Gibber Graph</h5>
     <p class="card-text">Gibberish <i class="fas fa-heart" style="color: red;"></i> LiteGraph<br></p>
     <a href="/auth/github" class="btn btn-primary">Login with Github <i class="fab fa-github" ></a>
-  </div>
+      </div>
+
   <div class="card-footer text-muted">
+
     <a target="_blank" href="https://github.com/rmanky">Robear Mankaryous</a>, 
     <a target="_blank" href="https://github.com/afsimoneau">Alexander Simoneau</a>,
     <a target="_blank" href="https://github.com/kylemikableh">Kyle Mikolajczyk</a>,
     <a target = "_blank" href = "https://github.com/afreglett">Alexa Freglette 
   </div>
+
 </div>
+
     </div>
     
   {/if}
   {#if user.loggedIn}
-  <nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand">Hello, {user.username}</a>
-    <a href="/auth/logout" class="btn btn-danger">
-      Log Out
-        <i class="fab fa-github" />
-      </a>
-  </nav>
     <LiteGraph {user}/>
   {/if} 
 </main>
