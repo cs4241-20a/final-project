@@ -32,7 +32,7 @@ class API {
 	}
 
 	authenticate(token){
-		let params = {auth_token: token}
+		let params = {id_token: token}
 		this.get(this.auth_url, {params: params}).then((res) => {
 			if(res.status !== 200) {
 				console.error(res.data)
@@ -126,6 +126,32 @@ class API {
 		const url = '/uploads/' + id
 		const data = {uploader: uploader, title: title}
 		return await this.put(url, data).catch(handle_error)
+	}
+
+	async get_drawing(id){
+		const url = '/drawings/' + id
+		return await this.get(url).catch(handle_error)
+	}
+
+	async submit_drawing(artist, title, canvas_data, published=false) {
+		const data = {artist: artist, title: title, canvas_data: canvas_data, published: published}
+		return await this.post('/drawings', data).catch(handle_error)
+	}
+
+	async update_drawing(id, artist, title, canvas_data, published){
+		const url = '/drawings/' + id
+		const data = {artist: artist, title: title, canvas_data: canvas_data, published: published}
+		return await this.put(url, data).catch(handle_error)
+	}
+
+	async delete_drawing(id){
+		const url = '/drawings/' + id
+		const res = await this.delete(url)
+		if(res.status != 200) {
+			handle_error(res.data)
+			return false
+		}
+		return true
 	}
 
 	async sign_out(){
