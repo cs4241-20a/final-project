@@ -16,7 +16,7 @@ const {ensureAuthenticated} = githubAuth;
  * Auth: Required
  * Desc: Gets all groups the current user belongs to. Verified by session.
  */
-router.get("/:id", ensureAuthenticated, async (req, res) => {
+router.get("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {username} = req.user;
 
