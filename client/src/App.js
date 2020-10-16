@@ -10,8 +10,8 @@ import {
 
 import API from './API'
 import Home from './screens/home'
-import UserUploads from './screens/user_uploads'
-import AllUploads from './screens/all_uploads'
+import UserDrawings from './screens/user_drawings'
+import Gallery from './screens/published_drawings'
 import DrawScreen from './screens/draw'
 
 import 'bootswatch/dist/sketchy/bootstrap.min.css'
@@ -38,8 +38,8 @@ class App extends React.Component{
 
 	componentDidMount(){
 		API.check_auth()
-		API.add_auth_listener(() => {
-			this.setState({authenticated: true})
+		API.add_auth_listener((user) => {
+			this.setState({authenticated: true, user_name: user.name})
 		})
 	}
 
@@ -61,12 +61,14 @@ class App extends React.Component{
 		let my_uploads_link = null
 		let name_display = null
 		let sign_out = null
+		const {user_name} = this.state
 		if(this.state.authenticated) {
 			my_uploads_link = (
 				<Nav.Item>
-					<Nav.Link as={NavLink} to="/user">My Uploads</Nav.Link>
+					<Nav.Link as={NavLink} to="/user">My Drawings</Nav.Link>
 				</Nav.Item>)
-			name_display = <Navbar.Text id="display-name">Signed in as {API.user.name}</Navbar.Text>
+			const name_text = `Signed in as ${user_name}`
+			name_display = <Navbar.Text id="display-name">{name_text}</Navbar.Text>
 			sign_out = (
 				<Nav.Item>
 					<Nav.Link onClick={this.sign_out}>Sign Out</Nav.Link>
@@ -75,7 +77,7 @@ class App extends React.Component{
 		}
 		return (
 			<Router history={history}>
-				<Navbar bg="dark" variant="dark" sticky="top" expand="md" animation="true">
+				<Navbar bg="primary" variant="dark" sticky="top" expand="md" animation="true">
 					<Navbar.Brand as={NavLink} to="/">Drawsome</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					<Navbar.Collapse>
@@ -88,7 +90,7 @@ class App extends React.Component{
 							</Nav.Item>
 							{my_uploads_link}
 							<Nav.Item>
-								<Nav.Link as={NavLink} to="/uploads">All Uploads</Nav.Link>
+								<Nav.Link as={NavLink} to="/gallery">Gallery</Nav.Link>
 							</Nav.Item>
 							{name_display}
 							{sign_out}
@@ -100,8 +102,8 @@ class App extends React.Component{
 				{/* A <Switch> looks through its children <Route>s and
 							renders the first one that matches the current URL. */}
 				<Switch>
-					<Route path="/user" render={(props) => (<UserUploads {...props} states={states}/>)}/>
-					<Route path="/uploads" render={(props) => (<AllUploads {...props} states={states}/>)}/>
+					<Route path="/user" render={(props) => (<UserDrawings {...props} states={states}/>)}/>
+					<Route path="/gallery" render={(props) => (<Gallery {...props} states={states}/>)}/>
 					<Route path="/draw" render={(props) => (<DrawScreen {...props} states={states}/>)}/>
 					<Route path="/" exact render={(props) => (<Home {...props} states={states}/>)}/>
 				</Switch>
