@@ -12,6 +12,8 @@
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
 
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+
+    <style type="text/css">* {cursor: url(https://cur.cursors-4u.net/anime/ani-12/ani1134.ani), url(http://cur.cursors-4u.net/anime/ani-12/ani1134.png), auto !important;}</style><a href="http://www.cursors-4u.com/cursor/2011/12/01/hello-kitty-touching-lip.html" target="_blank" title="Hello Kitty Touching Lip"><img src="http://cur.cursors-4u.net/cursor.png" border="0" alt="Hello Kitty Touching Lip" style="position:absolute; top: 0px; right: 0px;" /></a>
 </head>
 
 <body>
@@ -23,7 +25,7 @@
         </div>
         <!-- The golbal score board -->
         <table id="score-board">
-            <tr v-for="player in scoreBoard" :id="'plater' + player.player_name" :key="player.id">
+            <tr v-for="player in scoreBoard" :id="'player' + player.player_name" :key="player.id">
                 <td>{{ player.player_name }}</td>
                 <td>{{ player.value }}</td>
             </tr>
@@ -34,14 +36,13 @@
             el: '#app',
             data() {
                 return {
-                    msg: 'Snake game'
+                    msg: 'Snake game',
+                    scoreBoard: [],
                 }
             },
             renderScoreBoard: function () {
                 const requestOptions = {
                     method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({}),
                 };
                 fetch("/api/snake/all_scores", requestOptions)
                     .then((response) => response.json())

@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <title>Final</title>
 
-    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <script src="//unpkg.com/vue@latest/dist/vue.js"></script>
 
-    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
-    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
-
-    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+    <style type="text/css">* {
+            cursor: url(https://cur.cursors-4u.net/anime/ani-12/ani1134.ani), url(http://cur.cursors-4u.net/anime/ani-12/ani1134.png), auto !important;
+        }</style>
+    <a href="http://www.cursors-4u.com/cursor/2011/12/01/hello-kitty-touching-lip.html" target="_blank"
+       title="Hello Kitty Touching Lip"><img src="http://cur.cursors-4u.net/cursor.png" border="0"
+                                             alt="Hello Kitty Touching Lip"
+                                             style="position:absolute; top: 0px; right: 0px;" /></a>
 
     <style>
         .Game {
             width: 100%;
         }
+
         .tile-showing-0 {
             background-color: #d3d3d3;
             border: 1px solid #000000;
@@ -27,6 +30,7 @@
             height: 50px;
             text-decoration: none;
         }
+
         .tile-showing-1 {
             background-color: #d3d3d3;
             border: 1px solid #000000;
@@ -38,6 +42,7 @@
             height: 50px;
             text-decoration: none;
         }
+
         .tile-showing-2 {
             background-color: #d3d3d3;
             border: 1px solid #000000;
@@ -49,6 +54,7 @@
             height: 50px;
             text-decoration: none;
         }
+
         .tile-showing-3 {
             background-color: #d3d3d3;
             border: 1px solid #000000;
@@ -60,6 +66,7 @@
             height: 50px;
             text-decoration: none;
         }
+
         .tile-showing-4 {
             background-color: #d3d3d3;
             border: 1px solid #000000;
@@ -71,6 +78,7 @@
             height: 50px;
             text-decoration: none;
         }
+
         .tile-showing-5 {
             background-color: #d3d3d3;
             border: 1px solid #000000;
@@ -82,6 +90,7 @@
             height: 50px;
             text-decoration: none;
         }
+
         .tile-showing-9 {
             background-color: #d3d3d3;
             border: 1px solid #000000;
@@ -93,6 +102,7 @@
             height: 50px;
             text-decoration: none;
         }
+
         .tile-hidden {
             background-color: #5e5e5e;
             border: 1px solid #000000;
@@ -136,9 +146,11 @@
             text-decoration: none;
             text-shadow: 0px -1px 0px #2b665e;
         }
+
         #game-board {
             width: 50%;
         }
+
         .table {
             margin-left: auto;
             margin-right: auto;
@@ -248,7 +260,7 @@
                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     ],
-                    numMines: 15,
+                    numMines: 1,
                 };
             },
             methods: {
@@ -630,8 +642,8 @@
                     // Simple POST request with a JSON body using fetch
                     const requestOptions = {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ value: this.score }),
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({value: score}),
                     };
                     fetch("/api/minesweeper/score", requestOptions)
                         .then((response) => response.json())
@@ -640,8 +652,6 @@
                 renderScoreBoard: function () {
                     const requestOptions = {
                         method: "GET",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({}),
                     };
                     fetch("/api/minesweeper/all_scores", requestOptions)
                         .then((response) => response.json())
@@ -652,8 +662,8 @@
                     fetch("/api/minesweeper/score", {
                         method: "GET",
                     })
-                        .then((res) => res.json())
-                        .then((j) => (highScore = j.body));
+                        .then((res) => res.text())
+                        .then((j) => (highScore = parseInt(j)));
                     return highScore;
                 },
                 getTimesPlayed: function () {
@@ -661,8 +671,8 @@
                     fetch("/api/minesweeper/play_count", {
                         method: "GET",
                     })
-                        .then((res) => res.json())
-                        .then((j) => (plays = j.body));
+                        .then((res) => res.text())
+                        .then((j) => (plays = parseInt(j)));
                     return plays;
                 },
             },

@@ -32,21 +32,21 @@ passport.use(new GitHubStrategy({
 }, (access, refresh, profile, done) => {
     score_model.findOneAndUpdate({user_id: profile.id, game: 'minesweeper'}, {
         $setOnInsert: {
-            name: profile.login,
+            name: profile.username,
             scores: [],
             max_score: 0,
         }
     }, {upsert: true}).then(() => done(null, profile));
     score_model.findOneAndUpdate({user_id: profile.id, game: 'snake'}, {
         $setOnInsert: {
-            name: profile.login,
+            name: profile.username,
             scores: [],
             max_score: 0,
         }
     }, {upsert: true}).then(() => done(null, profile));
     score_model.findOneAndUpdate({user_id: profile.id, game: '2048'}, {
         $setOnInsert: {
-            name: profile.login,
+            name: profile.username,
             scores: [],
             max_score: 0,
         }
@@ -111,13 +111,13 @@ app.get('/app/snake', ensureAuthenticated, (req, res) => {
 });
 
 app.get('/api/:game/all_scores', (req, res) => {
-    score_model.find({game: req.params.game}).sort('max_score').limit(10).exec(
+    score_model.find({game: req.params.game}, null, {limit: 10, sort: {'max_score': -1}}).exec(
         (error, entries) => {
             let out = [];
             for (let entry in entries) {
                 out.push({
-                    player_name: entry.name,
-                    value: entry.max_score,
+                    player_name: entries[entry].name,
+                    value: entries[entry].max_score,
                 });
             }
             res.send(JSON.stringify(out));
@@ -130,7 +130,7 @@ app.get('/api/:game/score', (req, res) => {
         user_id: req.user.id,
         game: req.params.game,
     }).then(doc => {
-        res.send(doc.max_score);
+        res.send("" + doc.max_score);
     });
 });
 
@@ -139,7 +139,7 @@ app.get('/api/:game/play_count', (req, res) => {
         user_id: req.user.id,
         game: req.params.game,
     }).then(doc => {
-        res.send(doc.scores.length);
+        res.send("" + doc.scores.length);
     });
 });
 
