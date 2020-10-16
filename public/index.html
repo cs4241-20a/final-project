@@ -1,13 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Webware final project</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
 </head>
-<body>
+
+<body class="bg-dark">
     <div id="my-game"></div>
     <script src="js/imports/phaser.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/scripts.js"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <a class="navbar-brand" href="#"> RPG chat game</a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <div class="form-inline my-2 my-lg-0" id="userInfo">
+                <input class="form-control mr-sm-2" id="username" placeholder="Username" />
+                <input class="form-control mr-sm-2" id="password" placeholder="Password" type="password" />
+                <button class="btn btn-primary my-2 my-sm-0 mr-sm-2" id="loginButton">
+                    Register / Login
+                </button>
+            </div>
+            <div class="form-inline my-2 my-lg-0" id="profile" style="display: none">
+                <button class="btn btn-info disabled my-2 my-sm-0 mr-sm-1">
+                    Username: <span id="loggedUsername"></span>
+                </button>
+                <button class="btn btn-danger my-2 my-sm-0 ml-2 mr-sm-5" id="logoutButton">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid bg-dark">
+        <div id="loginPage">
+            <div class="container p-3">
+                <!-- add content-->
+            </div>
+        </div>
+
+        <div class="pages" id="otherPages" style="display: none">
+            <br />
+
+        </div>
+    </div>
 </body>
+
 </html>
