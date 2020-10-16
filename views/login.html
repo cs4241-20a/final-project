@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="login.css" />
+    <script src="loginScript.js"></script>
+    <title>Enlighten Me</title>
+    <meta name="description" content="Enlighten Me" />
+    <meta name="Mario" content="SitePoint" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="/index.html">
+        <img
+          src="https://cdn.glitch.com/aee5db39-84c5-480a-8f4a-12d8cb3976ea%2Fcard-checklist.svg?v=1600893665069"
+          width="30"
+          height="30"
+          class="d-inline-block align-top"
+          alt=""
+          loading="lazy"
+        />
+        Enlighten Me
+      </a>
+    </nav>
+
+    <div class="jumbotron">
+      <h1 class="display-4">Are you ready to be enlightened?</h1>
+      <p class="lead">
+        Log in and debate topics with other users online
+      </p>
+      <hr class="my-4" />
+      <h5>Sign in to get started!</h5>
+      
+      
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="usernameInput">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="usernameInput"
+            aria-describedby="emailHelp"
+          />
+          <small id="emailHelp" class="form-text text-muted"
+            >We'll never share your info with anyone else.</small
+          >
+        </div>
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="passwordInput"
+          />
+        </div>
+    
+        <button id="submitLogin" type="submit" class="btn btn-primary" href="/discuss">
+          Submit
+        </button>
+          <small id="emailHelper" class="form-text text-muted">Note for first time users, an account will be created after first sign in.</small>
+      </form>
+    </div>
+  </body>
+</html>

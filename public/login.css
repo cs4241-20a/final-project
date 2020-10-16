@@ -1,0 +1,51 @@
+#loginForm {
+    width: 30%;
+    padding-top: 15px;
+  }
+  
+  #listEditor {
+    background-color: #e9ecef;
+  }
+  
+  #githubIcon {
+    margin-left: 3px;
+  }
+  #githubLogin {
+    margin-left: 5px;
+  }
+  
+  #welcomeText {
+    margin-right: 10px;
+  }
+  
+  #listGroup {
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 1%;
+  }
+  
+  .inlineButton {
+    margin-left: 10px;
+  }
+  
+  #userList {
+    width: auto;
+    margin-bottom: 1%;
+  }
+  
+  h3 {
+    margin-bottom: 15px;
+    margin-top: 15px;
+  }
+  
+  #addBar {
+    margin-bottom: 15px;
+  }
+  
+  #addatask {
+    font-size: 18px;
+  }
+  
+  .noBottomMargin {
+    margin-bottom: 0px;
+  }
