@@ -10,7 +10,7 @@ Note: This site may take unusually long to start up. This is Glitch's fault beca
 ## Technical notes
 * If running on your machine, run `npm install` both in the root AND `backend` directories. Run `npm run build` in the root directory to compile the frontend.
 * To develop on your local machine with a watch, run `npm install` as above and then run `npm run watch` in the root directory.
-* If running on an HTTPS server (such as on Glitch), you will need to change this line in `frontend/js/components/WebSocketProvider.tsx`:
+* If running on an HTTPS server (such as on Glitch), you will need to change this line in `frontend/js/components/WebSocketProvider.tsx`:  
     ```js
     const ws = new WebSocket(`ws://${location.host}`);
     ```
@@ -18,7 +18,7 @@ Note: This site may take unusually long to start up. This is Glitch's fault beca
     ```js
     const ws = new WebSocket(`wss://${location.host}`);
     ```
-* `.env` (placed in the root directory) requires the following fields:
+* `.env` (placed in the root directory) requires the following fields:  
     ```
     DB_USER=MongoDbUser
     DB_PASSWORD=MongoDbUserPassword
@@ -26,7 +26,7 @@ Note: This site may take unusually long to start up. This is Glitch's fault beca
     DB_DATABASE=DbConnectionQueryString
     SESSION_SECRET="Any secret to be used for signing sessions"
     ```
-* If running on Glitch, you may need to change this line in `package.json`:
+* If running on Glitch, you may need to change this line in `package.json`:  
     ```json
     "start": "cd backend && npm run start",
     ```
@@ -37,21 +37,21 @@ Note: This site may take unusually long to start up. This is Glitch's fault beca
     Though it is unclear how necessary exactly this is.
 
 ## Major technologies used
-* React w/ Material-UI
+* React w/ Material-UI  
     React and Material-UI were used as the foundation for the frontend. They provided simple state handling with and beatiful design framework. We exclusively used the functional component dialect of React components.
-* React Router
+* React Router  
     React Router provided frontend route handling that took stress off of the backend and made navigation feel more fluid. React Router was used for all frontend routing (API routing and `POST` requests were of course handled by the backend).
-* Monaco Editor
+* Monaco Editor  
     We chose the Monaco Editor (the same one that's used in VSCode) for our code editors. It was chosen over CodeMirror because it has excellent javascript support, which was our primary use case, and it also looks a lot nicer by default and a lot more in line with the visual design of our site.
-* Express
+* Express  
     Express was used to run the server and handle middleware.
-* MongoDB
+* MongoDB  
     For data storage.
-* Passport/`express-session`/`connect-mongodb-session`
+* Passport/`express-session`/`connect-mongodb-session`  
     All of these in conjunction were used to produce login sessions for users.
-* `ws`
+* `ws`  
     This was used to handle websockets, which were used for the group-forming and racing feature.
-* `vm2`
+* `vm2`  
     VM2 was used for sandboxing code submissions so that malicious actors can't take down the server.
 
 Other smaller technologies were used as well, such as `react-markdown`, `react-split-pane`, `nanoid`, `body-parser`, and `esm` (for Node 12 compatibility).
@@ -68,13 +68,13 @@ Client-server communication was a whole other beast, with trying to get asynchro
 Time was also a limitation. There were other stretch goals listed in our proposal that, while being listed as stretch goals, would've been nice to add. These are things like leaderboards, profile pages listing what challenges a user had completed or made, and other things to that effect. If we had more time, maybe we could've gotten one or two of those strech goals in there.
 
 ## Responsibilities
-* Lindberg Simpson
+* Lindberg Simpson  
     Created the challenge listing page
-* Stephen Lucas
+* Stephen Lucas  
     Created the login/register page
-* Yongcheng Liu
+* Yongcheng Liu  
     Implemented server-side sandboxing and the client-server protocol for requesting that code be run
-* Trevor Paley
+* Trevor Paley  
     Overall project vision/design, implemented project infrastructure, created create/play challenge pages, and implemented most client-server communication (including RTC)
 
 ## Video
