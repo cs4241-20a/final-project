@@ -183,29 +183,38 @@ var editTask = function (e) {
   tEdit.tags = input4.value
   tEdit.description = input5.value
 
-  fetch( '/edit', {
-         method:'POST',
-         body: JSON.stringify(tEdit),
-         headers: {
-          "Content-type": "application/json"
-        }
-    })
-    .then( function( response ) {
-      location.reload()
-    })
+  const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "PATCH", body: JSON.stringify(tEdit)})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+
+  // fetch( '/edit', {
+  //        method:'POST',
+  //        body: JSON.stringify(tEdit),
+  //        headers: {
+  //         "Content-type": "application/json"
+  //       }
+  //   })
+  //   .then( function( response ) {
+  //     location.reload()
+  //   })
 }
 
 function delTask(task) {
-  fetch('/delete', {
-    method: 'POST',
-    body: JSON.stringify({id: task._id}),
-    headers: {
-      "Content-type": "application/json"
-    }
-  })
-  .then( function( response ) {
-    location.reload()
-  })
+  const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "DELETE"})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+  // fetch('/delete', {
+  //   method: 'POST',
+  //   body: JSON.stringify({id: task._id}),
+  //   headers: {
+  //     "Content-type": "application/json"
+  //   }
+  // })
+  // .then( function( response ) {
+  //   location.reload()
+  // })
 }
 
 // Tells us which task was just clicked on

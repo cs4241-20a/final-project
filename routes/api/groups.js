@@ -23,7 +23,6 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 	try {
 		// Find the user with the given username
 		const currentUser = await User.findOne({username});
-		console.log(currentUser)
 		// Find the groups the user with the given id belongs to
 		const groups = await Group.find({members: currentUser._id});
 
