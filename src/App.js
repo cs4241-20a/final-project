@@ -33,14 +33,21 @@ function App() {
             <li>
               <Link to="/">Home</Link>
             </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+            <li>
+              <Link to="/lobby">Lobby</Link>
+            </li>
           </ul>
           <button onClick={joinLobby}>Button</button>
           <button onClick={sendClick}>Send Click</button>
         </nav>
       <Switch>
-        <Route path="/">
-          <Home />
-        </Route>
+      
         <Route path="/lobby">
           <Lobby />
         </Route>
@@ -49,6 +56,9 @@ function App() {
         </Route>
         <Route path="/register">
           <Register />
+        </Route>
+         <Route path="/">
+          <Home />
         </Route>
       </Switch>
       </Router>
