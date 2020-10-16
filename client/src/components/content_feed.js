@@ -3,7 +3,6 @@ import {Spinner} from 'react-bootstrap'
 import {withRouter} from 'react-router-dom'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import FileView from '../components/file_view'
 import API from '../API'
 
 class ContentFeed extends React.Component {
@@ -12,6 +11,7 @@ class ContentFeed extends React.Component {
 		const auth_required = props.auth_required == undefined? true : props.auth_required
 		this.state = {auth_required: auth_required, authenticated: false, items: [], has_more: true, is_loading: true}
 		this.feed_path = props.feed_path
+		this.ItemRender = this.props.ItemRender
 		this.generator = API.pager(props.feed_path)
 		this.renderItems = this.renderItems.bind(this)
 	}
@@ -32,7 +32,8 @@ class ContentFeed extends React.Component {
 	renderItem(key, data){
 		if(!data)
 			return null
-		return <div key={key}><FileView data={data}/></div>
+		const Render = this.ItemRender
+		return <div key={key}><Render data={data}/></div>
 	}
 
 	renderItems(){
