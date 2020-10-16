@@ -70,7 +70,7 @@ function timeout() {
 timeout();
 
 //*******************Game socket************************
-const ws = new WebSocket("ws://localhost:8082");
+const ws = new WebSocket("ws://localhost:3030");
 
 
 ws.addEventListener("message", e=>{
