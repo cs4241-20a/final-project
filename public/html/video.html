@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+2<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -93,7 +93,8 @@
   </form>
   <script src="socket.io/socket.io.js"></script>
     <script>
-      var socket = io('http://localhost:3000');
+
+      var socket = window.ws = io(`${window.location.host}`);
       var videoType, video_link;
       window.onload = function () {
         videoType = getUrlVars()["video"];
@@ -133,7 +134,13 @@
 
         socket.on('message', function (message) {
                 console.log('message', message);
-                createSpan(message.content);
+
+                var comment = message.content.split(" ");
+                var type = comment.shift();
+                if(type == videoType){
+                  createSpan(comment);
+                }
+
             });
       };
 
@@ -176,7 +183,12 @@
           }, 1500);
           return;
         }
-        var content = oInput.value;
+
+        // var content = oInput.value;
+        var content = videoType + " ";
+        content += oInput.value;
+        // content += videoType;
+
         socket.emit('message', { content });
         createSpan(oInput.value);
         console.log("send clicked");
