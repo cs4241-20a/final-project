@@ -60,8 +60,8 @@ export const ListChallenges: FunctionComponent<{siteSettings: SiteSettings}> = (
                 {challenges.map(challenge => (
                     <Paper className={classes.challengeCard} elevation={3}>
                         <div>
-                            <Typography variant="h6">Title: {challenge.title}</Typography>
-                            <Typography variant="subtitle2">Author: {challenge.author}</Typography>
+                            <Typography variant="h6">{challenge.title}</Typography>
+                            <Typography variant="subtitle2">By {challenge.author}</Typography>
                         </div>
                         <div>
                             <Link to={`/play/${challenge.id}`}><Button variant="text" color="secondary" size="large" endIcon={<SendIcon/>}>Attempt</Button></Link>
