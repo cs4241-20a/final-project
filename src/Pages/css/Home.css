@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+body {
+    font-family: "Lato";
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.8);
+    padding: 1px;
+}
+
+h1 {
+    font-style: italic;
+    text-align: center;
+    margin-left: 20%;
+    margin-right: 20%;
+    border-bottom: 3px solid black;
+}
+
+p{
+  text-align: center;
+}
+
+.room {
+  margin: auto;
+  width: 400px;
+  height: 300px;
+  text-align: center;
+  justify-content: center;
+  background-color: #eee;
+  display: grid;
+  grid-gap: 1em;
+  padding: 1em;
+  max-width: 40ch;
+}
+
+#hostbtn, #joinrandbtn, #joincodebtn{
+  background-color: #bbbbf2;
+  cursor: pointer;
+  padding: 8px;
+  font-weight: bold;
+}
+
+.center {
+    justify-content: center;
+    display:flex;
+}
+
+input:valid {
+  color: green;
+}
+input:invalid {
+  color: red;
+}
