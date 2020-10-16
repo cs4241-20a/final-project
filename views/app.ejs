@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Final</title>
+
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+</head>
+<body>
+    <main role="main" class="container" id="app">
+        <br>
+        <div class="jumbotron">
+            <h2>To-Do List</h2>
+            <p class="my-4">
+                This web application allows you to manage a personal to-do list.
+            </p>
+            <b-button block v-b-modal.create>Create New Item</b-button>
+            <br>
+            <b-list-group v-if="items.length !== 0">
+                <b-list-group-item v-for="item in items"
+                                   :key="item.id">
+                    {{ item.text }}
+                    <br>
+                    <div style="text-align: right">
+                        <b-button variant="outline-info" @click="start_edit_item(item.id)">Edit</b-button>
+                        <b-button variant="outline-danger" @click="delete_item(item.id)">Delete</b-button>
+                    </div>
+                </b-list-group-item>
+            </b-list-group>
+            <p v-else>No Items in To-Do List!</p>
+        </div>
+
+        <b-modal id="create" title="New Item" model-ok="Create" model-cancel="Cancel" @ok="new_item">
+            <b-form-group description="What should the content of the new item be?" label="Item Content">
+                <b-form-input v-model="new_item_text"></b-form-input>
+            </b-form-group>
+        </b-modal>
+
+        <b-modal id="edit" title="Edit Item" model-ok="Edit" model-cancel="Cancel" @ok="edit_item">
+            <b-form-group description="What should the item content be updated to?" label="Item Content">
+                <b-form-input v-model="edit_item_text"></b-form-input>
+            </b-form-group>
+        </b-modal>
+    </main>
+    <script>
+        window.app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    items: [],
+                    new_item_text: '',
+                    edit_item_text: '',
+                    edit_item_id: '',
+                }
+            },
+            methods: {
+                new_item() {
+                    fetch("/app/item", {method: 'POST', body: this.new_item_text})
+                        .then(() => this.update_items())
+                        .then(() => this.new_item_text = '');
+                },
+                edit_item() {
+                    fetch("/app/item/" + this.edit_item_id, {method: 'PUT', body: this.edit_item_text})
+                        .then(() => this.update_items())
+                        .then(() => this.edit_item_text = '')
+                        .then(() => this.edit_item_id = '');
+                },
+                start_edit_item(id) {
+                    this.edit_item_id = id;
+                    this.$bvModal.show('edit');
+                },
+                delete_item(id) {
+                    fetch("/app/item/" + id, {method: 'DELETE'})
+                        .then(() => this.update_items());
+                },
+                update_items() {
+                    fetch("/app/items")
+                        .then(r => r.json())
+                        .then(d => this.items = d);
+                }
+            },
+            created() {
+                this.update_items();
+            }
+        });
+    </script>
+</body>
+</html>
