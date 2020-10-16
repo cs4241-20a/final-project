@@ -199,7 +199,9 @@ class App extends React.Component {
     this.setState({searchTerm: e.target.value});
   }
   updateList(){
-    return this.state.champNames.filter(champ=>champ.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
+    return this.state.champNames.filter(champ=>
+             !this.state.selections.includes(champ) && champ.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+    )
   }
   checkCode(code){
     let newUrl = "/index.html?matchCode="+code;
