@@ -50,7 +50,7 @@ const webrtcProvider = new WebrtcProvider('string-demo', ydoc)
 //Sync clients with the y-websocket provider
 
 const websocketProvider = new WebsocketProvider(
-  `ws://${window.location.host}`, 'string-demo', ydoc
+  `wss://${window.location.host}`, 'string-demo', ydoc
 )
   
 // main component
