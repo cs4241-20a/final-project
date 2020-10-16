@@ -43,7 +43,7 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({}),
                 };
-                fetch("/api/minesweeper/all_scores", requestOptions)
+                fetch("/api/snake/all_scores", requestOptions)
                     .then((response) => response.json())
                     .then((data) => (this.scoreBoard = data));
             },
