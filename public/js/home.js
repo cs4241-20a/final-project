@@ -23,7 +23,6 @@
 let groupName = "test";
 export { groupName };
 
-console.log(document.getElementById('logout-button'))
 var logout = document.getElementById('logout-button')
 logout.onclick = function(e) {
   e.preventDefault()
@@ -72,7 +71,6 @@ async function addGroupTasks(groupId) {
 const addAllGroups = async () => {
   const res = await fetch("/api/groups", {method: "GET"})
   const data = await res.json()
-  console.log(data)
   var fullRows = Math.floor(data.data.length/3)
   var mod = data.data.length%3
   for(var i = 0; i < fullRows; i++){
@@ -147,29 +145,36 @@ var createGroup = async function(e){
 }
 
 const  addAllInvites = async () => {
-  const res = await fetch("/api/groups/invites/", {method: "GET"})
+  const res = await fetch("/api/groups/invites", {method: "GET"})
   const data = await res.json()
   var inviteDiv = document.getElementById('invite-div')
-  for(var i = 0; i < data.data.length; i++){
+  for(var j = 0; j < data.data.length; j++){
     var div1 = document.createElement('div')
     div1.setAttribute('class', 'collection-item avatar')
-    div1.setAttribute('id', data.data[i]._id)
+    div1.setAttribute('id', data.data[j]._id)
     var i = document.createElement('i')
     i.setAttribute('class', 'large material-icons circle red')
+    i.innerHTML = "account_circle"
     var span = document.createElement('span')
     span.setAttribute('class', 'title teal-text text-darken-3')
-    span.innerHTML = data.data[i].name
+    var groupName = data.data[j].name
+    span.innerHTML = groupName
     var div2 = document.createElement('div')
     div2.setAttribute('class', 'row')
     var a1 = document.createElement('a')
     a1.setAttribute('class', 'waves-effect waves-light btn-small blue')
-    a1.setAttribute('id', 'accept-' + data.data[i]._id)
-    document.getElementById('accept-' + data.data[i]._id).addEventListener('click', acceptInvite(data.data[i]))
+    var group = {_id: data.data[j]._id, invitees: data.data[j].invitees, members: data.data[j].members}
+    a1.addEventListener('click', (e) => {
+      e.preventDefault()
+      acceptInvite(group)
+    })
     a1.innerHTML = "Accept"
     var a2 = document.createElement('a')
     a2.setAttribute('class', 'waves-effect waves-light btn-small red')
-    a2.setAttribute('id', 'reject-' + data.data[i]._id)
-    document.getElementById('reject-' + data.data[i]._id).addEventListener('click', rejectInvite(data.data[i]))
+    a2.addEventListener('click', (e) => {
+      e.preventDefault()
+      rejectInvite(group)
+    })
     a2.innerHTML = "Reject"
     div2.appendChild(a1)
     div2.appendChild(a2)
@@ -185,21 +190,29 @@ var acceptInvite = async function(group) {
   const data = await res.json()
   var userId = data.data._id
   var invitees = group.invitees
-  invitees = invitees.filter(invitee => invitee._id != userId)
+  for(var i = 0; i < invitees.length; i++){
+    if(invitees[i] === userId){
+      invitees.splice(i)
+    }
+  }
   var members = group.members
-  members = members.push(userId)
+  members.push(userId)
   const res1 = await fetch("/api/groups/" + group._id, {method: "PATCH", body: JSON.stringify({members, invitees}), headers: {"Content-type": "application/json"}})
-  window.location.href="/"
+  window.location.href = "/"
 }
 
-var declineInvite = async function(group) {
+var rejectInvite = async function(group) {
   const res = await fetch("/api/users/", {method: "GET"})
   const data = await res.json()
   var userId = data.data._id
   var invitees = group.invitees
-  invitees = invitees.filter(invitee => invitee._id != userId)
+  for(var i = 0; i < invitees.length; i++){
+    if(invitees[i] === userId){
+      invitees.splice(i)
+    }
+  }
   const res1 = await fetch("/api/groups/" + group._id, {method: "PATCH", body: JSON.stringify({invitees}), headers: {"Content-type": "application/json"}})
-  window.location.href="/"
+  window.location.href = "/"
 }
 
 
@@ -213,8 +226,5 @@ window.onload = function() {
 
   const groupButton = document.getElementById("create-group")
   groupButton.onclick = createGroup
-
-  const acceptButton = document.querySelector('.accept-btn')
-  acceptButton.onclick = acceptInvite
 
 }
