@@ -28,9 +28,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 
 		// recieved when first connecting to the server so you get positions and colors of all current players
 		socket.on('currentPlayers', players => {
-			console.log(players);
 			Object.keys(players).forEach(id => { // loops through those players
-				console.log('in foreach', players);
 				if (players[id].playerId === socket.id) { // if that player is this client, run func
 					this.addPlayers(self, players[id]);
 				} else {

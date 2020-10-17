@@ -71,9 +71,6 @@ const addNewPlayer = (id) => {
 }
 
 io.on('connection', (socket) =>  {
-	console.log(socket.id);
-
-
 	socket.on('start', () => {
 		console.log('creating');
 		addNewPlayer(socket.id);
@@ -85,13 +82,12 @@ io.on('connection', (socket) =>  {
 		if (players[socket.id] === undefined)
 			addNewPlayer(socket.id)
 		players[socket.id].ready = true;
-		console.log(players);
-		console.log(inGame);
+
 		Object.values(players).some((player) => {
 			if (!player.ready){
 				return true;
 			}
-			console.log('Starting game');
+
 			io.emit('startGame');
 			gameTimeout = setTimeout(gameLogic, 2000);
 		});
@@ -127,14 +123,12 @@ io.on('connection', (socket) =>  {
 	})
 
 	socket.on('disconnectLobby', () => {
-		console.log('disconnect lobby', socket.id);
 		setTimeout(() => delete players[socket.id], 200);
 		io.emit('disconnect', socket.id);
 	})
 
 
 	socket.on('disconnectGame', () => {
-		console.log('disconnect game', socket.id);
 		setTimeout(() => delete players[socket.id], 200);
   
 		io.emit('disconnect', socket.id);
@@ -209,7 +203,6 @@ app.post("/setHighScore", async (req, res) => {
 	await client.connect();
 	const collection = client.db("fp-database").collection("users");
 
-	console.log(object);
 
 	await collection.updateOne(
 		{ username: object.username },

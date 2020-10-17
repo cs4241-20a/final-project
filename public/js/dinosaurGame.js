@@ -192,8 +192,9 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		socket.off('disconnect');
 		socket.off('playerMoved');
 
-		this.scene.switch('Lobby');
-		this.scene.stop('DinoGame');
+		location.reload();
+		// this.scene.switch('Lobby');
+		// this.scene.stop('DinoGame');
 	}
 
 }
