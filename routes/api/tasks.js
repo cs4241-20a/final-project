@@ -28,7 +28,7 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.find({_id: groupId, members: userId});
-		// Find all tasks with the given group id sorted by date created (descending)
+		// Find all tasks with the given group id sorted by date sent (descending)
 		const tasks = await Task.find({groupId}).sort({dateCreated: -1});
 
 		// Send result
@@ -85,7 +85,7 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 		await Group.findOne({_id: groupId, members: userId});
 		// Create a new task with the given name, description, column name, assignees, tags, and due date
 		console.log("Updated again, trying now with assignees as a string")
-		let newTask = new Task({name, desc, groupId, columnName, assignees, tags, dateDue: formatDate(dateDue)});
+		let newTask = new Task({name, desc, groupId, columnName, assignees, tags, dateDue: formatDate(dateDue)}); //formatDate(dateDue)
 		console.log(newTask)
 		// Save the new task to the database
 		newTask = await newTask.save();
@@ -94,7 +94,6 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 		res.status(201).json({success: true, data: newTask});
 	} catch (err) {
 		// Report errors
-		console.error(err);
 		res.status(500).json({success: false, error: err});
 	}
 });
