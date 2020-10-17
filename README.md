@@ -34,15 +34,15 @@ Utilized Technologies
 
 Challenges Faced
 =====================
-An expected challenge we faced was deciding on the most appropriate technologies for this project. Along the same lines, it was also a bit difficult to make sure we found a good balance between having this website do all we desired while also meeting the requirements of the assignment. We couldn't schedule regular meetings as a team but were able to use Teams for effective communication.
+An expected challenge we faced was deciding on the most appropriate technologies for this project. Along the same lines, it was also a bit difficult to make sure we found a good balance between having this website do all we desired while also meeting the requirements of the assignment. Implementing our back-end API in conjuction with our front-end code took longer than expected. Additionally the number of features we were adding and items we were keeping track of/sending data between added a growing level of complexity as we worked, drawing out or development time with testing and debugging. The chat functionality took time to implement particularly with keeping the messages displayed in the correct order. Additionally we didn't have enough time to schedule regular meetings during finals week as a team but were able to use Microsoft Teams for effective communication.
 
 Member Responsibilities
 =======================
-Benny: Front-end, page layout and styling
-Luke: Back-end, databases and authentication + socket.io
-Nikhil: Front-end, Javascript for authentication, task-list, group selection
-Rimsha: Front-end, page layout and styling
-Adam: Chat-based functionality (socket.io)
+Benny: Front-end, page layout and styling home and login page + chat styling
+Luke: Back-end, databases and authentication + chat-based functionality (socket.io)
+Nikhil: Front-end, Javascript for task-list functionality, information passing
+Rimsha: Front-end, task page layout and styling
+Adam: Front-end, Javascript for home page functionality and group invites
 
 Project video
 ===============
