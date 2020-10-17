@@ -4,7 +4,7 @@
 
 Website Link: http://conill-tolbert-final.glitch.me/
 
-Video Link: TO DO TO DO TO DO TO DO TO DO TO DO
+Video Link: https://youtu.be/urqBT8JAeLo
 
 ## Project Logistics
 
