@@ -1,14 +1,10 @@
 "use strict";
 
-import moment from "js/moment.js";
-
 const socket = io();
 
 socket.on("message", message => {
 	console.log(message);
 });
-
-console.log(moment());
 
 // Get the modal
 var modal = document.getElementById("myModal");
