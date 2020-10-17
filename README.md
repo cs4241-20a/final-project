@@ -4,7 +4,7 @@ README
 
 Project Description 
 ==========================
-[link]
+https://webware-team19-final.herokuapp.com/login
 
 Taskinator is a website that allows users to keep track of their tasks for a project. This website provides a simplistic yet useful interface to allow users to create groups, add team members to the groups, and assign tasks to each member. Hence, it specifically targets people who are working on a team project and need an organizational tool. 
 
@@ -38,11 +38,11 @@ An expected challenge we faced was deciding on the most appropriate technologies
 
 Member Responsibilities
 =======================
-Benny: Front-end, page layout and styling home and login page + chat styling
-Luke: Back-end, databases and authentication + chat-based functionality (socket.io)
-Nikhil: Front-end, Javascript for task-list functionality, information passing
-Rimsha: Front-end, task page layout and styling
-Adam: Front-end, Javascript for home page functionality and group invites
+- Benny: Front-end, page layout and styling home and login page + chat styling
+- Luke: Back-end, databases and authentication + chat-based functionality (socket.io)
+- Nikhil: Front-end, Javascript for task-list functionality, group invites
+- Rimsha: Front-end, task page layout and styling
+- Adam: Front-end, Javascript for home page functionality and group invite handling
 
 Project video
 ===============
