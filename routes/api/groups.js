@@ -85,6 +85,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 		console.error(err);
 		// Report errors
 		res.status(500).json({success: false, error: err});
+		console.log(err)
 	}
 });
 

@@ -65,13 +65,14 @@ async function addGroupTasks(groupId) {
 const addAllGroups = async () => {
   const res = await fetch("/api/groups", {method: "GET"})
   const data = await res.json()
-  var rows = Math.ceil(data.data.length/3)
-  var mod = data.data.length/3
-  for(var i = 0; i < rows; i++){
+  console.log(data)
+  var fullRows = Math.floor(data.data.length/3)
+  var mod = data.data.length%3
+  for(var i = 0; i < fullRows; i++){
     const groupContainer = document.getElementById('group-container')
     var row = document.createElement("div")
     row.setAttribute('class', 'row')
-    for(var j = 0; j < mod; j++){
+    for(var j = 0; j < 3; j++){
       var div1 = document.createElement('div')
       div1.setAttribute('class', 'col s12 m4')
       var div2 = document.createElement('div')
@@ -93,13 +94,53 @@ const addAllGroups = async () => {
       row.appendChild(div1)
     }
   groupContainer.append(row)
-
+  }
+  for(var i = 0; i < 1; i++) {
+    const groupContainer = document.getElementById('group-container')
+    var row = document.createElement("div")
+    row.setAttribute('class', 'row')
+    for (var j = 0; j < mod; j++) {
+      var div1 = document.createElement('div')
+      div1.setAttribute('class', 'col s12 m4')
+      var div2 = document.createElement('div')
+      div2.setAttribute('class', 'card')
+      var div3 = document.createElement('div')
+      div3.setAttribute('class', 'card-content')
+      var span = document.createElement('span')
+      span.setAttribute('class', 'card-title')
+      var a = document.createElement('a')
+      a.setAttribute('class', 'teal-text')
+      a.setAttribute('href', '/tasks')
+      a.setAttribute('style', 'font-weight: 400;')
+      a.setAttribute('id', data.data[fullRows * 3 + j]._id)
+      a.innerHTML = data.data[fullRows * 3 + j].name
+      span.appendChild(a)
+      div3.appendChild(span)
+      div2.appendChild(div3)
+      div1.appendChild(div2)
+      row.appendChild(div1)
+    }
+    groupContainer.append(row)
   }
 }
+
+var createGroup = async function(e){
+  e.preventDefault()
+  var g = document.getElementById('group-name')
+  var name = g.value
+  console.log(name)
+  const res = await fetch("/api/groups", {method: "POST", body: JSON.stringify({name}), headers: {"Content-type": "application/json"}})
+  const data = await res.json()
+  window.location.href="/"
+
+}
+
 
 
 window.onload = function() {
   addAllTasks()
   addAllGroups()
   welcome()
+  const groupButton = document.getElementById("create-group")
+  groupButton.onclick = createGroup
 }
