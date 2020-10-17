@@ -105,9 +105,14 @@ io.on("connection", socket => {
 	console.log("A user has connected");
 	socket.broadcast.emit("message", "A user has connected");
 	socket.emit("message", "Hello user!");
+
 	socket.on("disconnect", () => {
 		console.log("A user has disconnected");
 		io.emit("message", "A user has disconnected");
+	});
+
+	socket.on("chatMessage", (msg) => {
+		io.emit("message", {content: msg.content, sender: "placeholder", date: msg.date});
 	});
 });
 

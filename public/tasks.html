@@ -49,11 +49,11 @@
   </div>
   <div id="chat_box" class="right container card-panel teal lighten-2">
       <h5 id="chat_head" style="height: 5%;color: white;text-align: center;margin-bottom: 5px">Chat</h5>
-    <div id="chat_feed" class="container white" style="height: 74%;width: 93%;margin: 0 auto;border: 1px solid grey; box-shadow: 1px 1px 5px grey"></div>
+    <div id="chat_messages" class="container white" style="height: 74%;width: 93%;margin: 0 auto;border: 1px solid grey; box-shadow: 1px 1px 5px grey; overflow-y: scroll"></div>
     <div class="container white" style="bottom: 2px;width: 92%">
-      <form name="message" action="" class="right" >
-        <label for="chat_input"></label><input type="text" id="chat_input" name="chat_msg" style="width: 100%; background-color: white; border-radius: 5px; margin-top: 10px; padding-left: 10px; padding-right: 5px; border: 1px solid grey; box-shadow: 1px 1px 5px grey">
-        <button class="btn waves-effect waves-light" type="submit" id="submit_chat" name="action">Submit
+      <form id="chat_form" class="right" action="">
+        <input type="text" id="chat_input" autocomplete="off" required style="width: 100%; background-color: white; border-radius: 5px; margin-top: 10px; padding-left: 10px; padding-right: 5px; border: 1px solid grey; box-shadow: 1px 1px 5px grey">
+        <button class="btn waves-effect waves-light" id="send-chat-btn">Submit
           <i class="material-icons right">send</i>
         </button>
       </form>
