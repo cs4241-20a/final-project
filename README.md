@@ -2,6 +2,13 @@
 
 Project Group #25
 
+Zach Hilman
+Neville Ingram
+Charles Kittler
+Matthew  Kaminski
+
+https://www.youtube.com/watch?v=3aUSzLdlOos&ab_channel=NevilleIngram
+
 https://gamehub-cs4241.herokuapp.com/
 
 Project Overview: 
