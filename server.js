@@ -24,7 +24,6 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const {ensureAuthenticated} = passportConfig;
-let sessionCookie;
 
 // Configure environment variables
 dotenv.config();
@@ -79,8 +78,6 @@ app.get("/", ensureAuthenticated, (req, res) => {
 	res.sendFile(path.join(__dirname, "public/home.html"));
 });
 app.get("/tasks", ensureAuthenticated, (req, res) => {
-	sessionCookie = req.session;
-	sessionCookie.name = req.user.displayName;
 	res.sendFile(path.join(__dirname, "public/tasks.html"));
 });
 app.get("/login", (req, res) => {
@@ -112,7 +109,8 @@ io.on("connection", socket => {
 	});
 
 	socket.on("chatMessage", (message) => {
-		io.emit("message", {content: message.content, sender: sessionCookie.name, date: message.date});
+		const {content, sender, date} = message;
+		io.emit("message", {content, sender, date});
 	});
 });
 
