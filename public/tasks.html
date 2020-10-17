@@ -7,8 +7,19 @@
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/moment.min.js"></script>
-  <script src="/js/tasks.js" defer></script>
+  <script type="module" src="/js/tasks.js" defer></script>
+  <style>
+    .meta {
+      color: #009688;
+      font-style: italic;
+      font-size: smaller;
+    }
 
+    .message {
+      margin-bottom: 0px;
+      padding-bottom: 15px;
+    }
+  </style>
 </head>
 <body class="teal lighten-5">
 <nav>
@@ -30,7 +41,7 @@
         <a class="btn-floating btn-large waves-effect waves-light red accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
         <h5 class="white-text center-align row list-names" style="font-weight: 400;" contenteditable="true">List Name</h5>
         <!-- Added in a div to make sure tasks appear before the button-->
-        <div class="tasks white" id="1"></div>
+        <div class="tasks" id="1"></div>
           <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
         </div>
       </div>
@@ -40,11 +51,11 @@
   </div>
   <div id="chat_box" class="right container card-panel teal lighten-2">
     <h5 id="chat_head" style="height: 5%;color: white;text-align: center;margin-bottom: 5px">Chat</h5>
-    <div id="chat_feed" class="container white" style="height: 70%; width: 93%;margin: 0 auto;border: 1px solid grey; box-shadow: 1px 1px 5px grey; border-radius: 5px; margin-bottom: 60px;"></div>
+    <div id="chat_feed" class="container white" style="height: 70%; width: 93%;margin: 0 auto;border: 1px solid grey; box-shadow: 1px 1px 5px grey; border-radius: 5px; padding: 10px; margin-bottom: 60px; overflow-y: scroll; word-wrap: break-word"></div>
     <div class="container white" style="bottom: 2px;width: 92%">
       <form name="message" action="" class="right" >
         <label for="chat_input"></label>
-        <input type="text" id="chat_input" name="chat_msg" style="width: 100%; background-color: #e0f2f1; border-radius: 5px; margin-top: 10px; border: 1px solid grey; box-shadow: 1px 1px 5px grey">
+        <input type="text" id="chat_input" name="chat_msg" style="width: 100%; background-color: #e0f2f1; border-radius: 5px; margin-top: 10px; margin-right: 0px; margin-right: 20px; padding-left: 10px; padding-right: 10px; border: 1px solid grey; box-shadow: 1px 1px 5px grey">
         <button class="btn waves-effect waves-light green accent-4" type="submit" id="submit_chat" name="action" style="margin-left: 35px;">Submit
           <i class="material-icons right">send</i>
         </button>
@@ -64,7 +75,7 @@
       <label for="tassignees">Assigned to: </label>
       <select class="browser-default" id="tassignees">
         <option value="" disabled selected>Choose assignees</option>
-        <option value="1">Option 1</option>
+        <!--<option value="1">Option 1</option>-->
       </select></br>
       <label for="tags">Tags: </label><input type="text" id="tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="tdesc" placeholder="Task Description"><br>
@@ -86,7 +97,7 @@
       <label for="t_assignee">Assigned To: </label>
       <select class="browser-default" id="t_assignee">
         <option value="" disabled selected>Choose assignees</option>
-          <option value="1">Option 1</option>
+          <!--<option value="1">Option 1</option>-->
       </select></br>
       <label for="tags">Tags: </label><input type="text" id="t_tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="t_desc" placeholder="Task Description"><br>
