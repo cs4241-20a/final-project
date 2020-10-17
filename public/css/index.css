@@ -1,0 +1,37 @@
+main {
+  margin-top: 100px;
+}
+
+h1 {
+  font-size: 70px;
+  margin-bottom: 100px;
+}
+
+div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.div {
+  width: 2px;
+  height: 200px;
+  margin: 0 50px 0 50px;
+  background-color: gray;
+}
+
+button {
+  background-color: #B8B8FF;
+  height: 50px;
+  max-width: 20ch;
+  padding: 0.25em 1em;
+  border: 2px solid currentColor;
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: 1.4em;
+}
+
+button:hover {
+  background-color: #8585FF;
+}

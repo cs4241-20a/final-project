@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WeMeet Scheduling" />
+
+    <title>Create Your Meeting</title>
+
+    <link
+      id="favicon"
+      rel="icon"
+      href="https://glitch.com/edit/favicon-app.ico"
+      type="image/x-icon"
+    />
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/scheduling.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/script.js" defer></script>
+    <script src="/scheduling.js" defer></script>
+     <script src= "https://smtpjs.com/v3/smtp.js"></script> 
+  </head>
+  <body>
+    <header id="home" onclick="callHome()">
+      WeMeet
+    </header>
+
+    <main>
+      <h1>View Availabilities</h1>
+
+      <div id="input-sid">
+        <label>
+          Schedule ID
+          <input
+            id="inputSID"
+            name="inputSID"
+            type="text"
+            maxlength="100"
+            required
+            placeholder="Schedule ID"
+          />
+        </label>
+        <button id="submit-sid" onclick="callToScheduling()">
+          See Schedule
+        </button>
+      </div>
+      <div id="content">
+        <div id="tables">
+          <div id="availTables">
+            <table id="availTable"></table>
+            <table id="colorbar"></table>
+          </div>
+          <table id="listPeople">
+            <tr>
+              <td>Available</td>
+              <td>Tentative</td>
+              <td>Busy</td>
+            </tr>
+            <tr>
+              <td id="listAvailPeople"></td>
+              <td id="listFlexPeople"></td>
+              <td id="listBusyPeople"></td>
+            </tr>
+          </table>
+        </div>
+
+        <div id="come">
+          <div id="comments"><label for="chat">Comments:</label><br /></div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

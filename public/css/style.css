@@ -1,0 +1,99 @@
+/* GERNERAL CSS */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  line-height: 1.5em;
+}
+
+header {
+  height: 40px;
+  padding-left: 10px;
+  line-height: 40px;
+  background-color: #3D3B30;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Dancing Script', cursive;
+}
+
+main {
+  display: flex;
+  margin-top: 50px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#index,
+#login,
+#maker {  
+  display: flex;
+  margin-top: 50px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-family: 'Dancing Script', sans-serif;
+  font-style: italic;
+  color: #373fff;
+}
+
+form {
+  background-color: #eee;
+  display: grid;
+  grid-gap: 1em;
+  padding: 1em;
+  width: 40ch;
+}
+
+input {
+  border: 1px solid silver;
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+}
+
+form button {
+  background-color: #bbbbf2;
+  border: 2px solid currentColor;
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: 1.4em;
+  padding: 0.25em 1em;
+  max-width: 20ch;
+}
+
+form button:hover {
+  background-color: lavender;
+}
+
+footer {
+  margin-top: 3em;
+  padding-top: 1.5em;
+}
+
+table {
+  height: 50px;
+  border-collapse: collapse;
+}
+
+thead > tr > td {
+  font-size: 18px;
+}
+
+td {
+  font-size: 12px;
+  border: 1px solid black;
+}
+

@@ -1,0 +1,77 @@
+#input-sid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  margin-bottom: 20px;
+  padding: 1em;
+  background-color: #eee;
+}
+
+button {
+  background-color: #B8B8FF;
+  max-width: 20ch;
+  margin-top: 20px;
+  padding: 0.25em 1em;
+  border: 2px solid currentColor;
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: 1.4em;
+}
+
+button:hover {
+  background-color: #8585FF;
+}
+
+#content {
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#tables {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  margin-right: 20px;
+}
+
+#availTables {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#availTable,
+#colorbar {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+table {
+  justify-content: center;
+  margin-top: 20px;
+}
+
+th {
+  border-bottom: 1px solid #3D3B30;
+}
+
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #3D3B30;
+  border-right: 1px solid #3D3B30;
+}
+
+#comments {
+  border: 2px solid black;
+}
+
+#come {
+  display: flex;
+  flex-direction: column;
+}

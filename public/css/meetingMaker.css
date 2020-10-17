@@ -1,0 +1,64 @@
+form {
+  width: 475px;
+}
+
+#nameEmail {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.weekDays-selector input {
+  display: none !important;
+}
+
+.weekDays-selector input[type="checkbox"] + label {
+  display: inline-block;
+  border-radius: 6px;
+  background: #dddddd;
+  height: 40px;
+  width: 30px;
+  margin-right: 3px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.weekDays-selector input[type="checkbox"]:checked + label {
+  background: #64CE8D;
+  color: white;
+}
+
+form button {
+  background-color: #B8B8FF;
+  max-width: 20ch;
+  padding: 0.25em 1em;
+  border: 2px solid currentColor;
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: 1.4em;
+}
+
+form button:hover {
+  background-color: #8585FF;
+}
+
+button {
+  background-color: #B8B8FF;
+  max-width: 20ch;
+  padding: 0.25em 1em;
+  border: 2px solid currentColor;
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: 1.4em;
+}
+
+button:hover {
+  background-color: #8585FF;
+}
+
+#next {
+  display: none;
+}
