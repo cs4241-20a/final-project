@@ -585,6 +585,9 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
             "__cargo_web_snippet_5611e6278e379d0b5e6620c81a462f6ca3b2e07f": function($0, $1) {
                 $1 = Module.STDWEB_PRIVATE.to_js($1);Module.STDWEB_PRIVATE.from_js($0, (function(){return($1)/2})());
             },
+            "__cargo_web_snippet_599cf928909ae6ecdac3327fb4b046f2b8c056ca": function($0) {
+                $0 = Module.STDWEB_PRIVATE.to_js($0);fetch("/api/snake/score",{method:"POST",body:""+($0),});
+            },
             "__cargo_web_snippet_614a3dd2adb7e9eac4a0ec6e59d37f87e0521c3b": function($0, $1) {
                 $1 = Module.STDWEB_PRIVATE.to_js($1);Module.STDWEB_PRIVATE.from_js($0, (function(){return($1).error;})());
             },
@@ -629,9 +632,6 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
             },
             "__cargo_web_snippet_b06dde4acf09433b5190a4b001259fe5d4abcbc2": function($0, $1) {
                 $1 = Module.STDWEB_PRIVATE.to_js($1);Module.STDWEB_PRIVATE.from_js($0, (function(){return($1).success;})());
-            },
-            "__cargo_web_snippet_ce35fc69c052ef38232f5c6d77921da795c3f670": function($0) {
-                $0 = Module.STDWEB_PRIVATE.to_js($0);fetch("/api/snake/score",{method:"POST",headers:{"Content-Type":"application/json"},body:""+($0),});
             },
             "__cargo_web_snippet_cf0debbfec441e126df5ec4b805a71e969f49a75": function($0, $1, $2, $3, $4) {
                 $0 = Module.STDWEB_PRIVATE.to_js($0);$1 = Module.STDWEB_PRIVATE.to_js($1);$2 = Module.STDWEB_PRIVATE.to_js($2);$3 = Module.STDWEB_PRIVATE.to_js($3);$4 = Module.STDWEB_PRIVATE.to_js($4);($0).fillRect(($1),($2),($3),($4));
