@@ -61,7 +61,6 @@ var openTask = function(task, edit) {
   }
 }
 
-
 var listClicked = function(){
   if(clicked){
     console.log(btnContainer)
@@ -86,6 +85,26 @@ const addMe = async () => {
 var groupName = "test"; //Change this to be set later
 var groupId;
 
+const getMembers = async (members) => {
+	var slct = document.getElementById("tassignees")
+	//var slct2 = document.getElementById("t_assignee")
+	for(var i = 0; i < members.length; i++) {
+		//Get member names
+		var member = members[i]
+		console.log(member)
+		const res = await fetch("/api/users/" + member, {method: "GET"});
+	  const data = await res.json()
+	  console.log(JSON.stringify(data))
+		//console.log(modal)
+		var opt = document.createElement("option")
+		opt.setAttribute('value', data.data._id)
+		opt.appendChild(document.createTextNode(data.data.displayName))
+		slct.appendChild(opt)
+		//slct2.appendChild(opt)
+	}
+
+}
+
 const getMyGroup = async () => {
   const res = await fetch("/api/groups", {method: "GET"});
   const data = await res.json()
@@ -99,7 +118,16 @@ const getMyGroup = async () => {
     }
   }
   console.log("Our group: " + groupId)
+	console.log(data.data[0].members)
+	getMembers(data.data[0].members)
   getTasks()
+}
+
+const getUser = async(mid) => {
+	const res = await fetch("/api/users/" + mid, {method: "GET"});
+	const data = await res.json()
+	console.log("I'm " + data.data.displayName)
+	return data.data.displayName
 }
 
 const getTasks = async () => {
@@ -119,7 +147,11 @@ const getTasks = async () => {
     console.log(dateStr)
     const date = dateStr.substring(0, 10)
     console.log(date)
+		const response = await fetch("/api/users/" + task.assignees, {method: "GET"});
+		const user = await response.json()
+		var uName = user.data.displayName
     task.dateDue = date
+		task.assignees = uName
     appendNewInfo(task)
   }
 }
@@ -133,9 +165,13 @@ var addTask = async (e) => {
 
   const input = document.querySelector( '#tname' )
   const input2 = document.querySelector( '#due_date' )
-  const input3 = document.querySelector( '#tassignee')
+  const input3 = document.querySelector( '#tassignees')
   const input4 = document.querySelector( '#tags')
   const input5 = document.querySelector( '#tdesc')
+
+	const response = await fetch("/api/users/" + input3.value, {method: "GET"});
+	const user = await response.json()
+	var uName = user.data.displayName//getUser(input3.value)
 
   const json = { name: input.value, desc: input5.value, columnName: currentCol, assignees: input3.value, tags: input4.value, dateDue: input2.value }
   const body = JSON.stringify( json )
@@ -149,6 +185,7 @@ var addTask = async (e) => {
   const dateStr = task.dateDue;
   const date = dateStr.substring(0, 10)
   task.dateDue = date
+	task.assignees = uName
   appendNewInfo(task)
   modal.style.display = "none";
 }
@@ -183,16 +220,6 @@ var editTask = async (e) => {
   edTask.dateDue = date
   appendNewInfo(edTask, true)
   editmodal.style.display = "none";
-  // fetch( '/edit', {
-  //        method:'POST',
-  //        body: JSON.stringify(tEdit),
-  //        headers: {
-  //         "Content-type": "application/json"
-  //       }
-  //   })
-  //   .then( function( response ) {
-  //     location.reload()
-  //   })
 }
 
 var delTask = async (task) => {
@@ -276,11 +303,11 @@ var addCol = function() {
   var newList = document.createElement("div")
   newList.setAttribute('class', 'tasks')
   newList.setAttribute('id', cols)
-  var newlistName = document.createElement("h5")
-  newlistName.setAttribute('class', 'white-text center-align row list-names')
+  var newlistName = document.createElement("h4")
+  newlistName.setAttribute('class', 'white-text center-align row')
   var addBtn = document.createElement("a")
-  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
-  addBtn.setAttribute('type', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
+  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
+  addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
   var btnID = "btn-" + cols
   addBtn.setAttribute('id', btnID)
   var plus = document.createElement("i")
@@ -292,16 +319,13 @@ var addCol = function() {
   addBtn.onclick = function() {
     makeTask(cols)
   }
-  newlistName.appendChild(document.createTextNode("List Name"))
+  newlistName.appendChild(document.createTextNode("New List"))
   newCol.appendChild(newlistName)
-  newlistName.addEventListener('click',function () {
-    newlistName.contentEditable=true
-  })
   newCol.appendChild(newList)
   newCol.appendChild(addBtn)
+  newCol.onclick = listClicked
   contain[0].appendChild(newCol)
 }
-
 
 var delCol = function() {
   const contain = document.getElementsByClassName("inner-container")
@@ -371,5 +395,3 @@ window.onload = function() {
     const teButton = document.querySelector( '#task_edit' )
     teButton.onclick = editTask
   }
-
-
