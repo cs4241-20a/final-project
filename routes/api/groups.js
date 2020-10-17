@@ -156,8 +156,7 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		// Find the id of the user with the given username
 		const userId = (await User.findOne({username}))._id;
 		// Find the group with the given id, ensuring the current user is a member of the group
-		let group = await Group.findOne({$and: [{_id: groupId}, {$or: [{members: userId},{invitees: userId}]}]});
-
+		let group = await Group.findOne({$and: [{_id: groupId}, {$or: [{members: userId}, {invitees: userId}]}]});
 		// Update fields based on request body
 		group.invitees = invitees ? invitees : group.invitees;
 		group.members = members ? members : group.members;
@@ -168,6 +167,7 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		// Send result
 		res.status(200).json({success: true, data: group});
 	} catch (err) {
+		console.log(err)
 		// Report errors
 		res.status(500).json({success: false, error: err});
 		console.log(err)
