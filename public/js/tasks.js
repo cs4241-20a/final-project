@@ -13,7 +13,7 @@ submitChatButton.addEventListener("click", async evt => {
 
 	const content = chatInput.value;
 	const sender = (await getCurrentUser()).displayName;
-	const date = moment(Date.now()).format("MM/DD/YY - hh:mm a");
+	const date = moment(Date.now()).format("MM/DD/YY h:mm a");
 	const message = {content, sender, date};
 	socket.emit("chatMessage", message);
 
@@ -34,7 +34,7 @@ const loadMessages = async () => {
 	for (const element of data.data) {
 		const {content, senderId, dateSent} = element;
 		const sender = await getDisplayNameById(senderId);
-		const date = moment(new Date(dateSent)).format("MM/DD/YY - hh:mm a");
+		const date = moment(new Date(dateSent)).format("MM/DD/YY h:mm a");
 		const message = {content, sender, date};
 		outputMessage(message);
 	}
@@ -515,6 +515,12 @@ var delCol = function() {
   }
 }
 
+var inviteMember = async () => {
+	
+}
+
+
+
 const returnHome = async () => {
 	window.location = "/";
 };
@@ -554,6 +560,7 @@ window.onload = async function () {
 	const teButton = document.querySelector("#task_edit");
 	teButton.onclick = editTask;
 
+
 	const inviteButton = document.getElementById("invite_btn")
 	inviteButton.onclick = invite
 
@@ -562,6 +569,6 @@ window.onload = async function () {
 
 	const noInvite = document.getElementById("noinv")
 	noInvite.onclick = closeInvite
-
+  
 	loadMessages();
 }

@@ -40,7 +40,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
  * Auth: Required
  * Desc: Gets all groups the current user has been invited to. Verified by session.
  */
-router.get("/", ensureAuthenticated, async (req, res) => {
+router.get("/invites", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const username = getUsername(req);
 
@@ -55,6 +55,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 	} catch (err) {
 		// Report errors
 		res.status(500).json({success: false, error: err});
+		console.log(err)
 	}
 });
 
@@ -156,8 +157,7 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		// Find the id of the user with the given username
 		const userId = (await User.findOne({username}))._id;
 		// Find the group with the given id, ensuring the current user is a member of the group
-		let group = await Group.findOne({_id: groupId, members: userId});
-
+		let group = await Group.findOne({$and: [{_id: groupId}, {$or: [{members: userId}, {invitees: userId}]}]});
 		// Update fields based on request body
 		group.invitees = invitees ? invitees : group.invitees;
 		group.members = members ? members : group.members;
@@ -171,6 +171,7 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		console.log(err)
 		// Report errors
 		res.status(500).json({success: false, error: err});
+		console.log(err)
 	}
 });
 
