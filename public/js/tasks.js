@@ -12,8 +12,9 @@ submitChatButton.addEventListener("click", async evt => {
 	evt.preventDefault();
 
 	const content = chatInput.value;
+	const sender = await getCurrentUser().displayName;
 	const date = moment(Date.now()).format("MM/DD/YY - hh:mm a");
-	const message = {content, date};
+	const message = {content, sender, date};
 	socket.emit("chatMessage", message);
 
 	const res = await fetch(`/api/messages/${groupId}`, {
@@ -31,19 +32,24 @@ const loadMessages = async () => {
 	const data = await res.json();
 
 	data.data.forEach(async element => {
-		const {content, senderId} = element;
+		const {content, senderId, dateSent} = element;
 		const sender = await getDisplayNameById(senderId);
-		const date = moment(new Date(element.dateSent)).format("MM/DD/YY - hh:mm a");
+		const date = moment(new Date(dateSent)).format("MM/DD/YY - hh:mm a");
 		const message = {content, sender, date};
 		outputMessage(message);
 	});
 };
 
-const getDisplayNameById = async (userId) => {
-	const res = await fetch(`/api/users/${userId}`, {method: "GET"});
+const getCurrentUser = async () => {
+	const res = await fetch(`/api/users`, {method: "GET"});
 	const data = await res.json();
 
-	console.log(data);
+	return data.data;
+}
+
+const getDisplayNameById = async userId => {
+	const res = await fetch(`/api/users/${userId}`, {method: "GET"});
+	const data = await res.json();
 
 	return data.data.displayName;
 }
