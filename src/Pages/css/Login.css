@@ -1,0 +1,107 @@
+
+.main {
+    overflow: hidden;
+}
+
+.full-screen-container {
+    background-image: url("../imgs/cloudlogin.jpg");
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.full-screen-container2 {
+    background-image: url("../imgs/cloudregister.jpg");
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    background-color: hsla(193, 26%, 18%, 0.849);
+    padding: 50px 30px;
+    min-width: 400px;
+    width: 50%;
+    max-width: 600px;
+}
+
+.login-title {
+    color: white;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: normal;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    color: white;
+    font-weight: lighter;
+    font-size: 1.5em;
+    margin-bottom: 7px;
+}
+
+.input-group input {
+    font-size: 1.5em;
+    padding: .1em .25em;
+    background-color:  hsla(0, 0%, 79%, 0.26);
+    border: 1px solid  hsla(0, 0%, 75%, 0.329);
+    outline: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: lighter;
+}
+
+.input-group input:focus {
+    border: 1px solid hsl(0, 0%, 100%);
+}
+
+.login-button {
+    padding: 10px 30px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: hsla(193, 27%, 37%, 0.705);
+    border: 1px solid hsla(0, 0%, 75%, 0.329);
+    outline: none;
+    font-size: 1.5em;
+    color: white;
+    font-weight: lighter;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: hsla(0, 100%, 50%, 0.7);
+}
+
+.login-button:focus {
+    background-color: rgba(214, 11, 11, 0.9);
+}
+
+.container-footer a {
+    font-weight: bold;
+    color: hsla(0, 91%, 46%, 0.856);
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 20px;
+}
+
+.container-footer a:hover {
+    color: hsl(0, 100%, 50%);
+}

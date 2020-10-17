@@ -1,0 +1,39 @@
+body {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+h1 {
+    font-style: italic;
+    text-align: center;
+    margin-left: 20%;
+    margin-right: 20%;
+    border-bottom: 3px solid black;
+}
+
+p{
+  text-align: center;
+  font-weight: bold;
+}
+
+.room {
+  margin: auto;
+  text-align: center;
+  justify-content: center;
+  background-color: #eee;
+  display: grid;
+  grid-gap: 1em;
+  padding: 1em;
+  max-width: 40ch;
+}
+
+#vs{
+  font-style: italic;
+  color: #FF0000
+}
+
+#startbtn{
+  background-color: #bbbbf2;
+  cursor: pointer;
+  padding: 8px;
+  font-weight: bold;
+}
