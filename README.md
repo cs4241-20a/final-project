@@ -1,6 +1,6 @@
 ## Groceryify
 
-A web application that manages the food in your inventory and grocery list to track when food is going to expire so that the user can be alerted that they have to use up a food item. It allows for login through Google and registering for an account with user and password credentials. Through the login, users can join and create groups in which grocery lists can be shared among group members. There is also a chat where users can enter their identifiable name and a message and converse with multiple members about grocery related things.
+A web application that manages the food in your inventory and grocery list to track when food is going to expire so that the user can be alerted that they have to use up a food item. It allows for login through Google (through Auth0) and registering for an account with user and password credentials. Through the login, users can join and create groups in which grocery lists can be shared among group members. There is also a chat where users can enter their identifiable name and a message and converse with multiple members about grocery related things.
 
 Link to the website: https://glitch.com/~final-project-007
 
@@ -8,7 +8,7 @@ Link to video: https://youtu.be/oAaSUpDEKOg;
 
 The technologies we used to create our project are Auth0 for the main login page, Svelte for the chat, and Glitch to host Groceryify.
 
-Our team used the following TO-DO List to complete Groceryify's main functionality and these are the methods we used to complete our tasks as well as who did what: In general, Pradnya, Carley, and Kirsten worked on the server work and most of the CSS in the main page while Isabel worked on the Auth0 functionality and the login pages.
+Our team used the following TO-DO List to complete Groceryify's main functionality and these are the methods we used to complete our tasks as well as who did what: In general, Pradnya, Carley, and Kirsten worked on the server work and most of the CSS in the main page while Isabel worked on the Auth0 functionality, CSS, and the login pages.
 
 ## Group Tasks for Groceryify
 - Chat – CARLEY
@@ -19,9 +19,9 @@ Our team used the following TO-DO List to complete Groceryify's main functionali
 
     Introduction to the platform -- Kirsten
 
-    Designing it: Improving the CSS -- Kirsten
+    Designing it: Improving the CSS -- Kirsten + Isabel 
 
-    A section which tells you if you are logged in -- Isabel
+    A section which tells you if you are logged in and Auth0 implementation -- Isabel
 
 - Server + JS
     
@@ -49,13 +49,13 @@ Our team used the following TO-DO List to complete Groceryify's main functionali
 
   Date Bought -- Pradnya and Carley
 
-      Add a time field (store it in the js format) to the json object (grocery       item) when transferring from the cart to the pantry/fridge
+      Add a time field (store it in the js format) to the json object (grocery item) when transferring from the cart to the pantry/fridge
 
       Create a function to calculate the time passed
 
-            The function should check how many weeks have passed (the                     developer's choice)
+            The function should check how many weeks have passed (the developer's choice)
 
-            Change the background color of that specific row: 1=yellow,                   2=orange, 3+=red
+            Change the background color of that specific row: 1=yellow, 2=orange, 3+=red
 
   Add the grocery item to the pantryArray or the fridgeArray
 
@@ -104,9 +104,11 @@ Our team faced many challenges in our implementation. These challenges include:
 
 -Because of our busy schedules we could not work as much during the day but most of the team pulled all-nighters to get our tasks done.
 
+-Due to busy schedules, we were not able to fully implement the spoonacular API which would display recipes given the ingredients that are in the user's fridge and pantry. 
+
 ##Design Tech Achievements
 
-- We used an external authenication API for our login called Auth0.
+- We used an external authenication API for our login called Auth0 which allows users to create their own accounts and sign in through Google.
 
 - According to our proposal, one of our stretch goals was to have three different boards for the users which were cart, pantry, and fridge board. We were able to implement all three boards, design them, and made them user friendly.
 
