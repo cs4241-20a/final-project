@@ -318,15 +318,20 @@ var addCol = function() {
   //console.log(contain)
   cols++ //update number of columns
   console.log(cols)
+	// <a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
   // Create all the necessary elements
   var newCol = document.createElement("div");
   newCol.setAttribute('class', 'task_lists card-panel teal lighten-2')
   var colID = "col-" + cols
   newCol.setAttribute('id', colID)
+	var dltBtn = document.createElement("a")
+	dltBtn.setAttribute('class', 'btn-floating btn-large waves-effect waves-light teal accent-4 right')
+	var dlt = document.createElement("i")
+	dlt.setAttribute('class', 'material-icons right')
   var newList = document.createElement("div")
   newList.setAttribute('class', 'tasks')
   newList.setAttribute('id', cols)
-  var newlistName = document.createElement("h4")
+  var newlistName = document.createElement("h5")
   newlistName.setAttribute('class', 'white-text center-align row')
   var addBtn = document.createElement("a")
   addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
@@ -337,12 +342,15 @@ var addCol = function() {
   plus.setAttribute('class', 'material-icons right')
   // Add everything
   plus.appendChild(document.createTextNode("add"))
+	dlt.appendChild(document.createTextNode("delete"))
+	dltBtn.appendChild(dlt)
   addBtn.appendChild(plus)
   addBtn.appendChild(document.createTextNode(" New Task"))
   addBtn.onclick = function() {
     makeTask(cols)
   }
   newlistName.appendChild(document.createTextNode("New List"))
+	newCol.appendChild(dltBtn)
   newCol.appendChild(newlistName)
   newCol.appendChild(newList)
   newCol.appendChild(addBtn)

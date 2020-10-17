@@ -62,8 +62,6 @@ async function addGroupTasks(groupId) {
     a.setAttribute('href', '/tasks')
     a.innerHTML = data1.data[i].name
     a.onclick = function() {
-      //groupName = data1.data[i].name
-      //document.cookie = "group=" + groupId
       window.localStorage.setItem("group", groupId)
       console.log(window.localStorage.getItem("group"))
     }
@@ -91,10 +89,14 @@ const addAllGroups = async () => {
       span.setAttribute('class', 'card-title')
       var a = document.createElement('a')
       a.setAttribute('class', 'teal-text')
-      //a.setAttribute('href', '/tasks')
+      a.setAttribute('href', '/tasks')
       a.setAttribute('style', 'font-weight: 400;')
       a.setAttribute('id', data.data[i*3+j]._id)
       a.innerHTML = data.data[i*3+j].name
+      a.onclick = function() {
+        window.localStorage.setItem("group", groupId)
+        console.log(window.localStorage.getItem("group"))
+      }
       span.appendChild(a)
       div3.appendChild(span)
       div2.appendChild(div3)
