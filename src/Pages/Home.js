@@ -7,25 +7,23 @@ export class Home extends Component {
       <div>
         <h1>Home</h1>
         <p>
-          <button>Log In</button> | <button>Register</button>
+          <button type="submit" action="/logout" method="POST">Log Out</button>
         </p>
-        <p>
-          <button>Friend List</button>
-        </p>
+
         <div className="room">
           <h2>Play BattleShip</h2>
           <button id="hostbtn">Create a Lobby</button>
           <button id="joinrandbtn">Join Random Lobby</button>
-          <button id="joincodebtn">Join Lobby with Code</button>
+          <button id="joincodebtn">Join Private Lobby</button>
           <form>
-            <label>Lobby Join Code:</label>
+            <label>Lobby Join Code: </label>
             <input
               type="text"
               maxLength="4"
               id="joincode"
               name="joincode"
               pattern="\d{4}"
-              placeholder="join code here"
+              placeholder=" Type join code here"
               required
             ></input>
           </form>

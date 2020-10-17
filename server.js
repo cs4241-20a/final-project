@@ -471,7 +471,7 @@ app.post("/login", function (req, res, next) {
                 })
               );
             }
-            // res.redirect("/index.html")
+            res.redirect("/")
             res.end(JSON.stringify({ Success: "YeetLogin" }));
           });
         }

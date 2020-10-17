@@ -13,13 +13,15 @@ export class BattleShip extends Component {
       <div>
         <h1>BattleShip</h1>
         <div>
-          <EnemyGrid />
-          <PlayerGrid />
+          <p><strong>Your Fleet</strong></p>
+          <br />
+          <br />
+          <br />
+          <p><strong>Enemy Fleet</strong></p>
+          <p>chat system here!</p>
         </div>
-        <p>chat system here!</p>
       </div>
     );
   }
 }
-
 export default BattleShip;
