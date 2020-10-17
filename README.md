@@ -5,11 +5,13 @@ Kōcha (紅茶, こうちゃ), meaning black tea in English, is a project to pro
 Inspired by After School Tea Time in _K-On!_, great works should be able to be done in a relaxed and happy way, and memory is no exception. Memory plays an significant role in our learning process and is a critical element for us. The mission of Kocha is to enable people to remember anything they want more efficiently in spare time.
 
 
-# Link to Project
+# Link to project
 
-https://glitch.com/~zphw-final-project
+http://zphw-final-project.glitch.me/login
 
-# link to project video
+# Link to project video
+
+https://youtu.be/WMOXEtnlEbw
 
 
 # API Documentation
@@ -39,4 +41,3 @@ Demo user: test/test
 - Pinhan Zhao: Developed the back-end API server and wrote the API documentation. Created data structures for the database.
 - Wenjing Ying: Created the functions in the front-end that implements the back-end API, including adding, editing, displaying the wordlist, etc. 
 - Zaiyang Zhong: Created most of front-end user interfaces in the main page and log-in and personalized css framwork to them. I also added a canvas element to create a 2d music player, which is very similar to what i did in A4. I developed a small portion of js codes.
-
