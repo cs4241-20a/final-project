@@ -5,7 +5,6 @@ export class Register extends Component {
   render() {
     return (
       <main>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
         <div className="full-screen-container">
           <div className="login-container">
             <h3 className="login-title">Register an Account</h3>
