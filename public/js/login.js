@@ -4,12 +4,12 @@ let currUserID = "";
 const displayLeaderboard = (json) => {
     const highScores = document.getElementById("highScores");
         highScores.innerHTML = "";
-        
+
         json.forEach((user) => {
                 highScores.innerHTML += `
                 <tr>
                   <td><h3 style="text-align:center" id="user-${user._id}">${user.username || "Unknown User"}</td>
-                  <td><h3 style="text-align:center" id="highScore-${user._id}">${user.highScore || 0}</td> 
+                  <td><h3 style="text-align:center" id="highScore-${user._id}">${user.highScore || 0}</td>
                 </tr>
                 `;
         });
@@ -80,17 +80,16 @@ const submit = function (e) {
 
     elementDisable();
     fetch("/submit", {
-=======
     submit();
 
-    
-    
+
+
 };
 
 const submit = function () {
-    
+
     const json = {user:{_id: currUserID, username: currUsername, highScore: 50 + Math.floor(Math.random()*50)}};
-    
+
     console.log(json);
 
     fetch("/setHighScore", {
