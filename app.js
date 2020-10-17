@@ -43,43 +43,100 @@ app.use(
 );
 
 let players = {};
-let users = {}
+let inGame = {};
+let gameTimeout;
 
-io.on('connection', (socket) =>  {
-	console.log('new user connected');
-	players[socket.id] = {
-		playerId: socket.id,
+
+const gameLogic = () => {
+	if(Math.random() >= .5){
+		io.emit('comet', 
+			{x: Math.floor(Math.random() * 750) + 50, 
+			 velocityY: Math.floor(Math.random() * 100) + 50,
+			 velocityX: Math.floor(Math.random() * 50) - 25});
+	} else {
+		io.emit('star', 
+			{x: Math.floor(Math.random() * 750) + 50});
+	}
+	gameTimeout = setTimeout(gameLogic, Math.floor(Math.random() * 1000) + 200);
+};
+
+const addNewPlayer = (id) => {
+	players[id] = {
+		playerId: id,
 		x: Math.floor(Math.random() * 150 + 50),
 		y: 450,
-		team: [0x454545, 0x8E5DFB, 0xFFFFFF][Math.floor(Math.random() * 3)]
+		team: [0x454545, 0x8E5DFB, 0xFFFFFF][Math.floor(Math.random() * 3)],
+		ready: false
 	}
+}
+
+io.on('connection', (socket) =>  {
+	addNewPlayer(socket.id);
 
 	socket.emit('currentPlayers', players);
 	socket.broadcast.emit('newPlayer', players[socket.id]);
 
+	socket.on('ready', () => {
+		if (players[socket.id] === undefined)
+			addNewPlayer(socket.id)
+		players[socket.id].ready = true;
+		console.log(players);
+		console.log(inGame);
+		Object.values(players).some((player) => {
+			if (!player.ready){
+				return true;
+			}
+			console.log('Starting game');
+			io.emit('startGame');
+			gameTimeout = setTimeout(gameLogic, 2000);
+		});
+	});
+
+
+	socket.on('inGame', () => {
+		inGame[socket.id] = true;
+		socket.emit('gamePlayers', players);
+	});
+
+	socket.on('gameOver', () => {
+		inGame[socket.id] = false;
+		Object.values(inGame).some((player) => {
+			if (player){
+				return true;
+			}
+			clearTimeout(gameTimeout);
+			io.emit('endGame');
+			inGame = {};
+		});
+	});
 
 	socket.on('playerMovement', (movementData) => {
-		players[socket.id].x = movementData.x;
-		players[socket.id].y = movementData.y;
+		try {
+			players[socket.id].x = movementData.x;
+			players[socket.id].y = movementData.y;
 
-		socket.broadcast.emit('playerMoved', players[socket.id]);
+			socket.broadcast.emit('playerMoved', players[socket.id]);
+		} catch (e) {
+			addNewPlayer(socket.id);
+		}
 	})
 
+	socket.on('disconnectLobby', () => {
+		console.log('disconnect lobby', socket.id);
+		setTimeout(() => delete players[socket.id], 200);
+		io.emit('disconnect', socket.id);
+	})
+
+
+	socket.on('disconnectGame', () => {
+		console.log('disconnect game', socket.id);
+		setTimeout(() => delete players[socket.id], 200);
+  
+		io.emit('disconnect', socket.id);
+	});
+  
 	socket.on('send-chat-message', message => {
 		socket.broadcast.emit('chat-message', message)
-	})
-	// socket.on('new-user', name => {
-	// 	users[socket.id] = name
-	// 	socket.broadcast.emit('user-connected', name)
-	// })
-	// socket.on('server-disconnect', () => {
- //        socket.broadcast.emit('user-disconnected', users[socket.id])
- //        delete users[socket.id]
- //    })
-
-	socket.on('disconnect', () => {
-		delete players[socket.id];
-		io.emit('disconnect', socket.id);
 	});
 });
 
