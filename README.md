@@ -8,7 +8,7 @@ Margaret Earnest
 A brief description of what you created, and a link to the project itself.
 In our project we made a website where users could make stories with one another, with each user adding a word or a phrase at a time, similar to the game telephone.
 After a story was completed it would be saved and users would be able to vote on stories that they enjoyed.
-Link : ################Placeholder######################
+Link : https://edkazcarlson-final-project-2.glitch.me/ 
 
 
 2:
