@@ -1,56 +1,45 @@
-# cs4241-FinalProject
+# ItsRainingCows
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+## Project Link
+https://webware-final.herokuapp.com
 
-## General description
+## Project Video
+https://youtu.be/tAnJIruqn04
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+### Project Members:
+- Isaac Abouaf
+- Aditya Malik
+- Dev Patel
+- Abhijay Thammana
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+### Description
+ItsRainingCows allows users to log in, hangout in the lobby with other people, and when ready they can compete against each other in a minigame of dodging the raining cows until everyone is wiped out. Other functionalities of this application are that users can chat with each other in the chat box and view the leaderboard for the highest scores.
 
-## Project ideation
+### Instructions
+Users will just need to login with their previous info they signed up with, or simply create a new username/password and be automatically created an account.
+Users can navigate the player in the game using the up/left/right keys on the keyboard.
+Click the “Not Ready” button in the bottom right corner to change your player’s state to ready and start the game.
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+### Technologies
+#### Back-end
+- Node.js Express server that hosts a REST API
+- MongoDB for persisting user data
+- Socket.io for bidirectional communication between client and server
+#### Front-end
+- REST API Client carried out with axios
+- Phaser for graphics rendering, control and logic
 
-## Logistics
+### Challenges
+- None of us have ever used Phaser before. The documentation for Phaser was pretty comprehensive, so we were able to learn and complete the game.
+- Socket.io was also very difficult to learn for us, because we were all first timers.
+- Multiplayer was a very large challenge. The socket io library we used had a lot of trouble interfacing with Phaser. Phaser allows you to switch scenes, but this caused us to have multiple socket connections with different ids for each of them.
+- Different time zones (see note below)
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+### Contributions
+- Isaac Abouaf: Leaderboard, login, UI design
+- Aditya Malik: Authentication/leaderboard
+- Dev Patel: Chat box
+- Abhijay Thammana: Phaser Game
+ 
+NOTE: Our group struggled with miscommunication errors that led to us submitting the project a little late due to a severe difference in time zones. Our team was spread over the world with a time difference of 8 hours with some members and ran into issues when merging our parts, since it was hard to get availability.
 
-### Deliverables
-
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
-
-There are no other scheduled checkpoints for your project. 
-
-#### Turning in Your Outline / Project
-
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
-
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
-
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
-
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
-
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
-
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
