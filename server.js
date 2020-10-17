@@ -270,6 +270,7 @@ const userRegistration = (username, password) => {
       .findOne({ username: username })
       .then((result) => {
         if (!!result) {
+          
           resolve({
             error: "User Exists",
           });
@@ -336,6 +337,7 @@ const userLogin = (username, password) => {
         .findOne({ username: username })
         .then((result) => {
           if (!result) {
+            //stay on login page for error
             resolve({
               error: "No User Exists",
             });
@@ -575,10 +577,11 @@ app.post("/register", (req, res, next) => {
 });
 
 app.post("/logout", (req, res) => {
-  req.logout();
-  res.writeHead(200);
-  res.end(JSON.stringify({ Success: "Logout" }));
-});
+    req.logout();
+    res.redirect("/login")
+    res.writeHead(200);
+    res.end(JSON.stringify({ Success: "Logout" }));
+  });
 
 app.get("/authStatus", (req, res) => {
   if (req.user) {

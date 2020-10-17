@@ -22,7 +22,7 @@ export class Home extends Component {
         </p>
 
         <div className="room">
-          <h2>Play BattleShip</h2>
+          <h2>Party Chat</h2>
           <form>
             <label for="newcode">Put in your passcode</label>
             <input 
