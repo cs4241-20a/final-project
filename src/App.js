@@ -4,6 +4,7 @@ import Home from "./Pages/Home";
 import Lobby from "./Pages/Lobby";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
+import BattleShip from "./Pages/BattleShip";
 import io from "socket.io-client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Switch, Link, Route } from "react-router-dom";
@@ -30,6 +31,9 @@ function App() {
             <NavLink to="/lobby" as={Link}>
              Lobby
             </NavLink>
+            <NavLink>
+              <Link to="/BattleShip">Board (TEMP)</Link>
+            </NavLink>
           </Nav>
         </Navbar>
         <Switch>
@@ -41,6 +45,9 @@ function App() {
           </Route>
           <Route path="/register">
             <Register />
+          </Route>
+          <Route path="/BattleShip">
+            <BattleShip />
           </Route>
           <Route path="/">
             <Home />

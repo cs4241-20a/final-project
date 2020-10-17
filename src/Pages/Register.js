@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import './css/register.css'
+import './css/Login.css'
 
 export class Register extends Component {
   render() {
     return (
       <main>
-        <div className="full-screen-container">
+        <div className="full-screen-container2">
           <div className="login-container">
             <h3 className="login-title">Register an Account</h3>
             <form action="/register" method="POST">

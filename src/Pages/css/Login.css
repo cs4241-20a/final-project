@@ -10,6 +10,17 @@
     align-items: center;
 }
 
+.full-screen-container2 {
+    background-image: url("../imgs/battleready.jpg");
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .login-container {
     background-color: hsla(193, 26%, 18%, 0.849);
     padding: 50px 30px;

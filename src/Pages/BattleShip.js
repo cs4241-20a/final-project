@@ -11,11 +11,15 @@ export class BattleShip extends Component {
     })
     return (
       <div>
-        <h1>BattleShip</h1>
+    <h1>BattleShip</h1>
         <div>
-          <EnemyGrid />
+        <p><strong>Your Fleet</strong></p>
           <PlayerGrid />
-        </div>
+          <br />
+          <br />
+          <br />
+          <p><strong>Enemy Fleet</strong></p>
+          <EnermyGrid />
         <p>chat system here!</p>
       </div>
     );
