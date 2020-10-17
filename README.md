@@ -2,6 +2,8 @@
 
 Project Group #25
 
+https://gamehub-cs4241.herokuapp.com/
+
 Project Overview: 
   For our final project, we decided to implement a game hub website. Our website consists of three games: Mine sweeper, 2048, and snake.
   
