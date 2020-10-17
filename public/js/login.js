@@ -1,6 +1,10 @@
+let currUsername = "";
+
 function loginProc (json) {
     console.log("user data", json);
     if (!json._id) return;
+
+    currUsername = json.username
 
     document.getElementById("userInfo").setAttribute("style", "display:none");
     document.getElementById("profile").setAttribute("style", "");
@@ -9,22 +13,54 @@ function loginProc (json) {
 
     document.getElementById("loginPage").setAttribute("style", "display:none");
     document.getElementById("gamePage").setAttribute("style", "");
-    
+
     if ( document.getElementById('my-game').innerHTML === "") {
 	    game = new Phaser.Game(config);
     }
-    
+
 }({'_id': 'mom', 'username': 'mom'});
+
+const socket = io('http://localhost:5000')
+const messageContainer = document.getElementById('message-container')
+const messageForm = document.getElementById('send-container')
+const messageInput = document.getElementById('message-input')
+
+appendMessage('You joined')
+
+socket.on('chat-message', data => {
+    appendMessage(data)
+})
+
+messageForm.addEventListener('submit', e => {
+    e.preventDefault()
+    const message = messageInput.value
+    appendMessage(`You: ${message}`)
+    const newmessage = currUsername + ": " + messageInput.value
+    socket.emit('send-chat-message', newmessage)
+    messageInput.value = ''
+    while(messageContainer.childElementCount > 10) {
+        messageContainer.removeChild(messageContainer.childNodes[0])
+    }
+})
+
+function appendMessage(message) {
+    const messageElement = document.createElement('div')
+    messageElement.innerText = message
+    messageContainer.append(messageElement)
+    while(messageContainer.childElementCount > 10) {
+        messageContainer.removeChild(messageContainer.childNodes[0])
+    }
+}
 
 const submit = function (e) {
 
     e.preventDefault();
-  
+
     const task = document.querySelector("#task"),
       priority = document.querySelector("#priority"),
       json = { name: name.value, task: task.value, priority: priority.value },
       body = JSON.stringify(json);
-  
+
     elementDisable();
     fetch("/submit", {
       method: "POST",
@@ -35,11 +71,11 @@ const submit = function (e) {
     })
       .then((response) => response.json())
       .then((json) => {
-        
+
         task.value = "";
         elementEnable();
       });
-  
+
     return false;
   };
 

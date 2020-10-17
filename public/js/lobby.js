@@ -14,11 +14,11 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		let playerTwo = self.add.image(playerInfo.x, playerInfo.y, 'main')
 							  .setOrigin(0.5, 0.5)
 							  .setDisplaySize(50, 80);
-		
+
 		playerTwo.setTint(playerInfo.team); // setting their color
 		self.physics.add.collider(playerTwo, this.platforms); // making sure their image can stand on platforms
-		
-		playerTwo.playerId = playerInfo.playerId; 
+
+		playerTwo.playerId = playerInfo.playerId;
 		self.otherPlayers.add(playerTwo); // adding this new player to our catalog
 	}
 
@@ -28,7 +28,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		self.char = self.physics.add.image(playerInfo.x, playerInfo.y, 'main')
 						.setOrigin(0.5, 0.5)
 						.setDisplaySize(50, 80);
-		
+
 		self.char.setTint(playerInfo.team);
 		self.char.setBounce(0.2); // making sure we bounce correctly
 	    self.char.setCollideWorldBounds(true); // not allowed to leave the stage
@@ -54,7 +54,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		let self = this; // to store the current context
 
 		this.otherPlayers = this.physics.add.group(); // hold a group of game objects inside phaser
-		
+
 		this.socket = io(); // assign the io to socket
 
 		// recieved when first connecting to the server so you get positions and colors of all current players
@@ -114,7 +114,11 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		this.physics.add.collider(this.stars, this.platforms);
 
 		// get keyboard vals
-		this.keyboard = this.input.keyboard.createCursorKeys();
+		// this.keyboard = this.input.keyboard.createCursorKeys();
+		this.keyboard = this.input.keyboard.addCapture('UP', 'LEFT', 'RIGHT');
+        this.keyUP = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.keyLEFT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.keyRIGHT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 	}
 
 
@@ -123,18 +127,18 @@ class Lobby extends Phaser.Scene {// global vars for the player
 
 		// different controls to control our own character
 		if (char){
-			if (this.keyboard.left.isDown) {
-			    char.setVelocityX(-160);
-			} else if (this.keyboard.right.isDown) {
-			    char.setVelocityX(160);
-			} else {
-			    char.setVelocityX(0);
-			}
+			if (this.keyboard.checkDown(this.keyLEFT)) {
+                char.setVelocityX(-160);
+            } else if (this.keyboard.checkDown(this.keyRIGHT)) {
+                char.setVelocityX(160);
+            } else {
+                char.setVelocityX(0);
+            }
 
-			// jump
-			if (this.keyboard.up.isDown && char.body.touching.down){
-			    char.setVelocityY(-330);
-			}
+            // jump
+            if (this.keyboard.checkDown(this.keyUP) && char.body.touching.down){
+                char.setVelocityY(-330);
+            }
 
 			// if the current position is new, it is broadcasted to all other clients using the server
 			if (char.oldPosition && (char.x !== char.oldPosition.x || char.y !== char.oldPosition.y)){

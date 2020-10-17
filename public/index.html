@@ -6,6 +6,37 @@
     <title>Webware final project</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <style>
+        #message-container {
+          margin-top: 40px;
+          /*width: 80%;*/
+          max-width: 1000px;
+        }
+
+        #message-container div {
+          background-color: #CCC;
+          padding: 5px;
+        }
+
+        #message-container div:nth-child(2n) {
+          background-color: #FFF;
+        }
+
+        #send-container {
+
+         margin-top: 10px;
+         bottom: 0;
+         background-color: white;
+         max-width: 1000px;
+         /*width: 80%;*/
+         display: flex;
+       }
+
+       #message-input {
+         flex-grow: 1;
+       }
+    </style>
+
 </head>
 
 <body class="bg-dark">
@@ -41,6 +72,12 @@
 
         <div class="container p-3" id="gamePage" style="display: none">
             <div id="my-game" class="d-flex justify-content-center"></div>
+
+            <div id="message-container"></div>
+            <form id="send-container">
+                <input type="text" id="message-input" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"></textarea>
+                <button class="btn btn-success" type="submit" id="send-button">Send</button>
+            </form>
         </div>
     </div>
 
