@@ -16,7 +16,6 @@ const displayLeaderboard = (json) => {
 };
 
 function loginProc (json) {
-    console.log("user data", json);
     if (!json._id) return;
 
     currUsername = json.username;
@@ -33,7 +32,6 @@ function loginProc (json) {
     if ( document.getElementById('my-game').innerHTML === "") {
 	    game = new Phaser.Game(config);
     }
-
     submit();
 
 };
@@ -142,10 +140,10 @@ window.onload = function () {
         .then(json => loginProc(json));
 
     document.addEventListener("click", function (e) {
-        if (e.target && e.target.getAttribute("id") == "loginButton") {
+        if (e.target && e.target.getAttribute("id") === "loginButton") {
             login();
         }
-        if (e.target && e.target.getAttribute("id") == "logoutButton") {
+        if (e.target && e.target.getAttribute("id") === "logoutButton") {
             logout();
         }
     });

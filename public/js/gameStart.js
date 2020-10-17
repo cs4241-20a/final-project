@@ -7,10 +7,10 @@ let config = {
         default: 'arcade', // physics enging
         arcade: {
             gravity: {y: 300},
-            debug: true // puts boxes around everything for collisions
+            debug: false // puts boxes around everything for collisions
         }
     },
-    scene: new Lobby()
+    scene: [Lobby, DinoGame]
 };
 
-let game = new Phaser.Game(config);
+// let game = new Phaser.Game(config);
