@@ -1,56 +1,87 @@
-# cs4241-FinalProject
+# Drawsome
+Drawsome is a simple and accessible service to view, create, and share digital drawings online. Users who enter the site may create works in-browser and browse works that have been published on the platform. Registered users are able to save prior works, as well as publish them to be seen by everyone. The intended users of Drawsome are people who are interested in drawing or sketching and that would like to share their work.
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+- [Drawsome](http://mbsr.wpi.edu:40404)
+- [Project Video](https://youtu.be/kLMMFPviwZk)
 
-## General description
+### Team 1
+- Bryce Corbitt
+- Pooja Patel
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+## Instructions
+**How To: Login**
+- Users can log in by OAuth2 authentication through Google on the 'Home' page
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+**How To: Draw**
+- Navigate to the ‘Draw’ page
+- Use the color picker to select a color to draw with
+- To clear the board, undo previous lines, and erase you can use the buttons to the left of the canvas to perform those operations
+- Use the brush-radius sliding tool to adjust the brush to be smaller or larger
+- Be creative!
 
-## Project ideation
+**How To: Publish and Save a Drawing**
+- After completing a drawing on the page fill out the fields below ‘Save/Publish Drawing’, ‘Name’ and ‘Title’ are required fields
+- If you would like to have your art piece to be published in the gallery, toggle the switch to publish
+- Click ‘Save’
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+**How to: View All Your Drawings**
+- Navigate to the ‘My Drawings’ tab
+- This is where all of your drawings are held
 
-## Logistics
+**How to: View All Published Drawings**
+- Navigate to the ‘Gallery’ tab
+- This is where all published drawings are held
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+**How to: Logout**
+- Click the ‘Sign Out’ button in the navigation bar
 
-### Deliverables
+## Technologies Outline
+**Backend**
+- Node.js Express server that hosts a REST API
+ 	- Express routes for authentication with back-end, validation of Google id_tokens, and User/Drawing requests.
+- MongoDB + Mongoose for modelling and persisting user data
+	- Mongoose models created for Drawings, Users
+- OAuth2 Authentication through Google
+	- Created a Google Cloud Platform Project
+	- Created an OAuth2 Client ID
+	- Enabled valid development and deployment source/redirect URLs 
+	- Preserved credentials in .env file
+	
+Hosted and Deployed on WPI (MQP) virtual machine 
+  
+**Frontend**
+- React Application
+	- Several React components were used in this project for frontend development.
+  - react-canvas-draw and react-color were used to provide an elegant canvas interface with drawing controls
+	- The react-canvas-draw component was used for the drawing canvas, the tool to adjust brush size, to save and to undo.
+	- The react-color component was used for the color picker
+  - react-bootstrap & bootswatch for CSS boilerplate and theming
+	- react-bootstrap was used for various components including: container, row, col, button, and form
+	- bootswatch was used for the theming of Drawsome. The selected theme was ‘Sketchy’
+- REST API Client carried out with axios
+	- Client API singleton connects + authenticates with server
+	- Provides wrapper functions for each API call using axios
+- react-router-dom for self-contained site navigation
+	- HashRouter navigation in root component
+	- History integrated to preserve state when user navigates to previous page
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+## Challenges
+**Pooja**
 
-There are no other scheduled checkpoints for your project. 
+Working with the React components was challenging, especially working with various states. However, by looking at documentation, online sources, and getting clarification the concepts became more clear.
 
-#### Turning in Your Outline / Project
+**Bryce**
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+The carousel, while visually appealing, was an unpleasant experience to implement. You may not want to take a look at the source, because it is rather scary, but we managed to create a hack to take the canvas data and turn it into data PNGs to render in the carousel (as the carousel will not render canvases). 
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
+## Workload Split
+**Bryce Corbitt**
+- Back-end (Express REST API, MongoDB/Mongoose Models, etc.)
+- Carousel
+- "My Drawings" Paginated Feed + Gallery
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+**Pooja Patel**
+- Integrating react-canvas-draw and react-colors for drawing capability
+- Styling the ‘Draw’ page through CSS 
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
-
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
