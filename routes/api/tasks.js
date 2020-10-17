@@ -170,7 +170,7 @@ router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 
 const formatDate = dateStr => {
 	//* This is expecting a date formatted as a string exactly as outputed from a datepicker.
-	return moment(new Date(dateStr)).add(1, "days").format("MM/DD/YYYY");
+	return moment(new Date(dateStr)).format("MM/DD/YYYY");
 }
 
 module.exports = {router, formatDate};
