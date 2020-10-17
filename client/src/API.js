@@ -133,6 +133,10 @@ class API {
 		return await this.get(url).catch(handle_error)
 	}
 
+	async get_carousel(){
+		return await this.get('/drawings/carousel').catch(handle_error)
+	}
+
 	async submit_drawing(artist, title, canvas_data, published=false) {
 		const data = {artist: artist, title: title, canvas_data: canvas_data, published: published}
 		return await this.post('/drawings', data).catch(handle_error)

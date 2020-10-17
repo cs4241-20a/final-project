@@ -66,6 +66,12 @@ router.param('id', function(req, res, next, id){
 
 
 router.get('/feed/user', auth, validate_query(['page', 'limit']), paginate(true))
+router.get('/carousel', function(req, res){
+	Drawing.paginate({published: true}, {page: 1, limit: 5, sort: {updated_at: 'desc'}}).then((page) => {
+		const results = page.docs.map(doc => doc.toJSON())
+		res.json(results)
+	}).catch((err) => {res.status(500).json({error: err})})
+})
 
 router.get('/feed', validate_query(['page', 'limit']), paginate())
 
