@@ -23,7 +23,7 @@ main {
   right: 10%;
   text-align: center;
   margin: 0 auto;
-  width: 40%;
+  width: fit-content;
   padding: 5px 14px;
   background-color: #eee;
   border-radius: 5px;

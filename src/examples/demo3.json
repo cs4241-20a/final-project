@@ -3,243 +3,6 @@
   "last_link_id": 51,
   "nodes": [
     {
-      "id": 1,
-      "type": "instrument/Kick",
-      "pos": [310, 262],
-      "size": { "0": 169.60000610351562, "1": 106 },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        { "name": "gain", "type": "number", "link": 4 },
-        { "name": "frequency", "type": "number", "link": null },
-        { "name": "tone", "type": "number", "link": 6 },
-        { "name": "decay", "type": "number", "link": null },
-        { "name": "loudness", "type": "number", "link": 5 }
-      ],
-      "outputs": [{ "name": "instrument", "type": "instrument", "links": [1] }],
-      "properties": {}
-    },
-    {
-      "id": 9,
-      "type": "instrument/Hat",
-      "pos": [352, 452],
-      "size": { "0": 161.1999969482422, "1": 86 },
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        { "name": "gain", "type": "number", "link": 8 },
-        { "name": "tune", "type": "number", "link": null },
-        { "name": "decay", "type": "number", "link": 11 },
-        { "name": "loudness", "type": "number", "link": 9 }
-      ],
-      "outputs": [{ "name": "instrument", "type": "instrument", "links": [7] }],
-      "properties": {}
-    },
-    {
-      "id": 14,
-      "type": "instrument/Sequencer",
-      "pos": [568, 343],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 20,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 7 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 11,
-      "type": "instrument/Karplus",
-      "pos": [673, 464],
-      "size": { "0": 161.1999969482422, "1": 106 },
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        { "name": "gain", "type": "number", "link": 13 },
-        { "name": "decay", "type": "number", "link": null },
-        { "name": "loudness", "type": "number", "link": 16 },
-        { "name": "damping", "type": "number", "link": 15 },
-        { "name": "glide", "type": "number", "link": null }
-      ],
-      "outputs": [
-        { "name": "instrument", "type": "instrument", "links": [12] }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 18,
-      "type": "instrument/Sequencer",
-      "pos": [892.999938964844, 167.60001068115238],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 21,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 12 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 10,
-      "type": "instrument/Synth",
-      "pos": [898, 583],
-      "size": { "0": 144.39999389648438, "1": 66 },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        { "name": "gain", "type": "number", "link": 27 },
-        { "name": "attack", "type": "number", "link": 25 },
-        { "name": "decay", "type": "number", "link": null }
-      ],
-      "outputs": [
-        { "name": "instrument", "type": "instrument", "links": [19] }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 19,
-      "type": "instrument/Sequencer",
-      "pos": [981, 363],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 19 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 12,
-      "type": "instrument/FM",
-      "pos": [1192, 341],
-      "size": { "0": 144.39999389648438, "1": 66 },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        { "name": "gain", "type": "number", "link": 29 },
-        { "name": "attack", "type": "number", "link": null },
-        { "name": "decay", "type": "number", "link": null }
-      ],
-      "outputs": [
-        { "name": "instrument", "type": "instrument", "links": [28] }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 21,
-      "type": "instrument/Sequencer",
-      "pos": [1117, 620],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 17,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 28 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 16,
-      "type": "widget/internal_slider",
-      "pos": [-4, 627],
-      "size": { "0": 210, "1": 58 },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [{ "name": "", "type": "number", "links": [8, 25, 35] }],
-      "properties": {
-        "value": 0.2384210285387541,
-        "min": 0,
-        "max": 1,
-        "text": "V"
-      }
-    },
-    {
-      "id": 24,
-      "type": "instrument/Snare",
-      "pos": [1309, 576],
-      "size": { "0": 161.1999969482422, "1": 106 },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        { "name": "gain", "type": "number", "link": 35 },
-        { "name": "tune", "type": "number", "link": null },
-        { "name": "snappy", "type": "number", "link": 38 },
-        { "name": "decay", "type": "number", "link": null },
-        { "name": "loudness", "type": "number", "link": null }
-      ],
-      "outputs": [
-        { "name": "instrument", "type": "instrument", "links": [36] }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 25,
-      "type": "instrument/Sequencer",
-      "pos": [1264, 134],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 23,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 37 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 29,
-      "type": "instrument/Sequencer",
-      "pos": [1502, 132],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 24,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 40 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 28,
-      "type": "effect/Distortion",
-      "pos": [1064, 105],
-      "size": { "0": 178, "1": 106 },
-      "flags": {},
-      "order": 19,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 39 },
-        { "name": "shape1", "type": "number", "link": null },
-        { "name": "shape2", "type": "number", "link": null },
-        { "name": "pregain", "type": "number", "link": null },
-        { "name": "postgain", "type": "number", "link": null }
-      ],
-      "outputs": [
-        { "name": "instrument", "type": "instrument", "links": [40] }
-      ],
-      "properties": {}
-    },
-    {
       "id": 4,
       "type": "widget/internal_slider",
       "pos": [56, 413],
@@ -258,7 +21,7 @@
     {
       "id": 6,
       "type": "widget/knob",
-      "pos": [104, 162],
+      "pos": [57, 286],
       "size": [64, 84],
       "flags": {},
       "order": 2,
@@ -276,7 +39,7 @@
     {
       "id": 15,
       "type": "widget/knob",
-      "pos": [213, 81],
+      "pos": [61, 160],
       "size": [64, 84],
       "flags": {},
       "order": 3,
@@ -292,29 +55,245 @@
       "boxcolor": "rgba(161,161,161,1.0)"
     },
     {
-      "id": 27,
-      "type": "instrument/Snare",
-      "pos": [1010, 761],
-      "size": { "0": 161.1999969482422, "1": 106 },
+      "id": 16,
+      "type": "widget/internal_slider",
+      "pos": [56, 523],
+      "size": { "0": 210, "1": 58 },
       "flags": {},
-      "order": 11,
+      "order": 0,
+      "mode": 0,
+      "outputs": [{ "name": "", "type": "number", "links": [8, 25, 35] }],
+      "properties": {
+        "value": 0.2384210285387541,
+        "min": 0,
+        "max": 1,
+        "text": "V"
+      }
+    },
+    {
+      "id": 17,
+      "type": "widget/internal_slider",
+      "pos": [50, 631],
+      "size": { "0": 210, "1": 58 },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [{ "name": "", "type": "number", "links": [9, 13, 51] }],
+      "properties": {
+        "value": 0.19473684210526315,
+        "min": 0,
+        "max": 1,
+        "text": "V"
+      }
+    },
+    {
+      "id": 2,
+      "type": "instrument/Sequencer",
+      "pos": [851, 1],
+      "size": { "0": 140, "1": 66 },
+      "flags": {},
+      "order": 15,
       "mode": 0,
       "inputs": [
-        { "name": "gain", "type": "number", "link": 42 },
-        { "name": "tune", "type": "number", "link": 46 },
-        { "name": "snappy", "type": "number", "link": 47 },
+        { "name": "instrument", "type": "instrument", "link": 1 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 1,
+      "type": "instrument/Kick",
+      "pos": [526, 25],
+      "size": { "0": 169.60000610351562, "1": 106 },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        { "name": "gain", "type": "number", "link": 4 },
+        { "name": "frequency", "type": "number", "link": null },
+        { "name": "tone", "type": "number", "link": 6 },
+        { "name": "decay", "type": "number", "link": null },
+        { "name": "loudness", "type": "number", "link": 5 }
+      ],
+      "outputs": [{ "name": "instrument", "type": "instrument", "links": [1] }],
+      "properties": {}
+    },
+    {
+      "id": 9,
+      "type": "instrument/Hat",
+      "pos": [529, 187],
+      "size": { "0": 161.1999969482422, "1": 86 },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        { "name": "gain", "type": "number", "link": 8 },
+        { "name": "tune", "type": "number", "link": null },
+        { "name": "decay", "type": "number", "link": 11 },
+        { "name": "loudness", "type": "number", "link": 9 }
+      ],
+      "outputs": [{ "name": "instrument", "type": "instrument", "links": [7] }],
+      "properties": {}
+    },
+    {
+      "id": 11,
+      "type": "instrument/Karplus",
+      "pos": [528, 323],
+      "size": { "0": 161.1999969482422, "1": 106 },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        { "name": "gain", "type": "number", "link": 13 },
+        { "name": "decay", "type": "number", "link": null },
+        { "name": "loudness", "type": "number", "link": 16 },
+        { "name": "damping", "type": "number", "link": 15 },
+        { "name": "glide", "type": "number", "link": null }
+      ],
+      "outputs": [
+        { "name": "instrument", "type": "instrument", "links": [12] }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 20,
+      "type": "widget/internal_slider",
+      "pos": [50, 739],
+      "size": { "0": 210, "1": 58 },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        { "name": "", "type": "number", "links": [27, 29, 38, 42, 50] }
+      ],
+      "properties": {
+        "value": 0.08315788670590073,
+        "min": 0,
+        "max": 1,
+        "text": "V"
+      }
+    },
+    {
+      "id": 19,
+      "type": "instrument/Sequencer",
+      "pos": [844, 370],
+      "size": { "0": 140, "1": 66 },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 19 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 14,
+      "type": "instrument/Sequencer",
+      "pos": [847, 123],
+      "size": { "0": 140, "1": 66 },
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 7 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 18,
+      "type": "instrument/Sequencer",
+      "pos": [846, 246],
+      "size": { "0": 140, "1": 66 },
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 12 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 10,
+      "type": "instrument/Synth",
+      "pos": [526, 481],
+      "size": { "0": 144.39999389648438, "1": 66 },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        { "name": "gain", "type": "number", "link": 27 },
+        { "name": "attack", "type": "number", "link": 25 },
+        { "name": "decay", "type": "number", "link": null }
+      ],
+      "outputs": [
+        { "name": "instrument", "type": "instrument", "links": [19] }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 12,
+      "type": "instrument/FM",
+      "pos": [524, 600],
+      "size": { "0": 144.39999389648438, "1": 66 },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        { "name": "gain", "type": "number", "link": 29 },
+        { "name": "attack", "type": "number", "link": null },
+        { "name": "decay", "type": "number", "link": null }
+      ],
+      "outputs": [
+        { "name": "instrument", "type": "instrument", "links": [28] }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 21,
+      "type": "instrument/Sequencer",
+      "pos": [840, 500],
+      "size": { "0": 140, "1": 66 },
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 28 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 24,
+      "type": "instrument/Snare",
+      "pos": [521, 718],
+      "size": { "0": 161.1999969482422, "1": 106 },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        { "name": "gain", "type": "number", "link": 35 },
+        { "name": "tune", "type": "number", "link": null },
+        { "name": "snappy", "type": "number", "link": 38 },
         { "name": "decay", "type": "number", "link": null },
         { "name": "loudness", "type": "number", "link": null }
       ],
       "outputs": [
-        { "name": "instrument", "type": "instrument", "links": [39] }
+        { "name": "instrument", "type": "instrument", "links": [36] }
       ],
       "properties": {}
     },
     {
       "id": 26,
       "type": "effect/Distortion",
-      "pos": [1437, 353],
+      "pos": [841, 617],
       "size": { "0": 178, "1": 106 },
       "flags": {},
       "order": 18,
@@ -332,9 +311,79 @@
       "properties": {}
     },
     {
+      "id": 25,
+      "type": "instrument/Sequencer",
+      "pos": [1137, 574],
+      "size": { "0": 140, "1": 66 },
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 37 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 27,
+      "type": "instrument/Snare",
+      "pos": [518, 881],
+      "size": { "0": 161.1999969482422, "1": 106 },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        { "name": "gain", "type": "number", "link": 42 },
+        { "name": "tune", "type": "number", "link": 46 },
+        { "name": "snappy", "type": "number", "link": 47 },
+        { "name": "decay", "type": "number", "link": null },
+        { "name": "loudness", "type": "number", "link": null }
+      ],
+      "outputs": [
+        { "name": "instrument", "type": "instrument", "links": [39] }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 28,
+      "type": "effect/Distortion",
+      "pos": [846, 779],
+      "size": { "0": 178, "1": 106 },
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 39 },
+        { "name": "shape1", "type": "number", "link": null },
+        { "name": "shape2", "type": "number", "link": null },
+        { "name": "pregain", "type": "number", "link": null },
+        { "name": "postgain", "type": "number", "link": null }
+      ],
+      "outputs": [
+        { "name": "instrument", "type": "instrument", "links": [40] }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 29,
+      "type": "instrument/Sequencer",
+      "pos": [1143, 694],
+      "size": { "0": 140, "1": 66 },
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 40 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
+      ],
+      "properties": {}
+    },
+    {
       "id": 30,
       "type": "instrument/Conga",
-      "pos": [704, 235],
+      "pos": [516, 1042],
       "size": { "0": 161.1999969482422, "1": 86 },
       "flags": {},
       "order": 4,
@@ -351,39 +400,9 @@
       "properties": {}
     },
     {
-      "id": 2,
-      "type": "instrument/Sequencer",
-      "pos": [463, 89],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 1 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
-      "id": 23,
-      "type": "instrument/Sequencer",
-      "pos": [692, 79],
-      "size": { "0": 140, "1": 66 },
-      "flags": {},
-      "order": 22,
-      "mode": 0,
-      "inputs": [
-        { "name": "instrument", "type": "instrument", "link": 48 },
-        { "name": "values", "type": "array", "link": null },
-        { "name": "timings", "type": "array", "link": null }
-      ],
-      "properties": {}
-    },
-    {
       "id": 31,
       "type": "effect/Distortion",
-      "pos": [1277, 708],
+      "pos": [848, 945],
       "size": { "0": 178, "1": 106 },
       "flags": {},
       "order": 14,
@@ -401,38 +420,19 @@
       "properties": {}
     },
     {
-      "id": 20,
-      "type": "widget/internal_slider",
-      "pos": [581, 733],
-      "size": { "0": 210, "1": 58 },
+      "id": 23,
+      "type": "instrument/Sequencer",
+      "pos": [1124, 821],
+      "size": { "0": 140, "1": 66 },
       "flags": {},
-      "order": 5,
+      "order": 22,
       "mode": 0,
-      "outputs": [
-        { "name": "", "type": "number", "links": [27, 29, 38, 42, 50] }
+      "inputs": [
+        { "name": "instrument", "type": "instrument", "link": 48 },
+        { "name": "values", "type": "array", "link": null },
+        { "name": "timings", "type": "array", "link": null }
       ],
-      "properties": {
-        "value": 0.08315788670590073,
-        "min": 0,
-        "max": 1,
-        "text": "V"
-      }
-    },
-    {
-      "id": 17,
-      "type": "widget/internal_slider",
-      "pos": [236, 691],
-      "size": { "0": 210, "1": 58 },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "outputs": [{ "name": "", "type": "number", "links": [9, 13, 51] }],
-      "properties": {
-        "value": 0.19473684210526315,
-        "min": 0,
-        "max": 1,
-        "text": "V"
-      }
+      "properties": {}
     }
   ],
   "links": [

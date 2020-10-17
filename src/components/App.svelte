@@ -21,22 +21,6 @@
       user.loggedIn = false;
       user.username = "";
     }
-    // i dont even think we are using it, it can be deleted-Alexa 
-    // Robby - Uncommenting for now, throwing an error
-    
-      // window.cookieconsent.initialise({
-      //   container: document.getElementById("cookieconsent"),
-      //   palette:{
-      //     popup: { background: "#1aa3ff" },
-      //     button: { background: "#e0e0e0" },
-      //   },
-      //   revokable: true,
-      //   onStatusChange: function(status) {
-      //     console.log(this.hasConsented() ?
-      //     'enable cookies' : 'disable cookies');
-      //   },
-      //   "theme": "edgeless"
-      // });
   });
 </script>
 

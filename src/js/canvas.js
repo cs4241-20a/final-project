@@ -113,6 +113,9 @@ export function init(user) {
   addDemo("Demo2", "../examples/demo2.json");
   addDemo("Demo3", "../examples/demo3.json");
   addDemo("Demo4", "../examples/demo4.json");
+  addDemo("Demo5", "../examples/demo5.json")
+  addDemo("Demo6", "../examples/demo6.json");
+
   addDemo("Network (Beta)", "../examples/network.json");
   addDemo("Showcase", "../examples/showcase.json");
 
