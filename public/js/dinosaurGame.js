@@ -85,12 +85,11 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	    	obstacle.destroy();
 	    });
 
-		this.addPlayers(self, 'vagina');
-		console.log(self.char);
+		this.addPlayer(self, {x: 40, y: 300, team: '#000'});
 		
 		// get keyboard vals
 		this.keyboard = this.input.keyboard.createCursorKeys();
-		this.sendComet({x: 400});
+		this.sendComet({x: 400, velocityX: -10, gravityY: 10});
 	}
 
 
@@ -128,12 +127,9 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	// adding the comet to our game
 	sendComet(data){
 		console.log(data);
-		this.obstacles.create(data.x, 0, 'comet').setScale(2).refreshBody();
-		this.obstacles.children.iterate(child => {
-			child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
-				 .setVelocityX(Phaser.Math.Between(20, -40))
-				 .setGravityY(data.gravityY);
-		});
+		let comet = this.obstacles.create(data.x, 0, 'comet').setScale(2).refreshBody();
+		comet.setVelocityX(data.velocityX)
+			 .setGravityY(data.gravityY);
 	}
 
 
@@ -152,21 +148,24 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	}
 
 	// adding ourself to the world
-	addPlayers(self, playerInfo) {
+	addPlayer(self, playerInfo) {
 		// adding ourself as an image instead of a sprite
+		console.log('char', self.char)
 		self.char = self.physics.add.image(playerInfo.x, playerInfo.y, 'main')
 						.setOrigin(0.5, 0.5)
 						.setDisplaySize(50, 80);
+		console.log('char', self.char);
 		
 		self.char.setTint(playerInfo.team);
-		self.char.setBounce(0.2); // making sure we bounce correctly
 	    self.char.setCollideWorldBounds(true); // not allowed to leave the stage
 		self.physics.add.collider(self.char, this.platforms);
 
 		// collision with a star, also changes scores and removes the star
+		console.log('catching starts', this.stars, self.char);
 		self.physics.add.overlap(self.char, this.stars, (player, star) => {
+			console.log('caught a star');
 			star.disableBody(true, true);
-			this.scoreText.setText('Score: ' + ++this.score);
+			this.scoreText.setText('Score: ' + ++self.score);
 		}, null, self);
 	}
 

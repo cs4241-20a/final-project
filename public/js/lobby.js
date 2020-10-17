@@ -171,7 +171,6 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		this.socket.off('disconnect');
 		this.socket.off('playerMoved');
 		this.socket.off('startGame');
-		// this.socket.leave();
 		this.scene.start('DinoGame');
 	}
 }

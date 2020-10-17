@@ -1,5 +1,4 @@
 function loginProc (json) {
-    console.log("user data", json);
     if (!json._id) return;
 
     document.getElementById("userInfo").setAttribute("style", "display:none");
