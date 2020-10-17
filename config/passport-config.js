@@ -14,7 +14,7 @@ const setupPassport = () => {
 	passport.use(new GitHubStrategy({
 		clientID: GITHUB_CLIENT_ID,
 		clientSecret: GITHUB_CLIENT_SECRET,
-		callbackURL: "http://localhost:3000/auth/github/callback"
+		callbackURL: "https://webware-team19-final.herokuapp.com/auth/github/callback"
 	}, (accessToken, refreshToken, profile, done) => process.nextTick(() => {
 		done(null, profile);
 	})));
@@ -22,7 +22,7 @@ const setupPassport = () => {
 	passport.use(new GoogleStrategy({
 		clientID: GOOGLE_CLIENT_ID,
 		clientSecret: GOOGLE_CLIENT_SECRET,
-		callbackURL: "http://localhost:3000/auth/google/callback"
+		callbackURL: "https://webware-team19-final.herokuapp.com/auth/google/callback"
 	}, (accessToken, refreshToken, profile, done) => process.nextTick(() => {
 		done(null, profile);
 	})));
