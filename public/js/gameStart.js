@@ -13,4 +13,4 @@ let config = {
     scene: [Lobby, DinoGame]
 };
 
-let game = new Phaser.Game(config);
+// let game = new Phaser.Game(config);
