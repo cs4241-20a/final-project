@@ -102,7 +102,25 @@ const getMembers = async (members) => {
 		slct.appendChild(opt)
 		//slct2.appendChild(opt)
 	}
+}
 
+const getMembers2 = async (members) => {
+	var slct = document.getElementById("t_assignee")
+	//var slct2 = document.getElementById("t_assignee")
+	for(var i = 0; i < members.length; i++) {
+		//Get member names
+		var member = members[i]
+		console.log(member)
+		const res = await fetch("/api/users/" + member, {method: "GET"});
+	  const data = await res.json()
+	  console.log(JSON.stringify(data))
+		//console.log(modal)
+		var opt = document.createElement("option")
+		opt.setAttribute('value', data.data._id)
+		opt.appendChild(document.createTextNode(data.data.displayName))
+		slct.appendChild(opt)
+		//slct2.appendChild(opt)
+	}
 }
 
 const getMyGroup = async () => {
@@ -120,6 +138,7 @@ const getMyGroup = async () => {
   console.log("Our group: " + groupId)
 	console.log(data.data[0].members)
 	getMembers(data.data[0].members)
+	getMembers2(data.data[0].members)
   getTasks()
 }
 
