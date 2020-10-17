@@ -68,11 +68,9 @@ function appendMessage(message) {
     }
 }
 
-const submit = function () {
+const submit = function (highScore) {
 
-    const json = {user:{_id: currUserID, username: currUsername, highScore: 50 + Math.floor(Math.random()*50)}};
-
-    console.log(json);
+    const json = {user:{_id: currUserID, username: currUsername, highScore}};
 
     fetch("/setHighScore", {
       method: "POST",

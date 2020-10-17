@@ -78,8 +78,6 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    this.platforms.create(750, 220, 'ground');
 
 	    // ready button
-	    // this.ready = this.add.sprite(40, 50, 'ready').setInteractive();
-	    // this.ready.on('pointerdown', () => {console.log('we ready');});
 	    this.ready = this.add.text(700, 560, 'Not Ready', {fontFamily: 'Roboto', color: '#fff', backgroundColor: '#C42953'}).setInteractive();
 	    this.ready.on('pointerdown', () => {
 	    	this.ready.setText('Ready')
@@ -163,7 +161,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		self.char.setBounce(0.2); // making sure we bounce correctly
 	    self.char.setCollideWorldBounds(true); // not allowed to leave the stage
 		self.physics.add.collider(self.char, this.platforms);
-		console.log(self.char.body)
+
 		// collision with a star, also changes scores and removes the star
 		self.physics.add.overlap(self.char, this.stars, (player, star) => {
 			star.disableBody(true, true);

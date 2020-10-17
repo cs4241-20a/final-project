@@ -177,6 +177,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		}, null, self);
 
 		self.physics.add.overlap(self.char, self.obstacles, (player, obst) => {
+			submit(this.score);
 			self.scene.pause();
 			self.add.text(400, 300, 'Game Over', {fontSize: 50}).setOrigin(.5, .5);
 			this.socket.off('comet');
