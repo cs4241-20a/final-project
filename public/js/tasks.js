@@ -49,16 +49,6 @@ var openTask = function(task, edit) {
   }
 }
 
-var listClicked = function(){
-  if(clicked){
-    btnContainer.style.display="none"
-    clicked=false
-  }else{
-    btnContainer.style.display="block"
-    clicked=true
-  }
-}
-
 function getTasks() {
   var h = document.getElementById('group_name')
   var name = h.innerHTML
@@ -317,3 +307,5 @@ window.onload = function() {
     const teButton = document.querySelector( '#task_edit' )
     teButton.onclick = editTask
   }
+
+

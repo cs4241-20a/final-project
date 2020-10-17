@@ -57,7 +57,11 @@
     <form style="padding: 10px">
       <label for="tname">Task Name: </label><input type="text" id="tname" placeholder="Task name"><br>
       <label for="due_date">Due Date: </label><input type="date" id="due_date"><br>
-      <label for="tassignee">Assigned To: </label><input type="text" id="tassignee" placeholder="Assignees"><br>
+      <label for="tassignees">Assigned to: </label>
+      <select class="browser-default" id="tassignees">
+        <option value="" disabled selected>Choose assignees</option>
+        <option value="1">Option 1</option>
+      </select></br>
       <label for="tags">Tags: </label><input type="text" id="tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="tdesc" placeholder="Task Description"><br>
       <input type="submit" id="task_submit" value="Confirm" class="btn-small waves-effect waves-light">
@@ -75,7 +79,11 @@
     <form style="padding: 10px">
       <label for="tname">Task Name: </label><input type="text" id="t_name" placeholder="Task name"><br>
       <label for="due_date">Due Date: </label><input type="date" id="due__date"><br>
-      <label for="tassignee">Assigned To: </label><input type="text" id="t_assignee" placeholder="Assignees"><br>
+      <label for="t_assignee">Assigned To: </label>
+      <select class="browser-default" id="t_assignee">
+        <option value="" disabled selected>Choose assignees</option>
+          <option value="1">Option 1</option>
+      </select></br>
       <label for="tags">Tags: </label><input type="text" id="t_tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="t_desc" placeholder="Task Description"><br>
       <input type="submit" id="task_edit" value="Confirm">
