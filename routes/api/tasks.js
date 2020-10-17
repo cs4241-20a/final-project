@@ -49,7 +49,7 @@ router.get("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, taskId} = req.params;
 	const username = getUsername(req);
-	
+
 	try {
 		// Find the id of the user with the given username
 		const userId = (await User.findOne({username}))._id;
@@ -170,7 +170,7 @@ router.patch("/:groupId/:taskId", ensureAuthenticated, async (req, res) => {
 
 const formatDate = dateStr => {
 	//* This is expecting a date formatted as a string exactly as outputed from a datepicker.
-	return moment(new Date(dateStr)).add(1, "days").format("MM/DD/YYYY"); 
+	return moment(new Date(dateStr)).add(1, "days").format("MM/DD/YYYY");
 }
 
 module.exports = {router, formatDate};

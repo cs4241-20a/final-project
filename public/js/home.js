@@ -20,7 +20,10 @@
   //     console.log("Moving to task page!")
   // })
 //}
+let groupName = "test";
+export { groupName };
 
+console.log(document.getElementById('logout-button'))
 var logout = document.getElementById('logout-button')
 logout.onclick = function(e) {
   e.preventDefault()
@@ -58,6 +61,12 @@ async function addGroupTasks(groupId) {
     a.setAttribute('id', data1.data[i]._id)
     a.setAttribute('href', '/tasks')
     a.innerHTML = data1.data[i].name
+    a.onclick = function() {
+      //groupName = data1.data[i].name
+      //document.cookie = "group=" + groupId
+      window.localStorage.setItem("group", groupId)
+      console.log(window.localStorage.getItem("group"))
+    }
     taskList.appendChild(a)
   }
 }
@@ -82,7 +91,7 @@ const addAllGroups = async () => {
       span.setAttribute('class', 'card-title')
       var a = document.createElement('a')
       a.setAttribute('class', 'teal-text')
-      a.setAttribute('href', '/tasks')
+      //a.setAttribute('href', '/tasks')
       a.setAttribute('style', 'font-weight: 400;')
       a.setAttribute('id', data.data[i*3+j]._id)
       a.innerHTML = data.data[i*3+j].name

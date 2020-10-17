@@ -6,6 +6,9 @@ socket.on("message", message => {
 	console.log(message);
 });
 
+//import {groupName}  from './home.js'
+var groupId = window.localStorage.getItem("group")// document.cookie
+console.log(groupId)
 // Get the modal
 var modal = document.getElementById("myModal");
 var editmodal = document.getElementById("editModal");
@@ -82,8 +85,8 @@ const addMe = async () => {
   console.log(data)
 }
 
-var groupName = "test"; //Change this to be set later
-var groupId;
+//var groupName; //= "test"; //Change this to be set later
+//var groupId;
 
 const getMembers = async (members) => {
 	var slct = document.getElementById("tassignees")
@@ -124,21 +127,22 @@ const getMembers2 = async (members) => {
 }
 
 const getMyGroup = async () => {
-  const res = await fetch("/api/groups", {method: "GET"});
+  const res = await fetch("/api/groups/" + groupId, {method: "GET"});
   const data = await res.json()
   console.log(JSON.stringify(data))
-  for(var i = 0; i < data.data.length; i++)
-  {
-    console.log(data.data[i].name)
-    if(groupName == data.data[i].name) {
-      console.log(data.data[0]._id)
-      groupId = data.data[i]._id
-    }
-  }
+	//console.log(groupName)
+  // for(var i = 0; i < data.data.length; i++)
+  // {
+  //   console.log(data.data[i].name)
+  //   if(groupName == data.data[i].name) {
+  //     console.log(data.data[0]._id)
+  //     groupId = data.data[i]._id
+  //   }
+  // }
   console.log("Our group: " + groupId)
-	console.log(data.data[0].members)
-	getMembers(data.data[0].members)
-	getMembers2(data.data[0].members)
+	console.log(data.data.members)
+	getMembers(data.data.members)
+	getMembers2(data.data.members)
   getTasks()
 }
 
@@ -153,7 +157,7 @@ const getTasks = async () => {
   const res = await fetch("/api/tasks/" + groupId, {method: "GET"})
   const data = await res.json()
   console.log(JSON.stringify(data))
-  console.log(data.data[0])
+  //console.log(data.data[0])
   for (var i = 0; i < data.data.length; i++) {
     var task = data.data[i]
 		if(task.columnName > cols) {
@@ -376,6 +380,7 @@ var delCol = function() {
 }
 
 const returnHome = async () => {
+	console.log("Going home")
   window.location = "/"
 }
 
