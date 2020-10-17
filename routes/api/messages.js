@@ -24,7 +24,7 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	
 	try {
 		// Find the id of the user with the given username
-		const userId = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: userId});
 		// Find all messages with the given group id sorted by date sent (ascending)
@@ -143,7 +143,7 @@ router.patch("/:groupId/:messageId", ensureAuthenticated, async (req, res) => {
 
 	try {
 		// Find the id of the user with the given username
-		const senderId = await User.findOne({username})._id;
+		const senderId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: senderId});
 		// Find and update content and status of the message with the given id in the given group if the current user was the sender
