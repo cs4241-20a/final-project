@@ -61,6 +61,7 @@ var openTask = function(task, edit) {
   }
 }
 
+
 var listClicked = function(){
   if(clicked){
     console.log(btnContainer)
@@ -370,3 +371,5 @@ window.onload = function() {
     const teButton = document.querySelector( '#task_edit' )
     teButton.onclick = editTask
   }
+
+
