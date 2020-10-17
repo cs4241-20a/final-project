@@ -1,0 +1,115 @@
+div{
+  display: block;
+}
+*{
+  box-sizing: border-box;
+}
+.team1{
+  width: 50%;
+  float: right;
+  text-align: right;
+  position: relative;
+}
+.team2{
+  width: 50%;
+  text-align: left; 
+  position: relative;
+  float: left;
+}
+.picks{
+  background: black;
+  border-radius: 5px;
+  padding: 2px;
+  color: white;
+  height:350px
+}
+.pick{
+  width: 19%;
+  display: inline-block;
+  position: relative;
+  padding: 2px;
+  text-align: center;
+}
+.bans{
+  background: black;
+  border-radius: 5px;
+  padding: 2px;
+  color: white;
+  height:350px;
+}
+.ban{
+  width: 19%;
+  display: inline-block;
+  position: relative;
+  padding: 2px;
+  text-align: center; 
+}
+.pickImage img{
+  width: 100%;
+  position: relative;
+}
+.tileImage img{
+  width: 98%;
+  padding: 2px;
+  height: 98%;
+  position: relative;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+}
+.champGroup{
+  display: inline-block;
+  width: 10%;
+  background-color: black;
+  position: relative;
+  padding: 7px;
+}
+body{
+  background-color: #151726;
+  color: white;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.teamheader1{
+  background-image: linear-gradient(to left, black, #000001, #0d00bf);
+}
+.teamheader2{
+  background-image: linear-gradient(to right, black, #000001, #bf0a00);
+}
+.results{
+  height: auto;
+  position: relative;
+}
+.selectionBox{
+  height: auto;
+  position: relative;
+  margin-top: 10px;
+}
+.input{
+  width: 800px;
+  margin: auto;
+}
+#boxes{
+  display: inline-block;
+  left:37.5%;
+  position: relative;
+}
+.name{
+  font-size: 80%;
+  text-align: center;
+}
+
+.inBetween{
+  width: 100%;
+}
+.inBetween div{
+  width: 50%;
+  display: inline-block;
+}
+.left{
+  justify-content: left;
+}
+.right{
+  justify-content: right;
+}
