@@ -1,0 +1,37 @@
+{
+  "name": "bubble",
+  "version": "1.0.0",
+  "description": "A flexible tool for sharing audio and video within conversational \"bubbles\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "build-angular": "cd bubble && ng build && cd ..",
+    "build-angular-prod": "cd bubble && ng build --prod && cd ..",
+    "deploy": "npm install && npm run build-angular && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mastlouis/final-project.git"
+  },
+  "author": "Matthew St Louis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mastlouis/final-project/issues"
+  },
+  "homepage": "https://github.com/mastlouis/final-project#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-ensure-login": "^0.1.1",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "http": "0.0.1-security",
+    "mongodb": "^3.6.2",
+    "passport": "^0.4.1",
+    "passport-github": "^1.1.0",
+    "path": "^0.12.7",
+    "ws": "^7.3.1"
+  }
+}

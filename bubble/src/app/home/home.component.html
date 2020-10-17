@@ -1,0 +1,80 @@
+<p style="text-align: center;">Welcome to <b>Bubble!</b> This application allows users to join bubbles and start chatting!</p>
+
+<a mat-flat-button color="primary" href="/auth/GitHub">Login with GitHub</a>
+<button mat-flat-button class="pad-left" color="primary" (click)="openDialog()">
+  <mat-icon>info</mat-icon>
+</button>
+
+<h2>Bubbles</h2>
+<mat-chip-list class="example-chip" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+    <mat-chip class="example-box" cdkDrag *ngFor="let bubble of bubbles">
+        {{bubble.name}}
+    </mat-chip>
+</mat-chip-list>
+
+<form [formGroup]="newBubbleForm">
+    <mat-form-field>
+        <mat-label>New Bubble</mat-label>
+        <input matNativeControl matInput formControlName="newBubble" />
+    </mat-form-field>
+    <button mat-button (click)="addBubble()" [disabled]="!newBubbleForm.get('newBubble').value">
+    <mat-icon>add</mat-icon>
+  </button>
+</form>
+
+<form [formGroup]="oldBubbleForm">
+    <mat-form-field>
+        <mat-label>Join an existing Bubble! Enter the Bubble name here: </mat-label>
+        <input matNativeControl matInput formControlName="oldBubble" />
+    </mat-form-field>
+    <button mat-button (click)="joinOldBubble()" [disabled]="!oldBubbleForm.get('oldBubble').value">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</form>
+
+<h2>Socket Tests</h2>
+<button mat-flat-button color="primary" (click)="activateRTC()">Connect</button>
+
+<h2>
+    Videos
+    <button mat-button (click)=addTile()>
+    <mat-icon>add</mat-icon>
+  </button>
+</h2>
+<mat-grid-list [cols]="numCols">
+    <mat-grid-tile *ngFor="let tile of tiles; let i = index" [colspan]="tile.cols" [rowspan]="tile.rows" [style.background]="tile.color">
+        <br>
+
+        <!-- You -->
+        <div *ngIf="tile.index === 0">
+            <video class="your-video" [ngClass]="{'mirror' : mirror}"></video>
+        </div>
+
+        <!-- Them -->
+        <div *ngIf="tile.index !== 0">
+            <video class="client-{{i}}-video"></video>
+        </div>
+
+        <mat-grid-tile-footer>
+            <p>{{tile.text}}</p>
+            <button *ngIf="tile.cols === 1" mat-button (click)="refocus(tile.index)">
+        <mat-icon>fullscreen</mat-icon>
+      </button>
+            <button *ngIf="tile.cols !== 1" mat-button (click)="unfocus()">
+        <mat-icon>fullscreen_exit</mat-icon>
+      </button>
+
+            <!-- You -->
+            <div *ngIf="tile.index === 0">
+                <button mat-button (click)="toggleAudio()">
+          <mat-icon>{{audio? 'mic_off' : 'mic'}}</mat-icon>
+        </button>
+                <button mat-button (click)="toggleVideo()">
+          <mat-icon>{{video? 'videocam_off' : 'videocam'}}</mat-icon>
+        </button>
+                <!-- <mat-slide-toggle [checked]="mirror">Mirror</mat-slide-toggle> -->
+            </div>
+            <!-- End You -->
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+</mat-grid-list>
