@@ -2,10 +2,7 @@
 
 const socket = io();
 
-socket.on("message", (message) => {
-	console.log(message);
-	outputMessage(message);
-});
+socket.on("message", message => outputMessage(message));
 
 const chatMessages = document.getElementById("chat_messages");
 const sendChatButton = document.getElementById("send-chat-btn");
@@ -14,12 +11,11 @@ const chatInput = document.getElementById("chat_input");
 sendChatButton.addEventListener("click", async evt => {
 	evt.preventDefault();
 
-	const content = chatInput.value
+	const content = chatInput.value;
 	const date = moment(Date.now()).format("MM/DD/YY - hh:mm a");
 	const message = {content, date};
 	socket.emit("chatMessage", message);
 
-	//TODO: send to db
 	const res = await fetch(`/api/messages/${groupId}`, {
 		method: "POST",
 		body: JSON.stringify({content}),
@@ -30,18 +26,32 @@ sendChatButton.addEventListener("click", async evt => {
 	chatInput.value = "";
 });
 
-const loadMessages = async (groupId) => {
+const loadMessages = async () => {
 	const res = await fetch(`/api/messages/${groupId}`, {method: "GET"});
 	const data = await res.json();
-	console.log(data);
+
+	data.data.forEach(async element => {
+		const {content, senderId} = element;
+		const sender = await getDisplayNameById(senderId);
+		const date = moment(new Date(element.dateSent)).format("MM/DD/YY - hh:mm a");
+		const message = {content, sender, date};
+		outputMessage(message);
+	});
 };
+
+const getDisplayNameById = async (userId) => {
+	const res = await fetch(`/api/users/${userId}`, {method: "GET"});
+	const data = await res.json();
+
+	console.log(data);
+
+	return data.data.displayName;
+}
 
 const outputMessage = (message) => {
 	const div = document.createElement("div");
 	div.classList.add("message");
 	let {content, sender, date} = message;
-	//TODO: change
-	sender = "Test Testerson";
 	div.innerHTML = `<p class="text">${content}</p><p class="meta">${sender} <span>${date}</span></p>`;
 	chatMessages.appendChild(div);
 	chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -396,8 +406,8 @@ const returnHome = async () => {
 	window.location = "/";
 };
 
-window.onload = function () {
-	getMyGroup();
+window.onload = async function () {
+	await getMyGroup();
 
 	const tsButton = document.querySelector("#task_submit");
 	tsButton.onclick = addTask;
@@ -431,5 +441,5 @@ window.onload = function () {
 	const teButton = document.querySelector("#task_edit");
 	teButton.onclick = editTask;
 
-	loadMessages(groupId);
+	loadMessages();
 };
