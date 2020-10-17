@@ -45,27 +45,37 @@ let gameTimeout;
 
 
 const gameLogic = () => {
-	io.emit('comet', 
-		{x: Math.floor(Math.random() * 750) + 50, 
-		 velocityY: Math.floor(Math.random() * 100) + 50,
-		 velocityX: Math.floor(Math.random() * 50) - 25});
-	gameTimeout = setTimeout(gameLogic, Math.floor(Math.random() * 3000) + 2000);
+	if(Math.random() >= .5){
+		io.emit('comet', 
+			{x: Math.floor(Math.random() * 750) + 50, 
+			 velocityY: Math.floor(Math.random() * 100) + 50,
+			 velocityX: Math.floor(Math.random() * 50) - 25});
+	} else {
+		io.emit('star', 
+			{x: Math.floor(Math.random() * 750) + 50});
+	}
+	gameTimeout = setTimeout(gameLogic, Math.floor(Math.random() * 1000) + 200);
 };
 
-io.on('connection', (socket) =>  {
-	console.log(socket.id);
-	players[socket.id] = {
-		playerId: socket.id,
+const addNewPlayer = (id) => {
+	players[id] = {
+		playerId: id,
 		x: Math.floor(Math.random() * 150 + 50),
 		y: 450,
 		team: [0x454545, 0x8E5DFB, 0xFFFFFF][Math.floor(Math.random() * 3)],
 		ready: false
 	}
+}
+
+io.on('connection', (socket) =>  {
+	addNewPlayer(socket.id);
 
 	socket.emit('currentPlayers', players);
 	socket.broadcast.emit('newPlayer', players[socket.id]);
 
 	socket.on('ready', () => {
+		if (players[socket.id] === undefined)
+			addNewPlayer(socket.id)
 		players[socket.id].ready = true;
 		console.log(players);
 		console.log(inGame);
@@ -104,7 +114,7 @@ io.on('connection', (socket) =>  {
 
 			socket.broadcast.emit('playerMoved', players[socket.id]);
 		} catch (e) {
-			console.error(e, socket.id);
+			addNewPlayer(socket.id);
 		}
 	})
 

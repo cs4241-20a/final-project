@@ -174,7 +174,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		this.ready.setText('Not Ready');
 
 		console.log('starting');
-		// this.socket.emit('disconnectLobby');
+		this.socket.emit('disconnectLobby');
 		// this.socket.off('currentPlayers');
 		// this.socket.off('newPlayer');
 		// this.socket.off('disconnect');

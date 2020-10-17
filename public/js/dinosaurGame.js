@@ -59,6 +59,8 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		// to display a comet when the server sends it (everyone gets the same)
 		this.socket.on('comet', data => this.sendComet(data));
 
+		this.socket.on('star', data => this.sendStar(data));
+
 		// on a game over
 		this.socket.on('endGame', () => this.endGame());
 
@@ -135,6 +137,11 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	sendComet(data){
 		let comet = this.obstacles.create(data.x, 0, 'comet');
 		comet.setVelocityX(data.velocityX);
+	}
+
+	// adding new star to our game
+	sendStar(data){
+		let star = this.stars.create(data.x, 0, 'star');
 	}
 
 
