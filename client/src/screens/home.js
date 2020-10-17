@@ -133,7 +133,7 @@ class Home extends React.Component {
 					</Row>
 					{redirect}
 				</Container>
-				<div style={{display: 'hidden'}}>
+				<div style={{display: 'hidden'}} className="get-rid-of-me">
 					{items}
 				</div>
 			</div>

@@ -255,3 +255,7 @@ div.saveTitle{
 .the-title {
   padding: 25px;
 }
+
+.get-rid-of-me {
+  display: hidden;
+}
