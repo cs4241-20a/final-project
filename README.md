@@ -1,56 +1,118 @@
-# cs4241-FinalProject
+## Groceryify
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+A web application that manages the food in your inventory and grocery list to track when food is going to expire so that the user can be alerted that they have to use up a food item. It allows for login through Google and registering for an account with user and password credentials. Through the login, users can join and create groups in which grocery lists can be shared among group members. There is also a chat where users can enter their identifiable name and a message and converse with multiple members about grocery related things.
 
-## General description
+Link to the website: https://glitch.com/~final-project-007
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+The technologies we used to create our project are Auth0 for the main login page, Svelte for the chat, and Glitch to host Groceryify.
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+Our team used the following TO-DO List to complete Groceryify's main functionality and these are the methods we used to complete our tasks as well as who did what: In general, Pradnya, Carley, and Kirsten worked on the server work and most of the CSS in the main page while Isabel worked on the Auth0 functionality and the login pages.
 
-## Project ideation
+## Group Tasks for Groceryify
+- Chat – CARLEY
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+- Frontend
 
-## Logistics
+- The Landing Page
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+    Introduction to the platform -- Kirsten
 
-### Deliverables
+    Designing it: Improving the CSS -- Kirsten
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+    A section which tells you if you are logged in -- Isabel
 
-There are no other scheduled checkpoints for your project. 
+- Server + JS
+    
+    Create/find group setup
 
-#### Turning in Your Outline / Project
+    Submit button in the form should update the cartArray in the Database --       Pradnya
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+    Displaying the data in the cart, pantry, and fridge array to the frontend     (The 3 tables)
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
+          Getting the data from the database to the server
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
+          Sending the data from the server to the frontend
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+          Sending from the server to the database
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
+          Doing a foreach loop for the arrays and adding the data to the table
 
-## FAQs
+- Moving items from the cart to the pantry or the fridge (Button)
 
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+  An eventlistener on the button
+
+  Store the object in a variable
+
+  Delete the grocery item from the cartArray
+
+  Date Bought -- Pradnya and Carley
+
+      Add a time field (store it in the js format) to the json object (grocery       item) when transferring from the cart to the pantry/fridge
+
+      Create a function to calculate the time passed
+
+            The function should check how many weeks have passed (the                     developer's choice)
+
+            Change the background color of that specific row: 1=yellow,                   2=orange, 3+=red
+
+  Add the grocery item to the pantryArray or the fridgeArray
+
+  Send the updated JSON object: {id: \_\_\_\_, groupname: json.groupname,     cartList: cartArray, pantryList: pantryArray, fridgeList: fridgeArray}
+
+  Use the updateOne function to update the arrays in mongoDB
+
+  Send the updates object back to script.js
+
+  Display the data that is received from the database (standalone helper function) -- Pradnya
+
+  Delete button for all the rows in Cart, Fridge, and Pantry -- Pradnya
+
+  Onclick event for the row of the table
+
+  Remove the JSON object from that specific array
+
+  Send the updated JSON object: {id: \_\_\_\_, groupname: json.groupname,     cartList: cartArray, pantryList: pantryArray, fridgeList: fridgeArray}
+
+  Use the update function in the server to update the deletion in mongodb
+
+  .then to display the deletion in the UI
+
+A minus button for all the rows in Cart, Fridge, and Pantry -- Pradnya
+
+  Onclick event for the – button in the row of the table
+
+  Reduce the quantity of the JSON object by 1 in the specific JSON object in that specific array
+
+  Send the updated JSON object: {id: \_\_\_\_, groupname: json.groupname, cartList: cartArray, pantryList: pantryArray, fridgeList: fridgeArray}
+
+  Use the update function in the server to update the deletion in mogodb
+
+  .then to display the change in quantity in the UI
+
+## Challenges Our Team Faced
+Our team faced many challenges in our implementation. These challenges include:
+
+-Getting the chat to work in our Glitch project- we did not have much experience with making web sockets in Javascript, so we went to Prof. Robert's Office Hours for assistance on multiple occasions and were able to get a working chat!
+
+-Modifying the cart in the database correctly- we were calling two fetch methods where there was no guarantee that the first fetch would be called first
+
+- One of the big challenges was designing the database itself- what functions we would need for the website, what structure the database would have including the collections.
+
+-We had to make the website accessible to multiple people at once, so we had to do most of the data processing in the frontend and send it to the server.
+
+-Because of our busy schedules we could not work as much during the day but most of the team pulled all-nighters to get our tasks done.
+
+##Design Tech Achievements
+
+- We used an external authenication API for our login called Auth0.
+
+- According to our proposal, one of our stretch goals was to have three different boards for the users which were cart, pantry, and fridge board. We were able to implement all three boards, design them, and made them user friendly.
+
+- Another stretch goal was to alert the user about how long it has been since they have bought each grocery item by color coding the grocery items in the UI. Yellow means one week, mustard means two weeks, and red means three or more weeks. This will remind the users about their groceries which are going to go bad and will prevent food waste.
+
+- We made the website accessible by adding big headings, labels to every text input, instructions for inputs, and color guides.
+
+
+
+
+( ᵔ ᴥ ᵔ )

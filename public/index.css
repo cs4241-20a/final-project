@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin-top:1%;
+  font-family:'Nunito Sans', 'sans-serif';
+  margin: 2em 1em;
+  line-height: 1.5em;
+  text-align:center;
+}
+
+h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #88C057;
+  line-height: 1.1;
+}
+
+
+.intro {
+  position: relative;
+  margin: 0 auto;
+  padding: 20px;
+  width: 50%;
+  border-style:ridge;
+  border-width: 7px;
+  border-color: #88C057;
+  justify-content:center;
+  margin-top:20px;
+  }
+
+button {
+  background-color: #88C057;
+  height: 50px;
+  width: 150px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#start{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* #updatebutton{
+  display: block;
+  padding-left: 10px;
+  width: 127px;
+  height: 66px;
+} */
