@@ -94,35 +94,36 @@ window.onclick = function (event) {
 };
 
 // Are we editing?
-var editing = true;
+var editing = true
 
-var openTask = function (task, edit) {
-	if (edit == true) {
-		editmodal.style.display = "block";
-		const input = document.querySelector("#t_name");
-		const input2 = document.querySelector("#due__date");
-		const input3 = document.querySelector("#t_assignee");
-		const input4 = document.querySelector("#t_tags");
-		const input5 = document.querySelector("#t_desc");
-		input.value = task.name;
-		input2.value = task.dateDue;
-		input3.value = task.assignees;
-		input4.value = task.tags;
-		input5.value = task.desc;
-	}
-};
+var openTask = function(task, edit) {
+  if(edit == true) {
+    editmodal.style.display = "block";
+    const input = document.querySelector( '#t_name' )
+    const input2 = document.querySelector( '#due__date' )
+    const input3 = document.querySelector( '#t_assignee')
+    const input4 = document.querySelector( '#t_tags')
+    const input5 = document.querySelector( '#t_desc')
+    input.value = task.name
+    input2.value = task.dateDue
+    input3.value = task.assignees
+    input4.value = task.tags
+    input5.value = task.desc
+  }
+}
 
-var listClicked = function () {
-	if (clicked) {
-		console.log(btnContainer);
-		btnContainer.style.display = "none";
-		clicked = false;
-	} else {
-		console.log(btnContainer);
-		btnContainer.style.display = "block";
-		clicked = true;
-	}
-};
+
+var listClicked = function(){
+  if(clicked){
+    console.log(btnContainer)
+    btnContainer.style.display="none"
+    clicked=false
+  }else{
+    console.log(btnContainer)
+    btnContainer.style.display="block"
+    clicked=true
+  }
+}
 
 const addMe = async () => {
 	var h = document.getElementById("group_name");
@@ -152,24 +153,26 @@ const getMyGroup = async () => {
 };
 
 const getTasks = async () => {
-	const res = await fetch("/api/tasks/" + groupId, { method: "GET" });
-	const data = await res.json();
-	console.log(JSON.stringify(data));
-	console.log(data.data[0]);
-	for (var i = 0; i < data.data.length; i++) {
-		var task = data.data[i];
-		if (task.columnName > cols) {
-			console.log("We need to add a new column");
-			addCol();
-		}
-		const dateStr = task.dateDue;
-		console.log(dateStr);
-		const date = dateStr.substring(0, 10);
-		console.log(date);
-		task.dateDue = date;
-		appendNewInfo(task);
-	}
-};
+  const res = await fetch("/api/tasks/" + groupId, {method: "GET"})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data.data[0])
+  for (var i = 0; i < data.data.length; i++) {
+    var task = data.data[i]
+		if(task.columnName > cols) {
+      console.log("We need to add a new column")
+      for(var j = cols; j < task.columnName; j++) {
+        addCol()
+      }
+    }
+    const dateStr = task.dateDue;
+    console.log(dateStr)
+    const date = dateStr.substring(0, 10)
+    console.log(date)
+    task.dateDue = date
+    appendNewInfo(task)
+  }
+}
 
 //What column are we adding to?
 var currentCol = 1;
@@ -331,76 +334,74 @@ function appendNewInfo(task, taskEdit = false) {
 //The total number of columns
 var cols = 1;
 
-var addCol = function () {
-	const contain = document.getElementsByClassName("inner-container");
-	//console.log(contain)
-	cols++; //update number of columns
-	console.log(cols);
-	// Create all the necessary elements
-	var newCol = document.createElement("div");
-	newCol.setAttribute(
-		"class",
-		"task_lists card-panel materialize-red lighten-2"
-	);
-	var colID = "col-" + cols;
-	newCol.setAttribute("id", colID);
-	var newList = document.createElement("div");
-	newList.setAttribute("class", "tasks");
-	newList.setAttribute("id", cols);
-	var newlistName = document.createElement("h4");
-	newlistName.setAttribute("class", "white-text center-align row");
-	var addBtn = document.createElement("a");
-	addBtn.setAttribute(
-		"class",
-		"add_task centerwaves-effect waves-light btn-large"
-	);
-	addBtn.setAttribute("type", "centerwaves-effect waves-light btn-large");
-	var btnID = "btn-" + cols;
-	addBtn.setAttribute("id", btnID);
-	var plus = document.createElement("i");
-	plus.setAttribute("class", "material-icons right");
-	// Add everything
-	plus.appendChild(document.createTextNode("add"));
-	addBtn.appendChild(plus);
-	addBtn.appendChild(document.createTextNode(" New Task"));
-	addBtn.onclick = function () {
-		makeTask(cols);
-	};
-	newlistName.appendChild(document.createTextNode("New List"));
-	newCol.appendChild(newlistName);
-	newCol.appendChild(newList);
-	newCol.appendChild(addBtn);
-	newCol.onclick = listClicked;
-	contain[0].appendChild(newCol);
-};
+var addCol = function() {
+  const contain = document.getElementsByClassName("inner-container")
+  //console.log(contain)
+  cols++ //update number of columns
+  console.log(cols)
+  // Create all the necessary elements
+  var newCol = document.createElement("div");
+  newCol.setAttribute('class', 'task_lists card-panel teal lighten-2')
+  var colID = "col-" + cols
+  newCol.setAttribute('id', colID)
+  var newList = document.createElement("div")
+  newList.setAttribute('class', 'tasks')
+  newList.setAttribute('id', cols)
+  var newlistName = document.createElement("h5")
+  newlistName.setAttribute('class', 'white-text center-align row list-names')
+  var addBtn = document.createElement("a")
+  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
+  addBtn.setAttribute('type', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
+  var btnID = "btn-" + cols
+  addBtn.setAttribute('id', btnID)
+  var plus = document.createElement("i")
+  plus.setAttribute('class', 'material-icons right')
+  // Add everything
+  plus.appendChild(document.createTextNode("add"))
+  addBtn.appendChild(plus)
+  addBtn.appendChild(document.createTextNode(" New Task"))
+  addBtn.onclick = function() {
+    makeTask(cols)
+  }
+  newlistName.appendChild(document.createTextNode("List Name"))
+  newCol.appendChild(newlistName)
+  newlistName.addEventListener('click',function () {
+    newlistName.contentEditable=true
+  })
+  newCol.appendChild(newList)
+  newCol.appendChild(addBtn)
+  contain[0].appendChild(newCol)
+}
 
-var delCol = function () {
-	const contain = document.getElementsByClassName("inner-container");
-	var columns = contain[0].children;
-	// Add this in when we can delete specific columns
-	// for(var i = 0; i < columns.length; i++) {
-	//
-	// }
-	var tasks = columns[cols].children[1].children;
-	console.log(tasks);
-	if (tasks.length != 0) {
-		deleteModal.style.display = "block";
-		const deleteCol = document.getElementById("col_del");
-		deleteCol.onclick = function () {
-			console.log(tasks[0].children[3]);
-			//tasks[0].children[3].click()
-			for (var i = 0; i < tasks.length; i++) {
-				//Simulate deleting a task
-				editing = false;
-				tasks[i].children[3].click();
-				delTask(ids[ids.length - 1]);
-			}
-		};
-	} else {
-		contain[0].removeChild(contain[0].lastChild);
-		cols--;
-	}
-};
+
+var delCol = function() {
+  const contain = document.getElementsByClassName("inner-container")
+  var columns = contain[0].children
+  // Add this in when we can delete specific columns
+  // for(var i = 0; i < columns.length; i++) {
+  //
+  // }
+  var tasks = columns[cols].children[1].children
+  console.log(tasks)
+  if(tasks.length != 0) {
+    deleteModal.style.display = "block";
+    const deleteCol = document.getElementById("col_del")
+    deleteCol.onclick = function() {
+      console.log(tasks[0].children[3])
+      //tasks[0].children[3].click()
+      for(var i = 0; i < tasks.length; i++) {
+        //Simulate deleting a task
+        editing = false
+        tasks[i].children[3].click()
+        delTask(ids[ids.length-1])
+      }
+    }
+  }
+  else {
+    contain[0].removeChild(contain[0].lastChild)
+    cols--
+  }
+}
 
 const returnHome = async () => {
 	window.location = "/";

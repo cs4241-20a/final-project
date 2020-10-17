@@ -24,7 +24,7 @@ const TaskSchema = new Schema({
 		required: true
 	},
 	assignees: {
-		type: [Schema.Types.ObjectId],
+		type: String, //[Schema.Types.ObjectId],
 		ref: "User",
 		required: false
 	},

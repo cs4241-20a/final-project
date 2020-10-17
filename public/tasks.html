@@ -26,34 +26,25 @@
 <div id="main_container">
   <div id="task_container">
     <div class="inner-container">
-      <div class="task_lists card-panel teal lighten-2" onclick="listClicked()" id="col-1">
-        <a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
-        <h5 class="white-text center-align row" style="font-weight: 300;">List Name</h5>
+      <div class="task_lists card-panel teal lighten-2" id="col-1">
+        <a class="btn-floating btn-large waves-effect waves-light red accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
+        <h5 class="white-text center-align row list-names" style="font-weight: 400;" contenteditable="true">List Name</h5>
         <!-- Added in a div to make sure tasks appear before the button-->
-        <div class="tasks white" id="1">
-        <!-- <div class="task_card card-panel col s1" id="card1" onclick="editTask()">
-          <p class="task_name task_item">Task Name</p>
-          <p class="task_date task_item">Due Date</p>
-          <p class="assignees task_item">Assigned To</p>
-          <div style="display:flex; flex-direction: row; justify-items: center">
-            <a class="centerwaves-effect waves-light btn-small btn" id="delete_task" onclick="deleteBtn()"><i class="material-icons right">delete_forever</i></a>
-          </div>
-        </div> -->
+        <div class="tasks white" id="1"></div>
+          <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
+        </div>
       </div>
-        <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
-      </div>
-    </div>
     <div class="btn_container" id="btn_container">
       <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" id="add_list"><i class="material-icons right">add</i>Add A New List</a>
     </div>
   </div>
   <div id="chat_box" class="right container card-panel teal lighten-2">
-      <h5 id="chat_head" style="height: 5%;color: white;text-align: center;margin-bottom: 5px">Chat</h5>
-    <div id="chat_messages" class="container white" style="height: 74%;width: 93%;margin: 0 auto;border: 1px solid grey; box-shadow: 1px 1px 5px grey; overflow-y: scroll"></div>
+    <h5 id="chat_head" style="height: 5%;color: white;text-align: center;margin-bottom: 5px">Chat</h5>
+    <div id="chat_feed" class="container white" style="height: 70%; width: 93%;margin: 0 auto;border: 1px solid grey; box-shadow: 1px 1px 5px grey; border-radius: 5px; margin-bottom: 60px;"></div>
     <div class="container white" style="bottom: 2px;width: 92%">
-      <form id="chat_form" class="right" action="">
-        <input type="text" id="chat_input" autocomplete="off" required style="width: 100%; background-color: white; border-radius: 5px; margin-top: 10px; padding-left: 10px; padding-right: 5px; border: 1px solid grey; box-shadow: 1px 1px 5px grey">
-        <button class="btn waves-effect waves-light" id="send-chat-btn">Submit
+      <form name="message" action="" class="right" >
+        <label for="chat_input"></label><input type="text" id="chat_input" name="chat_msg" style="width: 100%; background-color: #e0f2f1; border-radius: 5px; margin-top: 10px; border: 1px solid grey; box-shadow: 1px 1px 5px grey">
+        <button class="btn waves-effect waves-light green accent-4" type="submit" id="submit_chat" name="action" style="margin-left: 35px;">Submit
           <i class="material-icons right">send</i>
         </button>
       </form>
@@ -69,7 +60,11 @@
     <form style="padding: 10px">
       <label for="tname">Task Name: </label><input type="text" id="tname" placeholder="Task name"><br>
       <label for="due_date">Due Date: </label><input type="date" id="due_date"><br>
-      <label for="tassignee">Assigned To: </label><input type="text" id="tassignee" placeholder="Assignees"><br>
+      <label for="tassignees">Assigned to: </label>
+      <select class="browser-default" id="tassignees">
+        <option value="" disabled selected>Choose assignees</option>
+        <option value="1">Option 1</option>
+      </select></br>
       <label for="tags">Tags: </label><input type="text" id="tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="tdesc" placeholder="Task Description"><br>
       <input type="submit" id="task_submit" value="Confirm" class="btn-small waves-effect waves-light">
@@ -87,7 +82,11 @@
     <form style="padding: 10px">
       <label for="tname">Task Name: </label><input type="text" id="t_name" placeholder="Task name"><br>
       <label for="due_date">Due Date: </label><input type="date" id="due__date"><br>
-      <label for="tassignee">Assigned To: </label><input type="text" id="t_assignee" placeholder="Assignees"><br>
+      <label for="t_assignee">Assigned To: </label>
+      <select class="browser-default" id="t_assignee">
+        <option value="" disabled selected>Choose assignees</option>
+          <option value="1">Option 1</option>
+      </select></br>
       <label for="tags">Tags: </label><input type="text" id="t_tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="t_desc" placeholder="Task Description"><br>
       <input type="submit" id="task_edit" value="Confirm">
