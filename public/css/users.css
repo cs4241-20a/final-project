@@ -1,0 +1,100 @@
+body {
+  background-color: #12E7FF;
+}
+
+h1 {
+  font-family: "Staatliches", cursive;
+  text-align: center;
+  background: black;
+  color: #12E7FF;
+  font-size: 120px;
+  margin: -10px;
+  padding: 10px;
+}
+
+h2 {
+  font-family: "Staatliches", cursive;
+  text-align: center;
+  font-size: 60px;
+  letter-spacing: 3px;
+}
+
+h3 {
+  font-family: "Staatliches", cursive;
+  text-align: center;
+  font-size: 30px;
+}
+
+form {
+  background: #9DFF12;
+  border: 3px solid black;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+input{
+  font-family: "Staatliches", cursive;
+  font-size: 20px;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  border: 3px solid black;
+  border-radius: 10px;
+}
+
+label {
+  font-family: "Staatliches", cursive;
+  font-size: 35px;
+}
+
+
+table {
+  background: #9DFF12;
+  border: 3px solid black;
+  border-radius: 10px;
+  width: 100%;
+  font-family: "Staatliches", cursive;
+  font-size: 25px;
+}
+
+td,
+th {
+  border: 2px solid black;
+  text-align: center;
+  padding: 8px;
+  width: 100px;
+}
+
+.entrybutton {
+  font-family: "Staatliches", cursive;
+  font-size: 25px;
+  color: #9DFF12;
+  background-color: black;
+  border: 3px solid black;
+  border-radius: 10px;
+  width: 100px;
+}
+
+.menubutton {
+  font-family: "Staatliches", cursive;
+  font-size: 25px;
+  background-color: #9DFF12;
+  border: 5px solid black;
+  border-radius: 10px;
+  width: 250px;
+  padding: 5px;
+}
+
+.writedownbutton {
+  font-family: "Staatliches", cursive;
+  font-size: 40px;
+  background-color: #9DFF12;
+  border: 3px solid black;
+  border-radius: 10px;
+  width: 500px;
+  padding: 5px;
+}
+
+.header {
+  background: black;
+  margin: -10px;
+}

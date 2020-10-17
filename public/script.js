@@ -1,22 +1,73 @@
 // Add some Javascript code here, to run on the front end.
 
-var golfBagArray = [];
+// TOP MENU BUTTONS --------------
+const goToChat = function(e) {
+  e.preventDefault();
+
+  fetch("/goToChat", {
+    method: "GET"
+  }).then(url => {
+    window.location.href = "/chat";
+  });
+
+  return false;
+};
+
+const goToAbout = function(e) {
+  e.preventDefault();
+
+  fetch("/goToAbout", {
+    method: "GET"
+  }).then(url => {
+    window.location.href = "/about";
+  });
+
+  return false;
+};
+
+const goToUsers = function(e) {
+  e.preventDefault();
+
+  fetch("/goToUsers", {
+    method: "GET"
+  }).then(url => {
+    window.location.href = "/users";
+  });
+
+  return false;
+};
+
+const logout = function(e) {
+  e.preventDefault();
+
+  fetch("/logout", {
+    method: "GET"
+  }).then(url => {
+    window.location.href = "/";
+  });
+
+  return false;
+};
+
+// -------------------------------
+
+var entryArray = [];
 
 // Allow clearing of input values
 const clear = function(e) {
   e.preventDefault();
 
-  const manufacturer = document.querySelector("#clubManufacturer"),
-    model = document.querySelector("#clubModel"),
-    type = document.querySelector("#clubType"),
-    loft = document.querySelector("#clubLoft"),
-    distance = document.querySelector("#clubDistance");
+  const date = document.querySelector("#date"),
+    musclegroup = document.querySelector("#muscleGroup"),
+    exercise = document.querySelector("#exercise"),
+    repcount = document.querySelector("#reps"),
+    weight = document.querySelector("#weight");
 
-  manufacturer.value = "";
-  model.value = "";
-  type.value = "";
-  loft.value = "";
-  distance.value = "";
+  date.value = "";
+  exercise.value = "";
+  musclegroup.value = "";
+  repcount.value = "";
+  weight.value = "";
 
   // reset buttons
   const button = document.querySelector("#addButton");
@@ -31,37 +82,35 @@ const clear = function(e) {
 const retrieveInput = function() {
   console.log("Some version of submit hit");
   // create json listing of input params
-  const manufacturer = document.querySelector("#clubManufacturer"),
-    model = document.querySelector("#clubModel"),
-    type = document.querySelector("#clubType"),
-    loft = document.querySelector("#clubLoft"),
-    distance = document.querySelector("#clubDistance"),
+  const date = document.querySelector("#date"),
+    musclegroup = document.querySelector("#muscleGroup"),
+    exercise = document.querySelector("#exercise"),
+    repcount = document.querySelector("#reps"),
+    weight = document.querySelector("#weight"),
     json = {
-      manufacturer: manufacturer.value,
-      model: model.value,
-      type: type.value,
-      loft: Number(loft.value).toFixed(1),
-      distance: Number(distance.value).toFixed(1),
-      ballSpeed: (distance.value / 1.75).toFixed(1),
-      swingSpeed: (distance.value / 1.75 / 1.5).toFixed(1)
+      date: date.value,
+
+      musclegroup: musclegroup.value,
+      exercise: exercise.value,
+      repcount: repcount.value,
+      weight: weight.value
     };
-  
+
   // check for empty values
   for (const [key, value] of Object.entries(json)) {
-    if (typeof value === 'string' && value === "") {
+    if (typeof value === "string" && value === "") {
       console.warn("Must specify value for " + key + "!");
       return false;
     }
   }
 
-
   // verify distance and loft are numbers
-  if (isNaN(loft.value)) {
-    console.warn("Loft must be a number!");
+  if (isNaN(repcount.value)) {
+    console.warn("Reps must be a number!");
     return false;
   }
-  if (isNaN(distance.value)) {
-    console.warn("Distance must be a number!");
+  if (isNaN(weight.value)) {
+    console.warn("Weight must be a number!");
     return false;
   }
 
@@ -92,8 +141,8 @@ const submit = function(e) {
     })
     .then(json => {
       // update local array as well (avoid tons of DB I/O)
-      golfBagArray.push(json);
-      displayGolfBag(); // update golf bag table
+      entryArray.push(json);
+      displayEntries(); // update table
     });
 
   // clear inputs now that we have retrieved them
@@ -109,51 +158,51 @@ const submitEdits = function(dataID) {
   if (!json) {
     return;
   }
-  
+
   var object = JSON.parse(json);
   object._id = dataID;
-  const body = JSON.stringify(object)
+  const body = JSON.stringify(object);
 
-  console.log("trying to post edit")
+  console.log("trying to post edit");
   // add to server
   fetch("/update", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: body
   }).then(() => {
-    console.log("posted edit")
+    console.log("posted edit");
     // update fields
-    for (var i = 0; i < golfBagArray.length; i++) {
-      if (golfBagArray[i]._id === dataID) {
-        golfBagArray[i] = object;
-        console.log(golfBagArray)
+    for (var i = 0; i < entryArray.length; i++) {
+      if (entryArray[i]._id === dataID) {
+        entryArray[i] = object;
+        console.log(entryArray);
       }
     }
-    displayGolfBag(); // update golf bag table
+    displayEntries(); // update table
   });
 
   return false;
 };
 
-const edit = function(dataID) {  
+const edit = function(dataID) {
   // set appropriate fields from element
-  var element = golfBagArray.filter(function(value, index, arr) {
-    return (value._id === dataID);
+  var element = entryArray.filter(function(value, index, arr) {
+    return value._id === dataID;
   });
 
   element = element[0];
 
-  const manufacturer = document.querySelector("#clubManufacturer"),
-    model = document.querySelector("#clubModel"),
-    type = document.querySelector("#clubType"),
-    loft = document.querySelector("#clubLoft"),
-    distance = document.querySelector("#clubDistance");
+  const date = document.querySelector("#date"),
+    musclegroup = document.querySelector("#muscleGroup"),
+    exercise = document.querySelector("#exercise"),
+    repcount = document.querySelector("#reps"),
+    weight = document.querySelector("#weight");
 
-  manufacturer.value = element.manufacturer;
-  model.value = element.model;
-  type.value = element.type;
-  loft.value = element.loft;
-  distance.value = element.distance;
+  date.value = element.date;
+  musclegroup.value = element.musclegroup;
+  exercise.value = element.exercise;
+  repcount.value = element.repcount;
+  weight.value = element.weight;
 
   // change submit button to become "update field"
   const button = document.querySelector("#addButton");
@@ -178,10 +227,10 @@ const deleteFunc = function(dataID) {
     body: JSON.stringify({ _id: dataID })
   });
 
-  golfBagArray = golfBagArray.filter(function(value, index, arr) {
+  entryArray = entryArray.filter(function(value, index, arr) {
     return value._id != dataID;
   });
-  
+
   // now that item is deleted, it can't be edited
   // handle weird edge case of deleting item while editing it
   const clearButton = document.querySelector("#clearButton");
@@ -189,59 +238,45 @@ const deleteFunc = function(dataID) {
     clearButton.click();
   }
 
-  displayGolfBag(); // update golf bag table
+  displayEntries(); // update table
 
   return false;
 };
 
 // update table using provided array of json elements to be displayed in the table
 // replaces existing table
-const displayGolfBag = function() {
-  // retrieve existing golf bag table
-  const golfBag = document.querySelector("#clubs");
-
-  // update golfBagArray to verify it is sorted
-  golfBagArray.sort(function(a, b) {
-    if (a.distance < b.distance) {
-      return 1;
-    }
-    if (a.distance > b.distance) {
-      return -1;
-    }
-    return 0;
-  });
+const displayEntries = function() {
+  // retrieve existing table
+  const table = document.querySelector("#entryTable");
 
   // replace existing table with new table
-  document.getElementById("clubs").innerHTML = "";
-  for (var i = 0; i < golfBagArray.length; i++) {
+  document.getElementById("entryTable").innerHTML = "";
+  for (var i = 0; i < entryArray.length; i++) {
     // grab current json element and create a new row in the table since the
     // data is already sorted server side
-    const input = golfBagArray[i];
-    var row = golfBag.insertRow(-1);
+    const input = entryArray[i];
+    var row = table.insertRow(-1);
 
     // create cells corresponding to th headers
-    var manufacturer = row.insertCell(0);
-    var model = row.insertCell(1);
-    var type = row.insertCell(2);
-    var loft = row.insertCell(3);
-    var distance = row.insertCell(4);
-    var ballSpeed = row.insertCell(5);
-    var swingSpeed = row.insertCell(6);
-    var editButtonCell = row.insertCell(7);
-    var deleteButtonCell = row.insertCell(8);
+    var date = row.insertCell(0);
+    var muscleGroup = row.insertCell(1);
+    var exercise = row.insertCell(2);
+    var repCount = row.insertCell(3);
+    var weight = row.insertCell(4);
+    var editButtonCell = row.insertCell(5);
+    var deleteButtonCell = row.insertCell(6);
 
     // update text displayed in each cell
-    manufacturer.innerHTML = input.manufacturer;
-    model.innerHTML = input.model;
-    type.innerHTML = input.type;
-    loft.innerHTML = input.loft;
-    distance.innerHTML = input.distance;
-    ballSpeed.innerHTML = input.ballSpeed;
-    swingSpeed.innerHTML = input.swingSpeed;
+    date.innerHTML = input.date;
+    muscleGroup.innerHTML = input.musclegroup;
+    exercise.innerHTML = input.exercise;
+    repCount.innerHTML = input.repcount;
+    weight.innerHTML = input.weight;
 
     // add edit and delete buttons to each row with a stored reference to row
     var editButton = document.createElement("button");
-    editButton.style = " color:blue;"
+    editButton.style =
+      "font-family: 'Staatliches', cursive; color:#9DFF12; background-color: black; font-size: 25px; border: 3px solid black;border-radius: 10px; width: 100px;";
     editButton.innerHTML = "Edit";
     editButton.onclick = function() {
       edit(input._id);
@@ -249,6 +284,9 @@ const displayGolfBag = function() {
     editButtonCell.appendChild(editButton);
 
     var deleteButton = document.createElement("button");
+    deleteButton.style =
+      "font-family: 'Staatliches', cursive; color:#9DFF12; background-color: black; font-size: 25px; border: 3px solid black;border-radius: 10px; width: 100px;";
+
     deleteButton.innerHTML = "Delete";
     deleteButton.onclick = function() {
       deleteFunc(input._id);
@@ -257,38 +295,35 @@ const displayGolfBag = function() {
   }
 };
 
-const logout = function(e) {
-  e.preventDefault();
-
-  fetch("/logout", {
-    method: "GET"
-  }).then(url => {
-    window.location.href = "/";
-  });
-
-  return false;
-};
-
 window.onload = function() {
   const button = document.querySelector("#addButton");
   button.onclick = submit;
+
+  const chatButton = document.querySelector("#chatButton");
+  chatButton.onclick = goToChat;
+
+  const friendsButton = document.querySelector("#friendsButton");
+  friendsButton.onclick = goToUsers;
+  
+  const aboutButton = document.querySelector("#aboutButton");
+  aboutButton.onclick = goToAbout;
 
   const logoutButton = document.querySelector("#logoutButton");
   logoutButton.onclick = logout;
 
   const clearButton = document.querySelector("#clearButton");
   clearButton.onclick = clear;
-
+  
   /*
-    Load golf bag from golfbag array in memory
+    Load from DB into memory
     */
-  fetch("/golfbag")
+  fetch("/data")
     .then(function(response) {
       return response.json(); // wait on response
     })
     .then(function(array) {
       // parse from array into table
-      golfBagArray = array;
-      displayGolfBag();
+      entryArray = array;
+      displayEntries();
     });
 };

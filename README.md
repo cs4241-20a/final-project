@@ -1,56 +1,86 @@
-# cs4241-FinalProject
+# CS 4241 Final Project - DevelUP
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+## By Nicole Conill & Matthew Tolbert
 
-## General description
+Website Link: http://conill-tolbert-final.glitch.me/
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+Video Link: TO DO TO DO TO DO TO DO TO DO TO DO
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+## Project Logistics
 
-## Project ideation
+#### Description:
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+DevelUP is a web-based application that allows users to log in via GitHub authentication.
+Every user has access to their personal dashboard, where they may record their workouts
+based on the date, muscle group targeted, exercise, rep count, and weight. During the
+process of recording their information, they may at any time clear the form, and edit or
+delete existing entries. For ease of viewment, the form to record a workout is hidden until
+"Writedown a Workout" button is selected.
 
-## Logistics
+A chat board also exists for users, in which the first two users to log in will be connected,
+and introduced by their GitHub names. Following connection, users can recieve any messages
+that the opposing user types into the input box and sends. The most recent message recieved
+is that of which is displayed to a user during a conversation.
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+#### Requirements:
 
-### Deliverables
+This Web application correctly facets the three main sections of the 4241 course material,
+as required, as well as the highly encouraged facet:
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+- **Static Web page content and design:** DevelUP was created with a fully customized CSS style
+  to promote the design of the website. There are four different pages of content available
+  throughout the website.
+- **Dynamic behavior implemented with JavaScript:** Javascript is present on every page.
+- **Server-side programming using Node.js** All workouts reside in persistent storage. 
+GitHub authentication is implemented. Realtime communication is implemented.
+- **Realtime communication technology:** Users may visit and communicate on the chat board.
 
-There are no other scheduled checkpoints for your project. 
+## Deliverables
 
-#### Turning in Your Outline / Project
+#### Remaining Project Information:
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+- **An outline of the technologies you used and how you used them:**
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
+  For server management and page navigation, we utilized Express as our Node.js web application
+  framework. The server handles directing requests made by users, such as visiting pages, logging
+  in or out, and processing entries into the table.
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
+  For persistent data storage and management, we utilized MongoDB as our database storage. Users can add, edit and delete their own entries. Furthermore, they can view the workouts of other users by name.
+  
+  For login authorization, we handled OAuth with GitHub, requiring access ID's and tokens.
+  
+  For realtime communication, we implemented a workout chat feature which takes advantage of the simple-peer
+  library, which simplifies the use of WebRTC. For this interaction, when a user visits the chat page on their
+  logged in account, the server then attempts to pair them with another user on the page. Using their usernames,
+  the users are aware of the connection status to one another. This connection occurs instantly and we provide real
+  time error feedback to the user if a connection error occurs. The server is only used for initial pairings, after
+  connection, peers communicate with one another directly.
+  
+  For CSS stylization, every tag used recieved custom features to match the design of the website.
+  Website icons were accessed using the the Font Awesome framework. Fonts were chosen from Google Fonts.
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+- **What challenges you faced in completing the project:**
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
+  The greatest challenge was the implementation of the chat board (thank you to the Professor
+  for his time in assisting us). Our issue stemmed from calling "app.listen()" instead of "server.listen()." While this
+  was merely a small problem, it took a long time to resolve and was very frustrating for our team.
+  
+  Smaller challenges presented included stylistically determining the best portrayal of
+  the website, such as menu presentation and button styles. Manipulating the form entries,
+  and thus the script and server also presented several small challenges. One of these 
+  included discovering a way to allow users to write their own input text, while still
+  providing suggestions (as seen in the Muscle Group input and solved with the datalist tag).
 
-## FAQs
+- **What each group member was responsible for designing / developing:**
+    
+  Matt provided the basis of the website through the concept replication of previous projects, including the
+  creation of the server and database that are used. The back-end construction and concepts 
+  of the chat-board and the other users workout viewing were created and implemented by him. He also implemented the 
+  login strategy of GitHub authorization, and created methods to prevent people from accessing
+  user-only pages by the URL without being a user.
 
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+  Nicole created the design of the website with the fully customized CSS files, and variously
+  wrote and applied them to each page of the project. Some amounts of front-end JavaScript was written for
+  concepts such as displaying the workout entry form through a button press.
+  She updated the previous replicated project's server, script and form inputs to
+  work with information necessary for the final project. She also composed the README.md file.
