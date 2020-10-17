@@ -1,0 +1,47 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WeMeet application" />
+
+    <title>WeMeet</title>
+
+    <link
+      id="favicon"
+      rel="icon"
+      href="https://glitch.com/edit/favicon-app.ico"
+      type="image/x-icon"
+    />
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+    <!-- import the webpage's client-side javascript file -->
+        <script src="/script.js" defer></script>
+<!--     <script src="/scriptsCombined.js" defer></script> -->
+    
+  </head>
+  <body>
+    <header id="home" onclick="callHome()">
+      WeMeet
+    </header>
+
+    <main id="main">
+        <h1>Welcome to WeMeet!</h1>
+        <div>
+          <button id="createMeeting">Create A Meeting</button>
+          <div class="div"></div>
+          <button id="loginMeeting">Add Availability</button>
+          <div class="div"></div>          
+          <button id="viewMeeting">View Schedule</button>
+        </div>
+      
+    </main>
+  </body>
+</html>

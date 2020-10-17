@@ -1,0 +1,80 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Join a meeting that has been previously created" />
+
+    <title>Join a Meeting</title>
+
+    <link
+      id="favicon"
+      rel="icon"
+      href="https://glitch.com/edit/favicon-app.ico"
+      type="image/x-icon"
+    />
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/script.js" defer></script>
+    <script src="/login.js" defer></script>
+<!--     <script src="/scriptsCombined.js" defer></script> -->
+  </head>
+  <body>
+    <header id="home" onclick="callHome()">
+      WeMeet
+    </header>
+
+    <main>      
+      <h1>
+        Join a Schedule
+      </h1>
+      <form>
+        <label>
+          Schedule ID
+          <input
+            id="schedule-id"
+            name="schedule-id"
+            type="text"
+            maxlength="100"
+            required
+            placeholder="id"
+          />
+        </label>
+        <label>
+          Name
+          <input
+            id="name"
+            name="name"
+            type="text"
+            maxlength="100"
+            required
+            placeholder="name"
+          />
+        </label>
+        <label>
+          Email
+          <input
+            id="email"
+            name="email"
+            type="text"
+            maxlength="100"
+            required
+            placeholder="email"
+          />
+        </label>
+        <button type="submit" id="submit-login" onclick="loginButton()">Join</button>
+        
+      </form>
+    </main>
+
+    <footer></footer>
+  </body>
+</html>
