@@ -26,6 +26,7 @@ class DrawScreen extends React.Component {
 		this.form = React.createRef()
 		this.onFormSubmit = this.onFormSubmit.bind(this)
 		this.handleChange = this.handleChange.bind(this)
+		this.handleChangeComplete = this.handleChangeComplete.bind(this)
 			
 		this.titleInput = (<input type="text" className="title-input" required={true} defaultValue={this.state.title} onChange={(e) => {this.setState({title: e.target.value})}}/>)
 		this.artistInput = (<input type="text" className="artist-input" required={true} defaultValue={this.state.artist} onChange={(e) => {this.setState({artist: e.target.value})}}/>)
