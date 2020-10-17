@@ -3,7 +3,6 @@
 
 const express = require("express");
 const moment = require("moment");
-//const bodyParser = require('body-parser');
 
 const Task = require("../../models/Task");
 const Group = require("../../models/Group");

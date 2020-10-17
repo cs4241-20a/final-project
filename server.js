@@ -54,7 +54,9 @@ if (NODE_ENV === "development") {
 }
 
 // Middleware processing
-app.use(helmet());
+app.use(helmet({
+	contentSecurityPolicy: false
+}));
 app.use(compression());
 app.use(express.json());
 app.use(methodOverride());
