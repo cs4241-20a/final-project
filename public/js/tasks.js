@@ -30,14 +30,14 @@ submitChatButton.addEventListener("click", async evt => {
 const loadMessages = async () => {
 	const res = await fetch(`/api/messages/${groupId}`, {method: "GET"});
 	const data = await res.json();
-
-	data.data.forEach(async element => {
+	
+	for (const element of data.data) {
 		const {content, senderId, dateSent} = element;
 		const sender = await getDisplayNameById(senderId);
 		const date = moment(new Date(dateSent)).format("MM/DD/YY - hh:mm a");
 		const message = {content, sender, date};
 		outputMessage(message);
-	});
+	}
 };
 
 const getCurrentUser = async () => {
