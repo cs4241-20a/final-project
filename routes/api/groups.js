@@ -167,6 +167,7 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		// Send result
 		res.status(200).json({success: true, data: group});
 	} catch (err) {
+		console.log(err)
 		// Report errors
 		res.status(500).json({success: false, error: err});
 	}

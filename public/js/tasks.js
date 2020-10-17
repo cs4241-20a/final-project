@@ -107,9 +107,53 @@ var closeTask = function (e) {
 	editmodal.style.display = "none";
 };
 
+var closeInvite = function (e) {
+	e.preventDefault();
+	inviteModal.style.display = "none";
+};
+
 var keepCol = function () {
 	delmodal.style.display = "none";
 };
+
+var imodal = document.getElementById("inviteModal");
+
+var invite = async (e) => {
+	e.preventDefault()
+
+	const res = await fetch("/api/users/all", {method: "GET"});
+	const data = await res.json()
+	console.log(JSON.stringify(data))
+	var slct = document.getElementById("invitees")
+	var iList = data.data
+	for(var i = 0; i < iList.length; i++) {
+		//Get member names
+		var user = iList[i]
+		//console.log(modal)
+		var opt = document.createElement("option")
+		opt.setAttribute('value', user._id)
+		opt.appendChild(document.createTextNode(user.username))
+		slct.appendChild(opt)
+		//slct2.appendChild(opt)
+	}
+	inviteModal.style.display = "block"
+}
+
+var invited = async (e) => {
+	e.preventDefault()
+
+	const response = await fetch("/api/groups/" + groupId, {method: "GET"});
+	const group = await response.json()
+	const input = document.querySelector( '#invitees')
+	var invitees = group.data.invitees
+	console.log(input.value)
+	invitees.push(input.value)
+	console.log("Who are we inviting? " + invitees)
+	const res = await fetch("/api/groups/" + groupId, {method: "PATCH", body: JSON.stringify({invitees}), headers: {"Content-type": "application/json"}});
+	const data = await res.json()
+	console.log(JSON.stringify(data))
+	inviteModal.style.display = "none"
+}
 
 window.onclick = function (event) {
 	if (modal === event.target) {
@@ -507,6 +551,15 @@ window.onload = async function () {
 
 	const teButton = document.querySelector("#task_edit");
 	teButton.onclick = editTask;
+
+	const inviteButton = document.getElementById("invite_btn")
+	inviteButton.onclick = invite
+
+	const sendInvite = document.getElementById("inv")
+	sendInvite.onclick = invited
+
+	const noInvite = document.getElementById("noinv")
+	noInvite.onclick = closeInvite
 
 	loadMessages();
 }
