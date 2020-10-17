@@ -6,10 +6,7 @@ const session = require('express-session');
 const GitHubStrategy = require('passport-github2').Strategy;
 const app = express();
 
-const DB_SERVER = process.env.DB_SERVER;
-const DB_NAME = process.env.DB_NAME;
-
-mongoose.connect(`mongodb://${DB_SERVER}/${DB_NAME}`)
+mongoose.connect(process.env.DB_URI)
     .then(() => console.log('MongoDB Connection Successful'));
 
 const score_schema = new mongoose.Schema({
