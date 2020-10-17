@@ -19,13 +19,13 @@ if( typeof Rust === "undefined" ) {
         if( typeof process === "object" && typeof process.versions === "object" && typeof process.versions.node === "string" ) {
             var fs = require( "fs" );
             var path = require( "path" );
-            var wasm_path = path.join( __dirname, "project.wasm" );
+            var wasm_path = path.join( __dirname, "/project.wasm" );
             var buffer = fs.readFileSync( wasm_path );
             var mod = new WebAssembly.Module( buffer );
             var wasm_instance = new WebAssembly.Instance( mod, instance.imports );
             return instance.initialize( wasm_instance );
         } else {
-            var file = fetch( "/project.wasm", {credentials: "same-origin"} );
+            var file = fetch( "project.wasm", {credentials: "same-origin"} );
 
             var wasm_instance = ( typeof WebAssembly.instantiateStreaming === "function"
                 ? WebAssembly.instantiateStreaming( file, instance.imports )
@@ -630,6 +630,9 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
             "__cargo_web_snippet_b06dde4acf09433b5190a4b001259fe5d4abcbc2": function($0, $1) {
                 $1 = Module.STDWEB_PRIVATE.to_js($1);Module.STDWEB_PRIVATE.from_js($0, (function(){return($1).success;})());
             },
+            "__cargo_web_snippet_baf384b72c79afafd4d45b3448f6139a889e8bd3": function($0) {
+                $0 = Module.STDWEB_PRIVATE.to_js($0);fetch("/api/snake/score",{method:"POST",headers:{"Content-Type":"application/json"},body:""+($0),}).then((response)=>response.json()).then((data)=>(this.postId=data.id));
+            },
             "__cargo_web_snippet_cf0debbfec441e126df5ec4b805a71e969f49a75": function($0, $1, $2, $3, $4) {
                 $0 = Module.STDWEB_PRIVATE.to_js($0);$1 = Module.STDWEB_PRIVATE.to_js($1);$2 = Module.STDWEB_PRIVATE.to_js($2);$3 = Module.STDWEB_PRIVATE.to_js($3);$4 = Module.STDWEB_PRIVATE.to_js($4);($0).fillRect(($1),($2),($3),($4));
             },
@@ -641,9 +644,6 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
             },
             "__cargo_web_snippet_ddd20ee2b92848562b4a86777997e1d956dbd9d0": function($0) {
                 Module.STDWEB_PRIVATE.from_js($0, (function(){return Math.floor(Math.random()*4)})());
-            },
-            "__cargo_web_snippet_debea0d7b41f39f8a6121e32bb6ef8bcb9266bfb": function($0) {
-                $0 = Module.STDWEB_PRIVATE.to_js($0);fetch("/api/snake/score",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({value:($0)}),}).then((response)=>response.json()).then((data)=>(this.postId=data.id));
             },
             "__cargo_web_snippet_e9638d6405ab65f78daf4a5af9c9de14ecf1e2ec": function($0) {
                 $0 = Module.STDWEB_PRIVATE.to_js($0);Module.STDWEB_PRIVATE.unregister_raw_value(($0));
