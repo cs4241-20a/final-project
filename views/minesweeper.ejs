@@ -196,11 +196,11 @@
                 <h1 v-if="!playing && lost">YOU LOSE</h1>
                 <h1 v-if="!playing && win">YOU WON</h1>
                 <h2 v-if="!playing && win">Score: {{ calcScore() }}</h2>
-                <h3 v-if="!playing && (lost || win)">
-                    High Score: {{ getHighScore() }}
+                <h3 v-if="!playing && (lost || win)" :key="highScore">
+                    High Score: {{ highScore }}
                 </h3>
-                <h4 v-if="!playing && (lost || win)">
-                    Times Atempted: {{ getTimesPlayed() }}
+                <h4 v-if="!playing && (lost || win)" :key="plays">
+                    Times Atempted: {{ plays }}
                 </h4>
 
                 <!-- The golbal score board -->
@@ -261,6 +261,8 @@
                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     ],
                     numMines: 1,
+                    highScore: -1,
+                    plays: -1,
                 };
             },
             methods: {
@@ -658,22 +660,18 @@
                         .then((data) => (this.scoreBoard = data));
                 },
                 getHighScore: function () {
-                    let highScore = -1;
                     fetch("/api/minesweeper/score", {
                         method: "GET",
                     })
                         .then((res) => res.text())
-                        .then((j) => (highScore = parseInt(j)));
-                    return highScore;
+                        .then((j) => (this.highScore = parseInt(j)));
                 },
                 getTimesPlayed: function () {
-                    let plays = -1;
                     fetch("/api/minesweeper/play_count", {
                         method: "GET",
                     })
                         .then((res) => res.text())
-                        .then((j) => (plays = parseInt(j)));
-                    return plays;
+                        .then((j) => (this.plays = parseInt(j)));
                 },
             },
             created() {
