@@ -1,81 +1,33 @@
 # cs4241-FinalProject
+## Authors
+  1. Jordan Stoessel
+  2. Christian Tweed
+  3. Song Zhecheng
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+#### Chat Party
+https://final-project-team21.glitch.me/
 
-## General description
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
-
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+- The application is a chat party system that allows a user to host or join a party room. Messages that are sent in the party room are received by other users within the same room. Users prior to joining party rooms are able to register an account or log into a pre-existing account. Non-existing accounts entered on the register page are placed into the database while login checks the database prior to authenticating. The chat room updates in realtime to allow for seamless chatting.
 
 ## Project ideation
+For this project we wanted to create some sort of game or chat system. Our project originally to be made for people who want to hangout with friends online and play a game of Battleship. We also were trying to implement a way for random players to join each other's sessions. This was to allow both friends to play with friends and die-hard board gamers to play games with other strangers over the internet. 
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+- We made us of MongoDB, React, Bootstrap, NodeJS, express, bcrypt, yarn, and passport. MongoDB was used as a database for storing user information such as usernames and password hashes. React is a library that was used for building the interfaces for the website and designing certain components. Bootstrap is a CSS based framework which allows for website responsiveness. NodeJS was a requirement but was used for creating the server alongside express. Express was used to make implementing a server more simple. bcrypt allowed for password hashing so passwords could be properly and securely stored in the database. yarn was used to help with generating React builds and testing changes. Passport is authentication middleware which was used to authenticate requests in the server.
 
-## Logistics
+- There were many challenges that were faced in this project. We didn't realize the due date for the proposal was the 6th week of the term instead of the 7th week. Another problem we faced was dealing with differing timezones. We tried to have proposals done as soon as possible, but we couldn't get a hold of ZheCheng for a while which put us behind a bit further. Our messages to each other would basically be read 12 hours later when either of us were available. Our project originally was to be a game of Battleship, but due to time constraints didn't work out. The progress with the Battleship app code was left in the repository to show our implementations of clean UI. Though the original project didn't work, we tried to implement as many of the original ideas and technologies. Definitely the most challenging topic with this project was trying to split a workload over the internet with differing timezones. We tried to do work as early as we could, but the timezones made our preparation phase take a lot longer. In the end, we didn't have enough time to finish the project alongside the other requirements in other classes.
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+-  Other challenges that we faced were trying to adapt to React after only using it for 1 week or not at all prior. This set us behind even further. 
 
-### Deliverables
+### Team formation
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+- Tweed developed the backend server, imported technologies, and dealt with web sockets. He created links between the pages and also created lobby code generation. Imported the Navbar from React.
 
-There are no other scheduled checkpoints for your project. 
+- Jordan designed the login, register, and HowToPlay pages and dealt with css across multiple pages. Set up initial HTMLs which became outdated with the shift to React.
 
-#### Turning in Your Outline / Project
+- ZheCheng converted Jordan's initial HTMLs to React and created two grid components for the Battleship app's Player and Enemy grid. 
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+- [video]
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
-
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
-
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
-
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
-
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
-
-## Update by ZheCheng Song
-  Edited:
-  1. App.js : Just to test those pages, cause I didn't figure out how to use routers
-  2. server.js : To test mongoDB, cause I don't have your DB accounts, so I changed to mine for testing
-  (Just use your original server.js)
-  3. Login.js: Transfer html to react
-  4. Register.js: Transfer html to react
-  5. Home.js: Implemented Main page
-  6. Lobby,js: Implemented Lobby page
-  
-  Added:
-  1. css/ folder under Pages
-    - Login.css: copied from your login.css, css for Login.js and Register.js
-    - Home.css: css for Home.js
-    - Lobby.css : css for Lobby.js
-    - BattleShip.css : css for BattleShip.js
-  2. BattleShip.js: The Game Page
-  3. added few components used under src/Components
-    - EnermyGrid.js: Used to create a grid to represent enermy's map in BattleShip.js
-    - PlayerGrid.js: Used to create a grid to represent player's map in BattleShip.js
-    Note: Each node in the grid has id of P1[Row,Col] or P2[Row,Col], 
-          P1 represent Player, P2 represent Enermy
-          For example: node of 2nd row, 3rd col of enermy grid is name P2[2,3]
-          Hope it would help?
+### Similarities to other projects
+This project made use of tidbits from all of the previous projects. We have static pages which is linked to Project 1. We also have connection from frontend to a server and database (with express) which makes use of Project 2 and 3. We utilized React which shares the similarities to Project 4's components requirement. A lot of planning went into the creation of this app, but with the time restraints we were not able to completely finish the application. Though we did not finish on time, we learned a lot from this class and the processes of developing web applications.
