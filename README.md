@@ -46,5 +46,5 @@ Member Responsibilities
 
 Project video
 ===============
-[link]
+https://youtu.be/fCMFh9jnc3g
 
