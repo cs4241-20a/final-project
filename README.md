@@ -1,56 +1,42 @@
-# cs4241-FinalProject
+# Project Description
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+Kōcha (紅茶, こうちゃ), meaning black tea in English, is a project to promote the process of memory by utilizing the forgetting curve to plan the schedule for remembering. 
 
-## General description
+Inspired by After School Tea Time in _K-On!_, great works should be able to be done in a relaxed and happy way, and memory is no exception. Memory plays an significant role in our learning process and is a critical element for us. The mission of Kocha is to enable people to remember anything they want more efficiently in spare time.
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+# Link to Project
 
-## Project ideation
+https://glitch.com/~zphw-final-project
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+# link to project video
 
-## Logistics
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+# API Documentation
 
-### Deliverables
+https://docs.google.com/document/d/1r69ruuweX3tWmkNvEwO1g0pDqGAISwfV1Hrwxh66glY/edit?usp=sharing
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
 
-There are no other scheduled checkpoints for your project. 
+# Additional instructions to use the project
+Demo user: test/test
 
-#### Turning in Your Outline / Project
+# Workflow
+1. Sign up an account
+2. Import entries that you wanted to remember
+3. New entries will be pushed to user's homepage.
+4. Past ones needed to be reviewed will be pushed based on the forgetting curve.
+5. Users can check all entries already been added and can delete entries.
+6. Click the play button in the music box to relax ;)
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
+# Challenges in completing the project
+- To personalize the stylesheet was much more time-consuming then we expected.
+- It's little bit hard to write back-end code for edited table.
+- When useing the /mark api, it was hard to identify the _id of the object. Finally I went around this problem by saving the _id in a hidden division, which is not save.
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+# Group member
+- Pinhan Zhao: Developed the back-end API server and wrote the API documentation. Created data structures for the database.
+- Wenjing Ying: Created the functions in the front-end that implements the back-end API, including adding, editing, displaying the wordlist, etc. 
+- Zaiyang Zhong: Created most of front-end user interfaces in the main page and log-in and personalized css framwork to them. I also added a canvas element to create a 2d music player, which is very similar to what i did in A4. I developed a small portion of js codes.
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
-
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
