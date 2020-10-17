@@ -324,10 +324,10 @@ var addCol = function() {
   newCol.setAttribute('class', 'task_lists card-panel teal lighten-2')
   var colID = "col-" + cols
   newCol.setAttribute('id', colID)
-	var dltBtn = document.createElement("a")
-	dltBtn.setAttribute('class', 'btn-floating btn-large waves-effect waves-light teal accent-4 right')
-	var dlt = document.createElement("i")
-	dlt.setAttribute('class', 'material-icons right')
+	//var dltBtn = document.createElement("a")
+	//dltBtn.setAttribute('class', 'btn-floating btn-large waves-effect waves-light teal accent-4 right')
+	//var dlt = document.createElement("i")
+	//dlt.setAttribute('class', 'material-icons right')
   var newList = document.createElement("div")
   newList.setAttribute('class', 'tasks')
   newList.setAttribute('id', cols)
@@ -342,15 +342,18 @@ var addCol = function() {
   plus.setAttribute('class', 'material-icons right')
   // Add everything
   plus.appendChild(document.createTextNode("add"))
-	dlt.appendChild(document.createTextNode("delete"))
-	dltBtn.appendChild(dlt)
+	// dlt.appendChild(document.createTextNode("delete"))
+	// dltBtn.appendChild(dlt)
+	// dltBtn.onclick = function() {
+  // 	delCol(cols)
+  // }
   addBtn.appendChild(plus)
   addBtn.appendChild(document.createTextNode(" New Task"))
   addBtn.onclick = function() {
     makeTask(cols)
   }
   newlistName.appendChild(document.createTextNode("New List"))
-	newCol.appendChild(dltBtn)
+	//newCol.appendChild(dltBtn)
   newCol.appendChild(newlistName)
   newCol.appendChild(newList)
   newCol.appendChild(addBtn)
@@ -365,7 +368,7 @@ var delCol = function() {
   // for(var i = 0; i < columns.length; i++) {
   //
   // }
-  var tasks = columns[cols].children[1].children
+  var tasks = columns[cols-1].children[1].children
   console.log(tasks)
   if(tasks.length != 0) {
     deleteModal.style.display = "block";
@@ -378,6 +381,7 @@ var delCol = function() {
         editing = false
         tasks[i].children[3].click()
         delTask(ids[ids.length-1])
+				location.reload()
       }
     }
   }
