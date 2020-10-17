@@ -1,56 +1,65 @@
-# cs4241-FinalProject
+CS4241 Team 9 Final Project - Connect Four
+===
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+Alex Hunt, Nina Taurich, Nicole Cotto, Joe Swetz
 
-## General description
+Link to the project video: https://youtu.be/u2kCJRHgupg
+Link to the webesite hosted on Glitch: https://team9-final-project.glitch.me/
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+# Project Description
+Our project is a web app that allows users to play Connect 4. Whenever a user logs in, they're randomly matched with another user. The two players can play a full game of Connect 4 and chat with each other. 
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+# Instructions
+1.) Enter a username and log in.
+2.) Wait for another player to log in. If you want to play with yourself, you can just open a duplicate tab and log in with a different name.
+3.) To make a move when it's your turn, click the button underneath the column you want to place your piece in.
 
-## Project ideation
+# Technologies Used
+ - **WebSockets** was used for client and server communication. This allowed the server to send
+ messages to clients without the clients having to make API requests. This was sueful for cases
+ where the other player logged in or made a move, so the first client had to be notified.
+ - **Backend**
+   - An express server was used to get a simple game server up and running using node.js
+ - **Frontend**
+   - The Bulma CSS framework was used to style both pages
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+# Challenges
+- Random player matching
+  - The biggest issue with matchmaking was the redirection that takes place after players are
+  put in a match. When they are redirected to gameBoard.html, the websocket that was open on the
+  login page closes, meaning we can no longer use that websocket for sending game moves. After
+  some time researching and testing different ways of transferring values between pages, we 
+  ended up passing the username in the URL (/gameBoard?name=). When the user loads into 
+  gameBoard.html, they make a new websocket and, on open, tell the server their username. The
+  server will find their username in the list of games and update its socket reference to use the
+  player's new socket.
+- Chat messages
+  - For chat messages, the biggest challenge was getting the websockets set up to allow
+  for communication back and forth. Since Websockets was new to all of us, it required us
+  to learn it while we were creating the project.
+- Sending the same game state information to both players
+  - To do this, we had to figure out how to associate the two different players that were put
+  into a match as well as their two WebSockets. We used an array of objects which store both
+  usernames and sockets so it's easy to get the socket a message needs to be sent to. In the
+  JSON objects that are written on the sockets, we use a subject line to differentiate between
+  the purposes of the different messages.
 
-## Logistics
-
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
-
-### Deliverables
-
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
-
-There are no other scheduled checkpoints for your project. 
-
-#### Turning in Your Outline / Project
-
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
-
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
-
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
-
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
-
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
-
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+# Group Member Responsibilties
+Each group member was responsible for the following:
+- **Alex**
+  - Created login page layout
+  - Wrote front-end JS for game logic (including win condition checking)
+  - Tweaked layout of game board page (displaying which color the player is, aligning chat box)
+- **Nina**
+  - Set up server-side login
+  - Implemented front-end board updating
+  - Disconnect from game functionality
+  - Implemented move making (piece falls to lowest available spot in column)
+- **Nicole**
+  - Created the game board layout
+  - Fixed Users errors (disable login button once submitted, display who's turn)
+- **Joe**
+  - Set up Websockets on client and server
+  - Set up chat messages to be sent back and forth between players
+  - Wrote the front-end code for the chat box
+  - Wrote front-end Javascript to update the board whenever moves are made
