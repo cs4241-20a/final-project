@@ -43,7 +43,7 @@ router.get("/:id", async (req, res) => {
 
 	try {
 		// Find the user with the given id
-		const user = await User.findOne({_id: userId});//(userId);
+		const user = await User.findOne({_id: userId});
 
 		// Send result
 		res.status(200).json({success: true, data: user});

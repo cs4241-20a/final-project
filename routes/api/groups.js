@@ -35,6 +35,30 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 });
 
 /*
+ * Route: /api/groups/invites
+ * Method: GET
+ * Auth: Required
+ * Desc: Gets all groups the current user has been invited to. Verified by session.
+ */
+router.get("/", ensureAuthenticated, async (req, res) => {
+	// Gather request parameters
+	const username = getUsername(req);
+
+	try {
+		// Find the id of the user with the given username
+		const userId = (await User.findOne({username}))._id;
+		// Find the groups the user with the given id has been invited to
+		const groups = await Group.find({invitees: userId});
+
+		// Send result
+		res.status(200).json({success: true, data: groups});
+	} catch (err) {
+		// Report errors
+		res.status(500).json({success: false, error: err});
+	}
+});
+
+/*
  * Route: /api/groups/:id
  * Method: GET
  * Auth: Required
@@ -47,9 +71,9 @@ router.get("/:id", ensureAuthenticated, async (req, res) => {
 
 	try {
 		// Find the user with the given username
-		const currentUser = await User.findOne({username});
+		const userId = (await User.findOne({username}));
 		// Find the group with the given group id, ensuring the current user belongs to it
-		const group = await Group.findOne({_id: groupId, members: currentUser._id});
+		const group = await Group.findOne({_id: groupId, members: userId});
 
 		// Send result
 		res.status(200).json({success: true, data: group});
@@ -73,7 +97,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 
 	try {
 		// Find the id of user with the given username
-		const adminId = await User.findOne({username})._id;
+		const adminId = (await User.findOne({username}))._id;
 		// Create a new group with the given name and admin id
 		let newGroup = new Group({name, adminId, members: [adminId], invitees: []});
 		// Save the new message to the database
@@ -82,8 +106,10 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 		// Send result
 		res.status(201).json({success: true, data: newGroup});
 	} catch (err) {
+		console.error(err);
 		// Report errors
 		res.status(500).json({success: false, error: err});
+		console.log(err)
 	}
 });
 
@@ -100,7 +126,7 @@ router.delete("/:id", ensureAuthenticated, async (req, res) => {
 
 	try {
 		// Find the user with the given username
-		const currentUser = await User.findOne({username});
+		const currentUser = (await User.findOne({username}));
 		// Find and delete the group with the given id if the current user is the admin
 		await Group.findOneAndDelete({_id: groupId, adminId: currentUser._id});
 

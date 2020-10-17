@@ -2,48 +2,119 @@
 
 const socket = io();
 
-socket.on("message", message => {
-	console.log(message);
+socket.on("message", message => outputMessage(message));
+
+const chatFeed = document.getElementById("chat_feed");
+const submitChatButton = document.getElementById("submit_chat");
+const chatInput = document.getElementById("chat_input");
+
+submitChatButton.addEventListener("click", async evt => {
+	evt.preventDefault();
+
+	const content = chatInput.value;
+	const sender = (await getCurrentUser()).displayName;
+	const date = moment(Date.now()).format("MM/DD/YY - hh:mm a");
+	const message = {content, sender, date};
+	socket.emit("chatMessage", message);
+
+	const res = await fetch(`/api/messages/${groupId}`, {
+		method: "POST",
+		body: JSON.stringify({content}),
+		headers: {"Content-type": "application/json"}
+	});
+	const data = await res.json();
+
+	chatInput.value = "";
 });
 
-//import {groupName}  from './home.js'
-var groupId = window.localStorage.getItem("group")// document.cookie
-console.log(groupId)
+const loadMessages = async () => {
+	const res = await fetch(`/api/messages/${groupId}`, {method: "GET"});
+	const data = await res.json();
+
+	for (const element of data.data) {
+		const {content, senderId, dateSent} = element;
+		const sender = await getDisplayNameById(senderId);
+		const date = moment(new Date(dateSent)).format("MM/DD/YY - hh:mm a");
+		const message = {content, sender, date};
+		outputMessage(message);
+	}
+};
+
+const getCurrentUser = async () => {
+	const res = await fetch(`/api/users`, {method: "GET"});
+	const data = await res.json();
+
+	return data.data;
+
+	var groupId = window.localStorage.getItem("group")// document.cookie
+	console.log(groupId)
+	// Get the modal
+	var modal = document.getElementById("myModal");
+	var editmodal = document.getElementById("editModal");
+	var delmodal = document.getElementById("deleteModal");
+	var card1=document.getElementById("card1")
+	var btnContainer=document.getElementById("btn_container")
+	console.log("Button container " + btnContainer)
+	console.log("Modal " + modal)
+
+	var clicked=false
+
+	var makeTask = function(column) {
+	  modal.style.display = "block";
+	  currentCol = column
+}
+
+const getDisplayNameById = async userId => {
+	const res = await fetch(`/api/users/${userId}`, {method: "GET"});
+	const data = await res.json();
+
+	return data.data.displayName;
+}
+
+const outputMessage = (message) => {
+	const div = document.createElement("div");
+	div.classList.add("message");
+	let {content, sender, date} = message;
+	div.innerHTML = `<p class="text">${content}</p><p class="meta">${sender} <span>${date}</span></p>`;
+	chatFeed.appendChild(div);
+	chatFeed.scrollTop = chatFeed.scrollHeight;
+};
+
 // Get the modal
 var modal = document.getElementById("myModal");
 var editmodal = document.getElementById("editModal");
 var delmodal = document.getElementById("deleteModal");
-var card1=document.getElementById("card1")
-var btnContainer=document.getElementById("btn_container")
-console.log("Button container " + btnContainer)
-console.log("Modal " + modal)
+var card1 = document.getElementById("card1");
+var btnContainer = document.getElementById("btn_container");
+console.log("Button container " + btnContainer);
+console.log("Modal " + modal);
 
-var clicked=false
+var clicked = false;
 
-var makeTask = function(column) {
-  modal.style.display = "block";
-  currentCol = column
-}
+var makeTask = function (column) {
+	modal.style.display = "block";
+	currentCol = column;
+};
 
-var cancelTask = function(e){
-  e.preventDefault()
-  modal.style.display = "none";
-}
+var cancelTask = function (e) {
+	e.preventDefault();
+	modal.style.display = "none";
+};
 
-var closeTask = function(e){
-  e.preventDefault()
-  editmodal.style.display = "none";
-}
+var closeTask = function (e) {
+	e.preventDefault();
+	editmodal.style.display = "none";
+};
 
-var keepCol = function(){
-  delmodal.style.display = "none";
-}
+var keepCol = function () {
+	delmodal.style.display = "none";
+};
 
-window.onclick = function(event) {
-  if (modal === event.target) {
-    modal.style.display = "none";
-  }
-}
+window.onclick = function (event) {
+	if (modal === event.target) {
+		modal.style.display = "none";
+	}
+};
 
 // Are we editing?
 var editing = true
@@ -77,13 +148,13 @@ var listClicked = function(){
 }
 
 const addMe = async () => {
-  var h = document.getElementById('group_name')
-  var name = h.innerHTML
-  const res = await fetch("/api/", {method: "POST", body: name})
-  const data = await res.json()
-  console.log(JSON.stringify(data))
-  console.log(data)
-}
+	var h = document.getElementById("group_name");
+	var name = h.innerHTML;
+	const res = await fetch("/api/", { method: "POST", body: name });
+	const data = await res.json();
+	console.log(JSON.stringify(data));
+	console.log(data);
+};
 
 //var groupName; //= "test"; //Change this to be set later
 //var groupId;
@@ -246,68 +317,75 @@ var editTask = async (e) => {
 }
 
 var delTask = async (task) => {
-  const res = await fetch("/api/tasks/" + groupId + "/" + task._id, {method: "DELETE"})
-  const data = await res.json()
-  console.log(JSON.stringify(data))
-  console.log(data)
-  const col = document.getElementsByClassName('tasks')
-  var removeTask = document.getElementById(task._id)
-  var column = col[task.columnName-1]
-  column.removeChild(removeTask)
-}
+	const res = await fetch("/api/tasks/" + groupId + "/" + task._id, {
+		method: "DELETE",
+	});
+	const data = await res.json();
+	console.log(JSON.stringify(data));
+	console.log(data);
+	const col = document.getElementsByClassName("tasks");
+	var removeTask = document.getElementById(task._id);
+	var column = col[task.columnName - 1];
+	column.removeChild(removeTask);
+};
 
 // Tells us which task was just clicked on
-const ids = []
+const ids = [];
 
-function appendNewInfo(task, taskEdit=false) {
-  // Create elements
-  var div = document.createElement("div");
-  var name = document.createElement("p");
-  var due = document.createElement("p");
-  var assigned = document.createElement("p");
-  const col = document.getElementsByClassName('tasks')
-  var btnDiv = document.createElement("div");
-  var deleteBtn = document.createElement("a")
-  var del = document.createElement("i")
-  // Set attributes
-  div.setAttribute('class', 'task_card card-panel col s1')
-  div.setAttribute('id', task._id)
-  name.setAttribute('class', 'task_item')
-  due.setAttribute('class', 'task_item')
-  assigned.setAttribute('class', 'task_item')
-  del.setAttribute('class', 'material-icons right')
-  deleteBtn.setAttribute('class', 'centerwaves-effect waves-light btn-small btn')
-  btnDiv.setAttribute('style', 'display:flex; flex-direction: row; justify-items: center')
-  // Add things
-  del.appendChild(document.createTextNode("delete_forever"))
-  deleteBtn.appendChild(del)
-  deleteBtn.onclick = function() {
-    delTask(task)
-    editing = false
-  }
-  btnDiv.appendChild(deleteBtn)
-  name.appendChild(document.createTextNode(task.name))
-  due.appendChild(document.createTextNode(task.dateDue))
-  assigned.appendChild(document.createTextNode(task.assignees))
-  div.appendChild(name)
-  div.appendChild(due)
-  div.appendChild(assigned)
-  div.appendChild(btnDiv)
-  div.onclick = function() {
-    console.log(editing)
-    openTask(task, editing)
-    ids.push(task)
-    console.log(ids[ids.length-1])
-    editing = true
-  }
-  console.log(task.columnName)
-  if(taskEdit == true) {
-    const oldNode = document.getElementById(task._id)
-    col[task.columnName-1].replaceChild(div, oldNode)
-  }
-  else {
-    col[task.columnName-1].appendChild(div)
-  }
+function appendNewInfo(task, taskEdit = false) {
+	// Create elements
+	var div = document.createElement("div");
+	var name = document.createElement("p");
+	var due = document.createElement("p");
+	var assigned = document.createElement("p");
+	const col = document.getElementsByClassName("tasks");
+	var btnDiv = document.createElement("div");
+	var deleteBtn = document.createElement("a");
+	var del = document.createElement("i");
+	// Set attributes
+	div.setAttribute("class", "task_card card-panel col s1");
+	div.setAttribute("id", task._id);
+	name.setAttribute("class", "task_item");
+	due.setAttribute("class", "task_item");
+	assigned.setAttribute("class", "task_item");
+	del.setAttribute("class", "material-icons right");
+	deleteBtn.setAttribute(
+		"class",
+		"centerwaves-effect waves-light btn-small btn"
+	);
+	btnDiv.setAttribute(
+		"style",
+		"display:flex; flex-direction: row; justify-items: center"
+	);
+	// Add things
+	del.appendChild(document.createTextNode("delete_forever"));
+	deleteBtn.appendChild(del);
+	deleteBtn.onclick = function () {
+		delTask(task);
+		editing = false;
+	};
+	btnDiv.appendChild(deleteBtn);
+	name.appendChild(document.createTextNode(task.name));
+	due.appendChild(document.createTextNode(task.dateDue));
+	assigned.appendChild(document.createTextNode(task.assignees));
+	div.appendChild(name);
+	div.appendChild(due);
+	div.appendChild(assigned);
+	div.appendChild(btnDiv);
+	div.onclick = function () {
+		console.log(editing);
+		openTask(task, editing);
+		ids.push(task);
+		console.log(ids[ids.length - 1]);
+		editing = true;
+	};
+	console.log(task.columnName);
+	if (taskEdit == true) {
+		const oldNode = document.getElementById(task._id);
+		col[task.columnName - 1].replaceChild(div, oldNode);
+	} else {
+		col[task.columnName - 1].appendChild(div);
+	}
 }
 
 //The total number of columns
@@ -392,42 +470,43 @@ var delCol = function() {
 }
 
 const returnHome = async () => {
-	console.log("Going home")
-  window.location = "/"
-}
+	window.location = "/";
+};
 
-window.onload = function() {
-    getMyGroup()
+window.onload = async function () {
+	await getMyGroup();
 
-    const tsButton = document.querySelector( '#task_submit' )
-    tsButton.onclick = addTask
+	const tsButton = document.querySelector("#task_submit");
+	tsButton.onclick = addTask;
 
-    const ntButton = document.getElementById("btn-1")
-    ntButton.onclick = function() {
-      makeTask(1)
-    }
+	const ntButton = document.getElementById("btn-1");
+	ntButton.onclick = function () {
+		makeTask(1);
+	};
 
-    const dcButton = document.getElementById("col-1")
-    dcButton.onclick = listClicked
+	const dcButton = document.getElementById("col-1");
+	dcButton.onclick = listClicked;
 
-    const backButton = document.getElementById("back_btn")
-    backButton.onclick = returnHome
+	const backButton = document.getElementById("back_btn");
+	backButton.onclick = returnHome;
 
-    const cButton = document.getElementById("cancel")
-    cButton.onclick = cancelTask
+	const cButton = document.getElementById("cancel");
+	cButton.onclick = cancelTask;
 
-    const clButton = document.getElementById("close")
-    clButton.onclick = closeTask
+	const clButton = document.getElementById("close");
+	clButton.onclick = closeTask;
 
-    const kcButton = document.getElementById("keep")
-    kcButton.onclick = keepCol
+	const kcButton = document.getElementById("keep");
+	kcButton.onclick = keepCol;
 
-    const ncButton = document.getElementById("add_list")
-    ncButton.onclick = addCol
+	const ncButton = document.getElementById("add_list");
+	ncButton.onclick = addCol;
 
-    const rcButton = document.getElementById("delete_list")
-    rcButton.onclick = delCol
+	const rcButton = document.getElementById("delete_list");
+	rcButton.onclick = delCol;
 
-    const teButton = document.querySelector( '#task_edit' )
-    teButton.onclick = editTask
-  }
+	const teButton = document.querySelector("#task_edit");
+	teButton.onclick = editTask;
+
+	loadMessages();
+};
