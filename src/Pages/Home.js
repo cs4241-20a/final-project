@@ -7,11 +7,11 @@ export class Home extends Component {
       <div>
         <h1>Home</h1>
         <p>
-          <button type="submit" action="/logout" method="POST">Log Out</button>
+          <button onClick="/logout" method="POST" to="/login">Log Out</button>
         </p>
 
         <div className="room">
-          <h2>Play BattleShip</h2>
+          <h2>Party Chat</h2>
           <button id="hostbtn">Create a Lobby</button>
           <button id="joinrandbtn">Join Random Lobby</button>
           <button id="joincodebtn">Join Private Lobby</button>
