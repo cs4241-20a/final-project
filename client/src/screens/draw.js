@@ -1,31 +1,45 @@
 import React from 'react'
 import {Container, Row, Col, Button, Form} from  'react-bootstrap'
 import CanvasDraw from 'react-canvas-draw'
+import {Redirect} from 'react-router-dom'
 import {HuePicker} from 'react-color'
 
 import API from '../API'
 
 class DrawScreen extends React.Component {
-    state = {
-        color: "#ff0000",
-        secondColor: "#ff0000",
-        eraser: false,
-        published: false,
-        brushRadius: 10,
-      };
-
 	constructor(props){
 		super(props)
-        this.state = {appear: true}
-        this.form = React.createRef()
-        this.onFormSubmit = this.onFormSubmit.bind(this)
-        this.state = { checkboxChecked: false };
-        this.handleChange = this.handleChange.bind(this);
-        
+		this.state ={
+			color: "#ff0000",
+			secondColor: "#ff0000",
+			eraser: false,
+			published: false,
+			brushRadius: 10,
+			appear: true,
+			redirect: false,
+		}
+
+		if(props.location && props.location.state)
+			Object.assign(this.state, props.location.state)
+					
+		
+		this.form = React.createRef()
+		this.onFormSubmit = this.onFormSubmit.bind(this)
+		this.handleChange = this.handleChange.bind(this);
+			
+		this.titleInput = (<input type="text" className="title-input" required={true} defaultValue={this.state.title} onChange={(e) => {this.setState({title: e.target.value})}}/>)
+		this.artistInput = (<input type="text" className="artist-input" required={true} defaultValue={this.state.artist} onChange={(e) => {this.setState({artist: e.target.value})}}/>)
 	}
 
 	componentDidMount(){
-        console.log('hi')
+		console.log('hi')
+		if(this.state.canvas_data) {
+			this.saveableCanvas.loadSaveData(this.state.canvas_data)
+			localStorage.setItem(
+				"savedDrawing",
+				this.state.canvas_data
+		);
+		}
 	}
 
 	componentWillUnmount(){
@@ -38,11 +52,21 @@ class DrawScreen extends React.Component {
 
     async onFormSubmit(e){
 		e.preventDefault()
-		const [name, title] = ['name', 'title'].map((name) => document.getElementById(name).value)
-        const content = this.saveableCanvas.getSaveData()
-        const published = this.state.published
-		let response = await API.submit_drawing(name, title, content, published)
-    }
+		const content = this.saveableCanvas.getSaveData()
+		const {artist, title, published} = this.state
+		let response
+		if(!this.state._id)
+			response = await API.submit_drawing(artist, title, content, published)
+		else
+			response = await API.update_drawing(this.state._id, artist, title, content, published)
+		
+		if(response.status != 200 && response.status != 201 && response.status != 304){
+			alert("Request Failed :(\n" + JSON.stringify(response.data))
+			return
+		}
+		this.setState({redirect: true})
+
+		}
     
     handleChange(evt) {
         this.setState({published: !this.state.published}, () =>{
@@ -52,10 +76,13 @@ class DrawScreen extends React.Component {
       }
       
 	render(){
-        let eraserText = 'Erase'
-        if (this.state.eraser)
-        eraserText ='Draw'
-
+		let redirect = null
+		let eraserText = 'Erase'
+		if (this.state.eraser)
+		eraserText ='Draw'
+		if(this.state.redirect){
+			redirect = <Redirect to={{pathname: '/user'}}/>
+		}
 		return (
 			<Container>
 				<Row>
@@ -68,7 +95,7 @@ class DrawScreen extends React.Component {
                     <Col>
                     <div>
                     <HuePicker
-                    color={this.state.color}
+										color={this.state.color}
                     onChangeComplete={this.handleChangeComplete}
                    />
                     </div>
@@ -107,7 +134,7 @@ class DrawScreen extends React.Component {
                     >
                         Clear
                     </Button>
-                    <Button variant="warning"
+                    <Button variant="info"
                     style={{
                         position: "absolute",left:"0px",top:"0px"
                       }}
@@ -148,14 +175,16 @@ class DrawScreen extends React.Component {
                         <div class="name">
                             <Form.Group controlId="name">
                             <Form.Label className="required">Your Name</Form.Label>
-                            <Form.Control type="text" name="name" required/>
+                            {/* <Form.Control type="text" name="name" required/> */}
+														{this.artistInput}
                         </Form.Group>
                         </div>
 
                         <div class="title">
                             <Form.Group controlId="title">
                             <Form.Label className="required">Drawing Title</Form.Label>
-                            <Form.Control type="text" name="title" required />
+                            {/* <Form.Control type="text" name="title" required /> */}
+														{this.titleInput}
                         </Form.Group>
                         </div>
                        
@@ -228,7 +257,7 @@ class DrawScreen extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                
+                	{redirect}
                 </Row>
 			</Container>
 		)

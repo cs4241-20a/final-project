@@ -204,3 +204,18 @@ div.saveTitle{
   left: -100px;
   top: 140px;
 }
+.draw-view {
+  width: 400px;
+  height: 400px;
+  outline: black;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.draw-view-container {
+  margin-bottom: 100px;
+}
+
+.hue-picker {
+  margin-bottom: 10px;
+}
