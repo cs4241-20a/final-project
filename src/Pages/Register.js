@@ -4,7 +4,7 @@ import './css/Login.css'
 export class Register extends Component {
   render() {
     return (
-      <body>
+      <main>
         <div className="full-screen-container2">
           <div className="login-container">
             <h3 className="login-title">Register an Account</h3>
@@ -24,14 +24,14 @@ export class Register extends Component {
                 <input type="password" id="confirmPass" name="confirmPass" placeholder="confirm password here" required/>
               </div>
 
-              <button type="submit" class="login-button">Register</button>
+              <button type="submit" className="login-button">Register</button>
             </form>
             <div className="container-footer">
               <a href="/login">Click here to Login</a>
             </div>
           </div>
         </div>
-      </body>
+      </main>
     )
   }
 }

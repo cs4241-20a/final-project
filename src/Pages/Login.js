@@ -4,29 +4,29 @@ import "./css/Login.css"
 export class Login extends Component {
   render() {
     return (
-      <body>
-        <div class="full-screen-container">
-          <div class="login-container">
-            <h3 class="login-title">Sign into your Account</h3>
+      <main>
+        <div className="full-screen-container">
+          <div className="login-container">
+            <h3 className="login-title">Sign into your Account</h3>
             <form action="/login" method="POST">
-              <div class="input-group">
+              <div className="input-group">
                 <label>Username</label>
                 <input type="text" id="username" name="username" placeholder="username here" required/>
               </div>
 
-              <div class="input-group">
+              <div className="input-group">
                 <label>Password</label>
                 <input type="password" id="password" name="password" placeholder="password here" required/>
               </div>
 
-              <button type="submit" class="login-button">Log In</button>
+              <button type="submit" className="login-button">Log In</button>
             </form>
-            <div class="container-footer">
+            <div className="container-footer">
               <a href="/register">Click here to Register</a>
             </div>
           </div>
         </div>
-      </body>
+      </main>
     )
   }
 }
