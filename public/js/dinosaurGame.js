@@ -10,7 +10,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	// loads in all the assets
 	preload () {
 		console.log('preloaded');
-		this.load.image('space', '../assets/deep-space.jpg');
+		this.load.image('space', '../assets/farm.png');
 	    this.load.image('cactus', 'assets/platform.png');
 	    this.load.image('comet', 'assets/fireball.png');
 	}
