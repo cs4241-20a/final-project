@@ -108,9 +108,11 @@ const getTasks = async () => {
   console.log(data.data[0])
   for (var i = 0; i < data.data.length; i++) {
     var task = data.data[i]
-    if(task.columnName > cols) {
+		if(task.columnName > cols) {
       console.log("We need to add a new column")
-      addCol()
+      for(var j = cols; j < task.columnName; j++) {
+        addCol()
+      }
     }
     const dateStr = task.dateDue;
     console.log(dateStr)
