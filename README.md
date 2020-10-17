@@ -1,56 +1,50 @@
-# cs4241-FinalProject
+# cs4241-FinalProject:Taskinator
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+README
 
-## General description
+Project Description 
+==========================
+https://webware-team19-final.herokuapp.com/login
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+Taskinator is a website that allows users to keep track of their tasks for a project. This website provides a simplistic yet useful interface to allow users to create groups, add team members to the groups, and assign tasks to each member. Hence, it specifically targets people who are working on a team project and need an organizational tool. 
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+The website consists of three pages: a login page, a home page, and a task page. Logging in leads the users to the home page where they can see what groups they are a part of, or create new groups. The homepage also shows a list of tasks that are approaching their deadline or that are overdue. Clicking on each group leads to a task page corresponding to that group. Each task page allows the user to add lists of tasks where different lists can pertain to different categories of task. On this page, the user can also invite other team members. Additionally, the task page has a chat feature that allows real-time communication for the team members, making it easier for them to discuss their project as they organize their tasks.
 
-## Project ideation
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+Additional Instructions
+========================
 
-## Logistics
+Taskinator requires the users to have a GitHub or a Google account to login with.
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+Utilized Technologies
+======================
+- Materialize Framework
+    We used Google's Materialize framework to stylize the entire website and better the functionalities of the html elements.
+- Javascript
+- Node.js
+    We used Node.js for server-side programming.
+- MongoDB for Server + Mongoose
+    We used a combination of MongoDB and Mongoose to ensure persistence of data for each user.
+- OAuth Authentication (from multiple services Google, GitHub)
+    We used Google and GitHub OAuth Authentications to have the users log into the website.
+- Socket io
+    We used Socket io for the live chat feature on the task page.
+- Moment.js
+    We used Moment.js to handle due dates of each task.
 
-### Deliverables
+Challenges Faced
+=====================
+An expected challenge we faced was deciding on the most appropriate technologies for this project. Along the same lines, it was also a bit difficult to make sure we found a good balance between having this website do all we desired while also meeting the requirements of the assignment. Implementing our back-end API in conjuction with our front-end code took longer than expected. Additionally the number of features we were adding and items we were keeping track of/sending data between added a growing level of complexity as we worked, drawing out or development time with testing and debugging. The chat functionality took time to implement particularly with keeping the messages displayed in the correct order. Additionally we didn't have enough time to schedule regular meetings during finals week as a team but were able to use Microsoft Teams for effective communication.
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+Member Responsibilities
+=======================
+- Benny: Front-end, page layout and styling home and login page + chat styling
+- Luke: Back-end, databases and authentication + chat-based functionality (socket.io)
+- Nikhil: Front-end, Javascript for task-list functionality, group invites
+- Rimsha: Front-end, task page layout and styling
+- Adam: Front-end, Javascript for home page functionality and group invite handling
 
-There are no other scheduled checkpoints for your project. 
+Project video
+===============
+https://youtu.be/fCMFh9jnc3g
 
-#### Turning in Your Outline / Project
-
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
-
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
-
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
-
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
-
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
-
-## FAQs
-
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
