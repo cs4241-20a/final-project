@@ -1,6 +1,10 @@
 
+.main {
+    overflow: hidden;
+}
+
 .full-screen-container {
-    background-image: url("../imgs/battleship.jpg");
+    background-image: url("../imgs/cloudlogin.jpg");
     height: 100vh;
     width: 100vw;
     background-size: cover;
@@ -11,7 +15,7 @@
 }
 
 .full-screen-container2 {
-    background-image: url("../imgs/battleready.jpg");
+    background-image: url("../imgs/cloudregister.jpg");
     height: 100vh;
     width: 100vw;
     background-size: cover;
