@@ -3,6 +3,7 @@
 A web application that manages the food in your inventory and grocery list to track when food is going to expire so that the user can be alerted that they have to use up a food item. It allows for login through Google and registering for an account with user and password credentials. Through the login, users can join and create groups in which grocery lists can be shared among group members. There is also a chat where users can enter their identifiable name and a message and converse with multiple members about grocery related things.
 
 Link to the website: https://glitch.com/~final-project-007
+Link to video: https://youtu.be/oAaSUpDEKOg;
 
 The technologies we used to create our project are Auth0 for the main login page, Svelte for the chat, and Glitch to host Groceryify.
 
