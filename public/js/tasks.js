@@ -45,8 +45,9 @@ const getCurrentUser = async () => {
 	const data = await res.json();
 
 	return data.data;
+}
 
-	var groupId = window.localStorage.getItem("group")// document.cookie
+	var groupId = window.localStorage.getItem("group")
 	console.log(groupId)
 	// Get the modal
 	var modal = document.getElementById("myModal");
@@ -200,16 +201,9 @@ const getMembers2 = async (members) => {
 const getMyGroup = async () => {
   const res = await fetch("/api/groups/" + groupId, {method: "GET"});
   const data = await res.json()
+	var header = document.getElementById("group_name")
+	header.innerHTML = "" + data.data.name + "'s Tasks"
   console.log(JSON.stringify(data))
-	//console.log(groupName)
-  // for(var i = 0; i < data.data.length; i++)
-  // {
-  //   console.log(data.data[i].name)
-  //   if(groupName == data.data[i].name) {
-  //     console.log(data.data[0]._id)
-  //     groupId = data.data[i]._id
-  //   }
-  // }
   console.log("Our group: " + groupId)
 	console.log(data.data.members)
 	getMembers(data.data.members)
@@ -509,4 +503,4 @@ window.onload = async function () {
 	teButton.onclick = editTask;
 
 	loadMessages();
-};
+}
