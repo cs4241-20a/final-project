@@ -1,56 +1,70 @@
-# cs4241-FinalProject
+# PixelTalk
+Created by:
+- Brad Cosma
+- Carly Pereira
+- Jake Pelrah
+- Noah Olson
+- Patrick Houlihan
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+## About the Application
 
-## General description
+https://pixeltalk.glitch.me/
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+PixelTalk is a webapp that allows users to interact predominantly through image rather than text.
+Our intentions behind this project were to force users to think about what they say online, where discourse can feel impersonal and harsh.
+By having communication occur visually, it incentivizes users to actually draw out or symbolize what they want to convey. By enforcing a time limit on drawings, users are also incentivized to think about what they want to say beforehand.
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+### The Login Page
+To login click *sign in with GitHub*, and enter your credentials.
 
-## Project ideation
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+### The Inbox Page
+After signing in with GitHub users will be greeted by their inbox, a page that shows all users that are a friend. Included on this page is the users country flag, profile picture, and username as well as a logout and send drawing button. One of our favorite features on this page is the ability to draw your own profile picture! To do this, click on your profile picture and use the drawing application to complete your portrait.
 
-## Logistics
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+### The Gallery Page
+After clicking on a user in your inbox page, you will be brought to the gallery page. This view shows all messages recieved from that user, as well as their country flag, profile picture, and username. From this page, you can view drawings or click the send arrow to send the current user a drawing.
 
-### Deliverables
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+### The Drawing Page
+The drawing application features 9 colors and a size slider. Simply choose a color, brush size and begin drawing! Once the first brush stroke is made, a 20s timer will start. When the timer ends, the drawing will be sent.
 
-There are no other scheduled checkpoints for your project. 
 
-#### Turning in Your Outline / Project
+## Technologies Outline
+- Passport Express Middleware
+- Github OAuth
+- Bootstrap CSS framework
+- BodyParser
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+## Challenges Faced
+- Animating the drawing recreation of the image
+  - Race conditions were encountered as stroke color would be set irrespective of how the program executed
+- Properly maintaining a Git repository
+  - Git merges were infrequent, leading to large merges of branches using various states of the master branch happening all at once
+- Improper legacy data formatting
+  - Repeated changes in the desired data format cost significant amounts of time 
+  - example, in the database, some drawings would have their animation instruction field as Instruction, while others would be instruction
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
+## Responsibilities
+### UI
+Carly Pereira & Jake Pelrah
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
+The UI features modals and cards primarily to present a user with easy to access message inventories. The webapp uses bootstrap for styling.
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+### Server
+Brad Cosma & Noah Olson
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
+Our server handles all interaction with the database, Github authentication, user sessions, and sockets to notify clients when they recieve a message. Additionally, our server looks at the IP of the user and pulls their country flag from it.
 
-## FAQs
+### Database
+Brad Cosma & Noah Olson
 
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+Our database stores information for drawings and users. We have functions to add and update data, and queries to get user data by username and drawings by artist and receiver.
+
+### Drawing Application
+Jake Pelrah & Patrick Houlihan
+
+The drawing application is utilized in three different areas of the project, to produce profile pictures, produce images to send, and recreate and animate images. Images are exported as PNG's as well as instruction sets, which are understood by the drawing program.
+
+## Project Video
+[https://drive.google.com/file/d/1O8od8FDLdK8y3BQf3EyA1Va-HuHonBJ8/view?usp=sharing](https://drive.google.com/file/d/1O8od8FDLdK8y3BQf3EyA1Va-HuHonBJ8/view?usp=sharing)

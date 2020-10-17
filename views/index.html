@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/socket.js" defer></script>
+    <script src="js/drawpfp.js" defer></script>
+    <script src="js/home.js" defer></script>
+
+    <title>Pixel Talk</title>
+
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark  bg-dark">
+
+        <a type=" button" id="btnHome"
+           class="btn btn-light btn-lg">
+            <img id="homeIcon" src="/images/nav/home.svg">
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item active">
+                    <div class="col-sm align-self-start">
+                            <img src=/images/flags/blank_flag.png id="userFlag">
+                            <img data-toggle="modal" data-target="#pfpModal" src=/images/placeholder_avatar.png
+                                 id="userAvatar">
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <h1 id="userHandle" class="text-light"></h1>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+
+            <a href="/gallery.html" type=" button" id="mailStatus"
+               class="btn btn-light btn-lg mr-2">You have mail! Access inbox here
+            </a>
+
+            <a type=" button" id="btnGallery" href="gallery.html"
+               class="btn btn-light btn-lg mr-2">
+                <img id="galleryIcon" src="/images/nav/envelope.svg">
+            </a>
+            <a type=" button" id="btnLogout" href="/logout"
+               class="btn btn-light btn-lg mr-2">Logout
+            </a>
+        </div>
+        <!-- Modal -->
+        <div class="modal text-black" id="pfpModal" tabindex="-1"
+        role="dialog">
+        <div class="modal-dialog modal-md modal-dialog-centered"
+                role="document">
+
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container">
+
+                        <div class="col-md-center">
+                            <div class="row">
+                                <div class="col">
+                                    <canvas id="profileCanvas" height="300px"
+                                            width="300px"></canvas>
+                                </div>
+
+                                <div class="col" id="colorPicker">
+                                    <div class="btn-group-vertical">
+                                        <button type="button" id="color_red"
+                                                style="background-color: red"></button>
+                                        <button type="button" id="color_orange"
+                                                style="background-color: orange"></button>
+                                        <button type="button" id="color_yellow"
+                                                style="background-color: yellow"></button>
+                                        <button type="button" id="color_green"
+                                                style="background-color: green"></button>
+                                        <button type="button" id="color_blue"
+                                                style="background-color: blue"></button>
+                                        <button type="button" id="color_purple"
+                                                style="background-color: purple"></button>
+                                        <button type="button" id="color_pink"
+                                                style="background-color: pink"></button>
+                                        <button type="button" id="color_white"
+                                                style="background-color: white"></button>
+                                        <button type="button" id="color_black"
+                                                style="background-color: black"></button>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="slider-wrapper">
+                                        <input type="range" min="1" max="100"
+                                                value="50" class="slider"
+                                                id="penSize">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col">
+                            <h2 id="drawingTimer"></h2>
+                        </div>
+                        <button type="button" class="btn btn-primary"
+                                data-container="body"
+                                data-toggle="popover" data-placement="right"
+                                data-content="Time starts after the first line is drawn.">
+                            ?
+                        </button>
+                        <button type="button" id="closeDrawingWindow"
+                                class="btn btn-danger" data-dismiss="modal">
+                            Close
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </nav>
+</header>
+
+
+
+<div class="gallery py-5">
+    <div id="friendsDisplay" class="container">
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+/* Icons */
+#homeIcon{
+    width:40px;
+    padding-top: 8px;
+}
+
+#galleryIcon{
+    padding-top: 8px;
+    width: 40px;
+}
+
+#pencilIcon{
+    width: 40px;
+    padding-top: 8px;
+}
+
+#homeIcon{
+    width: 40px;
+}
+
+
+#btnLogout{
+    height: 75px;
+    padding-top: 20px;
+
+}
+
+#mailStatus {
+    width: 170px;
+    height: 75px;
+    padding-top: 20px;
+    font-size: 16px;
+    display:none;
+}
+
+/* Buttons */
+
+#btnLogin{
+    width: 200px;
+}
+
+#btnGallery, #btnHome, #btnDraw, #btnLogout {
+    height: 75px;
+}
+
+
+
+/* User Info */
+#userHandle{
+    margin-top: 10px;
+}
+
+#userFlag {
+    width: 100px;
+    height: 75px;
+    margin-right: 10px;
+    object-fit:scale-down;
+}
+
+#userAvatar {
+    width: 75px;
+    height: 75px;
+
+}
+
+
+/* Gallery Styling */
+.card{
+    margin: 1em;
+}
+
+#galleryThumb{
+    background-color: white;
+    filter: blur(15px);
+    -webkit-filter: blur(15px);
+}
+
+
+/* Drawing Modal Styling */
+#drawingTimer{
+    color: black;
+    padding-left: 4px;
+}
+
+canvas {
+    border: 2px black solid;
+}
+
+[id^="color_"]{
+    width: 34px;
+    height: 34px;
+}
+
+#colorPicker{
+    margin-left: -30px;
+}
+
+
+/* Slider Styling */
+.slider-wrapper {
+    display: block;
+    width: 2px;
+    height: 1px;
+}
+
+.slider-wrapper input {
+    border: 1px black solid;
+    width: 300px;
+    height: 34px;
+    transform-origin: 140px 165px;
+    transform: rotate(-90deg);
+}
+
+.slider-wrapper input {
+    -webkit-appearance: none;
+    width: 305px;
+    height: 34px;
+    background: #d3d3d3;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 34px;
+    height: 34px;
+    background: #292b2c;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 34px;
+    height: 34px;
+    background: #292b2c;
+    cursor: pointer;
+}
+
