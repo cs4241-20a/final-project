@@ -89,7 +89,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    });
 
 	    // add random bounce amounts to each star
-	    this.stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)));
+	    this.stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.6, 1)));
 
 	    // make stars collide with platforms
 		this.physics.add.collider(this.stars, this.platforms);
@@ -162,10 +162,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		// collision with a star, also changes scores and removes the star
 		self.physics.add.overlap(self.char, this.stars, (player, star) => {
 			star.disableBody(true, true);
-			this.scoreText.setText('Score: ' + ++this.score);
-			// if (this.stars.countActive(true) === 0)
-			self.switchScenes();
-			
+			this.scoreText.setText('Score: ' + ++this.score);			
 		}, null, self);
 	}
 

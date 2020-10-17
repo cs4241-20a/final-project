@@ -7,7 +7,7 @@ let config = {
         default: 'arcade', // physics enging
         arcade: {
             gravity: {y: 300},
-            debug: true // puts boxes around everything for collisions
+            debug: false // puts boxes around everything for collisions
         }
     },
     scene: [Lobby, DinoGame]

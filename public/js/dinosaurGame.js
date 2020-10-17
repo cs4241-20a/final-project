@@ -135,7 +135,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 
 	// adding the comet to our game
 	sendComet(data){
-		let comet = this.obstacles.create(data.x, 0, 'comet');
+		let comet = this.obstacles.create(data.x, 0, 'comet').setScale(2);
 		comet.setVelocityX(data.velocityX);
 	}
 
