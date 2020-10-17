@@ -163,7 +163,6 @@
                 class="Game"
                 v-on:keydown="getKeyInputs"
                 tabindex="-1"
-                :key="componentKey"
         >
             <div>
                 <h1>
@@ -196,10 +195,10 @@
                 <h1 v-if="!playing && lost">YOU LOSE</h1>
                 <h1 v-if="!playing && win">YOU WON</h1>
                 <h2 v-if="!playing && win">Score: {{ calcScore() }}</h2>
-                <h3 v-if="!playing && (lost || win)" :key="highScore">
+                <h3 v-if="!playing && (lost || win)">
                     High Score: {{ highScore }}
                 </h3>
-                <h4 v-if="!playing && (lost || win)" :key="plays">
+                <h4 v-if="!playing && (lost || win)">
                     Times Atempted: {{ plays }}
                 </h4>
 
@@ -207,7 +206,7 @@
                 <table id="score-board">
                     <tr
                             v-for="player in scoreBoard"
-                            :id="'plater' + player.player_name"
+                            :id="'player' + player.player_name"
                             :key="player.id"
                     >
                         <td>{{ player.player_name }}</td>
@@ -260,7 +259,7 @@
                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     ],
-                    numMines: 1,
+                    numMines: 10,
                     highScore: -1,
                     plays: -1,
                 };
@@ -644,12 +643,11 @@
                     // Simple POST request with a JSON body using fetch
                     const requestOptions = {
                         method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({value: score}),
+                        body: "" + score,
                     };
                     fetch("/api/minesweeper/score", requestOptions)
-                        .then((response) => response.json())
-                        .then((data) => console.log("Sent Score" + data));
+                        .then(() => console.log("Sent Score"));
+                    this.fetchAll();
                 },
                 renderScoreBoard: function () {
                     const requestOptions = {
@@ -673,9 +671,14 @@
                         .then((res) => res.text())
                         .then((j) => (this.plays = parseInt(j)));
                 },
+                fetchAll() {
+                    this.getHighScore();
+                    this.getTimesPlayed();
+                    this.renderScoreBoard();
+                }
             },
             created() {
-                this.renderScoreBoard();
+                this.fetchAll();
             },
         });
     </script>

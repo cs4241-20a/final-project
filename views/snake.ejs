@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
 
-    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/vue@latest/dist/vue.js"></script>
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
 
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
@@ -18,7 +18,7 @@
     <main role="main" class="container" id="app">
         <div class="snake">
             <h1>{{ msg }}</h1>
-            <canvas id="canvas" width="800" height="800">
+            <canvas id="canvas" width="800" height="600">
             </canvas>
         </div>
         <b-row cols="3" align-v="stretch">
@@ -44,29 +44,30 @@
                     playCount: [],
                 }
             },
-            getFetches: function () {
-                fetch("/api/snake/all_scores", {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                })
-                    .then((res) => res.json())
-                    .then((scores) => {
-                        this.topScores = scores;
-                    });
+            methods: {
+                getFetches: function () {
+                    fetch("/api/snake/all_scores", {
+                        method: "GET",
+                    })
+                        .then((res) => res.json())
+                        .then((scores) => {
+                            this.topScores = scores;
+                        });
 
-                fetch("/api/snake/score", {
-                    method: "GET",
-                })
-                    .then((res) => res.text())
-                    .then((j) => (this.topUserScore = Array.of({ your_best: parseInt(j) })));
+                    fetch("/api/snake/score", {
+                        method: "GET",
+                    })
+                        .then((res) => res.text())
+                        .then((j) => (this.topUserScore = Array.of({your_best: parseInt(j)})));
 
-                fetch("/api/snake/play_count", {
-                    method: "GET",
-                })
-                    .then((res) => res.text())
-                    .then((count) => {
-                        this.playCount = Array.of({ play_count: parseInt(count) });
-                    });
+                    fetch("/api/snake/play_count", {
+                        method: "GET",
+                    })
+                        .then((res) => res.text())
+                        .then((count) => {
+                            this.playCount = Array.of({play_count: parseInt(count)});
+                        });
+                },
             },
             created() {
                 const plugin = document.createElement('script')
@@ -77,6 +78,8 @@
                 plugin.async = true
                 document.head.appendChild(plugin)
                 this.getFetches();
+
+                setInterval(this.getFetches, 1000);
             }
         });
     </script>
