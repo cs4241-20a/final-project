@@ -26,8 +26,8 @@ For this project we wanted to create some sort of game or chat system. Our proje
 - Jordan designed the login, register, and HowToPlay pages and dealt with css across multiple pages. Set up initial HTMLs which became outdated with the shift to React.
 
 - ZheCheng converted Jordan's initial HTMLs to React and created two grid components for the Battleship app's Player and Enemy grid. 
-![Video Link](https://img.youtube.com/vi/X4zor6AI5Zk/0.jpg)](https://www.youtube.com/watch?v=X4zor6AI5Zk)
 
+### Video Link below:
 https://youtu.be/X4zor6AI5Zk
 
 ### Similarities to other projects
