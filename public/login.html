@@ -4,28 +4,63 @@
     <title>CS4241 Team 19 Final Project - Login</title>
     <!-- Import Google Icon Font -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Import title font -->
+    <!-- Import fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      * {
+        font-family: 'Roboto', sans-serif;
+      }
+
+      body {
+        height: 89vh; 
+      }
+
+      h4 {
+        font-weight: 300;
+      }
+
+      .description {
+        height: 25%;
+        overflow: hidden;
+      }
+    </style>
   </head>
-  <body>      
+  <body class="teal lighten-5">      
     <div class="container center">
       <h1 style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</h1>
       <br>
-      <h3>What is <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span>?</h3>
-      <h6><span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span> lets you collaborate with teammates to plan tasks. You can also chat with said teammates.</h6>
-      <h3>Does <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span> do anything else?</h3>
-      <h6>No, <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span> does not do anything else.</h6>
-      <h3>This sounds amazing, how do I access <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span>?</h3>
+      <div class="row">
+        <div class="col s5 push-s1">
+          <h4>What is <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span>?</h4>
+          <h6><span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span> lets you collaborate and chat with teammates to plan tasks.</h6>
+        </div>
+        <div class="col s5 push-s1">
+          <h4>Does it do anything else?</h4>
+          <h6>No, <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span> does not do anything else. Did we mention you can chat with teammates?</h6>
+         </div>
+      </div>
+      <div class="row"></div>
+      <div class="row">
+        <div class="col s10 push-s1">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title"><h4>This sounds amazing, how do I access <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span>?</h4></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <h5>You can log into <span style="font-family: 'Share Tech Mono', monospace">TASKINATOR 3000</span> through:</h5>
       <div class="row">
         <div class="col s2 push-s4">
-          <a href="#">
-            <div class="card">
+          <a href="/auth/github/login">
+            <div class="card small">
               <div class="card-image">
                 <img src="img/github.svg" alt="GitHub logo" style="padding: 15px;">
               </div>
@@ -36,8 +71,8 @@
           </a>
         </div>
         <div class="col s2 push-s4">
-          <a href="#">
-            <div class="card">
+          <a href="/auth/google/login">
+            <div class="card small">
               <div class="card-image">
                 <img src="img/google.svg" alt="Google logo" style="padding: 15px;">
               </div>
@@ -51,12 +86,4 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </body>
-	<head>
-		<title>CS4241 Team 19 Final Project</title>
-		<script src="/js/login.js" defer></script>
-	</head>
-	<!-- This is just a placeholder until the actual login page is merged -->
-	<body>
-		<button id="login-button" style=>Log in with GitHub</button>
-	</body>
 </html>

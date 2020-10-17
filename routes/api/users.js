@@ -4,10 +4,10 @@
 const express = require("express");
 
 const User = require("../../models/User");
-const githubAuth = require("../auth/github-auth");
+const passportConfig = require("../../config/passport-config");
 
 const router = express.Router();
-const {ensureAuthenticated} = githubAuth;
+const {ensureAuthenticated, getUsername} = passportConfig;
 
 /*
  * Route: /api/users
@@ -17,7 +17,7 @@ const {ensureAuthenticated} = githubAuth;
  */
 router.get("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the user with the given username
@@ -61,7 +61,8 @@ router.get("/:id", async (req, res) => {
  */
 router.post("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
-	const {username, displayName} = req.user;
+	const username = getUsername(req);
+	const {displayName} = req.user;
 
 	try {
 		// Create a new user with the given username and display name
@@ -83,7 +84,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
  */
 router.delete("/", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find and delete the user with the given username

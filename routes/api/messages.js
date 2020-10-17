@@ -6,10 +6,10 @@ const express = require("express");
 const Message = require("../../models/Message");
 const Group = require("../../models/Group");
 const User = require("../../models/User");
-const githubAuth = require("../auth/github-auth");
+const passportConfig = require("../../config/passport-config");
 
 const router = express.Router();
-const {ensureAuthenticated} = githubAuth;
+const {ensureAuthenticated, getUsername} = passportConfig;
 
 /*
  * Route: /api/messages/:groupId
@@ -20,13 +20,13 @@ const {ensureAuthenticated} = githubAuth;
 router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId} = req.params;
-	const {username} = req.user;
+	const username = getUsername(req);
 	
 	try {
 		// Find the id of the user with the given username
 		const userId = await User.findOne({username})._id;
 		// Verify that a group exists with the given id that the current user is a member of
-		await Group.find({_id: groupId, members: userId});
+		await Group.findOne({_id: groupId, members: userId});
 		// Find all messages with the given group id sorted by date sent (ascending)
 		const messages = await Message.find({groupId}).sort({dateSent: 1});
 
@@ -47,15 +47,15 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, messageId} = req.params;
-	const {username} = req.user;
+	const username = getUsername(req);
 	
 	try {
 		// Find the id of the user with the given username
-		const userId = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
-		await Group.find({_id: groupId, members: userId});
+		await Group.findOne({_id: groupId, members: userId});
 		// Find the message with the given id in the group with the given id
-		const message = await Message.findOne({_id: groupId, messageId}).sort({dateSent: 1});
+		const message = await Message.find({_id: groupId, messageId}).sort({dateSent: 1});
 
 		// Send result
 		res.status(200).json({success: true, data: message});
@@ -75,15 +75,17 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId} = req.params;
 	const {content} = req.body;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the id of the user with the given username
-		const senderId = await User.findOne({username})._id;
+		const senderId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: senderId});
 		// Create a new message with the given content and sender id
-		const newMessage = await new Message({groupId, senderId, content, edited: false}).save();
+		let newMessage = new Message({groupId, senderId, content, edited: false});
+		// Save the new message to the database
+		newMessage = await newMessage.save();
 
 		// Send result
 		res.status(201).json({success: true, data: newMessage});
@@ -103,14 +105,14 @@ router.post("/:groupId", ensureAuthenticated, async (req, res) => {
 router.delete("/:groupId/:messageId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, messageId} = req.params;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the the user with the given username
-		const currentUser = await User.findOne({username})._id;
+		const userId = (await User.findOne({username}))._id;
 		// Verify that a group exists with the given id that the current user is a member of
-		const group = await Group.findOne({_id: groupId, members: currentUser._id});
-		if (group.adminId === currentUser._id) {
+		const group = await Group.findOne({_id: groupId, members: userId});
+		if (group.adminId === userId) {
 			// If current user is group admin, find and delete the message with the given id from the group with the given id
 			await Message.findOneAndDelete({_id: messageId, groupId: group._id});
 		} else {
@@ -137,7 +139,7 @@ router.patch("/:groupId/:messageId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const {groupId, messageId} = req.params;
 	const {content} = req.body;
-	const {username} = req.user;
+	const username = getUsername(req);
 
 	try {
 		// Find the id of the user with the given username
