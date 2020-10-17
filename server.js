@@ -24,6 +24,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const {ensureAuthenticated} = passportConfig;
+let sessionCookie;
 
 // Configure environment variables
 dotenv.config();
@@ -78,6 +79,8 @@ app.get("/", ensureAuthenticated, (req, res) => {
 	res.sendFile(path.join(__dirname, "public/home.html"));
 });
 app.get("/tasks", ensureAuthenticated, (req, res) => {
+	sessionCookie = req.session;
+	sessionCookie.name = req.user.displayName;
 	res.sendFile(path.join(__dirname, "public/tasks.html"));
 });
 app.get("/login", (req, res) => {
@@ -103,11 +106,13 @@ app.get("*", (req, res) => {
 // Web socket handling
 io.on("connection", socket => {
 	console.log("A user has connected");
-	socket.broadcast.emit("message", "A user has connected");
-	socket.emit("message", "Hello user!");
+
 	socket.on("disconnect", () => {
 		console.log("A user has disconnected");
-		io.emit("message", "A user has disconnected");
+	});
+
+	socket.on("chatMessage", (message) => {
+		io.emit("message", {content: message.content, sender: sessionCookie.name, date: message.date});
 	});
 });
 
