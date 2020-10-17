@@ -403,6 +403,12 @@ var delCol = function() {
   }
 }
 
+var inviteMember = async () => {
+	
+}
+
+
+
 const returnHome = async () => {
 	window.location = "/";
 };
@@ -441,6 +447,9 @@ window.onload = async function () {
 
 	const teButton = document.querySelector("#task_edit");
 	teButton.onclick = editTask;
+
+	const invButton = document.getElementById("invite_btn");
+	invButton.onclick = inviteMember;
 
 	loadMessages();
 };
