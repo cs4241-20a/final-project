@@ -44,8 +44,10 @@ let gameTimeout;
 
 
 const gameLogic = () => {
-	console.log('sending fireball');
-	io.emit('comet', {x: Math.floor(Math.random() * 500) + 50, gravityY: Math.floor(Math.random() * 9) + 2})
+	io.emit('comet', 
+		{x: Math.floor(Math.random() * 750) + 50, 
+		 velocityY: Math.floor(Math.random() * 100) + 50,
+		 velocityX: Math.floor(Math.random() * 50) - 25});
 	gameTimeout = setTimeout(gameLogic, Math.floor(Math.random() * 3000) + 2000);
 };
 
@@ -69,6 +71,7 @@ io.on('connection', (socket) =>  {
 				return true;
 			}
 			io.emit('startGame');
+			gameTimeout = setTimeout(gameLogic, 2000);
 		});
 	});
 
@@ -79,7 +82,6 @@ io.on('connection', (socket) =>  {
 				return true;
 			}
 			io.emit('endGame');
-			gameTimeout = setTimeout(gameLogic, 2000);
 		});
 	});
 
