@@ -70,7 +70,7 @@
             </div>
         </div>
 
-        <div class="container p-3" id="gamePage" style="display: none">
+        <div class="container p-3" id="gamePage"> <!--style="display: none"-->
             <div id="my-game" class="d-flex justify-content-center"></div>
 
             <div id="message-container"></div>
@@ -78,6 +78,22 @@
                 <input type="text" id="message-input" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"></textarea>
                 <button class="btn btn-success" type="submit" id="send-button">Send</button>
             </form>
+
+
+            <div class="container m-5" style="align-items:center">
+                <h2 class="card-title m-2" style="text-align:center">Leaderboard</h2>
+                <div class="card-body">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center">User</th>
+                                <th style="text-align:center">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="highScores"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

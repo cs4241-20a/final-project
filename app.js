@@ -6,8 +6,9 @@ const favicon = require('serve-favicon');
 const dotenve = require('dotenv').config();
 const compression = require("compression");
 const session = require("express-session");
-const MongoClient = require("mongodb").MongoClient;
+const {MongoClient, ObjectId} = require("mongodb");
 const LocalStrategy = require("passport-local").Strategy;
+const bodyParser = require('body-parser')
 
 const app = express();
 const server = require('http').Server(app);
@@ -23,6 +24,8 @@ const mongoSetup = {
 app.use(express.static("public"));
 
 app.use(compression());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.json());
 app.set("trust proxy", 1); // trust first proxy
 app.use(morgan("combined"));
@@ -89,7 +92,7 @@ passport.deserializeUser(function (user, done) {
 });
 
 passport.use(
-	new LocalStrategy(async (username, password, done) => {
+	new LocalStrategy(async (username, password, done) => { //highScore,
 		const client = new MongoClient(uri, mongoSetup);
 
 		await client.connect();
@@ -103,6 +106,7 @@ passport.use(
 					const user = {
 						username,
 						password: hash,
+						highScore: 0,
 						github: false,
 					};
 					await collection.insertMany([user]);
@@ -135,56 +139,39 @@ app.get("/logout", function (req, res) {
 	return res.send();
 });
 
-app.post("/submit", async (req, res) => {
-	if (!req.user) {
-		return res.json({ success: false, needsAuth: true });
-	}
+app.post("/setHighScore", async (req, res) => {
 
-	const object = req.body;
-	object.user = req.user._id;
-
-	if (req.headers["x-forwarded-for"]) {
-		object.ip = req.headers["x-forwarded-for"].split(",")[0];
-	} else {
-		object.ip = "N/A";
-	}
+	const object = req.body.user;
 
 	const client = new MongoClient(uri, mongoSetup);
 	await client.connect();
-	const collection = client.db("fp-database").collection("leaderboard");
+	const collection = client.db("fp-database").collection("users");
 
-	if (object.delete) {
-		await collection.deleteOne({ _id: new mongo.ObjectID(object.id) });
-	} else if (object.id) {
-		await collection.updateOne(
-			{ _id: new mongo.ObjectID(object.id) },
-			{ $set: { ...object, _id: new mongo.ObjectID(object.id) } }
-		);
-	} else {
-		await collection.insertMany([object]);
-	}
+	console.log(object);
 
-	const docs = await collection.find({ user: req.user._id }).toArray();
+	await collection.updateOne(
+		{ username: object.username },
+		{ $set: { highScore: object.highScore } }
+	);
+
+	const docs = await collection.find({ user: req._id }).toArray();
 	await client.close();
 	return res.json(docs);
 });
 
-app.get("/api/getData", async (req, res) => {
-	if (!req.user) {
-		return res.send("LOGIN REQUIRED");
-	}
+app.get("/api/getAllUsers", async (req, res) => {
 
 	const client = new MongoClient(uri, mongoSetup);
 
 	//alter collection objects
 	await client.connect();
-	const collection = client.db("fp-database").collection("leaderboard");
+	const collection = client.db("fp-database").collection("users");
 
-	const docs = await collection.find({ user: req.user._id }).toArray();
+	const docs = await collection.find({ user: req.sessionId }).toArray();
 
 	//alter collection objects
 	await client.close();
-	return res.json(docs);
+	res.send(JSON.stringify(docs));
 });
 
 app.get("/api/getUser", async (req, res) => {
