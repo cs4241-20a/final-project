@@ -219,3 +219,39 @@ div.saveTitle{
 .hue-picker {
   margin-bottom: 10px;
 }
+
+.carousel {
+  background-color: rgba(0, 0, 0, 1);
+  height: 550;
+  margin: 25px;
+  margin-left: 4%;
+  margin-right: 4%;
+}
+
+/* .carousel-caption {
+  color: black !important;
+} */
+
+.carousel .draw-view {
+  margin-top: -10px;
+  padding-top: 20px;
+  padding-bottom: 200px;
+}
+
+.carousel-caption {
+  position: relative;
+  left: auto;
+  right: auto;
+}
+
+.carousel-item img{
+  width: auto;
+  height: 100%;
+  margin: auto; 
+  display: block;
+  /* margin-top: 25px; */
+  }
+
+.the-title {
+  padding: 25px;
+}

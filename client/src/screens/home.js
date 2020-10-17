@@ -1,12 +1,32 @@
 import React from 'react'
-import {Container, Row, Col, Jumbotron} from 'react-bootstrap'
+import {Container, Row, Col, Jumbotron, Carousel} from 'react-bootstrap'
 import FadeIn from 'react-fade-in'
-import TypeIt from 'typeit'
 import {Redirect} from 'react-router-dom'
 import {GoogleLogin} from 'react-google-login'
 import {withRouter} from 'react-router-dom'
+import CanvasDraw from 'react-canvas-draw'
 
 import API from '../API'
+
+function saveImage() {
+	const images = []
+	var sourceCanvases = document.getElementsByTagName('canvas')
+	for (let i = 1; i < sourceCanvases.length; i+=4){
+		var destinationCanvas = document.createElement('canvas')
+		destinationCanvas.height = sourceCanvases[i].height
+		destinationCanvas.width = sourceCanvases[i].width
+
+		var destinationContext = destinationCanvas.getContext('2d')
+
+		destinationContext.drawImage(sourceCanvases[i], 0, 0)
+		destinationContext.globalCompositeOperation = 'destination-over'
+		destinationContext.fillStyle = 'black'
+		destinationContext.fillRect(0, 0, destinationCanvas.width, destinationCanvas.height)
+		images.push(destinationCanvas.toDataURL('image/png'))
+	}
+	console.log(images)
+	return images
+}
 
 const responseGoogle = (response) => {
 	console.error(response)
@@ -22,11 +42,6 @@ class Home extends React.Component {
 		super()
 		this.state = { title_anim: false, anim_state: 0, authenticated: API.authenticated }
 		this.quote_ref = React.createRef()
-		this.title_block = (<h1 id="title-string">Drive++ <em>with <strong>React</strong></em></h1>)
-		this.quote_block = (<blockquote className="blockquote text-muted" ref={this.quote_ref}>
-			<h3><i>{'Possibly the most attractive landing page I\'ve ever created.'}</i></h3>
-			<footer className="blockquote-footer">Bryce Corbitt</footer>
-		</blockquote>)
 		this.login_button = 
 		(<GoogleLogin
 			clientId="772498714969-serroucg6ud4ns0038efpc5gdsefgm8d.apps.googleusercontent.com"
@@ -36,6 +51,7 @@ class Home extends React.Component {
 			cookiePolicy={'single_host_origin'}
 		/>)
 		this.on_file_upload = this.on_file_upload.bind(this)
+		this.items = null
 	}
 
 	on_file_upload(user){
@@ -45,42 +61,44 @@ class Home extends React.Component {
 		setTimeout(() => {this.setState({redirect: true})}, 0)
 	}
 
-	title_animation(){
-		let ti = new TypeIt('#title-string', {
-			speed: 100,
-			startDelay: 500,
-			afterComplete: () => {
-				ti.reset()
-				this.setState({title_anim: true, anim_state: 1, redirect: false})
-			}
-		})
-		ti
-			.type('Glitch Drive', {delay: 400})
-			.move(-5, {speed: 125})
-			.delete(7, {speed: 125})
-			.move('END', {delay: 100})
-			.type('++', {delay:800})
-			.delete(1)
-			.type('=2', {delay:100})
-			.type('?', {delay:400})
-			.delete(3)
-			.type('+', {delay:300})
-			.type(' <em>with </em>')
-			.type('<em><strong>React</strong></em>', {speed: 200, delay: 500})
-			.go()
-	}
-
 	async componentDidMount(){
 		API.add_auth_listener(() => {
-			this.setState({authenticated: true})
+			this.setState({authenticated: true, car: 0})
+		})
+		API.get_carousel().then((item_datas) => {
+			this.items = item_datas.data.map((item, i) => {
+				return <CanvasDraw key={i} saveData={item.canvas_data} hideGrid={true} disabled={true} hideInterface={true} immediateLoading={true} />
+			})
+			this.setState({carousel_items: item_datas.data, car: 1},  () => {setTimeout(() => {const images = saveImage()
+				this.setState({car: 2, images: images})}, 100)})
 		})
 		let state = this.props.states[this.props.location.pathname]
 		if(state !== undefined){
 			await this.setState(state)
 		}
-		if(!this.state.title_anim) {
-			this.title_animation()
-		}
+		// if(!this.state.title_anim) {
+		// 	this.title_animation()
+		// }
+	}
+
+	get_carousel(){
+		if(this.state.images == null)
+			return null
+		console.log(this.state.carousel_items)
+		const items = this.state.carousel_items.map((item, i) => {
+			return (<Carousel.Item key={i}>
+				<img
+					className="carousel-img"
+					src={this.state.images[i]}
+					alt={item.title}
+				/>
+				<Carousel.Caption>
+					<h3><i>&quot;{item.title}&quot;</i></h3>
+					<p><i>by <strong>{item.artist}</strong></i></p>
+				</Carousel.Caption>
+			</Carousel.Item>)
+		})
+		return <Carousel>{items}</Carousel>
 	}
 
 	componentWillUnmount(){
@@ -90,9 +108,11 @@ class Home extends React.Component {
 	}
 
 	render() {
-		let title_txt = <h1 id="title-string"></h1>
 		let login_button = null
 		let redirect = null
+		let items = null
+		if (this.state.car != 2)
+			items = this.items
 		if(!this.state.authenticated){
 			login_button = this.login_button
 		}
@@ -101,33 +121,19 @@ class Home extends React.Component {
 			redirect = <Redirect from="/" to="/user"/>
 		}
 
-		let quote_block
-		switch(this.state.anim_state) {
-		case 0:
-			quote_block = <div className="hidden-but-still-take-up-space">{this.quote_block}</div>
-			break
-		case 1:
-			quote_block = <FadeIn transitionDuration={1000}>{this.quote_block}</FadeIn>
-			title_txt = this.title_block
-			break
-		default:
-			quote_block = this.quote_block
-			title_txt = this.title_block
-			break
-		}
+		const carousel = this.get_carousel()
 
 		return (
 			<div>
-				<Jumbotron fluid>
-					{title_txt}
-					{quote_block}
-				</Jumbotron>
+				<FadeIn><h1 className="text-center the-title">Drawsome</h1></FadeIn>
+				<FadeIn>{carousel}</FadeIn>
 				<Container fluid>
 					<Row className="justify-content-md-center">
 						<Col id="login-button" className="text-center">{login_button}</Col>
 					</Row>
 					{redirect}
 				</Container>
+				{items}
 			</div>
 		)
 	}
