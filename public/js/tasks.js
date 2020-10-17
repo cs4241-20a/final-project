@@ -128,6 +128,7 @@ var openTask = function(task, edit) {
     const input3 = document.querySelector( '#t_assignee')
     const input4 = document.querySelector( '#t_tags')
     const input5 = document.querySelector( '#t_desc')
+		console.log("Assignee? " + task.assignees)
     input.value = task.name
     input2.value = task.dateDue
     input3.value = task.assignees
@@ -259,7 +260,7 @@ var addTask = async (e) => {
 
 	const response = await fetch("/api/users/" + input3.value, {method: "GET"});
 	const user = await response.json()
-	var uName = user.data.displayName//getUser(input3.value)
+	var uName = user.data.displayName
 
   const json = { name: input.value, desc: input5.value, columnName: currentCol, assignees: input3.value, tags: input4.value, dateDue: input2.value }
   const body = JSON.stringify( json )
@@ -287,6 +288,10 @@ var editTask = async (e) => {
   const input4 = document.querySelector( '#t_tags')
   const input5 = document.querySelector( '#t_desc')
 
+	const response = await fetch("/api/users/" + input3.value, {method: "GET"});
+	const user = await response.json()
+	var uName = user.data.displayName
+
   const tEdit = ids[ids.length-1]
   tEdit.name = input.value
   tEdit.dateDue = input2.value
@@ -306,6 +311,7 @@ var editTask = async (e) => {
   const date = dateStr.substring(0, 10)
   console.log(date)
   edTask.dateDue = date
+	edTask.assignees = uName
   appendNewInfo(edTask, true)
   editmodal.style.display = "none";
 }
