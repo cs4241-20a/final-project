@@ -71,10 +71,15 @@ const addNewPlayer = (id) => {
 }
 
 io.on('connection', (socket) =>  {
-	addNewPlayer(socket.id);
+	console.log(socket.id);
 
-	socket.emit('currentPlayers', players);
-	socket.broadcast.emit('newPlayer', players[socket.id]);
+
+	socket.on('start', () => {
+		console.log('creating');
+		addNewPlayer(socket.id);
+		socket.emit('currentPlayers', players);
+		socket.broadcast.emit('newPlayer', players[socket.id]);
+	});
 
 	socket.on('ready', () => {
 		if (players[socket.id] === undefined)

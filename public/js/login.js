@@ -36,16 +36,16 @@ function loginProc (json) {
 
 };
 
-const socket = io('http://localhost:5000')
-const messageContainer = document.getElementById('message-container')
-const messageForm = document.getElementById('send-container')
-const messageInput = document.getElementById('message-input')
+const socket = io('http://localhost:5000');
+const messageContainer = document.getElementById('message-container');
+const messageForm = document.getElementById('send-container');
+const messageInput = document.getElementById('message-input');
 
-appendMessage('You joined')
+appendMessage('You joined');
 
 socket.on('chat-message', data => {
     appendMessage(data)
-})
+});
 
 messageForm.addEventListener('submit', e => {
     e.preventDefault()
@@ -68,11 +68,9 @@ function appendMessage(message) {
     }
 }
 
-const submit = function () {
+const submit = function (highScore) {
 
-    const json = {user:{_id: currUserID, username: currUsername, highScore: 50 + Math.floor(Math.random()*50)}};
-
-    console.log(json);
+    const json = {user:{_id: currUserID, username: currUsername, highScore}};
 
     fetch("/setHighScore", {
       method: "POST",
