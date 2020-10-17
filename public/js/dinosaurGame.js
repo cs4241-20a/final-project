@@ -23,16 +23,19 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		
 		this.socket = io(); // assign the io to socket
 
-		// // recieved when first connecting to the server so you get positions and colors of all current players
-		// this.socket.on('gamePlayers', players => {
-		// 	Object.keys(players).forEach(id => { // loops through those players
-		// 		if (players[id].playerId === self.socket.id) { // if that player is this client, run func
-		// 			this.addPlayers(self, players[id]);
-		// 		} else {
-		// 			this.addOtherPlayers(self, players[id]) //  all other players get this function
-		// 		}
-		// 	});
-		// });
+		this.socket.emit('inGame');
+		
+		// recieved when first connecting to the server so you get positions and colors of all current players
+		this.socket.on('gamePlayers', players => {
+			Object.keys(players).forEach(id => { // loops through those players
+				console.log(players)
+				if (players[id].playerId === self.socket.id) { // if that player is this client, run func
+					this.addPlayer(self, players[id]);
+				} else {
+					this.addOtherPlayers(self, players[id]) //  all other players get this function
+				}
+			});
+		});
 
 		// if someone disconnects
 		this.socket.on('disconnect', playerId => {
@@ -53,7 +56,11 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 			});	
 		});
 
+		// to display a comet when the server sends it (everyone gets the same)
 		this.socket.on('comet', data => this.sendComet(data));
+
+		// on a game over
+		this.socket.on('endGame', () => this.endGame());
 
 		// add the space background	
 		let background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'space');
@@ -85,7 +92,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	    	obstacle.destroy();
 	    });
 
-		this.addPlayer(self, {x: 40, y: 300, team: '#fff'}); // FOR TESTING
+		// this.addPlayer(self, {x: 40, y: 300, team: '#fff'}); // FOR TESTING
 		
 		// get keyboard vals
 		this.sendComet({x: 750, velocityX: -10, gravityY: 10}); // FOR TESTING
@@ -97,7 +104,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		let char = this.char;
 
 		// different controls to control our own character
-		if (char){
+		if (char !== undefined && char.body !== undefined){
 			if (this.keyboard.left.isDown) {
 			    char.setVelocityX(-160);
 			} else if (this.keyboard.right.isDown) {
@@ -126,7 +133,6 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 
 	// adding the comet to our game
 	sendComet(data){
-		console.log(data);
 		let comet = this.obstacles.create(data.x, 0, 'comet');
 		comet.setVelocityX(data.velocityX);
 	}
@@ -159,10 +165,27 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 
 		// collision with a star, also changes scores and removes the star
 		self.physics.add.overlap(self.char, this.stars, (player, star) => {
-			console.log('caught a star');
 			star.disableBody(true, true);
 			this.scoreText.setText('Score: ' + ++self.score);
 		}, null, self);
+
+		self.physics.add.overlap(self.char, self.obstacles, (player, obst) => {
+			self.scene.pause();
+			self.add.text(400, 300, 'Game Over', {fontSize: 50}).setOrigin(.5, .5);
+			this.socket.off('comet');
+			this.socket.emit('gameOver');
+		});
+	}
+
+	endGame() {
+		console.log('Ending the game');
+		this.socket.emit('disconnectGame');
+		this.socket.off('currentPlayers');
+		this.socket.off('disconnect');
+		this.socket.off('playerMoved');
+
+		this.scene.switch('Lobby');
+		this.scene.stop('DinoGame');
 	}
 
 }

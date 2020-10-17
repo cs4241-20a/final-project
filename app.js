@@ -40,6 +40,7 @@ app.use(
 ); 
 
 let players = {};
+let inGame = {};
 let gameTimeout;
 
 
@@ -52,7 +53,7 @@ const gameLogic = () => {
 };
 
 io.on('connection', (socket) =>  {
-	console.log('new user connected');
+	console.log(socket.id);
 	players[socket.id] = {
 		playerId: socket.id,
 		x: Math.floor(Math.random() * 150 + 50),
@@ -66,34 +67,56 @@ io.on('connection', (socket) =>  {
 
 	socket.on('ready', () => {
 		players[socket.id].ready = true;
+		console.log(players);
+		console.log(inGame);
 		Object.values(players).some((player) => {
 			if (!player.ready){
 				return true;
 			}
+			console.log('Starting game');
 			io.emit('startGame');
 			gameTimeout = setTimeout(gameLogic, 2000);
 		});
 	});
 
+
+	socket.on('inGame', () => {
+		inGame[socket.id] = true;
+		socket.emit('gamePlayers', players);
+	});
+
 	socket.on('gameOver', () => {
-		players[socket.id].ready = false;
-		Object.values(players).some((player) => {
-			if (player.ready){
+		inGame[socket.id] = false;
+		Object.values(inGame).some((player) => {
+			if (player){
 				return true;
 			}
+			clearTimeout(gameTimeout);
 			io.emit('endGame');
+			inGame = {};
 		});
 	});
 
 	socket.on('playerMovement', (movementData) => {
-		players[socket.id].x = movementData.x;
-		players[socket.id].y = movementData.y;
+		try {
+			players[socket.id].x = movementData.x;
+			players[socket.id].y = movementData.y;
 
-		socket.broadcast.emit('playerMoved', players[socket.id]);
+			socket.broadcast.emit('playerMoved', players[socket.id]);
+		} catch (e) {
+			console.error(e, socket.id);
+		}
 	})
 
-	socket.on('disconnect', () => {
-		delete players[socket.id];
+	socket.on('disconnectLobby', () => {
+		console.log('disconnect lobby', socket.id);
+		setTimeout(() => delete players[socket.id], 200);
+		io.emit('disconnect', socket.id);
+	})
+
+	socket.on('disconnectGame', () => {
+		console.log('disconnect game', socket.id);
+		setTimeout(() => delete players[socket.id], 200);
 		io.emit('disconnect', socket.id);
 	});
 });

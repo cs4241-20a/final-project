@@ -13,10 +13,12 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    this.load.image('star', 'assets/star.png');
 	    this.load.image('main', 'assets/main.png');
 	    // this.load.image('ready', 'assets/readyBut.png');
+	    console.log('preloading');
 	}
 
 	// called to add all the assets to the actual game
 	create () {
+		console.log('creating');
 		let self = this; // to store the current context
 
 		this.otherPlayers = this.physics.add.group(); // hold a group of game objects inside phaser
@@ -93,7 +95,10 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		this.physics.add.collider(this.stars, this.platforms);
 
 		// get keyboard vals
-		this.keyboard = this.input.keyboard.createCursorKeys();
+		this.keyboard = this.input.keyboard.addCapture('UP', 'LEFT', 'RIGHT');
+		this.keyUP = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+		this.keyLEFT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+		this.keyRIGHT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 	}
 
 	// called like every game tick
@@ -101,17 +106,17 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		let char = this.char;
 
 		// different controls to control our own character
-		if (char){
-			if (this.keyboard.left.isDown) {
+		if (char !== undefined && char.body !== undefined){
+			if (this.keyboard.checkDown(this.keyLEFT)) {
 			    char.setVelocityX(-160);
-			} else if (this.keyboard.right.isDown) {
+			} else if (this.keyboard.checkDown(this.keyRIGHT)) {
 			    char.setVelocityX(160);
 			} else {
 			    char.setVelocityX(0);
 			}
 
 			// jump
-			if (this.keyboard.up.isDown && char.body.touching.down){
+			if (this.keyboard.checkDown(this.keyUP) && char.body.touching.down){
 			    char.setVelocityY(-330);
 			}
 
@@ -165,12 +170,17 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	}
 
 	switchScenes() {
+		this.ready.setStyle({fontFamily: 'Roboto', color: '#fff', backgroundColor: '#C42953'});
+		this.ready.setText('Not Ready');
+
 		console.log('starting');
-		this.socket.off('currentPlayers');
-		this.socket.off('newPlayer');
-		this.socket.off('disconnect');
-		this.socket.off('playerMoved');
-		this.socket.off('startGame');
-		this.scene.start('DinoGame');
+		// this.socket.emit('disconnectLobby');
+		// this.socket.off('currentPlayers');
+		// this.socket.off('newPlayer');
+		// this.socket.off('disconnect');
+		// this.socket.off('playerMoved');
+		// this.socket.off('startGame');
+		// this.scene.stop('Lobby');
+		this.scene.switch('DinoGame');
 	}
 }
