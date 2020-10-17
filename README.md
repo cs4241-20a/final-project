@@ -1,56 +1,70 @@
-# cs4241-FinalProject
+# Gibber Graph
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+[https://gibber-graph.glitch.me/](https://gibber-graph.glitch.me/)
 
-## General description
+## Video
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+[https://www.youtube.com/watch?v=KxEknSOGMfk](https://www.youtube.com/watch?v=KxEknSOGMfk)
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+## Summary
 
-## Project ideation
+This project is an audio playground that utilizes Litegraph to abstract Gibberish objects into a node editor style. Users can save, load, and download their current session.
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+## Instructions
 
-## Logistics
+1. Sign in using GitHub OAuth
+2. (a) Add nodes by right clicking in the window to show a drop down
+   Gibberish nodes implemented:
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+- Instruments
+- Oscillators
+- Effects
+- Helper (ArrayNode used to simplify timings/values for gibberish objects)
 
-### Deliverables
+2. (b) Optionally there are demos to load in the drop down in the header
+3. Click play to start your playback
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+Note: you are only able to save one session at a time. If you hit save, it will overwrite your previously saved work. Download a copy if you wish to keep a current project for later use.
 
-There are no other scheduled checkpoints for your project. 
+## Added Nodes
 
-#### Turning in Your Outline / Project
+LiteGraph provides many nodes by default, some of which work with the new Gibberish nodes
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+The Gibberish nodes are under the following categories:
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
+- instrument
+- oscillator
+- effect
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
+## Technologies
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+- Svelte
+- LiteGraph (via CDN)
+- Gibberish (via CDN)
+- Bootstrap (via CDN)
+- Parcel
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
+## Challenges
 
-## FAQs
+Litegraph and Gibberish have very large build sizes and because of that, Parcel was taking up too many system resources on bundling. This caused our project to crash repeatedly, so we moved to using a CDN to deliver these packages. If we didn't have to do this we could've edited more of the source code and made more features like we had planned
 
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+Another problem we encountered was how to get the audio of Litegraph to work with Gibberish, as it does with the sounds that initally come with Litegraph. To remediate this problem we had to understand how the fundamentals of Gibberish audio works, and how to pair it with Litegraph.
+
+The way effects are handled in Gibberish are intuitive for performing live but in this project there is a slight workaround for how effects are used. Instead of the effect itself being passed into a sequencer like one would expect, we have to pass the instrument "through" the effect node, while also adding the instrument into the gibberish object internally. This isn't quite intuitive, but the abstraction means the user doesn't see this complication
+
+## Team Member Jobs
+
+- Robby: Worked on making Gibberish ❤️ LiteGraph
+
+- Alex: Worked on effects, base code for server, demos and a special surprise
+
+- Kyle: Worked on the MongoDB backend, fetching and responses for the client side to communicate with the backend, bootstrap styles on default landing page and logged in page.
+
+- Alexa: Worked on the backend, MongoDb to create a persistent database that will communicate with the client side via fetching and responses; created demos; worked on the login.html page, including animiations.
+
+## Some Notes
+
+- We were able to integrate the SillyClient node into our project, check out the "Networking (Beta)" demo
+  - The value of the gain is sent over the network in "Send", and received in the node "Receive"
+  - Both values are graphed (you can see the delay, and any differences due to lag)
+- Gibberish seems to look for a left-click before loading, so sometimes you have to open the right-click menu twice in order for the nodes to be added
