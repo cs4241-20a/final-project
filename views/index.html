@@ -1,0 +1,54 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script src="/login.js"></script>
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/index.css">
+    <link href="https://unpkg.com/cirrus-ui" type="text/css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+      crossorigin="anonymous"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
+      rel="stylesheet"
+    />
+
+    <!-- Minified Cirrus CSS -->
+    <link rel="stylesheet" href="../css/cirrus.min.css" />
+    
+  </head>
+  <body>
+    <header>
+      <img src="https://www.flaticon.com/svg/static/icons/svg/135/135763.svg" width="60">
+      <h1>Groceryify</h1>
+    </header>
+      <div class="intro">
+        <h4 id="state"></h4>
+        <p>
+          Welcome to the Groceryify!<br />
+          After logging in, you can make a grocery list with a group of friends or family.<br />
+          Once someone buys the grocery item, it can be double-clicked to be moved to the fridge or pantry.<br />
+          The app can also suggest when to repurchase items based on how long they have been in your fridge or pantry.<br /><br>
+          Enjoy the convenience of always knowing what food you have at home in an effort to avoid food waste!<br /><br />
+          <div id ="start">
+            <button onclick="window.location.href='https://final-project-007.glitch.me/grocery';" id="login">Let's go!</button>
+        </div>
+        </p>
+    </div>
+  </body>
+</html>

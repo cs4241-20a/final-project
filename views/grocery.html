@@ -1,0 +1,147 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://unpkg.com/cirrus-ui" type="text/css" rel="stylesheet" />
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+      crossorigin="anonymous"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
+      rel="stylesheet"
+    />
+
+    <!-- Minified Cirrus CSS -->
+    <link rel="stylesheet" href="../css/cirrus.min.css" />
+
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/script.js" defer></script>
+  </head>
+  <body>
+    <div id="chat">
+    <button onclick="window.location.href='https://final-project-007.glitch.me/chat.html';">
+      Chat
+    </button>
+      </div>
+    <div class="base">
+      <header>
+      <img src="https://www.flaticon.com/svg/static/icons/svg/135/135763.svg" width="60">
+      <h1>Groceryify</h1>
+        <img src="https://www.flaticon.com/svg/static/icons/svg/135/135763.svg" width="60">
+      </header>
+      <p>
+        Log in to your group using your group name. For example: "WPI students" If you would like to see preexisting groups, log in to team007. To create a new group, enter your group name and click on the "Create Group" button. To log in to an existing group, enter your group name and click on the "Find Group" button.
+      </p>
+      <p>
+        NOTE: If you try to log in to an account which has not been created yet, your data will not be saved.<br>
+        NOTE: Refresh the page first if you have to find another group
+      </p>
+      <form id="groupForm">
+        <label for="groupname"><strong>Group Name:</strong></label>
+        <input type="text" style="width: 200px;" id="groupname"/>
+        <button id="findGroup">Find Group</button>
+        
+        <button id="createGroup">Create Group</button>
+      </form>
+      <div id="grocery">
+      <form id="groceryForm">
+        <h6>Add an item to your grocery list below:</h6> <br><br>
+        <p>
+        <ol>
+          <li> Add details to your form about the grocery items you would like to buy. </li>
+          <li> Click on the "Submit" button after filling out the form.</li>
+          <li> You will notice that your grocery item gets added to your cart.</li>
+          <li>If you wish to reduce the quantity of a specific grocery item, simply click on the minus (-) button next to it.</li>
+          <li> If you wish to delete a specific grocery item, click on the delete or trash button next to it. </li>
+          <li>Once you have purchased the item, double click on that item in your cart and it will automatically get transferred to either the Fridge or the Pantry. </li>
+          <li>We will notify you when 1, 2, or, 3+ weeks have passed by changing the color of your grocery item to <ul>
+            <li>Yellow: 1 week</li>
+            <li>Orange: 2 weeks</li>
+            <li>Red: 3+ weeks</li>
+            </ul></li>
+          <li>Since this is a group grocery list, you can chat with your groupmates by clicking on the "Chat" button located on the top right corner of the page.</li>
+        </ol>
+         </p>
+        <br>
+        <br>
+        <ol>
+          <li>
+      Input the item that you would like to add to your grocery list:
+        </li>
+        <label for="item"><strong>Item:</strong></label>
+        <input style="width: 200px;" type="text" value="(e.x sugar)" id="item" />
+        <br>
+        <li>
+      Choose the type of grocery item. If you would keep it in the fridge, choose "Fridge", otherwise, choose "Pantry".
+        </li>
+       
+        <label for="type"><strong>Type:</strong></label>
+        <label for="fridge">Fridge</label>
+        <input type="radio" id="fridge" name="type" value="Fridge" checked="checked"/>
+        <label for="pantry">Pantry</label>
+        <input type="radio" id="pantry" name="type" value="Pantry" />  <!-- <br> -->
+        <br>
+         <li>
+      Input the quantity of the grocery item you would like to buy.
+        </li>
+        <label for="quantity"><strong>Quantity:</strong></label>
+        <input style="width: 100px;" type="Number" id="quantity" value="1"/>
+        <br>
+        <br>
+          <button id="submit">submit</button>
+        </ol>
+      </form>
+      </div>
+      <div class="board">
+        <div class="board-lists">
+          <div id="cartdiv" class="board-list">
+            <div class="list-title">Cart</div>
+            <table id="cartTable">
+              <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+              </tr>
+              <tbody id="cartBody" class="table-cards"></tbody>
+            </table>
+          </div>
+          <div id="fridgediv" class="board-list">
+            <div class="list-title">Fridge</div>
+              <table id="fridgeTable">
+                <tr>
+                  <th>Item</th>
+                  <th>Quantity</th>
+                </tr>
+                <tbody id="fridgeBody" class="table-cards"></tbody>
+              </table>
+          </div>
+          <div id="pantrydiv" class="board-list">
+            <div class="list-title">Pantry</div>
+            <table id="pantryTable">
+                <tr>
+                  <th>Item</th>
+                  <th>Quantity</th>
+                </tr>
+                <tbody id="pantryBody" class="table-cards"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>
