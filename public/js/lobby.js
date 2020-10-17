@@ -22,7 +22,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		let self = this; // to store the current context
 
 		this.otherPlayers = this.physics.add.group(); // hold a group of game objects inside phaser
-		
+
 		this.socket = io(); // assign the io to socket
 
 		// recieved when first connecting to the server so you get positions and colors of all current players
@@ -92,13 +92,16 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    this.stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.6, 1)));
 
 	    // make stars collide with platforms
-		this.physics.add.collider(this.stars, this.platforms);
+		  this.physics.add.collider(this.stars, this.platforms);
 
 		// get keyboard vals
-		this.keyboard = this.input.keyboard.addCapture('UP', 'LEFT', 'RIGHT');
-		this.keyUP = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-		this.keyLEFT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-		this.keyRIGHT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
+		// this.keyboard = this.input.keyboard.createCursorKeys();
+		  this.keyboard = this.input.keyboard.addCapture('UP', 'LEFT', 'RIGHT');
+      this.keyUP = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+      this.keyLEFT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+      this.keyRIGHT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
 	}
 
 	// called like every game tick
@@ -106,6 +109,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		let char = this.char;
 
 		// different controls to control our own character
+
 		if (char !== undefined && char.body !== undefined){
 			if (this.keyboard.checkDown(this.keyLEFT)) {
 			    char.setVelocityX(-160);
@@ -132,6 +136,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 			};
 		}
 	}
+
 
 	// adding other players into our game
 	addOtherPlayers(self, playerInfo) {
