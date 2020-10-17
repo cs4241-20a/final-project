@@ -14,7 +14,7 @@ export class Chat extends Component {
         return (
             <div>
                 <Button variant="dark" onClick={() => {
-                    this.state.socket.emit("chat", "PEE PEE ")
+                    this.state.socket.emit("chat", "Message Sent")
                 }}>Test</Button>
             </div>
         )
