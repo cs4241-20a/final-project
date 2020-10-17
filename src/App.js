@@ -50,7 +50,7 @@ function App() {
             <BattleShip />
           </Route>
           <Route path="/">
-            <Home />
+            <Home socket={socket}/>
           </Route>
         </Switch>
       </Router>
