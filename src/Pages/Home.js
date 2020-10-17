@@ -8,7 +8,7 @@ export class Home extends Component {
       <div>
         <h1>Home</h1>
         <p>
-          <button>Log In</button> | <button>Register</button>
+          <button type="submit" action="/logout" method="POST">Log Out</button>
         </p>
 
         <div class="room">
