@@ -8,9 +8,13 @@ export class BattleShip extends Component {
         return (
             <div>
     <h1>BattleShip</h1>
-    <p>chat system here!</p>
         <div>
+        <p><strong>Your Fleet</strong></p>
           <PlayerGrid />
+          <br />
+          <br />
+          <br />
+          <p><strong>Enemy Fleet</strong></p>
           <EnermyGrid />
         </div>
             
