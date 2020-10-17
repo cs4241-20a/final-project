@@ -106,7 +106,7 @@ Our team faced many challenges in our implementation. These challenges include:
 
 -Due to busy schedules, we were not able to fully implement the spoonacular API which would display recipes given the ingredients that are in the user's fridge and pantry. 
 
-##Design Tech Achievements
+## Design Tech Achievements
 
 - We used an external authenication API for our login called Auth0 which allows users to create their own accounts and sign in through Google.
 
