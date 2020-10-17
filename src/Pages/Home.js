@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./css/Home.css";
-import Button from "react-bootstrap/Button";
 
 export class Home extends Component {
   render() {
@@ -13,7 +12,7 @@ export class Home extends Component {
         <p>
           <button>Friend List</button>
         </p>
-        <div class="room">
+        <div className="room">
           <h2>Play BattleShip</h2>
           <button id="hostbtn">Create a Lobby</button>
           <button id="joinrandbtn">Join Random Lobby</button>
@@ -22,7 +21,7 @@ export class Home extends Component {
             <label>Lobby Join Code:</label>
             <input
               type="text"
-              maxlength="4"
+              maxLength="4"
               id="joincode"
               name="joincode"
               pattern="\d{4}"

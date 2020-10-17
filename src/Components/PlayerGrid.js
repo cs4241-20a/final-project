@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 
-  class PlayerGrid extends React.Component {
-  
+  class PlayerGrid extends Component {
     render(){
-      var i , j;
+      let letters = ["A","B","C","D","E","F","G","H","I","J"]
+      let i , j;
       let grid = []
-      for(i = 1; i <= 10; i ++){
+      for(i = 0; i < 10; i ++){
         for(j = 1; j <=10; j++)
         {
-          var id = 'P1[' + i + ',' + j + ']';
-          grid.push(<button className="item" id={id}></button>);
+          let id = 'P1[' + letters[i] + ',' + j + ']';
+          grid.push(<button className="item" key={id} id={id} onClick={(e) => {
+            console.log("Sicko mode")
+            console.log(e.target.id)
+          }}></button>);
         }
       }
-      return (<div className="container">{grid}</div>)
+      return (<div className="board">{grid}</div>)
     }
-    
 }
 
 export default PlayerGrid;

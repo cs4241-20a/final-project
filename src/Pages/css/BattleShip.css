@@ -10,7 +10,7 @@ p{
   text-align: center;
 }
 
-.container {
+.board {
   display: grid;
   border : 2px solid black;
   width: 500px;
