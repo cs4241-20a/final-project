@@ -34,8 +34,9 @@ function loginProc (json) {
 	    game = new Phaser.Game(config);
     }
 
+    submit();
 
-}({'_id': 'mom', 'username': 'mom'});
+};
 
 const socket = io('http://localhost:5000')
 const messageContainer = document.getElementById('message-container')
@@ -68,23 +69,6 @@ function appendMessage(message) {
         messageContainer.removeChild(messageContainer.childNodes[0])
     }
 }
-
-const submit = function (e) {
-
-    e.preventDefault();
-
-    const task = document.querySelector("#task"),
-      priority = document.querySelector("#priority"),
-      json = { name: name.value, task: task.value, priority: priority.value },
-      body = JSON.stringify(json);
-
-    elementDisable();
-    fetch("/submit", {
-    submit();
-
-
-
-};
 
 const submit = function () {
 
