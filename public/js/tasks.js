@@ -513,6 +513,12 @@ var delCol = function() {
   }
 }
 
+var inviteMember = async () => {
+	
+}
+
+
+
 const returnHome = async () => {
 	window.location = "/";
 };
@@ -552,6 +558,7 @@ window.onload = async function () {
 	const teButton = document.querySelector("#task_edit");
 	teButton.onclick = editTask;
 
+
 	const inviteButton = document.getElementById("invite_btn")
 	inviteButton.onclick = invite
 
@@ -560,6 +567,6 @@ window.onload = async function () {
 
 	const noInvite = document.getElementById("noinv")
 	noInvite.onclick = closeInvite
-
+  
 	loadMessages();
 }

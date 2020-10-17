@@ -40,7 +40,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
  * Auth: Required
  * Desc: Gets all groups the current user has been invited to. Verified by session.
  */
-router.get("/", ensureAuthenticated, async (req, res) => {
+router.get("/invites", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
 	const username = getUsername(req);
 
@@ -55,6 +55,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 	} catch (err) {
 		// Report errors
 		res.status(500).json({success: false, error: err});
+		console.log(err)
 	}
 });
 
@@ -169,6 +170,7 @@ router.patch("/:id", ensureAuthenticated, async (req, res) => {
 		console.log(err)
 		// Report errors
 		res.status(500).json({success: false, error: err});
+		console.log(err)
 	}
 });
 
