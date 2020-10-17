@@ -8,6 +8,7 @@ Project Overview:
 Design Achievements: 
   - Used Bootstrap Vue to design our pages
   - Used a custom cursor
+  - Added gif to background of site
 
 Technical Achievements:
   - Used Vue
