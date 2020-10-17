@@ -35,6 +35,30 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 });
 
 /*
+ * Route: /api/groups/invites
+ * Method: GET
+ * Auth: Required
+ * Desc: Gets all groups the current user has been invited to. Verified by session.
+ */
+router.get("/", ensureAuthenticated, async (req, res) => {
+	// Gather request parameters
+	const username = getUsername(req);
+
+	try {
+		// Find the id of the user with the given username
+		const userId = (await User.findOne({username}))._id;
+		// Find the groups the user with the given id has been invited to
+		const groups = await Group.find({invitees: userId});
+
+		// Send result
+		res.status(200).json({success: true, data: groups});
+	} catch (err) {
+		// Report errors
+		res.status(500).json({success: false, error: err});
+	}
+});
+
+/*
  * Route: /api/groups/:id
  * Method: GET
  * Auth: Required
