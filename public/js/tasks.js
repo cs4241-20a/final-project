@@ -4,11 +4,11 @@ const socket = io();
 
 socket.on("message", message => outputMessage(message));
 
-const chatMessages = document.getElementById("chat_messages");
-const sendChatButton = document.getElementById("send-chat-btn");
+const chatFeed = document.getElementById("chat_feed");
+const submitChatButton = document.getElementById("submit_chat");
 const chatInput = document.getElementById("chat_input");
 
-sendChatButton.addEventListener("click", async evt => {
+submitChatButton.addEventListener("click", async evt => {
 	evt.preventDefault();
 
 	const content = chatInput.value;
@@ -53,8 +53,8 @@ const outputMessage = (message) => {
 	div.classList.add("message");
 	let {content, sender, date} = message;
 	div.innerHTML = `<p class="text">${content}</p><p class="meta">${sender} <span>${date}</span></p>`;
-	chatMessages.appendChild(div);
-	chatMessages.scrollTop = chatMessages.scrollHeight;
+	chatFeed.appendChild(div);
+	chatFeed.scrollTop = chatFeed.scrollHeight;
 };
 
 // Get the modal
