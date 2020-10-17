@@ -32,6 +32,25 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 });
 
 /*
+ * Route: /api/users
+ * Method: GET
+ * Auth: Not required
+ * Desc: Gets all users.
+ */
+router.get("/all", async (req, res) => {
+	try {
+		// Finds all registered users
+		const users = await User.find({});
+
+		// Send result
+		res.status(200).json({success: true, data: users});
+	} catch (err) {
+		// Report errors
+		res.status(500).json({success: false, error: err});
+	}
+});
+
+/*
  * Route: /api/users/:id
  * Method: GET
  * Auth: Not required
