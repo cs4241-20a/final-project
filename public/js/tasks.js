@@ -12,7 +12,7 @@ submitChatButton.addEventListener("click", async evt => {
 	evt.preventDefault();
 
 	const content = chatInput.value;
-	const sender = await getCurrentUser().displayName;
+	const sender = (await getCurrentUser()).displayName;
 	const date = moment(Date.now()).format("MM/DD/YY - hh:mm a");
 	const message = {content, sender, date};
 	socket.emit("chatMessage", message);
