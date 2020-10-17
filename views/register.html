@@ -1,0 +1,279 @@
+<html>
+
+  <style>
+    /* Sakura.css v1.3.1
+ * ================
+ * Minimal css theme.
+ * Project: https://github.com/oxalorg/sakura/
+ */
+/* Body */
+      
+      *{
+        padding:0;
+        margin:0;
+      }
+html {
+  font-size: 62.5%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; 
+  background-color:rgb(255,227,232);
+      }
+
+body {
+  
+  font-size: 1.8rem;
+  line-height: 1.618;
+  max-width: 100%;
+  margin: auto;
+  color: #4a4a4a;
+  background-color:rgb(255,227,232);
+  padding: 13px; }
+
+@media (max-width: 684px) {
+  body {
+    font-size: 1.53rem; } }
+
+@media (max-width: 382px) {
+  body {
+    font-size: 1.35rem; } }
+
+      #register-btn{
+        background-color:#DF7D82;
+        letter-spacing:2px;
+        
+      }
+      
+      body::after{
+        opacity:0.5;
+      }
+h1, h2, h3, h4, h5, h6 {
+  max-width: 38em;
+  color:brown;
+  line-height: 1.1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-weight: 700;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word; }
+
+h1 {
+  font-size: 2.35em; 
+  text-align:center;}
+
+h2 {
+  font-size: 2.00em; 
+       text-align:center;}
+
+h3 {
+  font-size: 1.75em; }
+
+h4 {
+  font-size: 1.5em;
+       text-align:center;}
+
+h5 {
+  font-size: 1.25em; 
+       text-align:center;}
+
+h6 {
+  font-size: 1em;
+       text-align:center;}
+
+p {
+  margin-top: 0px;
+  margin-bottom: 2.5rem; }
+
+small, sub, sup {
+  font-size: 75%; }
+
+hr {
+  border-color: #1d7484; }
+
+a {
+  max-width: 38em;
+  text-decoration: none;
+  color: #1d7484; }
+  a:hover {
+    color: #982c61;
+    border-bottom: 2px solid #4a4a4a; }
+  a:visited {
+    color: #144f5a; }
+
+ul {
+  padding-left: 1.4em;
+  margin-top: 0px;
+  margin-bottom: 2.5rem; }
+
+li {
+  margin-bottom: 0.4em; }
+
+blockquote {
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 1em;
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+  padding-right: 0.8em;
+  border-left: 5px solid #1d7484;
+  margin-bottom: 2.5rem;
+  background-color: #f1f1f1; }
+
+blockquote p {
+  margin-bottom: 0; }
+
+img {
+  height: auto;
+  max-width: 100%;
+  margin-top: 0px;
+  margin-bottom: 2.5rem; }
+
+/* Pre and Code */
+pre {
+  background-color: #f1f1f1;
+  display: block;
+  padding: 1em;
+  overflow-x: auto;
+  margin-top: 0px;
+  margin-bottom: 2.5rem; }
+
+code {
+  font-size: 0.9em;
+  padding: 0 0.5em;
+  background-color: #f1f1f1;
+  white-space: pre-wrap; }
+
+pre > code {
+  padding: 0;
+  background-color: transparent;
+  white-space: pre; }
+
+/* Tables */
+table {
+  text-align: justify;
+  width: 100%;
+  border-collapse: collapse; }
+
+td, th {
+  max-width: 38em;
+  padding: 0.5em;
+  border-bottom: 1px solid #f1f1f1; }
+
+/* Buttons, forms and input */
+input, textarea {
+  border: 1px solid #4a4a4a; }
+  input:focus, textarea:focus {
+    border: 1px solid #1d7484; }
+
+textarea {
+ 
+      max-width: 38em;}
+
+.button, button, input[type="submit"], input[type="reset"], input[type="button"] {
+  width:100%;
+  height: 40px;
+  display: inline-block;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: #1d7484;
+  color: #f9f9f9;
+  border-radius: 1px;
+  border: 1px solid #1d7484;
+  cursor: pointer;
+  box-sizing: border-box; }
+  .button[disabled], button[disabled], input[type="submit"][disabled], input[type="reset"][disabled], input[type="button"][disabled] {
+    cursor: default;
+    opacity: .5; }
+  .button:focus:enabled, .button:hover:enabled, button:focus:enabled, button:hover:enabled, input[type="submit"]:focus:enabled, input[type="submit"]:hover:enabled, input[type="reset"]:focus:enabled, input[type="reset"]:hover:enabled, input[type="button"]:focus:enabled, input[type="button"]:hover:enabled {
+    background-color: #982c61;
+    border-color: #982c61;
+    color: #f9f9f9;
+    outline: 0; }
+
+textarea, select, input {
+  max-width: 38em;
+  color: #4a4a4a;
+  padding: 6px 10px;
+  /* The 6px vertically centers text on FF, ignored by Webkit */
+  margin-bottom: 10px;
+  background-color: #f1f1f1;
+  border: 1px solid #f1f1f1;
+  border-radius: 6px;
+  box-shadow: none;
+  box-sizing: border-box; }
+  textarea:focus, select:focus, input:focus {
+    border: 1px solid #1d7484;
+    outline: 0; }
+
+input[type="checkbox"]:focus {
+  outline: 1px dotted #1d7484; }
+
+label, legend, fieldset {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+.bg_color{
+  background-color:rgb(35, 7, 77);
+}
+
+.content{
+  max-width: 38em;
+  background_color:rgb(35, 7, 77);
+  color: black;
+}
+    
+    </style>
+      <link rel="stylesheet" href="https://unpkg.com/wingcss"/>
+
+
+  
+<body style="background-image:url('https://cdn.glitch.com/dcda3f59-5482-4edd-a65f-f571dc77196f%2Fheader-image-sakura.jpg?v=1602871599195'); " >
+<h1 style="letter-spacing:2px;margin-top:200px;">Register</h1>
+<form onsubmit="doRegister(event)"  style="text-align:center">
+  <div  style="text-align:center">
+    <label for="name" style="color:brown; margin-top:30px;">Username</label>
+    <input type="text" style="max-width: 38em; text-align:center;" id="username" required>
+  </div>
+  <div  style="text-align:center">
+    <label for="password" style="color:brown;">Password</label>
+    <input type="password"  style="max-width: 38em; text-align:center;" id="password" required>
+  </div>
+  <button type="submit" id="register-btn" style="max-width: 38em;">Register</button>
+</form>
+<a href="/login">Login</a>
+
+<script>
+  function doRegister(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    fetch('/api/reg', {
+      method:'POST',
+      body: JSON.stringify({
+        username: username,
+        password: password
+      }),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(result => {
+        if (result.code === 201) {
+          window.location.href = "/";
+        } else {
+          // alert(result.msg);
+          document.getElementById("username").value = '';
+          document.getElementById("password").value = '';
+        }
+    });
+    
+  }
+</script>
+
+
+</body>
+    
+</html>

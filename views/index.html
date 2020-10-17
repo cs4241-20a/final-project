@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/purecss@2.0.3/build/pure-min.css"
+      integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      @tailwind base;
+
+      @tailwind components;
+
+      @tailwind utilities;
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        height: 900px;
+        background-color: #FFE3EB;
+      }
+
+      .menu-btn {
+        width: 100%;
+        min-height: 60px;
+      }
+
+      .menu-btn2 {
+        width: 100%;
+        background-color: white;
+        max-width: 300px;
+      }
+
+      .menu-btn3 {
+        margin-top: 30px;
+        margin-right: 08px;
+        min-width: 50px;
+        height: 40px;
+      }
+
+      .menu-btn3:hover {
+        background-color: #b1ffa8;
+        color: black;
+      }
+
+      #play {
+        background-color: #b1ffa8;
+      }
+
+      #play:hover {
+        background-color: white;
+      }
+      header {
+        /* 	background-image: url('https://cdn.glitch.com/dcda3f59-5482-4edd-a65f-f571dc77196f%2Fheader-image-sakura.jpg?v=1602871599195'); */
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-attachment: fixed;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0 0 85% 85% / 30%;
+      }
+      header .overlay {
+        /*   background-image: url('https://cdn.glitch.com/dcda3f59-5482-4edd-a65f-f571dc77196f%2Fheader-image-sakura.jpg?v=1602871599195'); */
+
+        background-size: cover;
+        background-attachment: fixed;
+        width: 100%;
+        height: 100%;
+        padding: 100px;
+        color: #FFF;
+        text-shadow: 1px 1px 1px #333;
+        background-image: linear-gradient(
+          135deg,
+          #9f05ff69 10%,
+          #fd5e086b 100%
+        );
+      }
+
+      h1 {
+        font-family: "Dancing Script", cursive;
+        font-size: 80px;
+        margin-bottom: 30px;
+      }
+
+      h3,
+      p {
+        font-family: "Open Sans", sans-serif;
+        margin-bottom: 30px;
+      }
+
+      button {
+        border: none;
+        outline: none;
+        padding: 10px 20px;
+
+        border-radius: 30px;
+        color: #333;
+        background: #FFC5C9;
+        margin-bottom: 20px;
+      }
+      button:hover {
+        cursor: pointer;
+        color: #DF7D82;
+        box-shadow: 0 3px 10px 0 #FFC0CB;
+      }
+      /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+      .flip-card {
+        float: left;
+        width: 200px;
+        height: 160px;
+        background-color: transparent;
+        margin: 5px;
+        border: 1px solid white;
+        border-radius: 5px;
+        perspective: 1000px; /* Remove this if you don't want the 3D effect */
+      }
+
+      /* This container is needed to position the front and back side */
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+      }
+
+      /* Do an horizontal flip when you move the mouse over the flip box container */
+      .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+
+      /* Position the front and back side */
+      .flip-card-front,
+      .flip-card-back {
+        font-family: "Open Sans", "Lucida Grande", Tahoma, Verdana, Arial,
+          sans-serif;
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden; /* Safari */
+        backface-visibility: hidden;
+      }
+
+      /* Style the front side (fallback if image is missing) */
+      .flip-card-front {
+        background-color: pink;
+        color: black;
+        text-align: center;
+        font-size: 1em;
+        word-wrap: break-word;
+        padding-top: 55px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      /* Style the back side */
+      .flip-card-back {
+        padding-top: 40px;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: rgb(193, 150, 292);
+        color: white;
+        text-align: center;
+        font-size: 0.8em;
+        transform: rotateY(180deg);
+        word-wrap: break-word;
+      }
+
+      .pop {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        color: black;
+      }
+
+      /* Modal Content/Box */
+      .pop-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .signature-pad::before {
+        left: 20px;
+        -webkit-transform: skew(-3deg) rotate(-3deg);
+        transform: skew(-3deg) rotate(-3deg);
+      }
+
+      .signature-pad::after {
+        right: 20px;
+        -webkit-transform: skew(3deg) rotate(3deg);
+        transform: skew(3deg) rotate(3deg);
+      }
+
+      .signature-pad--body {
+        position: relative;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        border: 1px solid #f4f4f4;
+      }
+
+      .signature-pad--footer {
+        color: #C3C3C3;
+        text-align: center;
+        font-size: 1.2em;
+        margin-top: 8px;
+      }
+
+      .signature-pad--actions {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        margin-top: 8px;
+      }
+      .hide {
+        visibility: hidden;
+      }
+    </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <div
+      style="background-image:url('https://cdn.glitch.com/dcda3f59-5482-4edd-a65f-f571dc77196f%2Fheader-image-sakura.jpg?v=1602871599195'); background-size: cover;"
+    >
+      <div class="overlay" style="text-align:center">
+        <h1 style="padding-top:90px; color:#8B291A;">
+          Hi. Welcome to Kocha!
+        </h1>
+        <h3 style="padding-top:0px;; color:#8B291A;">
+          Having a cup of Kocha, have it memorized!
+        </h3>
+        <p style="padding-top:00px; padding-bottom:65px; color:black  ;">
+          Kōcha (紅茶, こうちゃ), meaning black tea in English, is a project to promote the process of memory by utilizing the forgetting curve to plan the schedule for remembering. 
+
+Inspired by After School Tea Time in _K-On!_, great works should be able to be done in a relaxed and happy way, and memory is no exception. Memory plays an significant role in our learning process and is a critical element for us. The mission of Kocha is to enable people to remember anything they want more efficiently in spare time.
+
+        </p>
+        <br />
+      </div>
+    </div>
+  </head>
+  <script>
+    function doOnloadCheck(e) {
+      fetch("/api/fetch", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (result.code === 200) {
+            todayqueue = result.data;
+            for (let i = 0; i < 9; i++) {
+              let front = document.getElementById("flipcard" + i);
+              let back = document.getElementById("flipcardback" + i);
+              let _id = document.getElementById("_id" + i);
+
+              //let vocab = result.data[i];
+              if (todayqueue.length > 0) {
+                let vocab = todayqueue.shift();
+                front.innerHTML = vocab.title;
+                back.innerHTML = vocab.content;
+                _id.innerHTML = vocab._id;
+              } else {
+                front.innerHTML = "";
+                back.innerHTML = "";
+              }
+              document
+                .getElementById("fp" + i)
+                .addEventListener("click", event => {
+                  let thisFront = document.getElementById("flipcard" + i);
+                  let thisBack = document.getElementById("flipcardback" + i);
+                  let this_id = document.getElementById("_id" + i);
+                  fetch("/api/mark", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      data: [
+                        {
+                          _id: this_id.innerHTML,
+                          isRemembered: 1
+                        }
+                      ]
+                    }),
+                    headers: { "Content-Type": "application/json" }
+                  })
+                    .then(response => response.json())
+                    .then(result => {
+                      if (result.code === 200) {
+                        if (todayqueue.length > 0) {
+                          let replace = todayqueue.shift();
+                          thisFront.innerHTML = replace.title;
+                          thisBack.innerHTML = replace.content;
+                          document
+                            .getElementById("_id" + i)
+                            .innerHTML(replace._id);
+                        } else {
+                          thisFront.innerHTML = "";
+                          thisBack.innerHTML = "";
+                          this_id.innerHTML = "";
+                        }
+                      } else {
+                        alert(result.msg);
+                      }
+                    });
+                });
+            }
+            if (todayqueue.length <= 0) {
+            }
+          } else {
+            alert(result.msg);
+            console.log("fail");
+          }
+        });
+    }
+    window.onload = doOnloadCheck(event);
+  </script>
+
+  <div class="pure-g" style="text-align:center;">
+    <div
+      class="pure-u-1-4"
+      style="background-color:#FFE3EB; border-radius:30px; border:5px solid white; margin-left:15px; padding:  20px; "
+    >
+      <h2
+        style="text-align:center;background-color:rgba(215,100,104,0.8)!important;color:white; min-height:80px; border-radius:15px; padding-top:30px; letter-spacing:2px;"
+      >
+        Menu
+      </h2>
+      <br />
+      <br />
+      <br />
+      <br />
+      <div class="pure-g" style="margin-top:20px;">
+        <div class="pure-u-1">
+          <div>
+            <form onsubmit="doCheckAll(event)">
+              <button type="submit" stype="font-size:1.2em;" class="menu-btn">
+                Check All Words
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <div class="pure-u-1">
+          <div>
+            <form onsubmit="doCheckReviewToday(event)">
+              <button type="submit" class="menu-btn">
+                Words you need to Review today
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <script src="checkAll.js"></script>
+      </div>
+    </div>
+
+    <div
+      class="pure-u-1-2"
+      style="background-color:#FFE3EB;min-width:600px; border-radius:30px; border:5px solid white; margin-left:15px; padding:  20px; max-width:650px;"
+    >
+      <h2
+        style="text-align:center;background-color:rgba(215,100,104,0.8)!important;color:white; min-height:80px; border-radius:15px; padding-top:30px; letter-spacing:2px;  "
+      >
+        Word List
+      </h2>
+      <div class="pure-g" style="margin-top:20px;">
+        <div class="pure-u-1-3">
+          <div class="flip-card" id="fp0">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard0"></div>
+              <div class="flip-card-back" id="flipcardback0"></div>
+              <div class="hide" id="_id0"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
+          <div class="flip-card" id="fp1">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard1"></div>
+              <div class="flip-card-back" id="flipcardback1"></div>
+              <div class="hide" id="_id1"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
+          <div class="flip-card" id="fp2">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard2"></div>
+              <div class="flip-card-back" id="flipcardback2"></div>
+              <div class="hide" id="_id2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pure-g">
+        <div class="pure-u-1-3">
+          <div class="flip-card" style="clear:both" id="fp3">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard3"></div>
+              <div class="flip-card-back" id="flipcardback3"></div>
+              <div class="hide" id="_id3"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
+          <div class="flip-card" id="fp4">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard4"></div>
+              <div class="flip-card-back" id="flipcardback4"></div>
+              <div class="hide" id="_id4"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
+          <div class="flip-card" id="fp5">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard5"></div>
+              <div class="flip-card-back" id="flipcardback5"></div>
+              <div class="hide" id="_id5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pure-g">
+        <div class="pure-u-1-3">
+          <div class="flip-card" style="clear:both" id="fp6">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard6"></div>
+              <div class="flip-card-back" id="flipcardback6"></div>
+              <div class="hide" id="_id6"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
+          <div class="flip-card" id="fp7">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard7"></div>
+              <div class="flip-card-back" id="flipcardback7"></div>
+              <div class="hide" id="_id7"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
+          <div class="flip-card" id="fp8">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard8"></div>
+              <div class="flip-card-back" id="flipcardback8"></div>
+              <div class="hide" id="_id8">test</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script src="drag.js"></script>
+    </div>
+
+    <div
+      class="pure-u-1-4"
+      style="background-color:#FFE3EB; border-radius:30px; border:5px solid white; margin-left:15px; padding:  20px; min-width:400px;"
+    >
+      <div
+        class="pure-u-1"
+        style="text-align:center;background-color:#d49cb5!important;color:white; min-height:30px; border-radius:15px; padding-top:13px;letter-spacing:2px; letter-spacing:2px;  "
+      >
+        <h2
+          style="text-align:center;color:white; min-height:30px; border-radius:15px; padding-bottom:15px;letter-spacing:2px;"
+        >
+          Add Word
+        </h2>
+      </div>
+
+      <div class="pure-g" style="margin-top:20px;">
+        <div class="pure-u-1">
+          <div class="adder">
+            <div id="btnAdd">
+              <button id="myBtn" class="menu-btn2">
+                Add
+              </button>
+              <div id="addpop" class="pop">
+                <div class="pop-content">
+                  <span class="close" id="closeAdder">x</span>
+                  <form onsubmit="doAdd(event)">
+                    <div>
+                      <label for="vocab">Word</label>
+                      <input type="text" id="vocab" name="vocab" required />
+                    </div>
+                    <div>
+                      <label for="definition">Definition</label>
+                      <input type="text" id="definition" name="definition" />
+                    </div>
+                    <button type="submit" class="menu-btn2">
+                      add
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div id="btnEdit">
+              <button id="edit" class="menu-btn2">
+                Edit
+              </button>
+              <div id="editpop" class="pop">
+                <div class="pop-content">
+                  <span class="close" id="closeEditer">x</span>
+                  <form onsubmit="doEdit(event)">
+                    <div id = "searchBoard">
+                      <label for="vocab"
+                        >Type in the word you want to edit</label
+                      >
+                      <input type="text" id="search" name="vocab" required />
+                    </div>
+                    <div id = "resultTable" style="text-align:center" class="hide">
+                      <table id = "resultTb" border="3" style="text-align:center">
+                        <tr><th>Vocab</th>
+                        <th>Definition</th></tr>
+                      </table>
+                    </div>
+                    <button type="submit" id="esBtn">search</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="adder.js"></script>
+
+      <div class="pure-g" style="min-width:200px;">
+        <div
+          class="pure-u-1"
+          style="text-align:center;background-color:#d49cb5!important;color:white; min-height:30px; border-radius:15px; padding-top:23px;letter-spacing:2px; letter-spacing:2px;  "
+        >
+          <h2
+            style="text-align:center;color:white; min-height:30px; border-radius:15px; padding-bottom:15px;letter-spacing:2px;"
+          >
+            Music
+          </h2>
+        </div>
+        <div class="pure-g">
+          <button
+            id="play"
+            class="menu-btn3"
+            style="margin-top:13px; padding-top:0px;"
+          >
+            play
+          </button>
+          <button
+            id="pause"
+            class="menu-btn3"
+            style="margin-top:13px; padding-top:0px;"
+          >
+            pause
+          </button>
+          <button
+            id="help"
+            class="menu-btn3"
+            style="margin-top:13px; padding-top:0px;"
+          >
+            help
+          </button>
+        </div>
+
+        <div class="pure-g, pure-u-1" id="canvas-content">
+          <canvas
+            id="myCanvas"
+            minwidth="300px; "
+            style="border:1px solid #000000; padding:0px; margin:0px;"
+            height="300px"
+          >
+          </canvas>
+
+          <script src="audio.js"></script>
+        </div>
+      </div>
+    </div>
+  </div>
+</html>

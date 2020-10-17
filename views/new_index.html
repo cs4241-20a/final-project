@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/purecss@2.0.3/build/pure-min.css"
+      integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ"
+      crossorigin="anonymous"
+    />
+
+    
+    <style>
+      
+      @tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+      
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.flip-card {
+float:left;
+  width:200px;
+  height:160px;
+  background-color: transparent;
+
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+  font-family: "Open Sans", "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
+  display:block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+  background-color: pink;
+  color: black;
+  text-align:center;
+  font-size:1em;
+  word-wrap:break-word;
+}
+
+/* Style the back side */
+.flip-card-back {
+  background-color: dodgerblue;
+  color: white;
+  text-align:center;
+  font-size:0.5em;
+  transform: rotateY(180deg);
+  word-wrap:break-word;
+}
+
+.pop {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  color: black
+}
+
+/* Modal Content/Box */
+.pop-content{
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.signature-pad {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  font-size: 10px;
+  width: 100%;
+  height: 100%;
+  max-width: 700px;
+  max-height: 460px;
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.08) inset;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.signature-pad::before,
+.signature-pad::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  width: 40%;
+  height: 10px;
+  bottom: 10px;
+  background: transparent;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+.signature-pad::before {
+  left: 20px;
+  -webkit-transform: skew(-3deg) rotate(-3deg);
+          transform: skew(-3deg) rotate(-3deg);
+}
+
+.signature-pad::after {
+  right: 20px;
+  -webkit-transform: skew(3deg) rotate(3deg);
+          transform: skew(3deg) rotate(3deg);
+}
+
+.signature-pad--body {
+  position: relative;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  border: 1px solid #f4f4f4;
+}
+
+.signature-pad--body
+canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.02) inset;
+}
+
+.signature-pad--footer {
+  color: #C3C3C3;
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: 8px;
+}
+
+.signature-pad--actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 8px;
+}
+      
+      
+      
+      
+      
+    </style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+
+  
+  
+  <script>
+    window.onload = function() {
+      // add cafe music
+      audio = new Audio();
+      context = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = context.createAnalyser();
+
+      audio.src =
+        "https://cdn.glitch.com/dcda3f59-5482-4edd-a65f-f571dc77196f%2Fencounter.mp3?v=1602812584794";
+      // this is another song
+      // audio.src = "https://cdn.glitch.com/dcda3f59-5482-4edd-a65f-f571dc77196f%2Fme-and-you-preview-60s.mp3?v=1602810566378";
+      audio.crossOrigin = "anonymous"; // the source path
+      //   source = context.createMediaElementSource(audio);
+      //   source.connect(analyser);
+      //   analyser.connect(context.destination);
+      //   frequency_array = new Uint8Array(analyser.frequencyBinCount);
+      document
+        .getElementById("pauseMusic")
+        .addEventListener("click", function() {
+          audio.pause();
+        });
+      document
+        .getElementById("playMusic")
+        .addEventListener("click", function() {
+          audio.play();
+        });
+      document.getElementById("help").addEventListener("click", function() {
+        alert("This is the song 'Encounter' from Persona 5.");
+      });
+
+      fetch("/api/fetch", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (result.code === 200) {
+            todayqueue = result.data;
+            for (let i = 0; i < 9; i++) {
+              let front = document.getElementById("flipcard" + i);
+              let back = document.getElementById("flipcardback" + i);
+
+              //let vocab = result.data[i];
+              if (todayqueue.length > 0) {
+                console.log(todayqueue.length);
+                let vocab = todayqueue.shift();
+                front.innerHTML = vocab.title;
+                back.innerHTML = vocab.content;
+              } else {
+                front.innerHTML = "";
+                back.innerHTML = "";
+              }
+              document
+                .getElementById("fp" + i)
+                .addEventListener("click", event => {
+                  if (todayqueue.length > 0) {
+                    let replace = todayqueue.shift();
+                    front.innerHTML = replace.title;
+                    back.innerHTML = replace.content;
+                  } else {
+                    front.innerHTML = "";
+                    back.innerHTML = "";
+                  }
+                });
+            }
+          } else {
+            // alert(result.msg);
+            console.log("fail");
+          }
+        });
+    };
+  </script>
+
+  
+  <div class="pure-g">
+    <div class="pure-u-1">
+       <div class="logo">Logo</div>
+
+      <div class="header">
+        <h2>Hi. Welcome to Kocha!</h2>
+      </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+  </div>
+
+  <div class="pure-g">
+    <div class="pure-u-1-4" style="background-color:red">
+      menu
+      <div class="pure-g">
+        
+        <div class="pure-u-1">
+           <div>
+          <form onsubmit="doCheckAll(event)">
+            <button type="submit">Check All Words</button>
+          </form>
+        </div>
+    
+          </div>
+        
+        <div class="pure-u-1">     
+        <div>
+          <form onsubmit="doCheckReviewToday(event)">
+            <button type="submit">Words you need to Review today</button>
+          </form>
+        </div>
+        </div>
+        
+        <div class="pure-u-1">button3- inside here</div>
+        
+        <script src="checkAll.js"></script>
+      </div>
+    </div>
+    <div class="pure-u-1-2" style="background-color:pink; min-width:600px;">word list
+      <div class="pure-g">
+        <div class="pure-u-1-3">
+        <div class="flip-card" id="fp0">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard0">
+                flipcard0 fronttt
+              </div>
+              <div class="flip-card-back" id="flipcardback0">
+                flipcard0 back
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
+         <div class="flip-card" id="fp1">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard1">flipcard1 front</div>
+              <div class="flip-card-back" id="flipcardback1">
+                flipcard1 back
+              </div>
+            </div>
+          </div>
+        
+        </div>
+        <div class="pure-u-1-3">
+         <div class="flip-card" id="fp2">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard2">flipcard2 front</div>
+              <div class="flip-card-back" id="flipcardback2">
+                flipcard2 back
+              </div>
+            </div>
+          </div>
+        
+        
+        </div>
+      </div>
+      <div class="pure-g">
+        <div class="pure-u-1-3">
+          <div class="flip-card" style="clear:both" id="fp3">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard3">flipcard3 front</div>
+              <div class="flip-card-back" id="flipcardback3">
+                flipcard3 back
+              </div>
+            </div>
+          </div>
+        
+        </div>
+        <div class="pure-u-1-3">
+        
+         <div class="flip-card" id="fp4">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard4">flipcard4 front</div>
+              <div class="flip-card-back" id="flipcardback4">
+                flipcard4 back
+              </div>
+            </div>
+          </div></div>
+        <div class="pure-u-1-3">
+        
+          <div class="flip-card" id="fp5">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard5">flipcard5 front</div>
+              <div class="flip-card-back" id="flipcardback5">
+                flipcard5 back
+              </div>
+            </div>
+          </div></div>
+      </div>
+      <div class="pure-g">
+        <div class="pure-u-1-3">
+          <div class="flip-card" style="clear:both" id="fp6">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard6">flipcard6 front</div>
+              <div class="flip-card-back" id="flipcardback6">
+                flipcard6 back
+              </div>
+            </div>
+          </div></div>
+        <div class="pure-u-1-3">
+         <div class="flip-card" id="fp7">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard7">flipcard7 front</div>
+              <div class="flip-card-back" id="flipcardback7">
+                flipcard7 back
+              </div>
+            </div>
+          </div></div>
+        <div class="pure-u-1-3"> <div class="flip-card" id="fp8">
+            <div class="flip-card-inner">
+              <div class="flip-card-front" id="flipcard8">flipcard8 front</div>
+              <div class="flip-card-back" id="flipcardback8">
+                Test:if this is very lonnnnnnnnnnnggggggggggggggggg
+              </div>
+            </div>
+          </div></div>
+      </div>
+      
+      <script src="drag.js"></script>
+    </div>
+    
+    
+    <div class="pure-u-1-4" style="background-color:blue">
+    <div class="pure-g">
+      <div class="pure-u-1">
+        
+             <div class="adder">
+        <div id="btnAdd">
+          <button id="myBtn">Add</button>
+          <div id="addpop" class="pop">
+            <div class="pop-content">
+              <span class="close" id="closeAdder">x</span>
+              <form onsubmit="doAdd(event)">
+                <div>
+                  <label for="vocab">Word</label>
+                  <input type="text" id="vocab" name="vocab" required />
+                </div>
+                <div>
+                  <label for="definition">Definition</label>
+                  <input type="text" id="definition" name="definition" />
+                </div>
+                <button type="submit">add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div id="btnEdit">
+          <button id="edit">edit</button>
+          <div id="editpop" class="pop">
+            <div class="pop-content">
+              <span class="close" id="closeEditer">x</span>
+              <form action="/import" method="POST">
+                <div>
+                  <label for="vocab">Type in the word you want to edit</label>
+                  <input type="text" id="search" name="vocab" required />
+                </div>
+                <button type="submit">search</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      </div>
+      
+      </div>
+     <script src="adder.js"></script>
+      
+      <div class="pure-g">
+       <div class="pure-u-1">
+        Starter
+         
+           <div>
+        <button id="playMusic">
+          play
+        </button>
+        <button id="pauseMusic">
+          pause
+        </button>
+        <button id="help">
+          help
+        </button>
+      </div>
+         
+      </div>
+      
+      </div>
+    
+    
+    
+    
+    </div>
+  </div>
+</html>
