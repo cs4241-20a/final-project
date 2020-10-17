@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Conill Tolbert - Final Project</title>
+    <meta charset="utf-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Heebo&family=Staatliches&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/home.css" />
+    <script src="script.js"></script>
+  </head>
+
+  <body>
+    <div style="text-align:center;">
+      <div class="header">
+        <br />
+        <button class="menubutton" id="aboutButton">
+          <i class="fa fa-chevron-circle-up" style="font-size:25px;"></i>
+          &nbsp;&nbsp; About DevelUP
+        </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="menubutton" id="chatButton">
+          <i class="fa fa-comments" style="font-size:25px;"></i>
+          &nbsp;&nbsp; Chat Board
+        </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="menubutton" id="friendsButton">
+          <i class="fa fa-users" style="font-size:25px;"></i>
+          &nbsp;&nbsp; Other Users
+        </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="menubutton" id="logoutButton">
+          <i class="fa fa-sign-out" style="font-size:25px;"></i>
+          &nbsp;&nbsp; Logout
+        </button>
+      </div>
+      <h1>
+        DevelUP
+        <i
+          class="fa fa-chevron-circle-up"
+          style="font-size:100px;color:#9DFF12;"
+        ></i>
+      </h1>
+      <h2>
+        <i class="fa fa-user" style="font-size:60px;color:black;"></i>
+        &nbsp; Dashboard
+        <br />
+        <button class="writedownbutton" onclick="newEntry()">
+          <i class="fa fa-pencil-square-o" style="font-size:35px;"></i>
+          &nbsp;&nbsp; Writedown A Workout
+        </button>
+      </h2>
+
+      <script>
+        function newEntry() {
+          var x = document.getElementById("entryForm");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+          } else {
+            x.style.display = "none";
+          }
+        }
+      </script>
+    </div>
+
+    <div id="entryForm" style="display:none" class="inputForm">
+      <form style="text-align:center;" id="clubForm">
+        <input type="date" id="date" />&nbsp;&nbsp;&nbsp;&nbsp;
+        <input
+          type="text"
+          id="muscleGroup"
+          list="groups"
+          placeholder="Muscle Group"
+        />&nbsp;&nbsp;&nbsp;&nbsp;
+        <datalist id="groups">
+          <option value="Abdominals"> </option>
+          <option value="Back"> </option>
+          <option value="Biceps"> </option>
+          <option value="Calves"> </option>
+          <option value="Chest"> </option>
+          <option value="Deltoids"> </option>
+          <option value="Forearms"> </option>
+          <option value="Glutes"> </option>
+          <option value="Hamstrings"> </option>
+          <option value="Triceps"> </option>
+          <option value="Quadriceps"> </option>
+        </datalist>
+        <input
+          type="text"
+          id="exercise"
+          placeholder="Exercise"
+        />&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <input
+          type="number"
+          id="reps"
+          placeholder="Rep Count"
+        />&nbsp;&nbsp;&nbsp;&nbsp;
+        <input
+          type="number"
+          id="weight"
+          placeholder="Weight (LBS)"
+        />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <button class="entrybutton" id="addButton">Submit</button
+        >&nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="entrybutton" id="clearButton">Clear</button>
+      </form>
+    </div>
+    <br />
+
+    <div class="grid-container">
+      <div class="entries_table">
+        <table>
+          <thead>
+            <tr>
+              <th>Date (YYYY-MM-DD)</th>
+              <th>Muscle Group</th>
+              <th>Exercise</th>
+              <th>Rep Count</th>
+              <th>Weight (LBS)</th>
+              <th>
+                <i class="fa fa-pencil" style="font-size:30px;"></i>
+              </th>
+              <th>
+                <i class="fa fa-trash" style="font-size:30px;"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="entryTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

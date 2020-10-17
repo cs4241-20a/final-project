@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DevelUp - Chat</title>
+    <meta charset="utf-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/chat.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.7.2/simplepeer.min.js"></script>
+  </head>
+
+  <body>
+    <section>
+      <div style="text-align:center;">
+        <div class="header">
+          <br />
+          <button class="menubutton" id="aboutButton">
+            <i class="fa fa-chevron-circle-up" style="font-size:25px;"></i>
+            &nbsp;&nbsp; About DevelUP
+          </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="menubutton" id="homeButton">
+            <i class="fa fa-user" style="font-size:25px;"></i>
+            &nbsp;&nbsp; My Dashboard
+          </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="menubutton" id="friendsButton">
+            <i class="fa fa-users" style="font-size:25px;"></i>
+            &nbsp;&nbsp; Other Users
+          </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="menubutton" id="logoutButton">
+            <i class="fa fa-sign-out" style="font-size:25px;"></i>
+            &nbsp;&nbsp; Logout
+          </button>
+        </div>
+        <h1>
+          DevelUP
+          <i
+            class="fa fa-chevron-circle-up"
+            style="font-size:100px;color:#9DFF12;"
+          ></i>
+        </h1>
+        <h2>
+          <i class="fa fa-comments" style="font-size:60px;color:black;"></i>
+          &nbsp; chat board
+          <br />
+        </h2>
+        <div>
+          <h3 id="helloText"></h3>
+          <h4 id="infoHeader">
+            You are not connected to anyone yet...
+          </h4>
+          <textarea
+            id="incoming"
+            placeholder="&nbsp;&nbsp;Messages to you will appear here..."
+          ></textarea>
+          <br /><br />
+          <form style="text-align:center;" id="messageForm">
+            <input
+              type="text"
+              id="currentMessage"
+              placeholder="&nbsp;&nbsp;Send a message here..."
+            />&nbsp;&nbsp;
+            <button class="sendbutton" type="submit" id="sendButton">
+              Send
+            </button>
+          </form>
+          <br />
+        </div>
+        <script>
+          // TOP MENU BUTTONS --------------
+          const goHome = function(e) {
+            e.preventDefault();
+
+            fetch("/goHome", {
+              method: "GET"
+            }).then(url => {
+              window.location.href = "/";
+            });
+
+            return false;
+          };
+
+          const goToAbout = function(e) {
+            e.preventDefault();
+
+            fetch("/goToAbout", {
+              method: "GET"
+            }).then(url => {
+              window.location.href = "/about";
+            });
+
+            return false;
+          };
+
+          const logout = function(e) {
+            e.preventDefault();
+
+            fetch("/logout", {
+              method: "GET"
+            }).then(url => {
+              window.location.href = "/";
+            });
+
+            return false;
+          };
+          const goToUsers = function(e) {
+            e.preventDefault();
+
+            fetch("/goToUsers", {
+              method: "GET"
+            }).then(url => {
+              window.location.href = "/users";
+            });
+
+            return false;
+          };
+          // ------------------------------
+          window.onload = function() {
+            //var myUserId = document.cookie[0];
+            var myCookie = document.cookie.split(";")[0];
+            myCookie = myCookie.split("=")[1];
+            myCookie = window.atob(myCookie);
+            myCookie = JSON.parse(myCookie);
+            const myUsername = myCookie.username;
+
+            document.querySelector("#helloText").innerHTML =
+              "Hello, " + myUsername + "!";
+
+            const homeButton = document.querySelector("#homeButton");
+            homeButton.onclick = goHome;
+
+            const logoutButton = document.querySelector("#logoutButton");
+            logoutButton.onclick = logout;
+
+            const aboutButton = document.querySelector("#aboutButton");
+            aboutButton.onclick = goToAbout;
+
+            const friendsButton = document.querySelector("#friendsButton");
+            friendsButton.onclick = goToUsers;
+
+            let rtcConnected = false,
+              Peer = SimplePeer,
+              p = null;
+
+            const socketReady = new Promise((resolve, reject) => {
+              ws = new WebSocket(`wss://${window.location.host}`);
+
+              ws.onopen = () => {
+                ws.onmessage = __msg => {
+                  const msg = JSON.parse(__msg.data);
+                  if (msg.address === "connect") {
+                    resolve(msg.initiator);
+                  } else {
+                    p.signal(msg);
+                  }
+                };
+              };
+            });
+
+            const makeConnection = function(initiator) {
+              console.log("making connection");
+              ws.send(initiator);
+            };
+
+            Promise.all([socketReady]).then(values => {
+              p = new Peer({
+                initiator: values[0],
+                trickle: false
+              });
+
+              p.on("error", err => {
+                console.log("error", err);
+                document.querySelector("#infoHeader").innerHTML =
+                  "Real Time Chat has run into a problem... Try refreshing!";
+              });
+
+              p.on("signal", data => {
+                console.log(data);
+                makeConnection(JSON.stringify(data));
+              });
+
+              document
+                .querySelector("#messageForm")
+                .addEventListener("submit", ev => {
+                  ev.preventDefault();
+                  const sendMe = document.querySelector("#currentMessage")
+                    .value;
+                  if (sendMe != "") {
+                    p.send(sendMe);
+                  }
+                  document.querySelector("#currentMessage").value = "";
+                });
+
+              p.on("data", data => {
+                data = new TextDecoder("utf-8").decode(data);
+                if (data.includes("commence connection")) {
+                  username = data.split(":commence")[0];
+                  document.querySelector("#infoHeader").innerHTML =
+                    "You are now connected to " + username;
+                } else {
+                  console.log("data: " + data);
+                  document.querySelector("#incoming").value = data;
+                }
+              });
+
+              p.on("connect", () => {
+                console.log("I have established a connection");
+                p.send(myUsername + ":commence connection");
+              });
+
+              // end window.onload
+            });
+          };
+        </script>
+      </div>
+    </section>
+  </body>
+</html>
