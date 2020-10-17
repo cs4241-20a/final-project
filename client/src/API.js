@@ -7,7 +7,7 @@ const axios  = Axios.create({
 	headers: {
 		Accept: 'application/json'
 	},
-	baseURL: 'http://localhost:40404'
+	// baseURL: 'http://mbsr.wpi.edu:40404'
 })
 
 const handle_error = function(err){
@@ -23,7 +23,6 @@ const handle_error = function(err){
 
 class API {
 	constructor(){
-		this.base_url = 'http://localhost:40404'
 		this.auth_url = '/auth/callback'
 		this.auth_check_url = '/auth/check'
 		this.authenticated = false

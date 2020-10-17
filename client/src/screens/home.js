@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Row, Col, Jumbotron, Carousel} from 'react-bootstrap'
+import {Container, Row, Col, Carousel} from 'react-bootstrap'
 import FadeIn from 'react-fade-in'
 import {Redirect} from 'react-router-dom'
 import {GoogleLogin} from 'react-google-login'
@@ -133,7 +133,9 @@ class Home extends React.Component {
 					</Row>
 					{redirect}
 				</Container>
-				{items}
+				<div style={{display: 'hidden'}}>
+					{items}
+				</div>
 			</div>
 		)
 	}
