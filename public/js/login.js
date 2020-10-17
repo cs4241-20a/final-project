@@ -1,11 +1,32 @@
+let currUsername = "";
+let currUserID = "";
+let index = 0;
+
+const displayLeaderboard = (json) => {
+    const highScores = document.getElementById("highScores");
+        highScores.innerHTML = "";
+        
+        json.forEach((user) => {
+                highScores.innerHTML += `
+                <tr>
+                  <td><h3 style="text-align:center" id="user-${user._id}">${user.username || "Unknown User"}</td>
+                  <td><h3 style="text-align:center" id="highScore-${user._id}">${user.highScore || 0}</td> 
+                </tr>
+                `;
+        });
+};
+
 function loginProc (json) {
     console.log("user data", json);
     if (!json._id) return;
 
+    currUsername = json.username;
+    currUserID = json._id;
+
     document.getElementById("userInfo").setAttribute("style", "display:none");
     document.getElementById("profile").setAttribute("style", "");
 
-    document.getElementById("loggedUsername").innerHTML = json.username;
+    document.getElementById("loggedUsername").innerHTML = currUsername;
 
     document.getElementById("loginPage").setAttribute("style", "display:none");
     document.getElementById("gamePage").setAttribute("style", "");
@@ -14,50 +35,30 @@ function loginProc (json) {
 	    game = new Phaser.Game(config);
     }
 
-    fetch("/api/getHighScores")
-        .then((response) => response.json())
-        .then((json) => displayLeaderboard(json));
+    submit();
+
     
-}({'_id': 'mom', 'username': 'mom'});
-
-
-const displayLeaderboard = (json) => {
-    const highScores = document.getElementById("highScores");
-        highScores.innerHTML = "";
-
-        json.forEach((highScore) => {
-        
-            highScores.innerHTML += `
-            <tr>
-              <td><h3 id="user-${highScore._id}">${highScore.user || "Unknown User"}</textarea>
-              <td><h3 id="highScore-${highScore._id}" value=${highScore.score}></td>
-            </tr>
-            `;
-        });
+    
 };
 
-const submit = function (e) {
+const submit = function () {
+    
+    const json = {user:{_id: currUserID, username: currUsername, highScore: 50 + Math.floor(Math.random()*50)}};
+    
+    console.log(json);
 
-    e.preventDefault();
-  
-    const user = document.querySelector("#user"),
-      score = document.querySelector("#priority"),
-      json = { name: name.value, user: user.value, priority: priority.value },
-      body = JSON.stringify(json);
-  
-    elementDisable();
-    fetch("/editLeaderboard", {
+    fetch("/setHighScore", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body,
+      body:JSON.stringify(json),
     })
-      .then((response) => response.json())
-      .then((json) => {
-        
-        user.value = "";
-        elementEnable();
+      .then((response) => {
+          fetch("/api/getAllUsers")
+            .then((response) => response.json())
+            .then((json) => displayLeaderboard(json));
+
       });
   
     return false;
