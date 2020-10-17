@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'" /> -->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>CS4241 Team 19 Final Project - Home</title>
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+		<script src="/js/home.js" defer></script>
+		<script type="text/javascript" src-elem="js/materialize.min.js"></script>
+		<style>
+			.collection {
+				font-weight: bolder;
+			}
+
+			* {
+				font-family: 'Roboto', sans-serif;
+			}
+
+			h1 {
+				font-weight: 300;
+			}
+
+			header, main {
+				padding-left: 300px;
+			}
+
+			@media only screen and (max-width: 992px) {
+				header, main {
+					padding-left: 0;
+				}
+			}
+
+			.logout-btn {
+				padding-top: 5px;
+			}
+		</style>
+  	</head>
+
+	<body class="teal lighten-5">
+		<!-- Navbar -->
+		<header>
+			<nav class="teal lighten-1">
+				<div class="nav-wrapper">
+					<div class="row">
+						<div class="col s12" id="top-div">
+							<a href="#" data-target="sidenav-left" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+							<!--<a href="#" class="brand-logo" style="font-weight: 300;">Hello, ${NAME}</a>-->
+							<div class="container logout-btn">
+								<a class="right waves-effect waves-light btn-large teal lighten-3" id="logout-button"><i class="material-icons right">exit_to_app</i>Log out</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+
+		<!-- Sidebar -->
+		<div id="sidenav-1" class="sidenav sidenav-fixed">
+			<h5 style="padding-left: 1em" class="teal-text">Received Invites</h5>
+			<div class="collection">
+				<!--
+
+					BACKEND PEOPLE: Invite listings go here and use this format.
+					<a href="#" class="collection-item avatar">
+						<i class="large material-icons circle BUTTON_COLOR">account_circle</i>
+						<span class="title">NAME</span>
+						<p class="grey-text text-darken-1">Received on DATE_RECEIVED</p>
+					</a>
+
+				-->
+				<div class="collection-item avatar">
+					<i class="large material-icons circle red">account_circle</i>
+					<span class="title teal-text text-darken-3">Alan Smithee</span>
+					<p class="grey-text text-darken-1">Received 1 day ago</p>
+					<div class="row">
+						<a class="waves-effect waves-light btn-small blue">Accept</a>
+						<a class="waves-effect waves-light btn-small red">Reject</a>
+					</div>
+				</div>
+				<div class="collection-item avatar">
+					<i class="large material-icons circle green">account_circle</i>
+					<span class="title teal-text text-darken-3">Jamie Thompson</span>
+					<p class="grey-text text-darken-1">Received 3 days ago</p>
+					<div class="row">
+						<a class="waves-effect waves-light btn-small blue">Accept</a>
+						<a class="waves-effect waves-light btn-small red">Reject</a>
+					</div>
+				</div>
+				<div class="collection-item avatar">
+					<i class="large material-icons circle blue">account_circle</i>
+					<span class="title teal-text text-darken-3">Another person</span>
+					<p class="grey-text text-darken-1">Received on 8/31/2020</p>
+					<div class="row">
+						<a class="waves-effect waves-light btn-small blue">Accept</a>
+						<a class="waves-effect waves-light btn-small red">Reject</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<main>
+			<div class="container" id="group-container">
+				<h1 class="center teal-text text-darken-3">Tasks</h1>
+				<div class="collection z-depth-1" id="task-list">
+					<!--
+
+					BACKEND PEOPLE: Tasks go here and use this format.
+					<a href="TASK_LINK" class="collection-item">TASK_NAME</a>
+
+					-->
+					<!--<a href="#!" class="collection-item">Task A</a>
+					<a href="#!" class="collection-item">Task B</a>
+					<a href="#!" class="collection-item">Task C</a>
+					<a href="#!" class="collection-item">Task D</a>
+					-->
+				</div>
+				<br>
+				<h1 class="center teal-text text-darken-3">Groups</h1>
+				<!--
+
+				BACKEND PEOPLE: Recent activity goes here.
+				This format allows three cards per row, for infinite rows.
+				Each individual card uses this format:
+				<div class="col s12 m4">
+					<div class="card">
+						<div class="card-content">
+							<span class="card-title"><a href="#">TITLE</a></span>
+							<p>DESCRIPTION</p>
+							<a class="btn-floating btn-large waves-effect waves-light COLOR right" href="#"><i class="material-icons">add</i></a>
+						</div>
+					</div>
+				</div>
+
+				-->
+				<!--<div class="row">
+					<div class="col s12 m4">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
+								<p>Sample Text</p>
+								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m4">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
+								<p>Sample Text</p>
+								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m4">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title"><a href="#" class="teal-text" style="font-weight: 400;">Card Title</a></span>
+								<p>Sample Text</p>
+								<a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" href="#"><i class="material-icons">add</i></a>
+							</div>
+						</div>
+					</div>
+				</div>-->
+				<div class="row">
+					<form class="col s12 push-s2">
+						<div class="row">
+							<div class="input-field col s8 m6 l4 push-m1 push-l2">
+								<input placeholder="Enter your awesome group name here." id="group-name" type="text" class="validate">
+								<label for="group-name" style="font-family: 'Roboto', sans-serif;"></label>
+							</div>
+						</div>
+						<div class="row center col s4 push-s2">
+							<button class="btn waves-effect waves-light" type="submit" name="action" id="create-group">Add Group
+								<i class="material-icons right">add</i>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>
