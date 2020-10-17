@@ -49,6 +49,7 @@ router.get("/:id", async (req, res) => {
 		res.status(200).json({success: true, data: user});
 	} catch (err) {
 		// Report errors
+		console.log(err)
 		res.status(500).json({success: false, error: err});
 	}
 });

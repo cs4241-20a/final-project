@@ -7,8 +7,7 @@
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/moment.min.js"></script>
-  <script src="/js/tasks.js" defer></script>
-
+  <script type="module" src="/js/tasks.js" defer></script>
 </head>
 <body class="teal lighten-5">
 <nav>
@@ -30,7 +29,7 @@
         <a class="btn-floating btn-large waves-effect waves-light red accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
         <h5 class="white-text center-align row list-names" style="font-weight: 400;" contenteditable="true">List Name</h5>
         <!-- Added in a div to make sure tasks appear before the button-->
-        <div class="tasks white" id="1"></div>
+        <div class="tasks" id="1"></div>
           <a class="add_task centerwaves-effect waves-light btn-large teal lighten-3" style="text-align: center" id="btn-1"><i class="material-icons right">add</i>  New Task</a>
         </div>
       </div>
@@ -64,7 +63,7 @@
       <label for="tassignees">Assigned to: </label>
       <select class="browser-default" id="tassignees">
         <option value="" disabled selected>Choose assignees</option>
-        <option value="1">Option 1</option>
+        <!--<option value="1">Option 1</option>-->
       </select></br>
       <label for="tags">Tags: </label><input type="text" id="tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="tdesc" placeholder="Task Description"><br>
@@ -86,7 +85,7 @@
       <label for="t_assignee">Assigned To: </label>
       <select class="browser-default" id="t_assignee">
         <option value="" disabled selected>Choose assignees</option>
-          <option value="1">Option 1</option>
+          <!--<option value="1">Option 1</option>-->
       </select></br>
       <label for="tags">Tags: </label><input type="text" id="t_tags" placeholder="Tags"><br>
       <label for="tdesc">Task Description: </label><input type="text" id="t_desc" placeholder="Task Description"><br>

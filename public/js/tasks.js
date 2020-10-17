@@ -23,14 +23,14 @@ submitChatButton.addEventListener("click", async evt => {
 		headers: {"Content-type": "application/json"}
 	});
 	const data = await res.json();
-	
+
 	chatInput.value = "";
 });
 
 const loadMessages = async () => {
 	const res = await fetch(`/api/messages/${groupId}`, {method: "GET"});
 	const data = await res.json();
-	
+
 	for (const element of data.data) {
 		const {content, senderId, dateSent} = element;
 		const sender = await getDisplayNameById(senderId);
@@ -45,6 +45,24 @@ const getCurrentUser = async () => {
 	const data = await res.json();
 
 	return data.data;
+}
+
+	var groupId = window.localStorage.getItem("group")
+	console.log(groupId)
+	// Get the modal
+	var modal = document.getElementById("myModal");
+	var editmodal = document.getElementById("editModal");
+	var delmodal = document.getElementById("deleteModal");
+	var card1=document.getElementById("card1")
+	var btnContainer=document.getElementById("btn_container")
+	console.log("Button container " + btnContainer)
+	console.log("Modal " + modal)
+
+	var clicked=false
+
+	var makeTask = function(column) {
+	  modal.style.display = "block";
+	  currentCol = column
 }
 
 const getDisplayNameById = async userId => {
@@ -118,7 +136,6 @@ var openTask = function(task, edit) {
   }
 }
 
-
 var listClicked = function(){
   if(clicked){
     console.log(btnContainer)
@@ -140,29 +157,72 @@ const addMe = async () => {
 	console.log(data);
 };
 
-var groupName = "test"; //Change this to be set later
-var groupId;
+//var groupName; //= "test"; //Change this to be set later
+//var groupId;
+
+const getMembers = async (members) => {
+	var slct = document.getElementById("tassignees")
+	//var slct2 = document.getElementById("t_assignee")
+	for(var i = 0; i < members.length; i++) {
+		//Get member names
+		var member = members[i]
+		console.log(member)
+		const res = await fetch("/api/users/" + member, {method: "GET"});
+	  const data = await res.json()
+	  console.log(JSON.stringify(data))
+		//console.log(modal)
+		var opt = document.createElement("option")
+		opt.setAttribute('value', data.data._id)
+		opt.appendChild(document.createTextNode(data.data.displayName))
+		slct.appendChild(opt)
+		//slct2.appendChild(opt)
+	}
+}
+
+const getMembers2 = async (members) => {
+	var slct = document.getElementById("t_assignee")
+	//var slct2 = document.getElementById("t_assignee")
+	for(var i = 0; i < members.length; i++) {
+		//Get member names
+		var member = members[i]
+		console.log(member)
+		const res = await fetch("/api/users/" + member, {method: "GET"});
+	  const data = await res.json()
+	  console.log(JSON.stringify(data))
+		//console.log(modal)
+		var opt = document.createElement("option")
+		opt.setAttribute('value', data.data._id)
+		opt.appendChild(document.createTextNode(data.data.displayName))
+		slct.appendChild(opt)
+		//slct2.appendChild(opt)
+	}
+}
 
 const getMyGroup = async () => {
-	const res = await fetch("/api/groups", { method: "GET" });
-	const data = await res.json();
-	console.log(JSON.stringify(data));
-	for (var i = 0; i < data.data.length; i++) {
-		console.log(data.data[i].name);
-		if (groupName == data.data[i].name) {
-			console.log(data.data[0]._id);
-			groupId = data.data[i]._id;
-		}
-	}
-	console.log("Our group: " + groupId);
-	getTasks();
-};
+  const res = await fetch("/api/groups/" + groupId, {method: "GET"});
+  const data = await res.json()
+	var header = document.getElementById("group_name")
+	header.innerHTML = "" + data.data.name + "'s Tasks"
+  console.log(JSON.stringify(data))
+  console.log("Our group: " + groupId)
+	console.log(data.data.members)
+	getMembers(data.data.members)
+	getMembers2(data.data.members)
+  getTasks()
+}
+
+const getUser = async(mid) => {
+	const res = await fetch("/api/users/" + mid, {method: "GET"});
+	const data = await res.json()
+	console.log("I'm " + data.data.displayName)
+	return data.data.displayName
+}
 
 const getTasks = async () => {
   const res = await fetch("/api/tasks/" + groupId, {method: "GET"})
   const data = await res.json()
   console.log(JSON.stringify(data))
-  console.log(data.data[0])
+  //console.log(data.data[0])
   for (var i = 0; i < data.data.length; i++) {
     var task = data.data[i]
 		if(task.columnName > cols) {
@@ -175,7 +235,11 @@ const getTasks = async () => {
     console.log(dateStr)
     const date = dateStr.substring(0, 10)
     console.log(date)
+		const response = await fetch("/api/users/" + task.assignees, {method: "GET"});
+		const user = await response.json()
+		var uName = user.data.displayName
     task.dateDue = date
+		task.assignees = uName
     appendNewInfo(task)
   }
 }
@@ -184,86 +248,67 @@ const getTasks = async () => {
 var currentCol = 1;
 
 var addTask = async (e) => {
-	e.preventDefault();
 
-	const input = document.querySelector("#tname");
-	const input2 = document.querySelector("#due_date");
-	const input3 = document.querySelector("#tassignee");
-	const input4 = document.querySelector("#tags");
-	const input5 = document.querySelector("#tdesc");
+  e.preventDefault()
 
-	const json = {
-		name: input.value,
-		desc: input5.value,
-		columnName: currentCol,
-		assignees: input3.value,
-		tags: input4.value,
-		dateDue: input2.value,
-	};
-	const body = JSON.stringify(json);
-	console.log(body);
-	console.log(groupId);
-	const res = await fetch("/api/tasks/" + groupId, {
-		method: "POST",
-		body: body,
-		headers: { "Content-type": "application/json"},
-	});
-	const data = await res.json();
-	console.log(JSON.stringify(data));
-	console.log(data.data);
-	var task = data.data;
-	const dateStr = task.dateDue;
-	const date = dateStr.substring(0, 10);
-	task.dateDue = date;
-	appendNewInfo(task);
-	modal.style.display = "none";
-};
+  const input = document.querySelector( '#tname' )
+  const input2 = document.querySelector( '#due_date' )
+  const input3 = document.querySelector( '#tassignees')
+  const input4 = document.querySelector( '#tags')
+  const input5 = document.querySelector( '#tdesc')
+
+	const response = await fetch("/api/users/" + input3.value, {method: "GET"});
+	const user = await response.json()
+	var uName = user.data.displayName//getUser(input3.value)
+
+  const json = { name: input.value, desc: input5.value, columnName: currentCol, assignees: input3.value, tags: input4.value, dateDue: input2.value }
+  const body = JSON.stringify( json )
+  console.log(body)
+  console.log(groupId)
+  const res = await fetch("/api/tasks/" + groupId, {method: "POST", body: body, headers: {"Content-type": "application/json"}})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data.data)
+  var task = data.data
+  const dateStr = task.dateDue;
+  const date = dateStr.substring(0, 10)
+  task.dateDue = date
+	task.assignees = uName
+  appendNewInfo(task)
+  modal.style.display = "none";
+}
 
 var editTask = async (e) => {
-	e.preventDefault();
-	//Edit the task
-	const input = document.querySelector("#t_name");
-	const input2 = document.querySelector("#due__date");
-	const input3 = document.querySelector("#t_assignee");
-	const input4 = document.querySelector("#t_tags");
-	const input5 = document.querySelector("#t_desc");
+  e.preventDefault()
+  //Edit the task
+  const input = document.querySelector( '#t_name' )
+  const input2 = document.querySelector( '#due__date' )
+  const input3 = document.querySelector( '#t_assignee')
+  const input4 = document.querySelector( '#t_tags')
+  const input5 = document.querySelector( '#t_desc')
 
-	const tEdit = ids[ids.length - 1];
-	tEdit.name = input.value;
-	tEdit.dateDue = input2.value;
-	tEdit.assignees = input3.value;
-	tEdit.tags = input4.value;
-	tEdit.desc = input5.value;
+  const tEdit = ids[ids.length-1]
+  tEdit.name = input.value
+  tEdit.dateDue = input2.value
+  tEdit.assignees = input3.value
+  tEdit.tags = input4.value
+  tEdit.desc = input5.value
 
-	console.log(JSON.stringify(tEdit));
+  console.log(JSON.stringify(tEdit))
 
-	const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {
-		method: "PATCH",
-		body: JSON.stringify(tEdit),
-		headers: { "Content-type": "application/json" },
-	});
-	const data = await res.json();
-	console.log(JSON.stringify(data));
-	console.log(data);
-	const edTask = data.data;
-	const dateStr = edTask.dateDue;
-	console.log(dateStr);
-	const date = dateStr.substring(0, 10);
-	console.log(date);
-	edTask.dateDue = date;
-	appendNewInfo(edTask, true);
-	editmodal.style.display = "none";
-	// fetch( '/edit', {
-	//        method:'POST',
-	//        body: JSON.stringify(tEdit),
-	//        headers: {
-	//         "Content-type": "application/json"
-	//       }
-	//   })
-	//   .then( function( response ) {
-	//     location.reload()
-	//   })
-};
+  const res = await fetch("/api/tasks/" + groupId + "/" + tEdit._id, {method: "PATCH", body: JSON.stringify(tEdit), headers: {"Content-type": "application/json"}})
+  const data = await res.json()
+  console.log(JSON.stringify(data))
+  console.log(data)
+  const edTask = data.data
+  const dateStr = edTask.dateDue;
+  console.log(dateStr)
+  const date = dateStr.substring(0, 10)
+  console.log(date)
+  edTask.dateDue = date
+  appendNewInfo(edTask, true)
+  editmodal.style.display = "none";
+}
 
 var delTask = async (task) => {
 	const res = await fetch("/api/tasks/" + groupId + "/" + task._id, {
@@ -345,40 +390,48 @@ var addCol = function() {
   //console.log(contain)
   cols++ //update number of columns
   console.log(cols)
+	// <a class="btn-floating btn-large waves-effect waves-light teal accent-4 right" id="delete_list"><i class="material-icons right">delete</i></a>
   // Create all the necessary elements
   var newCol = document.createElement("div");
   newCol.setAttribute('class', 'task_lists card-panel teal lighten-2')
   var colID = "col-" + cols
   newCol.setAttribute('id', colID)
+	//var dltBtn = document.createElement("a")
+	//dltBtn.setAttribute('class', 'btn-floating btn-large waves-effect waves-light teal accent-4 right')
+	//var dlt = document.createElement("i")
+	//dlt.setAttribute('class', 'material-icons right')
   var newList = document.createElement("div")
   newList.setAttribute('class', 'tasks')
   newList.setAttribute('id', cols)
   var newlistName = document.createElement("h5")
-  newlistName.setAttribute('class', 'white-text center-align row list-names')
+  newlistName.setAttribute('class', 'white-text center-align row')
   var addBtn = document.createElement("a")
-  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
-  addBtn.setAttribute('type', 'add_task centerwaves-effect waves-light btn-large teal lighten-3')
+  addBtn.setAttribute('class', 'add_task centerwaves-effect waves-light btn-large')
+  addBtn.setAttribute('type', 'centerwaves-effect waves-light btn-large')
   var btnID = "btn-" + cols
   addBtn.setAttribute('id', btnID)
   var plus = document.createElement("i")
   plus.setAttribute('class', 'material-icons right')
   // Add everything
   plus.appendChild(document.createTextNode("add"))
+	// dlt.appendChild(document.createTextNode("delete"))
+	// dltBtn.appendChild(dlt)
+	// dltBtn.onclick = function() {
+  // 	delCol(cols)
+  // }
   addBtn.appendChild(plus)
   addBtn.appendChild(document.createTextNode(" New Task"))
   addBtn.onclick = function() {
     makeTask(cols)
   }
-  newlistName.appendChild(document.createTextNode("List Name"))
+  newlistName.appendChild(document.createTextNode("New List"))
+	//newCol.appendChild(dltBtn)
   newCol.appendChild(newlistName)
-  newlistName.addEventListener('click',function () {
-    newlistName.contentEditable=true
-  })
   newCol.appendChild(newList)
   newCol.appendChild(addBtn)
+  newCol.onclick = listClicked
   contain[0].appendChild(newCol)
 }
-
 
 var delCol = function() {
   const contain = document.getElementsByClassName("inner-container")
@@ -387,7 +440,7 @@ var delCol = function() {
   // for(var i = 0; i < columns.length; i++) {
   //
   // }
-  var tasks = columns[cols].children[1].children
+  var tasks = columns[cols-1].children[1].children
   console.log(tasks)
   if(tasks.length != 0) {
     deleteModal.style.display = "block";
@@ -400,6 +453,7 @@ var delCol = function() {
         editing = false
         tasks[i].children[3].click()
         delTask(ids[ids.length-1])
+				location.reload()
       }
     }
   }
@@ -449,4 +503,4 @@ window.onload = async function () {
 	teButton.onclick = editTask;
 
 	loadMessages();
-};
+}
