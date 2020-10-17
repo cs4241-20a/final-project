@@ -54,7 +54,9 @@ class Lobby extends Phaser.Scene {// global vars for the player
 					player.setPosition(playerInfo.x, playerInfo.y);
 				}
 			});
-		});
+		});		
+
+		this.socket.on('startGame', () => this.switchScenes());
 
 		// add the sky background
 		this.add.image(0, 0, 'sky').setOrigin(0, 0);
@@ -81,7 +83,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    	this.ready.setText('Ready')
 			    	  .setBackgroundColor('#28CA4A')
 			    	  .setColor('#000');
-			this.socket.emit('Ready');
+			this.socket.emit('ready');
 	    });
 
 	    // add random bounce amounts to each star
@@ -163,10 +165,12 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	}
 
 	switchScenes() {
+		console.log('starting');
 		this.socket.off('currentPlayers');
 		this.socket.off('newPlayer');
 		this.socket.off('disconnect');
-		this.socket.off('playermO');
+		this.socket.off('playerMoved');
+		this.socket.off('startGame');
 		// this.socket.leave();
 		this.scene.start('DinoGame');
 	}

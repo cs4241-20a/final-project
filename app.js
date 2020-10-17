@@ -40,6 +40,14 @@ app.use(
 ); 
 
 let players = {};
+let gameTimeout;
+
+
+const gameLogic = () => {
+	console.log('sending fireball');
+	io.emit('comet', {x: Math.floor(Math.random() * 500) + 50, gravityY: Math.floor(Math.random() * 9) + 2})
+	gameTimeout = setTimeout(gameLogic, Math.floor(Math.random() * 3000) + 2000);
+};
 
 io.on('connection', (socket) =>  {
 	console.log('new user connected');
@@ -47,12 +55,33 @@ io.on('connection', (socket) =>  {
 		playerId: socket.id,
 		x: Math.floor(Math.random() * 150 + 50),
 		y: 450,
-		team: [0x454545, 0x8E5DFB, 0xFFFFFF][Math.floor(Math.random() * 3)]
+		team: [0x454545, 0x8E5DFB, 0xFFFFFF][Math.floor(Math.random() * 3)],
+		ready: false
 	}
 
 	socket.emit('currentPlayers', players);
 	socket.broadcast.emit('newPlayer', players[socket.id]);
 
+	socket.on('ready', () => {
+		players[socket.id].ready = true;
+		Object.values(players).some((player) => {
+			if (!player.ready){
+				return true;
+			}
+			io.emit('startGame');
+		});
+	});
+
+	socket.on('gameOver', () => {
+		players[socket.id].ready = false;
+		Object.values(players).some((player) => {
+			if (player.ready){
+				return true;
+			}
+			io.emit('endGame');
+			gameTimeout = setTimeout(gameLogic, 2000);
+		});
+	});
 
 	socket.on('playerMovement', (movementData) => {
 		players[socket.id].x = movementData.x;

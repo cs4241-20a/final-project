@@ -12,7 +12,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		console.log('preloaded');
 		this.load.image('space', '../assets/deep-space.jpg');
 	    this.load.image('cactus', 'assets/platform.png');
-	    this.load.image('fireball', 'assets/fireball.png');
+	    this.load.image('comet', 'assets/fireball.png');
 	}
 
 	// called to add all the assets to the actual game
@@ -53,6 +53,8 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 			});	
 		});
 
+		this.socket.on('comet', data => this.sendComet(data));
+
 		// add the space background	
 		let background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'space');
 		background.setScale(Math.floor(Math.max(this.cameras.main.width * 1.15 / background.width, this.cameras.main.height / background.height) * 10) / 10);
@@ -60,6 +62,9 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		this.scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#FFF'}) // adds the score Text (top left)
 
 		this.platforms = this.physics.add.staticGroup(); // adds the platforms as a non moving (static) group
+
+		// adding the comets and stuff
+		this.obstacles = this.physics.add.group();
 
 		// adds the stars in a movable group with different starting coordinates (70px away in the x)
 	    this.stars = this.physics.add.group({
@@ -72,14 +77,6 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	    // add random bounce amounts to each star
 	    this.stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)));
 
-		this.obstacles = this.physics.add.group();
-		this.obstacles.create(Phaser.Math.Between(40, 550), 0, 'fireball').setScale(2).refreshBody();
-		this.obstacles.children.iterate(child => {
-			child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-			child.setVelocityX(Phaser.Math.Between(-20, -40));
-			child.setGravityX(Phaser.Math.FloatBetween(2, 4));
-		});
-
 	    // make stars collide with platforms
 		this.physics.add.collider(this.stars, this.platforms);
 
@@ -89,8 +86,11 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 	    });
 
 		this.addPlayers(self, 'vagina');
+		console.log(self.char);
+		
 		// get keyboard vals
 		this.keyboard = this.input.keyboard.createCursorKeys();
+		this.sendComet({x: 400});
 	}
 
 
@@ -123,6 +123,17 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 				y: char.y
 			};
 		}
+	}
+
+	// adding the comet to our game
+	sendComet(data){
+		console.log(data);
+		this.obstacles.create(data.x, 0, 'comet').setScale(2).refreshBody();
+		this.obstacles.children.iterate(child => {
+			child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
+				 .setVelocityX(Phaser.Math.Between(20, -40))
+				 .setGravityY(data.gravityY);
+		});
 	}
 
 
