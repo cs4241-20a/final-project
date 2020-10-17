@@ -47,7 +47,7 @@ const getCurrentUser = async () => {
 	return data.data;
 }
 
-	var groupId = window.localStorage.getItem("group")
+	var groupId = window.sessionStorage.getItem("group")
 	console.log(groupId)
 	// Get the modal
 	var modal = document.getElementById("myModal");
@@ -245,7 +245,9 @@ const getMembers2 = async (members) => {
 
 const getMyGroup = async () => {
   const res = await fetch("/api/groups/" + groupId, {method: "GET"});
+	console.log(groupId)
   const data = await res.json()
+	console.log(data)
 	var header = document.getElementById("group_name")
 	header.innerHTML = "" + data.data.name + "'s Tasks"
   console.log(JSON.stringify(data))

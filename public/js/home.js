@@ -22,6 +22,7 @@
 //}
 let groupName = "test";
 export { groupName };
+var groupID;
 
 console.log(document.getElementById('logout-button'))
 var logout = document.getElementById('logout-button')
@@ -62,8 +63,8 @@ async function addGroupTasks(groupId) {
     a.setAttribute('href', '/tasks')
     a.innerHTML = data1.data[i].name
     a.onclick = function() {
-      window.localStorage.setItem("group", groupId)
-      console.log(window.localStorage.getItem("group"))
+      window.sessionStorage.setItem("group", groupId)
+      console.log(window.sessionStorage.getItem("group"))
     }
     taskList.appendChild(a)
   }
@@ -94,9 +95,10 @@ const addAllGroups = async () => {
       a.setAttribute('style', 'font-weight: 400;')
       a.setAttribute('id', data.data[i*3+j]._id)
       a.innerHTML = data.data[i*3+j].name
+      console.log(data.data[i*3+j]._id)
       a.onclick = function() {
-        window.localStorage.setItem("group", groupId)
-        console.log(window.localStorage.getItem("group"))
+        window.sessionStorage.setItem("group", data.data[i*3+j]._id)
+        console.log(window.sessionStorage.getItem("group"))
       }
       span.appendChild(a)
       div3.appendChild(span)
@@ -125,6 +127,15 @@ const addAllGroups = async () => {
       a.setAttribute('style', 'font-weight: 400;')
       a.setAttribute('id', data.data[fullRows * 3 + j]._id)
       a.innerHTML = data.data[fullRows * 3 + j].name
+      console.log(data.data[fullRows*3+j]._id)
+      window.sessionStorage.setItem("group", data.data[fullRows*3+j]._id)
+      console.log(window.sessionStorage.getItem("group"))
+      groupID = new String(data.data[fullRows*3+j]._id) //JSON.parse(JSON.stringify({id: data.data[fullRows*3+j]._id})).id
+      a.onclick = () => {
+        console.log("TELL ME SOMETHING!")
+        window.sessionStorage.setItem("group", groupID)
+        console.log(window.sessionStorage.getItem("group"))
+      }
       span.appendChild(a)
       div3.appendChild(span)
       div2.appendChild(div3)

@@ -71,10 +71,11 @@ router.get("/:id", ensureAuthenticated, async (req, res) => {
 
 	try {
 		// Find the user with the given username
-		const userId = (await User.findOne({username}));
+		const userId = (await User.findOne({username}))._id;
 		// Find the group with the given group id, ensuring the current user belongs to it
 		const group = await Group.findOne({_id: groupId, members: userId});
-
+		console.log("Group: " + group)
+		console.log("Groupid: " + groupId)
 		// Send result
 		res.status(200).json({success: true, data: group});
 	} catch (err) {
