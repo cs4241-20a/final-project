@@ -257,5 +257,5 @@ div.saveTitle{
 }
 
 .get-rid-of-me {
-  display: hidden;
+  visibility: hidden;
 }
