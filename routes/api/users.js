@@ -32,7 +32,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 });
 
 /*
- * Route: /api/users
+ * Route: /api/users/all
  * Method: GET
  * Auth: Not required
  * Desc: Gets all users.
