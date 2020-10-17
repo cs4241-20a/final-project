@@ -21,15 +21,15 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 
 		this.otherPlayers = this.physics.add.group(); // hold a group of game objects inside phaser
 		
-		this.socket = io(); // assign the io to socket
+		// this.socket = io(); // assign the io to socket
 
-		this.socket.emit('inGame');
+		socket.emit('inGame');
 		
 		// recieved when first connecting to the server so you get positions and colors of all current players
-		this.socket.on('gamePlayers', players => {
+		socket.on('gamePlayers', players => {
 			Object.keys(players).forEach(id => { // loops through those players
 				console.log(players)
-				if (players[id].playerId === self.socket.id) { // if that player is this client, run func
+				if (players[id].playerId === socket.id) { // if that player is this client, run func
 					this.addPlayer(self, players[id]);
 				} else {
 					this.addOtherPlayers(self, players[id]) //  all other players get this function
@@ -38,7 +38,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		});
 
 		// if someone disconnects
-		this.socket.on('disconnect', playerId => {
+		socket.on('disconnect', playerId => {
 			let children = self.otherPlayers;
 			children.getChildren().forEach(child => {
 				if (playerId === child.playerId)
@@ -47,7 +47,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		});
 
 		// called whenever the server says someone moved
-		this.socket.on('playerMoved', playerInfo => {
+		socket.on('playerMoved', playerInfo => {
 			let children = self.otherPlayers;
 			children.getChildren().forEach(player => {
 				if (playerInfo.playerId === player.playerId){
@@ -57,12 +57,12 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 		});
 
 		// to display a comet when the server sends it (everyone gets the same)
-		this.socket.on('comet', data => this.sendComet(data));
+		socket.on('comet', data => this.sendComet(data));
 
-		this.socket.on('star', data => this.sendStar(data));
+		socket.on('star', data => this.sendStar(data));
 
 		// on a game over
-		this.socket.on('endGame', () => this.endGame());
+		socket.on('endGame', () => this.endGame());
 
 		// add the space background	
 		let background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'space');
@@ -122,7 +122,7 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 
 			// if the current position is new, it is broadcasted to all other clients using the server
 			if (char.oldPosition && (char.x !== char.oldPosition.x || char.y !== char.oldPosition.y)){
-				this.socket.emit('playerMovement', {x: char.x, y: char.y});
+				socket.emit('playerMovement', {x: char.x, y: char.y});
 			}
 
 			// saving the current position
@@ -180,17 +180,17 @@ class DinoGame extends Phaser.Scene {// global vars for the player
 			submit(this.score);
 			self.scene.pause();
 			self.add.text(400, 300, 'Game Over', {fontSize: 50}).setOrigin(.5, .5);
-			this.socket.off('comet');
-			this.socket.emit('gameOver');
+			socket.off('comet');
+			socket.emit('gameOver');
 		});
 	}
 
 	endGame() {
 		console.log('Ending the game');
-		this.socket.emit('disconnectGame');
-		this.socket.off('currentPlayers');
-		this.socket.off('disconnect');
-		this.socket.off('playerMoved');
+		socket.emit('disconnectGame');
+		socket.off('currentPlayers');
+		socket.off('disconnect');
+		socket.off('playerMoved');
 
 		this.scene.switch('Lobby');
 		this.scene.stop('DinoGame');

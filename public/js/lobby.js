@@ -12,7 +12,6 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    this.load.image('ground', 'assets/platform.png');
 	    this.load.image('star', 'assets/star.png');
 	    this.load.image('main', 'assets/main.png');
-	    // this.load.image('ready', 'assets/readyBut.png');
 	    console.log('preloading');
 	}
 
@@ -23,12 +22,16 @@ class Lobby extends Phaser.Scene {// global vars for the player
 
 		this.otherPlayers = this.physics.add.group(); // hold a group of game objects inside phaser
 
-		this.socket = io(); // assign the io to socket
+		// this.socket = io(); // assign the io to socket
+
+		socket.emit('start');
 
 		// recieved when first connecting to the server so you get positions and colors of all current players
-		this.socket.on('currentPlayers', players => {
+		socket.on('currentPlayers', players => {
+			console.log(players);
 			Object.keys(players).forEach(id => { // loops through those players
-				if (players[id].playerId === self.socket.id) { // if that player is this client, run func
+				console.log('in foreach', players);
+				if (players[id].playerId === socket.id) { // if that player is this client, run func
 					this.addPlayers(self, players[id]);
 				} else {
 					this.addOtherPlayers(self, players[id]) //  all other players get this function
@@ -37,12 +40,12 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		});
 
 		// if a new player joins the server
-		this.socket.on('newPlayer', player => {
+		socket.on('newPlayer', player => {
 			this.addOtherPlayers(self, player);
 		});
 
 		// if someone disconnects
-		this.socket.on('disconnect', playerId => {
+		socket.on('disconnect', playerId => {
 			self.otherPlayers.getChildren().forEach(child => {
 				if (playerId === child.playerId)
 					child.destroy();
@@ -50,7 +53,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		});
 
 		// called whenever the server says someone moved
-		this.socket.on('playerMoved', playerInfo => {
+		socket.on('playerMoved', playerInfo => {
 			self.otherPlayers.getChildren().forEach(player => {
 				if (playerInfo.playerId === player.playerId){
 					player.setPosition(playerInfo.x, playerInfo.y);
@@ -58,7 +61,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 			});
 		});		
 
-		this.socket.on('startGame', () => this.switchScenes());
+		socket.on('startGame', () => this.switchScenes());
 
 		// add the sky background
 		this.add.image(0, 0, 'sky').setOrigin(0, 0);
@@ -83,22 +86,22 @@ class Lobby extends Phaser.Scene {// global vars for the player
 	    	this.ready.setText('Ready')
 			    	  .setBackgroundColor('#28CA4A')
 			    	  .setColor('#000');
-			this.socket.emit('ready');
+			socket.emit('ready');
 	    });
 
 	    // add random bounce amounts to each star
 	    this.stars.children.iterate(child => child.setBounceY(Phaser.Math.FloatBetween(0.6, 1)));
 
 	    // make stars collide with platforms
-		  this.physics.add.collider(this.stars, this.platforms);
+		this.physics.add.collider(this.stars, this.platforms);
 
 		// get keyboard vals
 
 		// this.keyboard = this.input.keyboard.createCursorKeys();
-		  this.keyboard = this.input.keyboard.addCapture('UP', 'LEFT', 'RIGHT');
-      this.keyUP = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-      this.keyLEFT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-      this.keyRIGHT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+		this.keyboard = this.input.keyboard.addCapture('UP', 'LEFT', 'RIGHT');
+		this.keyUP = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+		this.keyLEFT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+		this.keyRIGHT = this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
 	}
 
@@ -124,7 +127,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 
 			// if the current position is new, it is broadcasted to all other clients using the server
 			if (char.oldPosition && (char.x !== char.oldPosition.x || char.y !== char.oldPosition.y)){
-				this.socket.emit('playerMovement', {x: char.x, y: char.y});
+				socket.emit('playerMovement', {x: char.x, y: char.y});
 			}
 
 			// saving the current position
@@ -174,7 +177,7 @@ class Lobby extends Phaser.Scene {// global vars for the player
 		this.ready.setText('Not Ready');
 
 		console.log('starting');
-		this.socket.emit('disconnectLobby');
+		socket.emit('disconnectLobby');
 		// this.socket.off('currentPlayers');
 		// this.socket.off('newPlayer');
 		// this.socket.off('disconnect');

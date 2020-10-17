@@ -36,16 +36,16 @@ function loginProc (json) {
 
 };
 
-const socket = io('http://localhost:5000')
-const messageContainer = document.getElementById('message-container')
-const messageForm = document.getElementById('send-container')
-const messageInput = document.getElementById('message-input')
+const socket = io('http://localhost:5000');
+const messageContainer = document.getElementById('message-container');
+const messageForm = document.getElementById('send-container');
+const messageInput = document.getElementById('message-input');
 
-appendMessage('You joined')
+appendMessage('You joined');
 
 socket.on('chat-message', data => {
     appendMessage(data)
-})
+});
 
 messageForm.addEventListener('submit', e => {
     e.preventDefault()
