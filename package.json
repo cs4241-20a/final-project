@@ -1,0 +1,27 @@
+{
+  "name": "express-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "keywords": [],
+  "author": [],
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "cookie-session": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-slash": "^2.0.1",
+    "mongodb": "^3.6.2",
+    "nodemon": "^2.0.5",
+    "passport": "^0.4.1",
+    "passport-github2": "^0.1.12",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.3"
+  },
+  "scripts": {
+    "start": "(cd react-app/ && yarn run build) && nodemon server.js"
+  }
+}
