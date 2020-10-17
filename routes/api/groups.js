@@ -73,7 +73,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 
 	try {
 		// Find the id of user with the given username
-		const adminId = await User.findOne({username})._id;
+		const adminId = (await User.findOne({username}))._id;
 		// Create a new group with the given name and admin id
 		let newGroup = new Group({name, adminId, members: [adminId], invitees: []});
 		// Save the new message to the database
@@ -84,6 +84,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 	} catch (err) {
 		// Report errors
 		res.status(500).json({success: false, error: err});
+		console.log(err)
 	}
 });
 
