@@ -10,15 +10,18 @@ class DrawScreen extends React.Component {
         color: "#ff0000",
         secondColor: "#ff0000",
         eraser: false,
+        published: false,
         brushRadius: 10,
-        height: 500,
-        width: 500
       };
+
 	constructor(props){
 		super(props)
         this.state = {appear: true}
         this.form = React.createRef()
         this.onFormSubmit = this.onFormSubmit.bind(this)
+        this.state = { checkboxChecked: false };
+        this.handleChange = this.handleChange.bind(this);
+        
 	}
 
 	componentDidMount(){
@@ -36,9 +39,18 @@ class DrawScreen extends React.Component {
     async onFormSubmit(e){
 		e.preventDefault()
 		const [name, title] = ['name', 'title'].map((name) => document.getElementById(name).value)
-		const content = this.saveableCanvas.getSaveData()
-		let response = await API.submit_drawing(name, title, content)
-	}
+        const content = this.saveableCanvas.getSaveData()
+        const published = this.state.published
+		let response = await API.submit_drawing(name, title, content, published)
+    }
+    
+    handleChange(evt) {
+        this.setState({published: !this.state.published}, () =>{
+            console.log(this.state.published)
+        })
+        
+      }
+      
 	render(){
         let eraserText = 'Erase'
         if (this.state.eraser)
@@ -72,7 +84,7 @@ class DrawScreen extends React.Component {
                     
                     <Button 
                         style={{
-                            position: "absolute",left:"85px",top:"0px"
+                            position: "absolute",left:"90px",top:"0px"
                           }}
                         onClick={() => {
                         this.setState({eraser: !this.state.eraser}, () => {
@@ -85,22 +97,9 @@ class DrawScreen extends React.Component {
                     {eraserText}
                     </Button>
 
-                    <Button variant="success"
-                    style={{
-                        position: "absolute",left:"-100px",top:"0px"
-                      }}
-                        onClick={() => {
-                        localStorage.setItem(
-                            "savedDrawing",
-                            this.saveableCanvas.getSaveData()
-                        );
-                        }}
-                    >
-                        Save
-                    </Button>
                     <Button variant="danger"
                     style={{
-                        position: "absolute",left:"-40px",top:"0px"
+                        position: "absolute",left:"-90px",top:"0px"
                       }}
                         onClick={() => {
                         this.saveableCanvas.clear();
@@ -110,7 +109,7 @@ class DrawScreen extends React.Component {
                     </Button>
                     <Button variant="warning"
                     style={{
-                        position: "absolute",left:"23px",top:"0px"
+                        position: "absolute",left:"0px",top:"0px"
                       }}
                         onClick={() => {
                         this.saveableCanvas.undo();
@@ -134,34 +133,57 @@ class DrawScreen extends React.Component {
                             this.setState({ brushRadius: parseInt(e.target.value, 10) })
                         }
                         style={{
-                            position: "absolute",left:"-110px",top:"100px"
+                            position: "absolute",left:"-110px",top:"90px"
                           }}
                         />
                     </div>
+                    
+                    <div class="saveTitle">
+                            <h3>Save/Publish Drawing</h3>
+                        </div>
+
                    <div class="form-group">
                         <Form className="form-group" ref={this.form} onSubmit={this.onFormSubmit}>
-                        <h3>Publish Drawing</h3>
+                        
                         <div class="name">
                             <Form.Group controlId="name">
                             <Form.Label className="required">Your Name</Form.Label>
                             <Form.Control type="text" name="name" required/>
                         </Form.Group>
                         </div>
+
                         <div class="title">
-                             <Form.Group controlId="title">
+                            <Form.Group controlId="title">
                             <Form.Label className="required">Drawing Title</Form.Label>
                             <Form.Control type="text" name="title" required />
                         </Form.Group>
                         </div>
-                        <Form.Check 
+                       
+                        <div class="submit">
+                        <Form.Switch 
+                            checked={this.state.published}
+                            onChange={this.handleChange}
                             type="switch"
                             id="custom-switch"
-                            type="submit"
-                            label="Check this switch"
+                            label="Publish"
                         />
+                        </div>
 
-
+                        <Button variant="success" type="submit"
+                            style={{
+                                position: "absolute",left:"70px",top:"250px"
+                            }}
+                                onClick={() => {
+                                localStorage.setItem(
+                                    "savedDrawing",
+                                    this.saveableCanvas.getSaveData()
+                                );
+                                }}
+                            >
+                                Save
+                        </Button>
                     </Form>
+
                    </div>
                    
                     </div>

@@ -164,7 +164,7 @@ svg.delete-btn{
 div.text {
   position: absolute;
   left: 0px;
-  top: 75px;
+  top: 65px;
 }
 
 div.form-group {
@@ -187,7 +187,7 @@ div.title {
 
 div.custom-control {
   position: absolute;
-  left: 130px;
+  left: 123px;
   top: 220px;
 }
 
@@ -197,4 +197,10 @@ div.custom-control {
 
 .form-label{
   width: 200% !important;
+}
+
+div.saveTitle{
+  position: absolute;
+  left: -100px;
+  top: 140px;
 }
