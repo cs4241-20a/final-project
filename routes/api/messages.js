@@ -29,7 +29,7 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 		await Group.findOne({_id: groupId, members: userId});
 		// Find all messages with the given group id sorted by date sent (ascending)
 		const messages = await Message.find({groupId}).sort({dateSent: 1});
-
+		
 		// Send result
 		res.status(200).json({success: true, data: messages});
 	} catch (err) {
@@ -42,7 +42,7 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
  * Route: /api/messages/:groupId/:messageId
  * Method: GET
  * Auth: Required
- * Desc: Gets all messages in the given group. User must belong to the group. Verified by session.
+ * Desc: Gets a message in the given group. User must belong to the group. Verified by session.
  */
 router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 	// Gather request parameters
@@ -55,7 +55,7 @@ router.get("/:groupId", ensureAuthenticated, async (req, res) => {
 		// Verify that a group exists with the given id that the current user is a member of
 		await Group.findOne({_id: groupId, members: userId});
 		// Find the message with the given id in the group with the given id
-		const message = await Message.find({_id: groupId, messageId}).sort({dateSent: 1});
+		const message = await Message.find({_id: groupId, messageId});
 
 		// Send result
 		res.status(200).json({success: true, data: message});
