@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.3/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/retro.css">
+    <style>
+        h1, h2 {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            color: white;
+        }
+        body {font-family: Arial, Helvetica, sans-serif;}
+        form {
+            border: 3px solid #f1f1f1;
+            box-sizing: border-box;
+            #border: 1px solid #1B998B;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #808080;
+        }
+
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        label{
+            color: white;
+        }
+
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+        }
+
+        img.avatar {
+            width: 25%;
+            border-radius: 30%;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<h1>Mine Sweeper Online</h1>
+
+<form>
+    <div class="imgcontainer">
+        <img src="/unnamed.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+        <label id="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name='id' id="id" required>
+
+        <label id="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name='password' id="password" required>
+
+        <button type="button" onclick="submitFunction()">Login</button>
+
+    </div>
+</form>
+
+</body>
+<script>
+    let submitFunction = function() {
+        const id = document.querySelector('#id').value
+        const password = document.querySelector('#password').value
+        let body = {
+            id: id,
+            password: password
+        }
+        fetch('/loginAttempt', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => response.json()).then(data => {
+            console.log(data.id)
+            if (data.id) {
+                window.location.replace("/game");
+            }
+        })
+    }
+</script>
+</html>

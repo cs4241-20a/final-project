@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player Lobby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="stylesheets/lobby.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<div class="topnav" id="myTopnav">
+    <a href="home" >Home</a>
+    <a href="Chat" class="active">Chat</a>
+    <a href="globalBoard">Global Leaderboard</a>
+    <a href="playGame">Play game</a>
+    <a href="logout">Logout</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+    </a>
+</div>
+  
+  <div id ="md">
+    <ul id="messages"></ul>
+  </div>
+  <div>
+    <form>
+        <input id="m" autocomplete="off" />
+        <button type="button">Press Enter</button>
+    </form>
+    </div>
+</body>
+<script>
+    let id = null;
+    window.onload = function (e) {
+        e.preventDefault();
+        fetch('/getUser', {
+            method: 'GET'
+        }).then(response => response.json()).then(data => {
+            id = data.id;
+            var socket = io();
+            e.preventDefault(); // prevents page reloading
+            socket.emit('chat message', id + " joined the chat");
+        })
+
+    }
+    $(function () {
+        var socket = io();
+        $('form').submit(function(e){
+            e.preventDefault(); // prevents page reloading
+            socket.emit('chat message', id + ': ' + $('#m').val());
+            $('#m').val('');
+            return false;
+        });
+        socket.on('chat message', function(msg){
+            $('#messages').append($('<li>').text(msg));
+          
+        });
+    });
+</script>
+<script type ="text/javascript"> >>$(document).ready(function (){ >> var $scroll_down_chat = $('#message_board');</script>
+</html>

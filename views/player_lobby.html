@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player Lobby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="stylesheets/lobby.css">
+    <link rel="stylesheet" href="/retro.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/lobby_script.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<div class="topnav" id="myTopnav">
+    <a href="home" class="active">Home</a>
+    <a href="Chat">Chat</a>
+    <a href="globalBoard">Global Leaderboard</a>
+    <a href="playGame">Play game</a>
+    <a href="logout">Logout</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+    </a>
+</div>
+<h2 id="welcome"></h2>
+  <iframe src="https://giphy.com/embed/l3V0GQMoaDLVbjXEI" width="150" height="150" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+<div>
+  <h2>
+    Mine Sweeper Game Rules 
+  </h2>
+  <p style="width: 90%,margin-left: 10px">
+    The objective of Minesweeper is to reveal all the tiles that don’t have mines on them and avoid revealing tiles with mines on them. You are given a grid filled with tiles that are hidden and you can reveal their content by clicking on them, but be careful because if you reveal a tile with a mine on it you’ll lose. Revealing a tile without a mine will reveals the number of neighboring tiles that have mines on them, this information combined with some lucky guesses will help you succeed. You can also mark tiles where you think mines are hidden by right clicking over the tile. This blocks the tile to avoid clicking it by mistake or forgetting that there’s a mine there. Marking tiles where there are no mines will not cause you to lose, but it can lead to mistakes that cause you to lose.
+  </p>
+</div>
+<br><br>
+  <h2>Stats:</h2>
+<div class="grid-container">
+    <div class="grid-item"><h1 id="easyN"></h1></div>
+    <div class="grid-item"><h2 id="easy"></h2></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"><h1 id="mediumN"></h1></div>
+    <div class="grid-item"><h2 id="medium"></h2></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"><h1 id="hardN"></h1></div>
+    <div class="grid-item"><h2 id="hard"></h2></div>
+    <div class="grid-item"></div>
+</div>
+<script>
+
+</script>
+</body>
+</html>
