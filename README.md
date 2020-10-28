@@ -1,46 +1,4 @@
-# cs4241-FinalProject
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
-
-## General description
-
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
-
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
-
-## Project ideation
-
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
-
-## Logistics
-
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
-
-### Deliverables
-
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
-
-There are no other scheduled checkpoints for your project. 
-
-#### Turning in Your Outline / Project
-
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
-
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
-
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
 
 1. A brief description of what you created, and a link to the project itself.
 2. Any additional instructions that might be needed to fully use your project (login information etc.)
@@ -54,3 +12,41 @@ Think of 1,3, and 4 in particular in a similar vein to the design / tech achieve
 ## FAQs
 
 - **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+
+1. Our project is a pong multiplayer game with high score charts
+
+
+**Instructions to play the game**
+
+1. If you want to play on multiple computers you MUST change the ip in script.js (on lines 40 and 72) to
+
+*your_ip_adress*:6969 or *your_ip_adress*:8082 for lines 40 and 72 respectively
+
+2. Then to play just run the server on 1 computer (node server.js) and type the url *your_ip_adress*:3000
+
+you can do this on two computers, then all you need to do is login and play!
+
+If you want to just test this on 1 computer you can skip the ip stuff and once the server starts you just type localhost:3000 to the url
+
+
+
+Only 2 people can play, if you login with more than 2 people you need to restart the server.
+
+
+3: we used mongodb to keep track of highscores
+
+We used websocket to have multiplayer functionality
+
+we used body parser for json parsing
+
+
+4: We faced a major challenge in actually getting the multiplayer to work and make sense, also there were some issue with 
+getting the datbase stuff to work the way we wanted it to
+
+5: Lewis: Responsible for the game itself, the websocket multiplayer and finishing touches
+
+Ryan: Responsible for the database communication
+
+Victoria: Responsible for the entirety of the front end
+
+6: https://www.youtube.com/watch?v=Mky3TDtZJTQ&feature=youtu.be&ab_channel=Lewiscook

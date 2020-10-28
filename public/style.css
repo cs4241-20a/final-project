@@ -1,0 +1,89 @@
+/* this file is loaded by index.html and styles the page */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  font-family: 'Commissioner', sans-serif;
+  margin: 2em 1em;
+  line-height: 1.5em;
+  background-color: black;
+  color: white;
+}
+
+h1 {
+  font-style: italic;
+  color: #373fff;
+  max-width: calc(100% - 5rem);
+  line-height: 1.1;
+}
+
+#loginform {
+  background-color: black;
+  border: 2px solid silver;
+  border-radius: 30px;
+  display: grid;
+  grid-gap: 1em;
+  padding: 5em;
+  max-width: 40ch;
+  box-shadow:
+        0 0 15px 2px #fff,
+        0 0 15px 5px #0ff,
+        inset 0px 0px 20px 0px #fff,
+        inset 0px 0px 20px 0px #0ff;
+}
+
+input{
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 100%;
+    box-shadow:
+        0 0 5px 2px #fff,
+        0 0 5px 5px #0ff,
+        inset 0px 0px 5px 0px #fff,
+        inset 0px 0px 5px 0px #0ff;
+}
+
+input::placeholder {
+  color: lightgray;  
+}
+
+button{
+    outline: none;
+      margin: 20px;
+      font-family: 'Commissioner', sans-serif;
+      color: white;
+      background-color:black;
+      border:none;
+      padding: 10px;
+      outline: none;
+}
+
+button:hover{
+  box-shadow:
+        0 0 5px 2px #fff,
+        0 0 5px 5px #0ff,
+        inset 0px 0px 5px 0px #fff,
+        inset 0px 0px 5px 0px #0ff;
+  cursor: pointer;
+}
+
+canvas{
+  display: flex;
+  border-radius: 10px;
+  justify-content: center;
+  box-shadow:
+        0 0 10px 2px #fff,
+        0 0 10px 5px #0ff,
+        inset 0px 0px 10px 0px #fff,
+        inset 0px 0px 10px 0px #0ff;
+}
