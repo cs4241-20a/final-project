@@ -152,7 +152,7 @@ app.post('/api/challenge/:id/solve', async (req, res) => {
     const responseData = {message: ""}
     if (testResult[0]) {
         const confirmationCode = nanoid(32);
-        confirmChallengeCompletion(confirmationCode);
+        confirmChallengeCompletion(confirmationCode, req.params.id, solution);
         responseData.message = "OK";
         responseData.code = confirmationCode;
     }

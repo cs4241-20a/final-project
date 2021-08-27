@@ -39,7 +39,7 @@ module.exports = {
         new CompressionPlugin({algorithm: 'brotliCompress', filename: '[path][base].br'})
     ],
     output: {
-        filename: 'bundle.js',
+        filename: '[name].js',
         publicPath: '/',
         path: path.resolve(__dirname, 'dist'),
     },

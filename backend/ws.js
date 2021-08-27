@@ -1,4 +1,5 @@
 import ws from 'ws';
+import { nanoid } from 'nanoid';
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -21,11 +22,11 @@ let clients = [];
 }}} */
 const lobbies = {};
 
-/** @type {{[code: string]: boolean}} */
+/** @type {{[code: string]: { challengeId: string, solution: string }}} */
 const confirmationCodes = {};
 
-export function confirmChallengeCompletion(code) {
-    confirmationCodes[code] = true;
+export function confirmChallengeCompletion(code, challengeId, solution) {
+    confirmationCodes[code] = { challengeId, solution };
 }
 
 export const wsServer = new ws.Server({ noServer: true });
@@ -36,8 +37,13 @@ wsServer.on("connection", (ws, request) => {
         owner: WebSocket;
         members: WebSocket[];
         currentChallenge: string | null;
+        variant: 'race' | 'classroom';
+        solutions: Map<WebSocket, string> | null;
     } | null} */
     let currentLobby = null;
+
+    const clientId = nanoid(5);
+
     function leaveLobby() {
         if (currentLobby !== null) {
             currentLobby.members.splice(currentLobby.members.indexOf(ws), 1);
@@ -68,7 +74,8 @@ wsServer.on("connection", (ws, request) => {
                     id: lobbyId,
                     owner: ws,
                     members: [ws],
-                    currentChallenge: null
+                    currentChallenge: null,
+                    solutions: new Map()
                 };
                 currentLobby = lobbies[lobbyId];
                 ws.send(JSON.stringify({
@@ -91,23 +98,44 @@ wsServer.on("connection", (ws, request) => {
                 break;
             case "startChallenge":
                 if (currentLobby !== null && currentLobby.owner === ws) {
+                    currentLobby.currentChallenge = message.challenge;
+                    currentLobby.variant = message.variant;
+                    currentLobby.solutions = new Map();
                     for (const member of currentLobby.members) {
                         member.send(JSON.stringify({
                             type: "startChallenge",
-                            challenge: message.challenge
+                            challenge: message.challenge,
+                            variant: message.variant
                         }));
                     }
                 }
             case "completeChallenge":
                 if (confirmationCodes[message.code]) {
+                    const { challengeId, solution } = confirmationCodes[message.code];
                     delete confirmationCodes[message.code];
-                    if (currentLobby !== null) {
-                        for (const member of currentLobby.members) {
-                            if (member !== ws) {
-                                member.send(JSON.stringify({
-                                    type: "completeChallenge"
-                                }));
-                            }
+                    if (currentLobby !== null && currentLobby.currentChallenge === challengeId) {
+                        currentLobby.solutions.set(ws, solution);
+                        switch (currentLobby.variant) {
+                            case 'race':
+                                for (const member of currentLobby.members) {
+                                    if (member !== ws) {
+                                        member.send(JSON.stringify({
+                                            type: "completeChallenge",
+                                            variant: currentLobby.variant
+                                        }));
+                                    }
+                                }
+                                break;
+                            case 'classroom':
+                                if (currentLobby.owner !== ws) {
+                                    currentLobby.owner.send(JSON.stringify({
+                                        type: "completeChallenge",
+                                        variant: currentLobby.variant,
+                                        solver: clientId,
+                                        solution,
+                                        certificate: message.code
+                                    }));
+                                }
                         }
                     }
                 }

@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, Paper, Snackbar, Typography } from "@material-ui/core";
+import { Button, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemIcon, Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FunctionComponent } from "react";
-import { handleChange, handleChangeWithValue } from '../utils/util';
+import { handleChangeWithValue } from '../utils/util';
 import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 import { ControlledEditor as Editor, EditorDidMount } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
-import { Group as GroupIcon, Send as SendIcon } from '@material-ui/icons';
+import { Group as GroupIcon, Send as SendIcon, Edit as EditIcon, Flag as FlagIcon } from '@material-ui/icons';
 import { SiteSettings } from './App';
 import { useHistory } from 'react-router-dom';
 import { useDialog } from '../components/DialogProvider';
@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1
     },
     descriptionContainer: {
+        overflow: 'auto'
+    },
+    studentSolutionsContainer: {
         overflow: 'auto'
     },
     panePaper: {
@@ -96,8 +99,12 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         })();
     }, [challengeId]);
 
+    const [challengeMode, setChallengeMode] = useState<'none' | 'race' | 'classroom'>('none');
+
     const [isVerifyingSolution, setIsVerifyingSolution] = useState(false);
     const [isRaceStarting, setIsRaceStarting] = useState(false);
+    
+    const [studentSolutions, setStudentSolutions] = useState<{ clientId: string, solution: string, certificate: string, revision: number }[]>([]);
 
     useEffect(() => {
         if (new URLSearchParams(history.location.search).get('reason') === 'race') {
@@ -110,15 +117,36 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
             const data = JSON.parse(e.data);
 
             if (data.type === "completeChallenge") {
-                openDialog({
-                    children: <>
-                        <DialogTitle>You Lose...</DialogTitle>
-                        <DialogContent>You lost the race! That's okay though, you can still continue trying to complete this challenge.</DialogContent>
-                        <DialogActions>
-                            <Button color="secondary" onClick={closeDialog}>Close</Button>
-                        </DialogActions>
-                    </>
-                });
+                if (data.variant === "race") {
+                    openDialog({
+                        children: <>
+                            <DialogTitle>You Lose...</DialogTitle>
+                            <DialogContent>You lost the race! That's okay though, you can still continue trying to complete this challenge.</DialogContent>
+                            <DialogActions>
+                                <Button color="secondary" onClick={closeDialog}>Close</Button>
+                            </DialogActions>
+                        </>
+                    });
+                }
+                else if (data.variant === "classroom") {
+                    setStudentSolutions(studentSolutions => {
+                        const priorSolution = studentSolutions.find(x => x.clientId === data.solver);
+                        if (priorSolution) {
+                            return studentSolutions.map(x => x === priorSolution ? {
+                                clientId: data.solver,
+                                solution: data.solution,
+                                certificate: data.certificate,
+                                revision: x.revision + 1
+                            } : x);
+                        }
+                        return studentSolutions.concat([{
+                            clientId: data.solver,
+                            solution: data.solution,
+                            certificate: data.certificate,
+                            revision: 1
+                        }])
+                    });
+                }
             }
         }
         ws.addEventListener("message", listener);
@@ -163,10 +191,12 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         });
     }
 
-    function beginRace() {
+    function beginChallenge(variant: 'race' | 'classroom') {
         setSolution(challenge?.starterCode ?? "");
+        setChallengeMode(variant);
         ws.send(JSON.stringify({
             type: "startChallenge",
+            variant,
             challenge: challenge?.id
         }));
     }
@@ -187,13 +217,34 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         }
     };
 
+    const editorWrapper = (children: React.ReactNode) => challengeMode === 'classroom'
+        ? <SplitPane split="horizontal">
+            <Pane minSize="100px" initialSize="70%">
+                {children}
+            </Pane>
+            <Pane minSize="100px">
+                <Paper className={`${classes.panePaper} ${classes.studentSolutionsContainer}`}>
+                    {studentSolutions.length > 0
+                        ? <List>
+                            {studentSolutions.map(solution => <ListItem button onClick={() => setSolution(solution.solution)} key={solution.certificate}>
+                                <ListItemIcon><EditIcon/></ListItemIcon>
+                                <Typography>User {solution.clientId}{solution.revision > 1 ? ` (v${solution.revision})` : null}</Typography>
+                            </ListItem>)}
+                        </List>
+                        : <Typography>No student submissions.</Typography>}
+                </Paper>
+            </Pane>
+        </SplitPane>
+        : children;
+
     return (
         <div className={classes.root}>
             <div className={classes.challengeControlsHeader}>
                 <Typography className={classes.challengeTitle} variant="h4">{challenge?.title}</Typography>
-                {siteSettings.currentLobbyId && siteSettings.isLobbyOwner ?
-                    <Button variant="outlined" color="secondary" size="large" endIcon={<GroupIcon/>} onClick={beginRace}>Summon &amp; Race</Button>
-                : undefined}
+                {siteSettings.currentLobbyId && siteSettings.isLobbyOwner ? <>
+                    <Button variant="outlined" color="secondary" size="large" endIcon={<FlagIcon/>} onClick={() => beginChallenge('race')}>Summon &amp; Race</Button>
+                    <Button variant="outlined" color="secondary" size="large" endIcon={<GroupIcon/>} onClick={() => beginChallenge('classroom')}>Classroom</Button>
+                </> : undefined}
                 <Button variant="contained" color="secondary" size="large" endIcon={<SendIcon/>} onClick={submit}>Submit</Button>
             </div>
             <SplitPane className={classes.editors} split="vertical" onChange={() => editor.current?.layout()}>
@@ -203,18 +254,20 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
                     </Paper>
                 </Pane>
                 <Pane minSize="300px">
-                    <Paper className={classes.panePaper}>
-                        <Typography className={classes.sectionTitle} variant="h6">Your Solution</Typography>
-                        <Typography className={classes.sectionCaption} variant="caption" component="div">Enter your code here.</Typography>
-                        <Editor
-                            language="javascript"
-                            theme={siteSettings.theme}
-                            options={editorOptions}
-                            value={solution}
-                            onChange={handleChangeWithValue(setSolution)}
-                            editorDidMount={handleEditorMount}
-                        />
-                    </Paper>
+                    {editorWrapper(
+                        <Paper className={classes.panePaper}>
+                            <Typography className={classes.sectionTitle} variant="h6">Your Solution</Typography>
+                            <Typography className={classes.sectionCaption} variant="caption" component="div">Enter your code here.</Typography>
+                            <Editor
+                                language="javascript"
+                                theme={siteSettings.theme}
+                                options={editorOptions}
+                                value={solution}
+                                onChange={handleChangeWithValue(setSolution)}
+                                editorDidMount={handleEditorMount}
+                            />
+                        </Paper>
+                    )}
                 </Pane>
             </SplitPane>
             <Snackbar
