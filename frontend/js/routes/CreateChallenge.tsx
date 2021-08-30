@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     codeContainer: {
         ...(theme.palette.type === 'dark' ? {
             color: '#d4d4d4',
-            backgroundColor: '#202124',
+            backgroundColor: '#1e1e1e',
         } : {}),
         margin: theme.spacing(2),
         padding: theme.spacing(2),
@@ -151,7 +151,7 @@ assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Tell the user what their objective is in precise detail</Typography>
                         <Editor
                             language="markdown"
-                            theme={siteSettings.theme}
+                            theme={siteSettings.theme === 'dark' ? 'vs-dark' : 'light'}
                             options={{...editorOptions, wordWrap: 'on'}}
                             value={description}
                             onChange={handleChangeWithValue(setDescription)}
@@ -163,7 +163,7 @@ assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Give the user some code to work with when they begin</Typography>
                         <Editor
                             language="javascript"
-                            theme={siteSettings.theme}
+                            theme={siteSettings.theme === 'dark' ? 'vs-dark' : 'light'}
                             options={editorOptions}
                             value={starterCode}
                             onChange={handleChangeWithValue(setStarterCode)}
@@ -176,7 +176,7 @@ assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Provide a working solution to your challenge. The user will not see this</Typography>
                         <Editor
                             language="typescript"
-                            theme={siteSettings.theme}
+                            theme={siteSettings.theme === 'dark' ? 'vs-dark' : 'light'}
                             options={editorOptions}
                             value={solution}
                             onChange={handleChangeWithValue(setSolution)}
@@ -188,7 +188,7 @@ assert(helloWorld() == "Hello, World!");`);
                         <Typography className={classes.sectionCaption} variant="caption" component="div">Provide some code to verify that the user's solution is correct</Typography>
                         <Editor
                             language="typescript"
-                            theme={siteSettings.theme}
+                            theme={siteSettings.theme === 'dark' ? 'vs-dark' : 'light'}
                             options={editorOptions}
                             value={tests}
                             onChange={handleChangeWithValue(setTests)}

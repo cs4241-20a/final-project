@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     panePaper: {
         ...(theme.palette.type === 'dark' ? {
             color: '#d4d4d4',
-            backgroundColor: '#202124',
+            backgroundColor: '#1e1e1e',
         } : {}),
         margin: theme.spacing(2),
         padding: theme.spacing(2),
@@ -260,7 +260,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
                             <Typography className={classes.sectionCaption} variant="caption" component="div">Enter your code here.</Typography>
                             <Editor
                                 language="javascript"
-                                theme={siteSettings.theme}
+                                theme={siteSettings.theme === 'dark' ? 'vs-dark' : 'light'}
                                 options={editorOptions}
                                 value={solution}
                                 onChange={handleChangeWithValue(setSolution)}
