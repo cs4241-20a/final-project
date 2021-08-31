@@ -125,17 +125,18 @@ wsServer.on("connection", (ws, request) => {
                                         }));
                                     }
                                 }
+                                // switch to classroom mode -- yes this is kinda hacky :P
+                                currentLobby.variant = 'classroom';
                                 break;
-                            case 'classroom':
-                                if (currentLobby.owner !== ws) {
-                                    currentLobby.owner.send(JSON.stringify({
-                                        type: "completeChallenge",
-                                        variant: currentLobby.variant,
-                                        solver: clientId,
-                                        solution,
-                                        certificate: message.code
-                                    }));
-                                }
+                        }
+                        if (currentLobby.owner !== ws) {
+                            currentLobby.owner.send(JSON.stringify({
+                                type: "completeChallenge",
+                                variant: currentLobby.variant,
+                                solver: clientId,
+                                solution,
+                                certificate: message.code
+                            }));
                         }
                     }
                 }

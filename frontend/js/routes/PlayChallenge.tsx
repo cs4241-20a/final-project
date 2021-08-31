@@ -217,7 +217,7 @@ export const PlayChallenge: FunctionComponent<PlayChallengeProps> = ({siteSettin
         }
     };
 
-    const editorWrapper = (children: React.ReactNode) => challengeMode === 'classroom'
+    const editorWrapper = (children: React.ReactNode) => siteSettings.isLobbyOwner
         ? <SplitPane split="horizontal">
             <Pane minSize="100px" initialSize="70%">
                 {children}
