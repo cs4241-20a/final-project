@@ -1,0 +1,97 @@
+body {
+  background: black;
+}
+h1 {
+  font-family: "Source Serif Pro";
+}
+h2 {
+  font-family: "Source Sans Pro";
+}
+.title {
+  font-size: 64px;
+  font-weight: 900;
+  color: white;
+}
+.subtitle {
+  font-size: 48px;
+  font-weight: 300;
+  margin-top: 10px;
+  margin-bottom: 25px;
+  color: #efefef;
+}
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 30vmin;
+  pointer-events: none;
+}
+#root{
+  margin-right: 175px;
+  margin-left: 175px
+}
+
+#uploadBtn{
+  margin-right: 20px
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-link {
+  color: #61dafb;
+}
+.background {
+  background: url(https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260);
+  background-size: cover;
+  position: fixed;
+  z-index: -1;
+  opacity: 0.1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.cover-container {
+  height: 180px;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+.cover-item {
+  position: relative;
+  display: inline-block;
+  margin: 8px 8px;
+  width: 150px;
+  height: 150px;
+  border-radius: 5px;
+  vertical-align: bottom;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 1px solid #efefef;
+  padding: 10px;
+}
+a:hover {
+  cursor: pointer;
+}
+@keyframes App-logo-spin {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-100px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

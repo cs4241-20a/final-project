@@ -1,56 +1,111 @@
-# cs4241-FinalProject
+# Cheem Chat
+For too long chat applications like Slack, Discord and Microsoft Teams has underrepresented those of the cheem kind. To solve this injustice we have made a chat app solely for cheems lovers to interact. In this revolutionary site built with JavaScript, Node.js / Express, MongoDB and React, users can send their favorite cheems to each other inside a persistent and communal chat room. With intuitive leaderboard technologies, users can also compete to be the top chatter and attempt to make their favorite cheem the top doge.  
 
-For your final project, you'll implement a course project that exhibits your mastery of the course materials. 
-This project should provide an opportunity to be creative and to pursue individual research and learning.
+For those who are unaware of the cheem kind, click [here](https://i.redd.it/tgy4a5n8i9a41.png).
 
-## General description
+To access the site. click [here](http://cheemchat-wpi.herokuapp.com/#)
 
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
+**Note:** The site may take a bit to spin up if it is inactive, be patient with Heroku.
 
-- Static Web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data, authentication, and possibly server-side computation. Ideally it will also include support for realtime commmunication as discussed below.
-- Groups are *highly encouraged* to consider including some type of realtime communication technology in their projects (chat, networked multiplayer games, collaborative coding/editing, video/audio via WebRTC etc.) We'll be discussing many of these technologies in class next week. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) The video should be posted on YouTube or some other accessible video hosting service. 
+Project video [link](https://youtu.be/xcewgcPacOc)
 
-## Project ideation
+### Team 6
+Cheem Chat is brought to you by:
+- Samuel Gehly
+- Hunter Trautz
+- Raymond Dolan
+- Gabriel Aponte
+- Maria Medina Martinez
 
-Excellent projects serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have impact, either artistically, politically, or in terms of productivity. Consider creating something useful for a cause or hobby you care about.
+## Instructions
+**How To: Login**
+- Users can log in with two OAuth method: GithHub and DeviantArt
+- Users can also login with a Local Strategy by inputting a username and a password
+  - If no user with the inputted username exists, a new account will be created and that initial password will be set
+  - This method is encrypted with bcrypt, so all passwords are secure and **not** accessible by us developers
+  - You will be prompted if the inputted password is incorrect, so don't forget it!
 
-## Logistics
+**How To: Chat**
+- Choose a cheem image from the scrollable list of choices
+- Write a caption in the caption box
+- Click the send button
 
-### Team size
-Students are will work in teams of 3-5 students for the project; teams of two can be approved with the permission of the instructor. Working in teams will allow you to build a good project in a limited amount of time.
+**How To: Upload A Cheem Image**
+- Click the Upload A New Cheem button
+- In the prompt box, type in an image URL (the URL must be valid!)
+  - A valid URL is: 1. An actual URL, 2. A URL that ends with an image file type such as .png or .jpg
+  - On successful input, the page will refresh and you can find the new cheem at the end of the cheem scrollable list
+- For the developers sake, please only upload cheems and try to avoid any duplicate cheems!
 
-### Deliverables
+**How to: Leaderboards**
+- The User Leaderboard shows which users have the most CheemChats sent
+  - A User's counter is updated every time they send a new chat
+- The Cheem Leaderboard shows which Cheems have been used the most
+  - A Cheem's uses count increments every time said cheem is sent in a chat post
 
-__Proposal:__ 
-Provide an outline of your project direction and the names of the team members. 
-The outline should have enough detail so that staff can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
-This file must be named proposal.md so we can find it.
-Submit a PR to turn it in by Monday, 11:59 PM
+**How to: Logout**
+- Click the logout button (Only if you are signed in)
 
-There are no other scheduled checkpoints for your project. 
+## Technologies Outline
+**React UI Library**
 
-#### Turning in Your Outline / Project
+For the user interface of the site, we decided that we would utilize React as we all enjoyed working with it for Assignment 4 because of how dynamic and responsive it is. React primarily allowed us to take advantage of its great pre-built and reusable elements and components. Furthermore, React renders our UI in JSX in a way that is fast and scalable to all web browser environments.
 
-**NOTE: code is due before the project presentation day due to the end of term / grading schedule constraints**
-Submit a second PR on the final project repo to turn in your app and code.
+**Express Server**
+This basic express server powers the main application logic of Cheemchat. It is where the Passport stategies are implemented, where we make calls to Ably and Mongo, and where all the API endpoints live. It uses the express-session, morgan, body-parser, compression, and passport middlewares.
 
-Deploy your app, in the form of a webpage, to Glitch/Heroku/Digital Ocean or some other service.
-Folks on the same team do not need to post the same webpage, but must instead clearly state who is on the team in their proposal.
+**Ably Realtime**
+Ably powers our realtime capabilities as using websockets directly (i.e socket.io) on Heroku is not incredibly stable (as websites go to sleep after a period of time). Ably is SaaS that includes many out of the box features like global network replication, persistence (though we use our own), authentication (we use our own), integrations with other services like Slack, push notifications, webhooks, etc. We chose this as Sam had a lot of experience with it and could set it up without too much headache.
 
-The README for your second pull request doesn’t need to be a formal report, but it should contain:
+**OAuth with Passport**
 
-1. A brief description of what you created, and a link to the project itself.
-2. Any additional instructions that might be needed to fully use your project (login information etc.)
-3. An outline of the technologies you used and how you used them.
-4. What challenges you faced in completing the project.
-5. What each group member was responsible for designing / developing.
-6. A link to your project video.
+We wanted our application to give a wider variety of login options to the user. So, we utilized the passport Express middleware to do so. We implemented both the GitHub and the DeviantArt methods of OAuth login. We choose GitHub since it is standard for our class and DeviantArt simply because it's neat and we wanted to learn more about passport.  
 
-Think of 1,3, and 4 in particular in a similar vein to the design / tech achievements for A1—A4… make a case for why what you did was challenging and why your implementation deserves a grade of 100%.
+**Local Passport Strategy with bcrypt**
 
-## FAQs
+In addition to the OAuth methods of login, we also created a Local Login by utilizing passport as well. This functionality ensures that all users can access the site. However, we didn't want this method to be insecure by saving plain text inside our MongoDB collection. So, we implemented the bcrypt middleware to add secure encryption to passwords. All Local passwords are encrypted and decrypted inside the server to ensure security. Lastly, we made sure to delete the passwords inputted on the UI from their json object after they had been used for logging in.
 
-- **Can I use XYZ framework?** You can use any web-based frameworks or tools available, but for your server programming you need to use node.js. Your client-side language should be either JavaScript or TypeScript.
+**Bootstrap CSS Framework**
+
+We leveraged the Bootstrap CSS framework on top of React which gave us access to even more components, effects, Jquery plugins to create the UI. We also used the Facebook create-react-app bootstrap template as a basis for the design.   
+
+**MongoDB**
+
+We utilized MongoDB in order to persist all the data within our site. This included creating three collections. One for user login information, one for holding all the chat messages and one for holding all the Cheem image URLs. The database is also updated every time a chat is added so that leaderboard counts are increment for specific users and Cheems.
+
+## Development Challenges
+
+**Realtime Chat**
+
+Using any third-party service that is as tightly integrated into an application environment is a challenge - troubleshooting why messages would not send, why they would not be received, why API keys wouldn't work or why requests would fail all take a certain amount of time to solve, and using Ably was no exception.
+
+**Bootstrap CSS Framework**
+
+Most of us were used to either writing our own UI with HTML and CSS or utilizing a Classless CSS framework. Since Bootstrap is a Class based framework, it required a decent amount of time reading over documentation about the different class styles and variations. This caused for a lot of trial and error on our part when it came to arranging and spacing UI elements.
+
+**Local Development**
+
+Due to the nature of a real-time chat application, we found local development to be quite challenging. It required running both the server.js file and our frontend build system at the same time. Every so often, the development versions of these systems would clash with each other and render the UI build files to be "not found". This lead to having to refresh the localhost over and over until the page was working. In addition, some of us were unable to automate the build system. So, these team members had to manually rebuild the frontend every time they made a new change and wanted to see/test it.
+
+## Workload Split
+- Samuel Gehly
+  - Server implementation for Realtime chat functionality
+  - MongoDB setup and data management
+- Hunter Trautz
+  - Lead UI design and implementation of the Bootstrap CSS framework
+  - Chat message creation functionality
+- Raymond Dolan
+  - DeviantArt login functionality and associated UI element(s) design
+  - Leaderboard functionality and associated UI element(s) design
+- Gabriel Aponte
+  - Image upload functionality and associated UI element(s) design
+  - Added bcrypt to the local login strategy   
+  - Wrote this README
+- Maria Medina Martinez
+  - GitHub login functionality and associated UI element(s) design
+  - Passport Local Strategy functionality and UI element design
+
+## Targeted Users & Stakeholders
+- This site targets anyone who loves doges, memes and chatting.
+  - Anyone can fall into this categorization, but we feel a demographic of young adults are most attracted to the site.
+- As for the stakeholders of our project,... well they are the cheems of course!
